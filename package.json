@@ -20,7 +20,7 @@
     "preview": "vite preview --port 5180"
   },
   "dependencies": {
-    "three": "^0.171.0"
+    "three": "^0.185.1"
   },
   "devDependencies": {
     "vite": "^8.1.5"
