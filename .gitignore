@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.direnv/
+.envrc.local
+*.log
+.workbench/
+.pi/metrics/
+.pi/peer-runs/
+.pi/reviews/
+.DS_Store

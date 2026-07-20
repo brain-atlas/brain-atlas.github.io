@@ -1,0 +1,55 @@
+# Architecture
+
+`brain-atlas` is a static Three.js application. Vite bundles the UI and renderer; large anatomical datasets stay in `public/` and load at runtime.
+
+## Runtime shape
+
+`src/main.js` owns the scene, loaders, animation models, and layer panel. `src/pathways.js` contains only schematic anterior-pathway coordinates. Keeping these concerns together is reasonable at the project's current size because they share scene state and ordering constraints.
+
+Every anatomical layer is a child of `mniGroup`:
+
+1. `brainGroup`
+2. `anteriorGroup`
+3. `labelGroup`
+4. `regionGroup`
+5. `fibreGroup`
+6. `tractGroup`
+7. `swmGroup`
+
+`sceneFromMni`, assigned to `mniGroup`, is the only coordinate transform. All child geometry remains in MNI152NLin2009cAsym RAS millimetres. Do not add dataset-specific transforms or alignment logic.
+
+`sceneState.visible` stores leaf-layer visibility. `hemiState` combines with per-region and per-tract hemisphere state. The render loop updates three distinct activity models:
+
+- directed anterior and optic-radiation flow;
+- illustrative tract tracers;
+- zero-mean superficial-white-matter vibration, which does not imply direction.
+
+## Data loading
+
+The app loads the cortical GLB, JSON fibre datasets, a region manifest, and region OBJ meshes in parallel. Offline tools must produce web-sized, co-registered assets; runtime fitting and heavy data processing do not belong in the viewer.
+
+## Architecture review
+
+The current design has no unnecessary service, state-management, or component layers. Splitting `src/main.js` solely to reduce its line count would add interfaces around tightly shared state without reducing runtime complexity. Extract modules only when a subsystem gains an independent interface or testable lifecycle.
+
+### Applied simplifications
+
+- Removed an unused 13 MB legacy cortical model from the public asset tree.
+- Removed unused JavaScript symbols.
+- Reused caller-owned typed arrays for fibre interpolation instead of allocating a temporary array for every animated dot on every frame.
+- Marked frequently updated GPU attributes as dynamic.
+
+### High-value future opportunities
+
+These changes are worthwhile but structural; implement them through a scoped Bead and a plan in `.pi/plans/`.
+
+1. **Move superficial-white-matter vibration into a vertex shader.** The CPU currently evaluates and uploads as many as 15,000 dot positions per frame. Per-dot phase, frequency, home position, and amplitude can become static attributes while a time uniform drives zero-mean displacement. Preserve the undirected representation exactly.
+2. **Package region shells into one web-optimized GLB.** The current manifest starts many OBJ requests and parses text geometry in the browser. A single indexed, decimated binary asset could reduce requests, transfer size, parse time, and duplicated vertices while retaining real bilateral meshes and MNI coordinates.
+3. **Add an idle render mode.** When flow and auto-rotation are both off, render only after controls, resize, or UI changes. This removes continuous CPU/GPU work while the scene is stationary. Account for OrbitControls damping and asynchronous asset loads before suspending frames.
+4. **Split runtime modules only along stable boundaries.** Good candidates are asset loading, activity models, and panel construction. Pass explicit state rather than introducing global registries or a framework.
+
+### Findings not adopted
+
+- A runtime asset manifest would not simplify loading: manifests already exist where metadata is needed, and independent top-level fetches correctly run in parallel.
+- Event delegation would save little for the small, infrequently rebuilt panel and would make its state transitions less explicit.
+- Manual vendor chunking would silence Vite's size warning but would not reduce Three.js bytes or improve first render by itself.

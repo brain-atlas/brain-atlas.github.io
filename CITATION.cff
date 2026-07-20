@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: >-
+  If you use this software, cite the version you used and the source datasets
+  listed in DATA_LICENSES.md.
+title: "Brain Atlas: Visual Pathway in 3D"
+type: software
+authors:
+  - family-names: Hay
+    given-names: Steve
+version: 0.1.0
+license: AGPL-3.0-only
+repository-code: "https://github.com/brain-atlas/brain-atlas.github.io"
+url: "https://brain-atlas.github.io/"
+abstract: >-
+  An interactive Three.js viewer of the human visual system using co-registered
+  MNI152 cortical, cytoarchitectonic-region, and tractography data.
+keywords:
+  - neuroscience
+  - neuroanatomy
+  - visual system
+  - tractography
+  - Three.js

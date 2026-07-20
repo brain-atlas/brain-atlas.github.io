@@ -1,0 +1,28 @@
+{
+  "name": "brain-atlas",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Interactive 3D viewer of the human visual pathway (retina to V1), rendered as animated field-coded flow inside a real translucent brain surface.",
+  "license": "AGPL-3.0-only",
+  "homepage": "https://brain-atlas.github.io/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brain-atlas/brain-atlas.github.io.git"
+  },
+  "bugs": {
+    "url": "https://github.com/brain-atlas/brain-atlas.github.io/issues"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "build:publish": "node scripts/check-publish.mjs && vite build",
+    "preview": "vite preview --port 5180"
+  },
+  "dependencies": {
+    "three": "^0.171.0"
+  },
+  "devDependencies": {
+    "vite": "^6.0.7"
+  }
+}

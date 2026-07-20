@@ -1,0 +1,1337 @@
+{
+ "space": "MNI152NLin2009cAsym",
+ "source": "Julich-Brain v3.0.3 MPM (winner-take-all)",
+ "streams": {
+  "subcortical": {
+   "hue": 286
+  },
+  "early": {
+   "hue": 172
+  },
+  "ventral": {
+   "hue": 22
+  },
+  "dorsal": {
+   "hue": 208
+  },
+  "temporal": {
+   "hue": 45
+  },
+  "parietal": {
+   "hue": 140
+  },
+  "frontal": {
+   "hue": 330
+  },
+  "gap": {
+   "hue": 215
+  }
+ },
+ "regions": [
+  {
+   "id": "lgn",
+   "name": "LGN",
+   "area": "CGL",
+   "stream": "subcortical",
+   "parent": "metathalamus",
+   "color": "#b785e0",
+   "opacity": 0.24,
+   "meshes": {
+    "L": {
+     "file": "data/regions/lgn_L.obj",
+     "verts": 666,
+     "centroid": [
+      -23.7,
+      -24.3,
+      -7.9
+     ]
+    },
+    "R": {
+     "file": "data/regions/lgn_R.obj",
+     "verts": 556,
+     "centroid": [
+      23.6,
+      -22.5,
+      -7.7
+     ]
+    }
+   }
+  },
+  {
+   "id": "v1",
+   "name": "V1",
+   "area": "hOc1",
+   "stream": "early",
+   "parent": "occipital cortex",
+   "color": "#85e0c0",
+   "opacity": 0.15,
+   "meshes": {
+    "L": {
+     "file": "data/regions/v1_L.obj",
+     "verts": 3007,
+     "centroid": [
+      -9.4,
+      -83.8,
+      1.9
+     ]
+    },
+    "R": {
+     "file": "data/regions/v1_R.obj",
+     "verts": 2992,
+     "centroid": [
+      14.3,
+      -80.3,
+      1.5
+     ]
+    }
+   }
+  },
+  {
+   "id": "v2",
+   "name": "V2",
+   "area": "hOc2",
+   "stream": "early",
+   "parent": "occipital cortex",
+   "color": "#6cdac4",
+   "opacity": 0.15,
+   "meshes": {
+    "L": {
+     "file": "data/regions/v2_L.obj",
+     "verts": 2991,
+     "centroid": [
+      -10.1,
+      -87.7,
+      4.0
+     ]
+    },
+    "R": {
+     "file": "data/regions/v2_R.obj",
+     "verts": 3000,
+     "centroid": [
+      15.4,
+      -85.8,
+      3.2
+     ]
+    }
+   }
+  },
+  {
+   "id": "v3v",
+   "name": "V3v",
+   "area": "hOc3v",
+   "stream": "early",
+   "parent": "occipital cortex",
+   "color": "#54d4cc",
+   "opacity": 0.15,
+   "meshes": {
+    "L": {
+     "file": "data/regions/v3v_L.obj",
+     "verts": 3003,
+     "centroid": [
+      -20.9,
+      -85.9,
+      -8.7
+     ]
+    },
+    "R": {
+     "file": "data/regions/v3v_R.obj",
+     "verts": 2994,
+     "centroid": [
+      25.2,
+      -82.6,
+      -8.9
+     ]
+    }
+   }
+  },
+  {
+   "id": "v3d",
+   "name": "V3d",
+   "area": "hOc3d",
+   "stream": "early",
+   "parent": "occipital cortex",
+   "color": "#3bc2ce",
+   "opacity": 0.15,
+   "meshes": {
+    "L": {
+     "file": "data/regions/v3d_L.obj",
+     "verts": 3000,
+     "centroid": [
+      -14.4,
+      -91.5,
+      21.5
+     ]
+    },
+    "R": {
+     "file": "data/regions/v3d_R.obj",
+     "verts": 2994,
+     "centroid": [
+      14.9,
+      -87.1,
+      23.6
+     ]
+    }
+   }
+  },
+  {
+   "id": "v4v",
+   "name": "V4v",
+   "area": "hOc4v",
+   "stream": "ventral",
+   "parent": "occipital cortex",
+   "color": "#e09285",
+   "opacity": 0.14,
+   "meshes": {
+    "L": {
+     "file": "data/regions/v4v_L.obj",
+     "verts": 3002,
+     "centroid": [
+      -26.7,
+      -79.1,
+      -12.1
+     ]
+    },
+    "R": {
+     "file": "data/regions/v4v_R.obj",
+     "verts": 3000,
+     "centroid": [
+      32.6,
+      -77.6,
+      -11.5
+     ]
+    }
+   }
+  },
+  {
+   "id": "loa",
+   "name": "LOC-a",
+   "area": "hOc4la",
+   "stream": "ventral",
+   "parent": "occipital cortex",
+   "color": "#dd8f78",
+   "opacity": 0.14,
+   "meshes": {
+    "L": {
+     "file": "data/regions/loa_L.obj",
+     "verts": 2998,
+     "centroid": [
+      -45.0,
+      -79.2,
+      -0.0
+     ]
+    },
+    "R": {
+     "file": "data/regions/loa_R.obj",
+     "verts": 3002,
+     "centroid": [
+      48.1,
+      -74.6,
+      -0.9
+     ]
+    }
+   }
+  },
+  {
+   "id": "lop",
+   "name": "LOC-p",
+   "area": "hOc4lp",
+   "stream": "ventral",
+   "parent": "occipital cortex",
+   "color": "#da8d6c",
+   "opacity": 0.14,
+   "meshes": {
+    "L": {
+     "file": "data/regions/lop_L.obj",
+     "verts": 3002,
+     "centroid": [
+      -34.1,
+      -89.2,
+      6.8
+     ]
+    },
+    "R": {
+     "file": "data/regions/lop_R.obj",
+     "verts": 3002,
+     "centroid": [
+      36.8,
+      -86.6,
+      6.8
+     ]
+    }
+   }
+  },
+  {
+   "id": "fg1",
+   "name": "FG1",
+   "area": "FG1",
+   "stream": "ventral",
+   "parent": "fusiform gyrus",
+   "color": "#d78c60",
+   "opacity": 0.14,
+   "meshes": {
+    "L": {
+     "file": "data/regions/fg1_L.obj",
+     "verts": 1798,
+     "centroid": [
+      -30.0,
+      -69.2,
+      -10.9
+     ]
+    },
+    "R": {
+     "file": "data/regions/fg1_R.obj",
+     "verts": 1807,
+     "centroid": [
+      33.1,
+      -65.9,
+      -10.6
+     ]
+    }
+   }
+  },
+  {
+   "id": "fg2",
+   "name": "FG2",
+   "area": "FG2",
+   "stream": "ventral",
+   "parent": "fusiform gyrus",
+   "color": "#d48c54",
+   "opacity": 0.14,
+   "meshes": {
+    "L": {
+     "file": "data/regions/fg2_L.obj",
+     "verts": 2998,
+     "centroid": [
+      -42.6,
+      -67.2,
+      -15.9
+     ]
+    },
+    "R": {
+     "file": "data/regions/fg2_R.obj",
+     "verts": 2118,
+     "centroid": [
+      42.7,
+      -63.4,
+      -17.0
+     ]
+    }
+   }
+  },
+  {
+   "id": "fg3",
+   "name": "FG3",
+   "area": "FG3",
+   "stream": "ventral",
+   "parent": "fusiform gyrus",
+   "color": "#d18e47",
+   "opacity": 0.14,
+   "meshes": {
+    "L": {
+     "file": "data/regions/fg3_L.obj",
+     "verts": 3000,
+     "centroid": [
+      -30.9,
+      -46.6,
+      -15.7
+     ]
+    },
+    "R": {
+     "file": "data/regions/fg3_R.obj",
+     "verts": 2350,
+     "centroid": [
+      31.7,
+      -46.3,
+      -15.5
+     ]
+    }
+   }
+  },
+  {
+   "id": "fg4",
+   "name": "FG4",
+   "area": "FG4",
+   "stream": "ventral",
+   "parent": "fusiform gyrus",
+   "color": "#ce913b",
+   "opacity": 0.14,
+   "meshes": {
+    "L": {
+     "file": "data/regions/fg4_L.obj",
+     "verts": 3002,
+     "centroid": [
+      -43.2,
+      -47.8,
+      -19.5
+     ]
+    },
+    "R": {
+     "file": "data/regions/fg4_R.obj",
+     "verts": 2628,
+     "centroid": [
+      43.2,
+      -45.2,
+      -21.5
+     ]
+    }
+   }
+  },
+  {
+   "id": "v3a",
+   "name": "V3A",
+   "area": "hOc4d",
+   "stream": "dorsal",
+   "parent": "occipital cortex",
+   "color": "#85c9e0",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/v3a_L.obj",
+     "verts": 2996,
+     "centroid": [
+      -17.8,
+      -88.3,
+      25.9
+     ]
+    },
+    "R": {
+     "file": "data/regions/v3a_R.obj",
+     "verts": 2990,
+     "centroid": [
+      20.3,
+      -86.6,
+      26.0
+     ]
+    }
+   }
+  },
+  {
+   "id": "v6",
+   "name": "V6",
+   "area": "hOc6",
+   "stream": "dorsal",
+   "parent": "occipital cortex",
+   "color": "#7fc4df",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/v6_L.obj",
+     "verts": 990,
+     "centroid": [
+      -17.3,
+      -72.2,
+      15.4
+     ]
+    },
+    "R": {
+     "file": "data/regions/v6_R.obj",
+     "verts": 758,
+     "centroid": [
+      18.3,
+      -68.5,
+      18.2
+     ]
+    }
+   }
+  },
+  {
+   "id": "mt",
+   "name": "MT/V5",
+   "area": "hOc5",
+   "stream": "dorsal",
+   "parent": "occipital cortex",
+   "color": "#7abfde",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/mt_L.obj",
+     "verts": 822,
+     "centroid": [
+      -42.3,
+      -73.9,
+      0.8
+     ]
+    },
+    "R": {
+     "file": "data/regions/mt_R.obj",
+     "verts": 756,
+     "centroid": [
+      49.1,
+      -65.9,
+      3.8
+     ]
+    }
+   }
+  },
+  {
+   "id": "hip1",
+   "name": "hIP1",
+   "area": "hIP1",
+   "stream": "dorsal",
+   "parent": "intraparietal sulcus",
+   "color": "#75b9dc",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/hip1_L.obj",
+     "verts": 2998,
+     "centroid": [
+      -36.6,
+      -50.4,
+      41.0
+     ]
+    },
+    "R": {
+     "file": "data/regions/hip1_R.obj",
+     "verts": 2788,
+     "centroid": [
+      38.2,
+      -48.1,
+      40.8
+     ]
+    }
+   }
+  },
+  {
+   "id": "hip2",
+   "name": "hIP2",
+   "area": "hIP2",
+   "stream": "dorsal",
+   "parent": "intraparietal sulcus",
+   "color": "#70b3db",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/hip2_L.obj",
+     "verts": 2493,
+     "centroid": [
+      -45.6,
+      -42.2,
+      43.9
+     ]
+    },
+    "R": {
+     "file": "data/regions/hip2_R.obj",
+     "verts": 2194,
+     "centroid": [
+      44.7,
+      -37.9,
+      45.9
+     ]
+    }
+   }
+  },
+  {
+   "id": "hip3",
+   "name": "hIP3",
+   "area": "hIP3",
+   "stream": "dorsal",
+   "parent": "intraparietal sulcus",
+   "color": "#6aadda",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/hip3_L.obj",
+     "verts": 2998,
+     "centroid": [
+      -31.0,
+      -50.3,
+      46.6
+     ]
+    },
+    "R": {
+     "file": "data/regions/hip3_R.obj",
+     "verts": 2998,
+     "centroid": [
+      33.8,
+      -49.5,
+      50.5
+     ]
+    }
+   }
+  },
+  {
+   "id": "hip4",
+   "name": "hIP4",
+   "area": "hIP4",
+   "stream": "dorsal",
+   "parent": "intraparietal sulcus",
+   "color": "#65a6d9",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/hip4_L.obj",
+     "verts": 2293,
+     "centroid": [
+      -31.4,
+      -80.5,
+      24.4
+     ]
+    },
+    "R": {
+     "file": "data/regions/hip4_R.obj",
+     "verts": 2193,
+     "centroid": [
+      37.8,
+      -75.2,
+      22.6
+     ]
+    }
+   }
+  },
+  {
+   "id": "hip5",
+   "name": "hIP5",
+   "area": "hIP5",
+   "stream": "dorsal",
+   "parent": "intraparietal sulcus",
+   "color": "#60a0d7",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/hip5_L.obj",
+     "verts": 2631,
+     "centroid": [
+      -28.9,
+      -73.5,
+      36.6
+     ]
+    },
+    "R": {
+     "file": "data/regions/hip5_R.obj",
+     "verts": 2140,
+     "centroid": [
+      34.0,
+      -68.7,
+      34.7
+     ]
+    }
+   }
+  },
+  {
+   "id": "hip6",
+   "name": "hIP6",
+   "area": "hIP6",
+   "stream": "dorsal",
+   "parent": "intraparietal sulcus",
+   "color": "#5b99d6",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/hip6_L.obj",
+     "verts": 2691,
+     "centroid": [
+      -31.4,
+      -66.4,
+      46.3
+     ]
+    },
+    "R": {
+     "file": "data/regions/hip6_R.obj",
+     "verts": 2366,
+     "centroid": [
+      36.9,
+      -61.8,
+      46.0
+     ]
+    }
+   }
+  },
+  {
+   "id": "hip7",
+   "name": "hIP7",
+   "area": "hIP7",
+   "stream": "dorsal",
+   "parent": "intraparietal sulcus",
+   "color": "#5591d5",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/hip7_L.obj",
+     "verts": 1435,
+     "centroid": [
+      -23.6,
+      -80.2,
+      30.0
+     ]
+    },
+    "R": {
+     "file": "data/regions/hip7_R.obj",
+     "verts": 2762,
+     "centroid": [
+      30.6,
+      -78.0,
+      27.1
+     ]
+    }
+   }
+  },
+  {
+   "id": "hip8",
+   "name": "hIP8",
+   "area": "hIP8",
+   "stream": "dorsal",
+   "parent": "intraparietal sulcus",
+   "color": "#508ad3",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/hip8_L.obj",
+     "verts": 2721,
+     "centroid": [
+      -18.8,
+      -73.5,
+      42.9
+     ]
+    },
+    "R": {
+     "file": "data/regions/hip8_R.obj",
+     "verts": 2650,
+     "centroid": [
+      26.2,
+      -70.4,
+      41.0
+     ]
+    }
+   }
+  },
+  {
+   "id": "spl7a",
+   "name": "7A",
+   "area": "7A",
+   "stream": "dorsal",
+   "parent": "superior parietal lobule",
+   "color": "#4b82d2",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/spl7a_L.obj",
+     "verts": 2985,
+     "centroid": [
+      -20.0,
+      -59.4,
+      62.1
+     ]
+    },
+    "R": {
+     "file": "data/regions/spl7a_R.obj",
+     "verts": 2998,
+     "centroid": [
+      22.9,
+      -59.6,
+      60.7
+     ]
+    }
+   }
+  },
+  {
+   "id": "spl7p",
+   "name": "7P",
+   "area": "7P",
+   "stream": "dorsal",
+   "parent": "superior parietal lobule",
+   "color": "#467ad1",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/spl7p_L.obj",
+     "verts": 2916,
+     "centroid": [
+      -8.4,
+      -75.6,
+      51.9
+     ]
+    },
+    "R": {
+     "file": "data/regions/spl7p_R.obj",
+     "verts": 2998,
+     "centroid": [
+      14.7,
+      -72.5,
+      55.3
+     ]
+    }
+   }
+  },
+  {
+   "id": "spl5l",
+   "name": "5L",
+   "area": "5L",
+   "stream": "dorsal",
+   "parent": "superior parietal lobule",
+   "color": "#4072cf",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/spl5l_L.obj",
+     "verts": 2998,
+     "centroid": [
+      -17.4,
+      -43.8,
+      66.8
+     ]
+    },
+    "R": {
+     "file": "data/regions/spl5l_R.obj",
+     "verts": 3002,
+     "centroid": [
+      14.4,
+      -47.4,
+      68.4
+     ]
+    }
+   }
+  },
+  {
+   "id": "spl5m",
+   "name": "5M",
+   "area": "5M",
+   "stream": "dorsal",
+   "parent": "superior parietal lobule",
+   "color": "#3b6ace",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/spl5m_L.obj",
+     "verts": 2996,
+     "centroid": [
+      -6.9,
+      -40.7,
+      56.5
+     ]
+    },
+    "R": {
+     "file": "data/regions/spl5m_R.obj",
+     "verts": 2854,
+     "centroid": [
+      7.1,
+      -42.6,
+      58.8
+     ]
+    }
+   }
+  },
+  {
+   "id": "sts2",
+   "name": "STS2 (ILF\u2192)",
+   "area": "STS2",
+   "stream": "temporal",
+   "parent": "superior temporal sulcus",
+   "color": "#e0b685",
+   "opacity": 0.15,
+   "meshes": {
+    "L": {
+     "file": "data/regions/sts2_L.obj",
+     "verts": 2998,
+     "centroid": [
+      -57.2,
+      -9.6,
+      -14.7
+     ]
+    },
+    "R": {
+     "file": "data/regions/sts2_R.obj",
+     "verts": 3001,
+     "centroid": [
+      58.0,
+      -9.3,
+      -14.9
+     ]
+    }
+   }
+  },
+  {
+   "id": "pf",
+   "name": "PF",
+   "area": "PF",
+   "stream": "parietal",
+   "parent": "inferior parietal",
+   "color": "#88dd92",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/pf_L.obj",
+     "verts": 3000,
+     "centroid": [
+      -59.5,
+      -37.6,
+      40.8
+     ]
+    },
+    "R": {
+     "file": "data/regions/pf_R.obj",
+     "verts": 2997,
+     "centroid": [
+      62.9,
+      -31.1,
+      32.4
+     ]
+    }
+   }
+  },
+  {
+   "id": "pft",
+   "name": "PFt",
+   "area": "PFt",
+   "stream": "parietal",
+   "parent": "inferior parietal",
+   "color": "#77d78c",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/pft_L.obj",
+     "verts": 2998,
+     "centroid": [
+      -55.1,
+      -26.6,
+      39.2
+     ]
+    },
+    "R": {
+     "file": "data/regions/pft_R.obj",
+     "verts": 3000,
+     "centroid": [
+      54.9,
+      -22.3,
+      41.0
+     ]
+    }
+   }
+  },
+  {
+   "id": "pfm",
+   "name": "PFm",
+   "area": "PFm",
+   "stream": "parietal",
+   "parent": "inferior parietal",
+   "color": "#65d289",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/pfm_L.obj",
+     "verts": 2992,
+     "centroid": [
+      -54.0,
+      -53.2,
+      41.5
+     ]
+    },
+    "R": {
+     "file": "data/regions/pfm_R.obj",
+     "verts": 2998,
+     "centroid": [
+      56.3,
+      -42.5,
+      40.8
+     ]
+    }
+   }
+  },
+  {
+   "id": "pga",
+   "name": "PGa",
+   "area": "PGa",
+   "stream": "parietal",
+   "parent": "inferior parietal",
+   "color": "#53cd89",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/pga_L.obj",
+     "verts": 2998,
+     "centroid": [
+      -47.6,
+      -61.8,
+      42.3
+     ]
+    },
+    "R": {
+     "file": "data/regions/pga_R.obj",
+     "verts": 2994,
+     "centroid": [
+      54.7,
+      -53.4,
+      35.1
+     ]
+    }
+   }
+  },
+  {
+   "id": "hpo1",
+   "name": "hPO1",
+   "area": "hPO1",
+   "stream": "parietal",
+   "parent": "parieto-occipital sulcus",
+   "color": "#41c88b",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/hpo1_L.obj",
+     "verts": 2936,
+     "centroid": [
+      -16.7,
+      -82.4,
+      36.5
+     ]
+    },
+    "R": {
+     "file": "data/regions/hpo1_R.obj",
+     "verts": 2502,
+     "centroid": [
+      22.8,
+      -81.9,
+      37.2
+     ]
+    }
+   }
+  },
+  {
+   "id": "ofc",
+   "name": "OFC (IFOF\u2192)",
+   "area": "Fo4",
+   "stream": "frontal",
+   "parent": "orbitofrontal cortex",
+   "color": "#d98cc3",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/ofc_L.obj",
+     "verts": 1462,
+     "centroid": [
+      -28.9,
+      53.0,
+      -14.7
+     ]
+    },
+    "R": {
+     "file": "data/regions/ofc_R.obj",
+     "verts": 1596,
+     "centroid": [
+      33.0,
+      54.5,
+      -15.6
+     ]
+    }
+   }
+  },
+  {
+   "id": "presma",
+   "name": "preSMA (SLF I\u2192)",
+   "area": "6ma",
+   "stream": "frontal",
+   "parent": "medial superior frontal",
+   "color": "#d582b9",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/presma_L.obj",
+     "verts": 3002,
+     "centroid": [
+      -4.1,
+      5.6,
+      57.8
+     ]
+    },
+    "R": {
+     "file": "data/regions/presma_R.obj",
+     "verts": 3000,
+     "centroid": [
+      5.2,
+      4.2,
+      58.0
+     ]
+    }
+   }
+  },
+  {
+   "id": "dlpfc",
+   "name": "DLPFC (SLF II\u2192)",
+   "area": "IFS3",
+   "stream": "frontal",
+   "parent": "inferior frontal sulcus",
+   "color": "#d279ae",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/dlpfc_L.obj",
+     "verts": 934,
+     "centroid": [
+      -40.7,
+      19.6,
+      28.6
+     ]
+    },
+    "R": {
+     "file": "data/regions/dlpfc_R.obj",
+     "verts": 956,
+     "centroid": [
+      37.5,
+      21.7,
+      31.0
+     ]
+    }
+   }
+  },
+  {
+   "id": "broca",
+   "name": "Broca 44 (SLF III\u2192)",
+   "area": "44",
+   "stream": "frontal",
+   "parent": "inferior frontal gyrus",
+   "color": "#cf6fa2",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/broca_L.obj",
+     "verts": 3001,
+     "centroid": [
+      -52.3,
+      11.5,
+      16.4
+     ]
+    },
+    "R": {
+     "file": "data/regions/broca_R.obj",
+     "verts": 2999,
+     "centroid": [
+      55.3,
+      14.7,
+      15.2
+     ]
+    }
+   }
+  },
+  {
+   "id": "fp1",
+   "name": "Fp1 (pole)",
+   "area": "Fp1",
+   "stream": "frontal",
+   "parent": "frontal pole",
+   "color": "#cc6595",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/fp1_L.obj",
+     "verts": 2998,
+     "centroid": [
+      -17.6,
+      64.5,
+      -2.3
+     ]
+    },
+    "R": {
+     "file": "data/regions/fp1_R.obj",
+     "verts": 3002,
+     "centroid": [
+      16.7,
+      65.4,
+      -1.8
+     ]
+    }
+   }
+  },
+  {
+   "id": "sfg8",
+   "name": "8d1 (SFG)",
+   "area": "8d1",
+   "stream": "frontal",
+   "parent": "superior frontal",
+   "color": "#c85b88",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/sfg8_L.obj",
+     "verts": 3002,
+     "centroid": [
+      -14.9,
+      24.8,
+      60.3
+     ]
+    },
+    "R": {
+     "file": "data/regions/sfg8_R.obj",
+     "verts": 2996,
+     "centroid": [
+      15.2,
+      26.5,
+      60.1
+     ]
+    }
+   }
+  },
+  {
+   "id": "op6",
+   "name": "Op6 (operc.)",
+   "area": "Op6",
+   "stream": "frontal",
+   "parent": "frontal operculum",
+   "color": "#c55179",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/op6_L.obj",
+     "verts": 2129,
+     "centroid": [
+      -51.5,
+      4.4,
+      5.2
+     ]
+    },
+    "R": {
+     "file": "data/regions/op6_R.obj",
+     "verts": 1570,
+     "centroid": [
+      53.7,
+      6.9,
+      3.8
+     ]
+    }
+   }
+  },
+  {
+   "id": "pcg6",
+   "name": "6d1 (premotor)",
+   "area": "6d1",
+   "stream": "frontal",
+   "parent": "precentral",
+   "color": "#c2476a",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/pcg6_L.obj",
+     "verts": 2994,
+     "centroid": [
+      -19.8,
+      -13.0,
+      67.8
+     ]
+    },
+    "R": {
+     "file": "data/regions/pcg6_R.obj",
+     "verts": 2994,
+     "centroid": [
+      20.7,
+      -11.8,
+      66.2
+     ]
+    }
+   }
+  },
+  {
+   "id": "gap_fi",
+   "name": "Frontal (unparc.)",
+   "area": "Frontal-I",
+   "stream": "gap",
+   "parent": "GapMap",
+   "color": "#a6b6bf",
+   "opacity": 0.07,
+   "meshes": {
+    "L": {
+     "file": "data/regions/gap_fi_L.obj",
+     "verts": 2998,
+     "centroid": [
+      -25.9,
+      41.8,
+      25.6
+     ]
+    },
+    "R": {
+     "file": "data/regions/gap_fi_R.obj",
+     "verts": 2997,
+     "centroid": [
+      26.0,
+      42.5,
+      24.3
+     ]
+    }
+   }
+  },
+  {
+   "id": "gap_fii",
+   "name": "Frontal-II (unparc.)",
+   "area": "Frontal-II",
+   "stream": "gap",
+   "parent": "GapMap",
+   "color": "#95a3b2",
+   "opacity": 0.07,
+   "meshes": {
+    "L": {
+     "file": "data/regions/gap_fii_L.obj",
+     "verts": 2994,
+     "centroid": [
+      -44.8,
+      -3.3,
+      44.4
+     ]
+    },
+    "R": {
+     "file": "data/regions/gap_fii_R.obj",
+     "verts": 2975,
+     "centroid": [
+      40.9,
+      -0.7,
+      43.9
+     ]
+    }
+   }
+  },
+  {
+   "id": "gap_fo",
+   "name": "Fronto-occipital (unparc.)",
+   "area": "Frontal-to-Occipital",
+   "stream": "gap",
+   "parent": "GapMap",
+   "color": "#838fa5",
+   "opacity": 0.07,
+   "meshes": {
+    "L": {
+     "file": "data/regions/gap_fo_L.obj",
+     "verts": 2990,
+     "centroid": [
+      -10.2,
+      -30.6,
+      30.7
+     ]
+    },
+    "R": {
+     "file": "data/regions/gap_fo_R.obj",
+     "verts": 2993,
+     "centroid": [
+      9.5,
+      -34.3,
+      33.5
+     ]
+    }
+   }
+  },
+  {
+   "id": "gap_tp",
+   "name": "Temporo-parietal (unparc.)",
+   "area": "Temporal-to-Parietal",
+   "stream": "gap",
+   "parent": "GapMap",
+   "color": "#717998",
+   "opacity": 0.07,
+   "meshes": {
+    "L": {
+     "file": "data/regions/gap_tp_L.obj",
+     "verts": 2990,
+     "centroid": [
+      -47.9,
+      -27.9,
+      -14.8
+     ]
+    },
+    "R": {
+     "file": "data/regions/gap_tp_R.obj",
+     "verts": 2975,
+     "centroid": [
+      43.0,
+      -33.8,
+      -9.3
+     ]
+    }
+   }
+  }
+ ]
+}

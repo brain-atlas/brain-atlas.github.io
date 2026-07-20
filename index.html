@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'" />
+  <meta name="referrer" content="no-referrer" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <title>Brain Atlas — Visual Pathway in 3D</title>
+</head>
+<body>
+  <div id="stage"></div>
+
+  <div class="overlay">
+    <header class="mast">
+      <p class="eyebrow">Visual pathway · 3D</p>
+      <h1>Eye → V1, inside a real brain</h1>
+      <p>Each visual-field quadrant's signal, traced as animated flow through a translucent
+         cortical surface: crossing at the chiasm, relayed at the LGN, then sorted upper-vs-lower
+         into the optic radiations before it lands in V1.</p>
+    </header>
+
+    <aside class="legend panel">
+      <h2>Retina → LGN → V1</h2>
+      <div class="leg-item"><span class="dot" data-q="ru"></span><span><b>Right eye</b>, nasal fibres → cross at the chiasm → <b>left</b> LGN</span></div>
+      <div class="leg-item"><span class="dot" data-q="lu"></span><span><b>Left eye</b>, nasal fibres → cross at the chiasm → <b>right</b> LGN</span></div>
+      <div class="leg-item"><span class="dot" style="background:#ffb060"></span><span><b>LGN → V1</b> along the real optic radiation (amber fibres; tracers fired down them)</span></div>
+      <p class="leg-note">Each hemisphere sees the <b>opposite</b> half-field: nasal-retinal fibres cross at
+        the chiasm, the LGN relays, then the optic radiation carries the signal back to V1 — the upper field
+        detouring forward through Meyer's loop.<br><br><b>Real data (MNI152):</b> cortical surface, the amber
+        <b>optic radiation</b> (HCP-1065 streamlines — real fibre density), and the <b>LGN, V1, V2, hOc5</b>
+        region shells (Jülich-Brain maximum-probability map — consistent cytoarchitectonic boundaries). <b>Schematic:</b> the anterior eye → chiasm → LGN segment. The right
+        optic radiation is mirrored from the left until real right-side streamlines are added.</p>
+    </aside>
+
+    <section class="console panel">
+      <h2>Layers</h2>
+      <div id="layers" class="layer-tree"></div>
+      <h2 style="margin-top:16px">Controls</h2>
+      <button id="play" class="play on"><span class="glyph" id="playGlyph">❚❚</span><span id="playTxt">Pause flow</span></button>
+      <div class="row"><span class="lbl">Flow speed</span><input id="speed" type="range" min="15" max="160" value="70"><span class="val" id="speedV">70</span></div>
+      <div class="row"><span class="lbl">Cutaway</span><input id="clip" type="range" min="0" max="100" value="0"><span class="val" id="clipV">0%</span></div>
+      <div class="row"><span class="lbl">Tissue</span><input id="tissue" type="range" min="0" max="100" value="16"><span class="val" id="tissueV">16</span></div>
+      <div class="row" style="margin-top:14px"><span class="lbl">View</span>
+        <div class="btns" style="margin-left:auto">
+          <button data-view="lateral">Side</button>
+          <button data-view="top">Top</button>
+          <button data-view="post">Back</button>
+          <button data-view="ant">Front</button>
+        </div>
+      </div>
+      <div class="btns" style="margin-top:12px">
+        <button id="spin" class="wide on">Auto-rotate</button>
+        <button id="reset" class="wide">Reset</button>
+      </div>
+      <nav class="legal" aria-label="Licensing and citation">
+        <span class="credit">Data include WU-Minn Human Connectome Project derivatives.</span>
+        <a href="./DATA_LICENSES.md">Data licenses &amp; citations</a>
+        <span aria-hidden="true">·</span>
+        <a href="./THIRD_PARTY_NOTICES.md">Software notices</a>
+        <span aria-hidden="true">·</span>
+        <a href="./CITATION.cff">Cite this viewer</a>
+        <span aria-hidden="true">·</span>
+        <a href="https://github.com/brain-atlas/brain-atlas.github.io">Source code</a>
+      </nav>
+    </section>
+
+    <div class="hint"><b>drag</b> to orbit &nbsp;·&nbsp; <b>right-drag / two-finger</b> to pan &nbsp;·&nbsp; <b>scroll</b> to zoom &nbsp;·&nbsp; <b>cutaway</b> slices the near hemisphere</div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
