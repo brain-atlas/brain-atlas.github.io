@@ -91,7 +91,12 @@ The Virtual Brain (<https://www.thevirtualbrain.org/>); neurolib
 
 ## Candidate backlog
 
-These ideas need focused research and a Bead before implementation:
+The approved spatial-lesson roadmap, including tract-to-region endpoint mapping,
+now lives in Beads epic `brain-atlas-zmq` and
+[the approved UX plan](../.pi/plans/brain-atlas-zmq-ux-requirements-roadmap.md).
+Scientific-fidelity and model-traceability cleanup is tracked separately in
+Beads epic `brain-atlas-yum`.
+The remaining ideas below need focused research and a Bead before implementation:
 
 - Replace the schematic anterior pathway with licensed optic-nerve, chiasm,
   optic-tract, and eye meshes. Keep any approximation clearly labelled.
@@ -99,8 +104,6 @@ These ideas need focused research and a Bead before implementation:
   laminae, so the view must remain explicitly demonstrative.
 - Add retinotopic eye inputs and labels that track visual-field information before
   and after the chiasm.
-- Map structural tracts to endpoint areas for bidirectional browsing. Do not add
-  directional animation to undirected association bundles.
 - Add a lesion tool that clips a tract and explains the expected visual-field
   deficit.
 
