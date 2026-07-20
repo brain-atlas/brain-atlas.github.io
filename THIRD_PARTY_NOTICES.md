@@ -7,11 +7,11 @@ software or data assets; data terms are listed in
 
 ## three.js
 
-The deployed application includes [three.js](https://threejs.org/) 0.171.0.
+The deployed application includes [three.js](https://threejs.org/) 0.185.1.
 
 > The MIT License
 >
-> Copyright © 2010-2024 three.js authors
+> Copyright © 2010-2026 three.js authors
 >
 > Permission is hereby granted, free of charge, to any person obtaining a copy
 > of this software and associated documentation files (the "Software"), to deal
@@ -32,5 +32,5 @@ The deployed application includes [three.js](https://threejs.org/) 0.171.0.
 > SOFTWARE.
 
 Build-time dependencies and their declared licenses are recorded in
-`package-lock.json`. They are predominantly MIT-licensed, with ISC and
-BSD-3-Clause components.
+`package-lock.json`. They include MIT, MPL-2.0, Apache-2.0, BSD-3-Clause, ISC,
+and 0BSD components.

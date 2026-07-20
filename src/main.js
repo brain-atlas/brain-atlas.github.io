@@ -57,7 +57,9 @@ const sceneFromMni = new THREE.Matrix4()
   .multiply(new THREE.Matrix4().makeRotationX(-Math.PI / 2))
   .multiply(new THREE.Matrix4().makeTranslation(-MNI_CENTER.x, -MNI_CENTER.y, -MNI_CENTER.z));
 const mniGroup = new THREE.Group();
-mniGroup.matrixAutoUpdate = false; mniGroup.matrix.copy(sceneFromMni);
+mniGroup.matrixAutoUpdate = false;
+mniGroup.matrix.copy(sceneFromMni);
+mniGroup.matrixWorldNeedsUpdate = true;
 scene.add(mniGroup);
 
 // ---------------------------------------------------------------------------

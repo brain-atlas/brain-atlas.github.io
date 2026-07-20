@@ -22,7 +22,7 @@ export default defineConfig({
     target: 'es2022',
     outDir: 'dist',
     assetsInlineLimit: 0,
-    // Three.js and its addons form a deliberate ~612 kB (~155 kB gzip) cacheable chunk.
+    // Three.js and its addons form a deliberate ~646 kB (~163 kB gzip) cacheable chunk.
     // Keep warning on unexpected chunks that grow beyond that known dependency.
     chunkSizeWarningLimit: 650,
     rollupOptions: {
