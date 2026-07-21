@@ -143,8 +143,9 @@ Meshing and tractography run offline and emit small JSON/OBJ/GLB into
   use the seeded inhibited event engine in `src/activity/association-impulses.js`
   plus the thin `updateTractImpulses` renderer adapter; v1 samples direction per
   accepted event from explicit bilateral 50/50 metadata in
-  `public/data/tract_activity.json`. SWM keeps its separate zero-mean vibration
-  updater (`updateSwm`).
+  `public/data/tract_activity.json`. SWM keeps its separate analytically
+  zero-mean vibration model in `src/activity/swm-vibration.js`; `updateSwm`
+  remains the thin renderer adapter.
 - Region material is a fresnel rim-fade shader (near-transparent interior, bright
   silhouette) so overlapping shells read as outlines.
 - Development mode exposes `window.__view = { camera, controls, scene, THREE }`

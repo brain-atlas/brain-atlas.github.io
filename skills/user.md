@@ -77,8 +77,9 @@ Describe layers by what the data supports (this mirrors the honesty rule in
   of two endpoint directions from an explicit 50/50 assumption; diffusion MRI
   does not measure polarity. Timing, inhibition, and speed are illustrative.
 - **Superficial fibres** (`swm`, violet) — REAL cortico-cortical short-fibre
-  ORIENTATION as a static grain; the dots vibrate ALONG each contour with **no net
-  direction** (none is measured). Swing width ∝ local fibre length.
+  ORIENTATION as a static grain; dots follow independently phased, bounded
+  sinusoids around fixed contour homes with **no net direction** (none is
+  measured). Swing width ∝ local fibre length.
 - **Anterior pathway** (`anterior`) — SCHEMATIC eye→chiasm→LGN and its flow dots.
 - **Structures** — Jülich-Brain MPM region shells (real bilateral, fresnel
   outlines).

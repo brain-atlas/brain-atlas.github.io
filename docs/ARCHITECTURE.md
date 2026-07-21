@@ -4,7 +4,7 @@
 
 ## Runtime shape
 
-`src/main.js` owns the scene, loaders, renderer integration, and layer panel. `src/pathways.js` contains only schematic anterior-pathway coordinates. `src/activity/association-impulses.js` owns the renderer-independent seeded event engine, inhibition math, canonical endpoint mapping, and plain-data pool adapter. The Three.js adapter stays in `main.js`. Keep tightly shared scene concerns in `main.js`; extract modules only when they have an independent interface or testable lifecycle.
+`src/main.js` owns the scene, loaders, renderer integration, and layer panel. `src/pathways.js` contains only schematic anterior-pathway coordinates. `src/activity/association-impulses.js` owns the renderer-independent seeded event engine, inhibition math, canonical endpoint mapping, and plain-data pool adapter. `src/activity/swm-vibration.js` owns bounded home/amplitude sampling and analytic zero-mean contour motion. The Three.js adapters stay in `main.js`. Keep tightly shared scene concerns in `main.js`; extract modules only when they have an independent interface or testable lifecycle.
 
 Every anatomical layer is a child of `mniGroup`:
 
@@ -32,7 +32,10 @@ handles deterministic visibility, cap, contour selection, and expiration before
 `updateTractImpulses` uploads positions and colours. Endpoint-only geometric
 heuristics orient A/B labels independently of source array order. Equal channel
 counts keep JSON sampling density from becoming an activity-rate claim.
-Superficial-white-matter vibration remains separate.
+Superficial-white-matter vibration remains separate. Each dot's structural
+amplitude is sampled with a home interval that keeps the complete sinusoid inside
+contour margins, so `updateSwm` needs no asymmetric endpoint clipping; reduced
+motion settles each dot at its fixed home.
 
 ## Data loading
 

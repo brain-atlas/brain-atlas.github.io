@@ -13,6 +13,7 @@ import {
   createAssociationImpulseEngine,
   updateAssociationEventPool,
 } from './activity/association-impulses.js';
+import { createSwmVibration, vibrationContourParameter } from './activity/swm-vibration.js';
 
 // ---------------------------------------------------------------------------
 const stage = document.getElementById('stage');
@@ -505,9 +506,18 @@ const MAXSWM = 15000;
 const swmGeo = new THREE.BufferGeometry();
 swmGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(MAXSWM * 3), 3).setUsage(THREE.DynamicDrawUsage));
 swmGeo.setDrawRange(0, 0);
-swmGroup.add(new THREE.Points(swmGeo, new THREE.PointsMaterial({
+const swmPoints = new THREE.Points(swmGeo, new THREE.PointsMaterial({
   color: 0xc8bdf0, size: 0.85, map: SPR, transparent: true, opacity: 0.7,
-  depthWrite: false, blending: THREE.AdditiveBlending, sizeAttenuation: true })));
+  depthWrite: false, blending: THREE.AdditiveBlending, sizeAttenuation: true }));
+swmPoints.name = 'swm-vibration';
+swmGroup.add(swmPoints);
+if (import.meta.env.DEV) {
+  window.__view.swm = {
+    points: swmPoints,
+    dots: swmDots,
+    get modelTime() { return swmT; },
+  };
+}
 
 function loadSwm() {
   fetch('/data/swm_fibres.json').then((r) => r.json()).then((data) => {
@@ -521,11 +531,13 @@ function loadSwm() {
       for (let i = 0; i < poly.length - 1; i++) linePos[h].push(poly[i].x, poly[i].y, poly[i].z, poly[i + 1].x, poly[i + 1].y, poly[i + 1].z);
       // One vibrating dot per fibre. AMPLITUDE (arc fraction) is set so the dot's
       // physical swing ≈ 0.5 × the LOCAL-MEAN fibre length here — longer bundles
-      // vibrate wider (structure). Random phase so there's no coherent travel.
+      // vibrate wider (structure). Home is sampled from the amplitude-safe interval,
+      // and random phase prevents coherent travel without endpoint clipping.
       const Lown = (lens && lens[idx]) || 25, Ll = (lloc && lloc[idx]) || Lown;
-      const amp = Math.max(0.08, Math.min(0.45, 0.5 * Ll / Lown));
-      swmDots.push({ poly, hemi: h, home: 0.35 + Math.random() * 0.30,
-        amp, freq: 0.35 + Math.random() * 0.7, phase: Math.random() * Math.PI * 2 });
+      swmDots.push({ poly, hemi: h, ...createSwmVibration({
+        ownLength: Lown,
+        localMeanLength: Ll,
+      }) });
     });
     // Static tangent grain: faint additive lines in a desaturated violet so the
     // superficial system reads as its own layer, distinct from the cool-white
@@ -544,8 +556,7 @@ function updateSwm(dt) {
   let k = 0;
   for (const d of swmDots) {
     if (!hemiState[d.hemi]) continue;
-    let t = d.home + d.amp * Math.sin(2 * Math.PI * d.freq * swmT + d.phase);   // vibrate ALONG the contour
-    t = t < 0.03 ? 0.03 : t > 0.97 ? 0.97 : t;
+    const t = reduce ? d.home : vibrationContourParameter(d, swmT);   // bounded vibration ALONG the contour
     writeFibrePoint(d.poly, t, arr, k * 3); k++;
   }
   swmGeo.setDrawRange(0, k);

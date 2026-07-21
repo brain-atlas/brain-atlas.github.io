@@ -127,8 +127,10 @@ overall anatomy reads correctly**:
   physiologically patterned but illustrative firing model (superposition +
   thinning, with refractoriness and bursts), not recorded spikes. Biological
   time is dilated so the pattern is legible on screen.
-- **Undirected activity:** superficial-WM/U-fibre dots vibrate along real
-  bilateral contours without assigned travel direction.
+- **Undirected activity:** superficial-WM/U-fibre dots follow bounded sinusoids
+  around fixed homes on real bilateral contours. Amplitude derives from local
+  fibre-length structure, random phase prevents coherent travel, and no endpoint
+  clipping biases the contour-parameter mean or assigns a travel direction.
 - **Mirrored:** the right optic radiation is a sagittal mirror of the left until
   independently generated right-side streamlines replace it. Region,
   association-tract, and superficial-WM geometry are real bilateral data.
