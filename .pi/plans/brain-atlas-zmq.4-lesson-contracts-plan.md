@@ -213,7 +213,7 @@ node --test test/catalog.test.js test/lesson-parser.test.js
 - Create: `src/lesson/renderer-adapter.js`
 - Create: `test/renderer-adapter.test.js`
 
-**Interface:** `createRendererAdapter(bindings)` returns `{ apply(snapshot), capture() }`.
+**Interface:** `createRendererAdapter(bindings, catalog)` returns `{ apply(snapshot), capture() }`; the catalog validates every stable reference before renderer bindings run.
 `bindings` must provide explicit `setCamera`, `setVisibility`, `setHemispheres`,
 `setCutaway`, `setMaterial`, `setPlayback`, `setSelection`, `setVisual`, and
 `setControlPolicy` functions plus plain `capture`. `apply` returns a frozen captured
