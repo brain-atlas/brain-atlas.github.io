@@ -1,7 +1,15 @@
 export const TEST_CATALOG = {
-  entityIds: ['pathway.anterior', 'region.lgn', 'tract.ilf'],
+  entityIds: [
+    'pathway.anterior',
+    'region.dlpfc',
+    'region.lgn',
+    'region.spl7a',
+    'tract.ilf',
+    'tract.slf1',
+  ],
   visualIds: ['atlas', 'retinotopy-diagram'],
   cameraPresets: {
+    dorsal: { position: [120, 260, 80], target: [0, 0, 0] },
     home: { position: [200, 120, 300], target: [0, 0, 0] },
     lateral: { position: [300, 15, 0], target: [0, 0, 0] },
   },
