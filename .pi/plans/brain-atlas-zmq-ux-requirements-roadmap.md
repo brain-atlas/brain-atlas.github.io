@@ -1,7 +1,7 @@
 # Spatial Lessons UX Requirements and Roadmap
 
 **Issue:** `brain-atlas-zmq` — Define UX goals and interaction roadmap
-**Status:** Approved product roadmap; the companion UX/UI specification remains a separate design gate
+**Status:** Approved product roadmap and companion UX/UI baseline
 **Design approval:** `brain-atlas-7b8` — approved 2026-07-20
 **Delivery amendment:** `brain-atlas-8y7` — approved 2026-07-21
 **Date:** 2026-07-20; materially amended 2026-07-21
@@ -216,7 +216,7 @@ Scientific traceability must be easy to find without competing with the spatial 
 - Distinguish intentional design decisions from known gaps. Flag an open gap only when it could materially alter interpretation, confidence, or intended use, or when higher-fidelity work is planned.
 - Apply the same disclosure taxonomy to desktop, touch, reduced-motion, and no-WebGL presentations.
 
-Beads epic `brain-atlas-yum` owns the cross-project scientific-fidelity and traceability audit. Its disclosure design (`brain-atlas-yum.3`) is a dependency of the lesson/entity contract so provenance is part of the data model rather than late UI copy.
+Beads epic `brain-atlas-yum` owns the cross-project scientific-fidelity and traceability audit. The approved disclosure design in `.pi/plans/brain-atlas-yum.3-model-fidelity-disclosure.md` is a dependency of the lesson/entity contract so provenance is part of the data model rather than late UI copy.
 
 ### External images
 
@@ -364,7 +364,7 @@ The approved policy is:
 - keep geometry provenance separate from activity-model provenance; and
 - disclose methods, assumptions, uncertainty, limitations, and material gaps without making the primary lesson unusably warning-heavy.
 
-P0 bug `brain-atlas-zmq.2` removes the current unlabelled array-order travel and uses the established direction-neutral texture as an interim correction. It does not establish a permanent ban on explicitly modelled directional activity. `brain-atlas-yum.2` must define the inference unit, evidence, probability/uncertainty model, sampling behavior, reproducibility, labelling, and reconciliation with `AGENTS.md` before a separate reviewed implementation Bead can add modeled travel. The optic radiation and schematic anterior pathway remain independently justified directed cases.
+P0 bug `brain-atlas-zmq.2` removed the unlabelled array-order travel as an interim correction. The approved specification `.pi/plans/brain-atlas-yum.2-association-impulse-model.md` and completed runtime Bead `brain-atlas-zmq.16` superseded that interim texture with seeded inhibited impulses whose direction is sampled per event from explicit bilateral 50/50 metadata. Streamline order remains non-polar; timing and direction assumptions are disclosed. The optic radiation and schematic anterior pathway remain independently justified directed cases, while superficial WM/U-fibres retain bounded zero-mean vibration.
 
 ## 11. Sequenced work graph
 
@@ -438,7 +438,8 @@ Before each structural child Bead, create an issue-specific implementation plan 
 ## 14. Documentation impact
 
 - This file is the approved product design/roadmap source.
-- `.pi/plans/brain-atlas-zmq.15-lesson-ux-ui-spec.md` is the implementation-facing UX/UI and behavioral acceptance source.
+- `.pi/plans/brain-atlas-zmq.15-lesson-ux-ui-spec.md` is the approved implementation-facing UX/UI and behavioral acceptance source.
+- `.pi/plans/brain-atlas-yum.3-model-fidelity-disclosure.md` is the approved taxonomy, materiality, state, and interaction source for **Model & sources**.
 - Keep `README.md` and `docs/ARCHITECTURE.md` describing current behavior until implementation lands.
 - Remove endpoint-mapping from the uncommitted candidate backlog because it is now actionable Bead `brain-atlas-zmq.10`.
 - Use fidelity epic `brain-atlas-yum` to create the public traceability inventory and reconcile `AGENTS.md`, architecture, provenance, and UI terminology before changing representation rules.

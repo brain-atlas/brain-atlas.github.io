@@ -4,9 +4,13 @@
 
 **Parent:** `brain-atlas-zmq` — Define UX goals and interaction roadmap
 
-**Date:** 2026-07-20
+**Date:** 2026-07-21
 
-**Status:** Draft design gate; runtime implementation remains blocked pending approval
+**Status:** Approved implementation-facing UX/UI baseline
+
+**Approval:** `brain-atlas-6nn`
+
+**Fidelity disclosure:** `.pi/plans/brain-atlas-yum.3-model-fidelity-disclosure.md`
 
 ## 1. Purpose
 
@@ -68,11 +72,32 @@ The interface should feel like an **editorial scientific instrument**: editorial
 | Visual selector | Shows the atlas first and declared supplementary visuals in authored order. Selection is explicit and keyboard/touch operable. |
 | Scene navigation | Provides Previous, Next, Restart scene, and Skip animation only when those actions apply. Disabled actions state why. |
 | Control-policy cue | Communicates `guided`, `look`, or `explore` before a learner attempts a disallowed manipulation. |
-| Model & sources | Shows concise geometry and behavior statuses and opens methods, citations, assumptions, uncertainty, limitations, and material gaps without losing scene context. |
+| Model & sources | Implements the approved progressive-disclosure contract in `.pi/plans/brain-atlas-yum.3-model-fidelity-disclosure.md`: separate geometry/activity statuses plus one-step methods, assumptions, uncertainty, material limitations, sources, and licenses without losing scene context. |
 | Entity preview | Provides highlight plus short label on hover/focus or first touch selection. It contains no citation-length content. |
 | Details inspector | Is nonmodal on wide layouts and a focus-managed sheet on compact layouts. It preserves the active scene. |
 | Import/validation | Separates editing, validation results, and the action that replaces the active lesson. |
 | Fallback content | Retains prose, scene summaries, supplementary-image alternatives, captions, sources, and navigation when WebGL is unavailable. |
+
+### 4.1 Scientific disclosure contract
+
+- Keep one quiet, persistent **Model & sources** control beside the active visual or
+  fallback; do not bury it in settings.
+- Show geometry and activity as separate text statuses. Mixed representations may
+  combine **Data-derived**, **Derived**, **Mirrored**, **Modeled**, **Schematic**,
+  **Illustrative**, and **Display-only** terms, but never collapse them into one trust
+  score or badge.
+- Lesson scenes reference curated fidelity records. They may add one short contextual
+  note when a representation first matters, but they do not redefine provenance,
+  assumptions, or citations.
+- The detailed wide panel or compact focus-managed sheet preserves scene, camera,
+  filters, playback, and lesson position; closing restores focus to its invoker.
+- Apply the approved materiality rule before showing known limitations. Internal work
+  IDs and harmless engineering details remain out of learner-facing copy.
+- Unknown records and incompatible versions fail import validation. Reduced-motion and
+  no-WebGL paths expose the same statuses, limitations, and sources.
+
+The taxonomy, record semantics, state table, materiality test, copy order, and
+behavior scenarios are normative by reference to the fidelity-disclosure plan.
 
 ## 5. Responsive layout contract
 
@@ -152,6 +177,7 @@ These are structural requirements, not fixed breakpoints. The layout should resp
 | External image failure | Reserved layout remains stable; alt text, caption, credit, and source link remain usable. |
 | WebGL unavailable | Prose, scene summaries, media alternatives, sources, and lesson navigation remain usable. |
 | Unsupported lesson version | No partial activation; explain the supported versions and how to recover. |
+| Fidelity record unavailable | State that status is unavailable; never substitute a reassuring default. Preserve lesson prose and scene context while exposing recovery or diagnostics. |
 
 ## 8. Accessibility requirements
 
@@ -179,7 +205,7 @@ Use Given/When/Then scenarios for:
 
 Do not use BDD to judge visual hierarchy, anatomical legibility, responsive composition, motion quality, or GPU performance. Verify those with annotated wide/compact wireframes, browser screenshots at a small device/zoom matrix, console checks, performance measurements, and human visual review.
 
-Scenarios begin in this specification. Stable behavior should later map to ordinary unit or browser tests; scenario text and automated tests must not become duplicate sources of truth.
+Scenarios begin in this specification. Stable behavior should later map to ordinary unit or browser tests; scenario text and automated tests must not become duplicate sources of truth. The mixed-status, keyboard/focus, unknown-fidelity-ID, and no-WebGL disclosure scenarios in `.pi/plans/brain-atlas-yum.3-model-fidelity-disclosure.md` are part of this baseline by reference.
 
 ### Scenario: Return from free exploration
 
@@ -232,11 +258,16 @@ And the alt text, caption, credit, and source link remain available
 And the learner can switch back to the atlas
 ```
 
-## 10. Design-gate acceptance
+## 10. Approval and change control
 
-Before `brain-atlas-zmq.4` or later lesson UI implementation begins:
+Human approval `brain-atlas-6nn` covers this specification's wide and compact
+structures and the integrated progressive fidelity-disclosure design.
 
-- the user has reviewed this specification's wide and compact structures;
-- child Beads cite the relevant journeys, surfaces, states, and scenarios;
-- any unresolved interaction decision is recorded as a Beads-backed blocker rather than invented during implementation;
-- low-fidelity visual exploration may refine composition, but it may not weaken the roadmap's accessibility, fidelity, security, or one-transform constraints.
+- Child Beads cite the relevant journeys, surfaces, states, scenarios, and fidelity
+  contract rather than inventing interaction behavior.
+- Any newly discovered material interaction decision becomes a Beads-backed blocker
+  or approved amendment.
+- Low-fidelity visual exploration may refine composition, but it may not weaken the
+  roadmap's accessibility, fidelity, security, or one-transform constraints.
+- Approval authorizes contract and implementation planning; it does not freeze final
+  pixel values or waive per-Bead code, test, visual-review, and documentation gates.
