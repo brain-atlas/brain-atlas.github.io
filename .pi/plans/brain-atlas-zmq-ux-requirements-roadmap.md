@@ -1,8 +1,10 @@
 # Spatial Lessons UX Requirements and Roadmap
 
 **Issue:** `brain-atlas-zmq` — Define UX goals and interaction roadmap
+**Status:** Approved product roadmap; the companion UX/UI specification remains a separate design gate
 **Design approval:** `brain-atlas-7b8` — approved 2026-07-20
-**Date:** 2026-07-20
+**Delivery amendment:** `brain-atlas-8y7` — approved 2026-07-21
+**Date:** 2026-07-20; materially amended 2026-07-21
 **Branch:** `main`
 
 **Goal:** Evolve the current visual-pathway viewer into a static, agent-authorable spatial-lesson system for neuroscience without weakening anatomical accuracy, free exploration, mobile capability, or the one-transform architecture.
@@ -14,6 +16,8 @@
 - [ ] The retina→chiasm→LGN→optic-radiation→V1 reference lesson works through vertical scrolling and explicit scene controls on desktop and mobile.
 - [ ] Every lesson can enter a prepared free-exploration state and return to the exact lesson scene.
 - [ ] Atlas entities can expose an unobtrusive highlight/short-label preview and explicit cited details through capability-equivalent pointer, keyboard, and touch interactions.
+- [ ] A lesson remains readable as ordinary Markdown while explicit, typed scene directives provide deterministic machine behavior.
+- [ ] Wide and compact UI structures, component states, focus behavior, and failure recovery are approved before runtime implementation.
 - [ ] Lesson scenes preserve the one-MNI-transform and honesty-of-representation invariants.
 - [ ] Reduced-motion and no-WebGL users receive useful settled/readable alternatives.
 - [ ] The static publication workflow remains viable; no planned requirement depends on WebAssembly or a service.
@@ -64,6 +68,20 @@ After a successful lesson, the learner should be able to:
 - a general-purpose page builder;
 - direct authenticated GitHub pull-request creation;
 - runtime tractography, meshing, atlas registration, or subject-data processing.
+
+### MVP delivery and scale-out strategy
+
+The releasable MVP is the complete `.4-.9` learning journey: stable lesson/entity/scene contracts, the retina→V1 reference lesson, local paste/import and validation, prepared free exploration, cited entity inspection, and integrated mobile/accessibility/performance hardening. Foundation modules and the first scrolling slice are implementation increments, not a substitute for a functional product.
+
+Build each increment as a thin, usable vertical slice while preserving only the seams needed for near-term expansion:
+
+- new tutorials should primarily add validated content and scene data, not new orchestration code;
+- new brain regions should primarily add entity metadata and renderer bindings, not lesson-specific branches;
+- lesson, scene, entity, and visual contracts remain domain-neutral while renderer adapters own Three.js details;
+- one normalized runtime path serves checked-in lessons, local imports, and the future reviewed library; and
+- before declaring a contract stable, exercise it with the retina→V1 lesson plus at least one small second tutorial/entity fixture from another brain region.
+
+Avoid both extremes: do not hard-code the MVP around vision, and do not delay a working MVP for a speculative framework, plugin system, or abstraction without a concrete second use.
 
 ## 2. Information architecture
 
@@ -130,11 +148,21 @@ The UI must communicate the active policy before the learner attempts a disabled
 
 ## 4. Authoring contract
 
-Use Markdown prose with YAML frontmatter and fenced `atlas-scene` directives. Markdown keeps lessons readable in Obsidian and reviewable in pull requests; fenced directives remain discoverable and machine-validatable.
+### Decision: Markdown prose with explicit scene directives
 
-Example:
+A lesson is one ordinary `.md` document, not a YAML document wrapped in Markdown:
 
-````markdown
+- YAML frontmatter contains only document-wide metadata and reusable visual declarations.
+- Normal Markdown contains the learner-facing title, headings, prose, lists, links, and image references.
+- A fenced `atlas-scene` block contains a typed YAML scene snapshot. It starts a semantic scene; rendered content after it belongs to that scene until the next scene block.
+- Body content before the first scene is the lesson introduction.
+- Headings and lists retain ordinary document meaning. The runtime does not infer camera, anatomy, layout, or playback behavior from prose structure.
+
+This hybrid is deliberate. YAML-only would make long-form lessons awkward to read and edit in Obsidian. Inferring runtime behavior from headings or list shapes would create hidden, brittle semantics. Explicit inert fences keep the source readable while giving agents, validators, and reviewers an unambiguous contract. The outer four-backtick fence below exists only so this roadmap can display a literal lesson file containing its own three-backtick scene block.
+
+Literal `lesson.md` example:
+
+````text
 ---
 title: How visual fields cross
 schema: 1
@@ -148,6 +176,10 @@ visuals:
     source: https://example.org/source
 ---
 
+# How visual fields cross
+
+This lesson follows retinal fibres from the eyes to V1.
+
 ```atlas-scene
 id: chiasm
 visual: atlas
@@ -157,6 +189,8 @@ controls:
   mode: look
 layout: dominant
 ```
+
+## Crossing at the chiasm
 
 Nasal retinal fibres cross at the optic chiasm…
 ````
@@ -267,7 +301,21 @@ Capability parity does not mean identical layouts or gestures.
 
 The current mobile rules only reposition fixed overlays (`src/style.css:115-120`), and several current sliders/generated tree controls lack robust accessible names or keyboard semantics (`index.html:43-45`, `src/main.js:570-599`). Treat those as foundation gaps, not acceptable lesson behavior.
 
-## 7. Static hosting and WebAssembly decision
+## 7. UX and UI specification strategy
+
+Product requirements, interface design, and verification need different forms of documentation:
+
+1. **This roadmap** owns user outcomes, system boundaries, representation invariants, and sequencing.
+2. **The companion UX/UI specification** at `.pi/plans/brain-atlas-zmq.15-lesson-ux-ui-spec.md` owns end-to-end journeys, wide/compact layout anatomy, interface surfaces and states, focus/input behavior, visual direction, and failure recovery.
+3. **Annotated wireframes and state matrices** judge hierarchy, responsive composition, control discoverability, and visual states. These concerns should not be forced into prose scenarios.
+4. **Selective BDD-style scenarios** specify deterministic, user-observable behavior such as scene hysteresis, non-destructive validation, Explore/Return restoration, reduced motion, input parity, and failed-media recovery.
+5. **Automated and visual checks** implement those requirements at the appropriate layer: pure tests for parsing/state, browser tests for interaction/focus, and screenshot plus human review for spatial legibility and polish.
+
+BDD is appropriate for the stateful interaction contract, but not as the sole UX or QA method. Do not add Cucumber or a Gherkin runner merely to adopt the notation. Keep the reviewed scenarios in the UX/UI specification, then map stable behavior to ordinary unit or browser tests. Visual hierarchy, anatomical readability, responsive balance, animation quality, and performance still require annotated designs, browser screenshots, measurements, and human review.
+
+Design gate `brain-atlas-zmq.15` must be approved before the lesson/entity contract in `brain-atlas-zmq.4`. This prevents schema and renderer work from silently inventing unresolved interface behavior.
+
+## 8. Static hosting and WebAssembly decision
 
 ### Decision: remain static
 
@@ -294,7 +342,7 @@ Reconsider WASM only if the project intentionally moves heavy offline neuroimagi
 
 The project currently requires these operations to remain offline. A flatmap morph, shader-based SWM vibration, lesson library, and atlas inspector do not require WASM.
 
-## 8. Idea triage
+## 9. Idea triage
 
 | Category | Ideas |
 |---|---|
@@ -304,33 +352,46 @@ The project currently requires these operations to remain offline. A flatmap mor
 | Later | Static reviewed lesson library; entity search/catalog; canonical lesson export; optional backend-free GitHub contribution handoff. |
 | Avoid | Continuous scroll-scrubbing; literal horizontal page scrolling; arbitrary executable lesson code; automatic layout guessing; hover-only facts; direct Obsidian sync or GitHub OAuth in MVP; runtime tractography/meshing. |
 
-## 9. Current correctness finding
+## 10. Association-tract activity policy
 
-`src/main.js:389-411` advances association-tract points monotonically from streamline parameter 0→1. Individual axons conduct directionally, but these HCP/DSI tractography streamlines are unoriented geometric inferences: point order does not encode soma-to-terminal polarity or net bundle flow. Visible travel along array order therefore conflicts with `AGENTS.md:31-35`.
+The original review made two observations: `src/main.js:389-411` advances association-tract points monotonically from streamline parameter 0→1, and HCP/DSI streamline point order does not measure soma-to-terminal polarity. Those observations still stand. The earlier conclusion that association-tract activity must remain direction-neutral in all future designs was superseded by decisions `brain-atlas-m9k` and `brain-atlas-sh7`.
 
-P0 bug `brain-atlas-zmq.2` removes that known artifact now using a direction-neutral fallback. Decisions `brain-atlas-m9k` and `brain-atlas-sh7` also establish a later modeling policy: estimate source→endpoint direction probabilities from the best cited evidence, and permit an explicitly labelled symmetric 50/50 stochastic assumption when evidence is absent. This assumption is modeled activity, not measured polarity and not evidence that one rendered streamline is one axon. `brain-atlas-yum.2` must define the inference unit, sources, probability/uncertainty model, sampling behavior, and reconciliation with the current no-unsupported-direction invariant before a separate implementation Bead adds such travel. The optic radiation and schematic anterior pathway remain valid directed exceptions because their direction is justified independently by the represented biology.
+The approved policy is:
 
-## 10. Sequenced work graph
+- never present streamline array order as measured biological direction;
+- prefer cited source→endpoint probability estimates when defensible evidence exists;
+- permit an explicitly labelled symmetric 50/50 stochastic model when direction evidence is absent;
+- keep geometry provenance separate from activity-model provenance; and
+- disclose methods, assumptions, uncertainty, limitations, and material gaps without making the primary lesson unusably warning-heavy.
+
+P0 bug `brain-atlas-zmq.2` removes the current unlabelled array-order travel and uses the established direction-neutral texture as an interim correction. It does not establish a permanent ban on explicitly modelled directional activity. `brain-atlas-yum.2` must define the inference unit, evidence, probability/uncertainty model, sampling behavior, reproducibility, labelling, and reconciliation with `AGENTS.md` before a separate reviewed implementation Bead can add modeled travel. The optic radiation and schematic anterior pathway remain independently justified directed cases.
+
+## 11. Sequenced work graph
 
 | Order | Bead | Priority | Outcome | Dependencies |
 |---:|---|---:|---|---|
-| 0a | `brain-atlas-zmq.2` | P0 | Remove arbitrary array-order direction using the current direction-neutral fallback. | None |
+| 0a | `brain-atlas-zmq.2` | P0 | Remove unlabelled array-order travel using the current direction-neutral fallback. | None |
 | 0b | `brain-atlas-eoa` | P3 | Complete pending Three.js/Vite API migration before overlapping runtime work. | None |
 | 0c | `brain-atlas-yum.1` | P1 | Inventory scientific claims, models, sources, assumptions, and limitations. | None |
 | 1a | `brain-atlas-yum.2` | P1 | Define the evidence-informed association-direction probability model and 50/50 fallback semantics. | `yum.1`, `zmq.2` |
 | 1b | `brain-atlas-yum.3` | P1 | Design unobtrusive progressive model-fidelity disclosure. | `yum.1` |
-| 2 | `brain-atlas-zmq.4` | P1 | Define domain-neutral lesson/entity/scene contracts and tests. | `zmq.2`, `eoa`, `yum.3` |
-| 3 | `brain-atlas-zmq.5` | P1 | Build retina→V1 scrolling vertical slice from an in-memory lesson object. | `.4` |
-| 4 | `brain-atlas-zmq.6` | P1 | Add local Markdown paste/import, sanitization, validation, and linked images. | `.5` |
-| 5 | `brain-atlas-zmq.7` | P1 | Add scene-controlled free-exploration pop-out. | `.6` |
-| 6 | `brain-atlas-zmq.8` | P2 | Add selection and cited inspector foundation with starter entities. | `.7` |
-| 7 | `brain-atlas-zmq.9` | P1 | Harden integrated mobile, accessibility, fallback, and performance behavior. | `.8` |
-| 8a | `brain-atlas-zmq.10` | P2 | Research/map defensible tract-region relationships. | `.8` |
-| 8b | `brain-atlas-zmq.12` | P3 | Add entity search/catalog over shared metadata. | `.8` |
-| 9 | `brain-atlas-zmq.11` | P3 | Publish a reviewed static lesson library. | `.6`, `.9` |
-| 10 | `brain-atlas-zmq.13` | P4 | Add canonical export and optional safe GitHub contribution handoff. | `.11` |
+| 2 | `brain-atlas-zmq.15` | P1 | Approve lesson journeys, responsive UI anatomy, interface states, and selective BDD scenarios. | `yum.3` |
+| 3 | `brain-atlas-zmq.4` | P1 | Define domain-neutral lesson/entity/scene contracts and tests. | `zmq.2`, `eoa`, `yum.3`, `.15` |
+| 4 | `brain-atlas-zmq.5` | P1 | Build retina→V1 scrolling vertical slice from an in-memory lesson object. | `.4` |
+| 5 | `brain-atlas-zmq.6` | P1 | Add local Markdown paste/import, sanitization, validation, and linked images. | `.5` |
+| 6 | `brain-atlas-zmq.7` | P1 | Add scene-controlled free-exploration pop-out. | `.6` |
+| 7 | `brain-atlas-zmq.8` | P2 | Add selection and cited inspector foundation with starter entities. | `.7` |
+| 8 | `brain-atlas-zmq.9` | P1 | Harden integrated mobile, accessibility, fallback, and performance behavior. | `.8` |
+| 9a | `brain-atlas-zmq.10` | P2 | Research/map defensible tract-region relationships. | `.8` |
+| 9b | `brain-atlas-zmq.12` | P3 | Add entity search/catalog over shared metadata. | `.8` |
+| 10 | `brain-atlas-zmq.11` | P3 | Publish a reviewed static lesson library. | `.6`, `.9` |
+| 11 | `brain-atlas-zmq.13` | P4 | Add canonical export and optional safe GitHub contribution handoff. | `.11` |
 
-## 11. Task execution guidance
+## 12. Task execution guidance
+
+### UX/UI design gate (`brain-atlas-zmq.15`)
+
+Review `.pi/plans/brain-atlas-zmq.15-lesson-ux-ui-spec.md` before implementation. Refine its annotated wide/compact structures, state matrix, visual direction, and behavior scenarios until they are sufficient for `.4-.9` to cite without inventing interactions. BDD remains selective requirements notation; do not add a dedicated runner unless later automation demonstrates a concrete need.
 
 ### Foundation (`brain-atlas-zmq.4`)
 
@@ -368,15 +429,16 @@ Use renderer commands and stable entity IDs rather than simulating clicks on the
 
 Do not postpone basic semantics or responsive design until this task; each preceding task must meet its own accessibility acceptance. This task is the integrated verification and performance gate before declaring the first lesson release-ready.
 
-## 12. File conflicts and execution strategy
+## 13. File conflicts and execution strategy
 
-Most core tasks will touch `src/main.js`, `src/style.css`, and lesson modules. Execute `brain-atlas-zmq.4-.9` serially in dependency order rather than parallel worktrees. Content research (`.10`) and search design (`.12`) may proceed in parallel after the inspector contract stabilizes, provided they do not edit the same entity registry simultaneously.
+Complete design gate `brain-atlas-zmq.15` before runtime work. Most core tasks will then touch `src/main.js`, `src/style.css`, and lesson modules. Execute `brain-atlas-zmq.4-.9` serially in dependency order rather than parallel worktrees. Content research (`.10`) and search design (`.12`) may proceed in parallel after the inspector contract stabilizes, provided they do not edit the same entity registry simultaneously.
 
 Before each structural child Bead, create an issue-specific implementation plan if its final file boundaries or migration steps are not already obvious from the source at that time.
 
-## 13. Documentation impact
+## 14. Documentation impact
 
-- This file is the approved design/roadmap source.
+- This file is the approved product design/roadmap source.
+- `.pi/plans/brain-atlas-zmq.15-lesson-ux-ui-spec.md` is the implementation-facing UX/UI and behavioral acceptance source.
 - Keep `README.md` and `docs/ARCHITECTURE.md` describing current behavior until implementation lands.
 - Remove endpoint-mapping from the uncommitted candidate backlog because it is now actionable Bead `brain-atlas-zmq.10`.
 - Use fidelity epic `brain-atlas-yum` to create the public traceability inventory and reconcile `AGENTS.md`, architecture, provenance, and UI terminology before changing representation rules.
@@ -386,4 +448,4 @@ Before each structural child Bead, create an issue-specific implementation plan 
 
 Plan saved to: `.pi/plans/brain-atlas-zmq-ux-requirements-roadmap.md`.
 
-Recommended next skill for implementation: `test-driven-development` for each behavior-changing child Bead; `verification-before-completion` before closing it. No implementation is authorized by this planning artifact alone.
+Roadmap execution was authorized by the user through delivery decision `brain-atlas-8y7` on 2026-07-21. Begin with unblocked P0 correction `brain-atlas-zmq.2` and preserve the documented dependency order. Design gate `brain-atlas-zmq.15` and its fidelity dependency must still be approved before `brain-atlas-zmq.4` or later lesson-contract/UI implementation. Use `test-driven-development` for each behavior-changing child Bead and `verification-before-completion` before closing it.
