@@ -20,19 +20,21 @@ async function loadReferenceLesson() {
   return { source, catalog, result: parseLesson(source, catalog) };
 }
 
-test('reference lesson parses with an unnumbered entry view and four complete scenes', async () => {
+test('reference lesson parses with an unnumbered entry view and eight complete scenes', async () => {
   const { result } = await loadReferenceLesson();
   assert.equal(result.ok, true, JSON.stringify(result.diagnostics));
-  assert.equal(result.value.title, 'From retina to V1');
+  assert.equal(result.value.title, 'Early vision: from retina to cortical streams');
   assert.equal(result.value.status, 'draft');
   assert.equal(result.value.entrySceneId, 'orientation');
   assert.deepEqual(result.value.scenes.map(({ id }) => id), [
     'orientation', 'nasal-crossing', 'lgn-relay', 'optic-radiation', 'v1-arrival',
+    'extrastriate-branching', 'ventral-stream', 'dorsal-stream', 'streams-integrate',
   ]);
   const presentation = createLessonPresentation(result.value);
   assert.equal(presentation.entryScene.id, 'orientation');
   assert.deepEqual(presentation.scenes.map(({ id }) => id), [
     'nasal-crossing', 'lgn-relay', 'optic-radiation', 'v1-arrival',
+    'extrastriate-branching', 'ventral-stream', 'dorsal-stream', 'streams-integrate',
   ]);
 
   const snapshotKeys = [
@@ -52,7 +54,12 @@ test('reference lesson uses only visual-system entities and never inherits omitt
   const { result } = await loadReferenceLesson();
   const allowed = new Set([
     'layer.cortex', 'layer.labels', 'pathway.anterior', 'pathway.optic-radiation',
-    'region.lgn', 'region.v1',
+    'region.lgn', 'region.v1', 'region.v2', 'region.v3v', 'region.v3d', 'region.v4v',
+    'region.loa', 'region.lop', 'region.fg1', 'region.fg2', 'region.fg3', 'region.fg4',
+    'region.v3a', 'region.v6', 'region.mt',
+    'region.hip1', 'region.hip2', 'region.hip3', 'region.hip4', 'region.hip5',
+    'region.hip6', 'region.hip7', 'region.hip8',
+    'region.spl7a', 'region.spl7p', 'region.spl5l', 'region.spl5m',
   ]);
   for (const scene of result.value.scenes) {
     assert.equal(scene.snapshot.visibility.entities.every((id) => allowed.has(id)), true);
@@ -83,25 +90,61 @@ test('crossing scene explicitly discloses the omitted uncrossed temporal pathway
 
 test('posterior scenes disclose mirrored geometry and illustrative event timing', async () => {
   const { result } = await loadReferenceLesson();
-  const posterior = result.value.scenes.slice(3).map(({ proseMarkdown }) => proseMarkdown).join('\n');
+  const posterior = result.value.scenes.slice(3, 5).map(({ proseMarkdown }) => proseMarkdown).join('\n');
 
   assert.match(posterior, /right side is mirrored/i);
   assert.match(posterior, /timing.+illustrative/is);
   assert.match(posterior, /not recorded spikes|not measured physiology/i);
-  for (const scene of result.value.scenes.slice(3)) {
+  for (const scene of result.value.scenes.slice(3, 5)) {
     assert.deepEqual(scene.fidelityIds, [
       'fidelity.julich-regions', 'fidelity.optic-radiation',
     ]);
   }
 });
 
+test('cortical stream scenes use atlas regions without claiming tract connectivity', async () => {
+  const { result } = await loadReferenceLesson();
+  const streamScenes = result.value.scenes.slice(5);
+  const streamProse = streamScenes.map(({ proseMarkdown }) => proseMarkdown).join('\n');
+
+  assert.equal(streamScenes.length, 4);
+  for (const scene of streamScenes) {
+    assert.deepEqual(scene.fidelityIds, ['fidelity.cortex', 'fidelity.julich-regions']);
+    assert.equal(scene.snapshot.visibility.entities.some((id) => id.startsWith('tract.')), false);
+  }
+  assert.match(streamProse, /does not demonstrate a connection/i);
+  assert.match(streamProse, /does not display their connections/i);
+  assert.match(streamProse, /two-stream framework.+not a complete wiring\s+diagram/is);
+});
+
 test('reference content keeps prose educational while curated records own sources', async () => {
   const { source, result } = await loadReferenceLesson();
   assert.doesNotMatch(source, /brain-atlas-[a-z0-9.]+/i);
   assert.doesNotMatch(source, /https?:\/\//i);
-  assert.doesNotMatch(source, /association tract|streamline array order/i);
-  assert.match(result.value.introductionMarkdown, /four scenes/i);
+  assert.doesNotMatch(source, /streamline array order/i);
+  assert.match(result.value.introductionMarkdown, /eight scenes/i);
   assert.equal(result.value.scenes.every(({ title }) => typeof title === 'string' && title.length > 0), true);
+});
+
+test('reference content teaches a mechanistic model with active checks and transfer', async () => {
+  const { source, result } = await loadReferenceLesson();
+  const instructionalProse = result.value.scenes.slice(1)
+    .map(({ proseMarkdown }) => proseMarkdown)
+    .join('\n');
+
+  assert.match(result.value.introductionMarkdown, /predict before you begin/i);
+  assert.match(result.value.introductionMarkdown, /should be able to/i);
+  assert.match(instructionalProse, /center-surround receptive field/i);
+  assert.match(instructionalProse, /parallel neural descriptions/i);
+  assert.match(instructionalProse, /retinotopic/i);
+  assert.match(instructionalProse, /cortical magnification/i);
+  assert.match(instructionalProse, /retrieval check|cumulative retrieval/i);
+  assert.match(instructionalProse, /predict, then check/i);
+  assert.match(instructionalProse, /homonymous hemianopia/i);
+  assert.match(instructionalProse, /vision for\s+perception/i);
+  assert.match(instructionalProse, /vision for\s+action/i);
+  assert.match(instructionalProse, /interacting,\s+branched, recurrent networks/i);
+  assert.doesNotMatch(source, /Previous and Next|Skip moves|camera transition|viewer controls/i);
 });
 
 test('adjacent lesson cameras do not cross the OrbitControls vertical-pole seam', async () => {
