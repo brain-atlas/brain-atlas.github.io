@@ -152,6 +152,13 @@ Meshing and tractography run offline and emit small JSON/OBJ/GLB into
   for scripted framing and screenshots — see `skills/user.md`. Vite removes this
   guarded hook from production builds; verify that before a public release.
 - `src/pathways.js` holds the schematic anterior-pathway control points.
+- `src/lesson/` holds the versioned renderer-independent lesson foundation:
+  strict Markdown/YAML/Ajv parsing, stable entity/fidelity catalogs, complete
+  immutable scene snapshots, pure allowlisted commands, and the single renderer
+  adapter port. Read `src/lesson/SPEC.md` before changing this subsystem. It must
+  not import Three.js/DOM state, infer behavior from prose, execute lesson code,
+  or introduce another coordinate transform; Three.js bindings and lesson UI are
+  intentionally deferred to their owning Beads.
 
 ## Run and verify
 ```bash

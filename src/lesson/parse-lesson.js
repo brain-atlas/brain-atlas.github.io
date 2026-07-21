@@ -79,14 +79,25 @@ function walk(node, parent, visit) {
 }
 
 function isAllowedUrl(url, { image = false } = {}) {
-  const normalized = url.trim().replace(/[\u0000-\u0020]+/g, '');
+  const normalized = url.trim();
   if (!image && normalized.startsWith('#')) return true;
-  return /^https:\/\//i.test(normalized);
+  try {
+    const parsed = new URL(normalized);
+    return parsed.protocol === 'https:' && Boolean(parsed.hostname) &&
+      parsed.username === '' && parsed.password === '';
+  } catch {
+    return false;
+  }
 }
 
 function markdownDiagnostics(tree, visuals) {
   const diagnostics = [];
-  const visualBySource = new Map(visuals.map((visual) => [visual.src, visual]));
+  const declaredImages = new Set(visuals.map(({ src, alt }) => `${src}\0${alt}`));
+  const definitions = new Map();
+  walk(tree, null, (node) => {
+    if (node.type === 'definition') definitions.set(node.identifier, node);
+  });
+
   walk(tree, null, (node, parent) => {
     const at = {
       line: node.position?.start.line ?? 1,
@@ -99,7 +110,8 @@ function markdownDiagnostics(tree, visuals) {
         { ...at, path: '' },
       ));
     }
-    if ((node.type === 'link' || node.type === 'image') && !isAllowedUrl(node.url, { image: node.type === 'image' })) {
+    if ((node.type === 'link' || node.type === 'image' || node.type === 'definition') &&
+        !isAllowedUrl(node.url, { image: node.type === 'image' })) {
       diagnostics.push(createDiagnostic(
         'markdown.unsafe-url',
         `URL scheme is not allowed: ${node.url}`,
@@ -107,8 +119,17 @@ function markdownDiagnostics(tree, visuals) {
       ));
     }
     if (node.type === 'image' && isAllowedUrl(node.url, { image: true })) {
-      const declared = visualBySource.get(node.url);
-      if (!declared || !node.alt || node.alt !== declared.alt) {
+      if (!node.alt || !declaredImages.has(`${node.url}\0${node.alt}`)) {
+        diagnostics.push(createDiagnostic(
+          'markdown.undeclared-image',
+          'Markdown images must match a declared visual source and alt text',
+          { ...at, path: '' },
+        ));
+      }
+    }
+    if (node.type === 'imageReference') {
+      const definition = definitions.get(node.identifier);
+      if (!definition || !node.alt || !declaredImages.has(`${definition.url}\0${node.alt}`)) {
         diagnostics.push(createDiagnostic(
           'markdown.undeclared-image',
           'Markdown images must match a declared visual source and alt text',
@@ -208,6 +229,20 @@ export function parseLesson(source, catalog) {
     diagnostics.push(...schemaDiagnostics);
     if (schemaDiagnostics.length > 0) continue;
 
+    const fidelityDiagnostics = (yaml.value.fidelity ?? []).flatMap((id, fidelityIndex) => {
+      if (sceneContext.fidelityIds?.includes(id)) return [];
+      const path = `/fidelity/${fidelityIndex}`;
+      return [createDiagnostic(
+        'scene.semantic.unknown-fidelity',
+        `unknown fidelity ID: ${id}`,
+        {
+          ...(yaml.locate(path) ?? yaml.origin),
+          path,
+        },
+      )];
+    });
+    diagnostics.push(...fidelityDiagnostics);
+
     if (sceneIds.has(yaml.value.id)) {
       diagnostics.push(createDiagnostic(
         'lesson.scene.duplicate',
@@ -227,6 +262,7 @@ export function parseLesson(source, catalog) {
       scenes.push({
         id: yaml.value.id,
         title: yaml.value.title ?? null,
+        fidelityIds: [...(yaml.value.fidelity ?? [])].sort(),
         proseMarkdown: trimMarkdown(source, node.position.end.offset, nextOffset),
         snapshot,
         source: {

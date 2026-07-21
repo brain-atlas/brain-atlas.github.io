@@ -3,7 +3,9 @@
 Status: current-state audit for `brain-atlas-yum.1` (2026-07-21). This document
 separates anatomical geometry from the viewer's activity and display models.
 `DATA_LICENSES.md` remains the authority for redistribution terms and full source
-citations.
+citations. `public/data/fidelity.json` is the concise runtime/lesson disclosure
+projection of this inventory; update both atomically, and treat this document as the
+current-state authority if they conflict.
 
 ## Classification vocabulary
 

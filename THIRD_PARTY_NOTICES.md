@@ -33,7 +33,9 @@ The deployed application includes [three.js](https://threejs.org/) 0.185.1.
 
 ## Lesson parsing and validation
 
-The deployed application includes:
+The lesson-contract source depends on the following runtime packages. They are
+present in the source distribution and lockfile; the static viewer bundle includes
+them when a lesson entry point imports the contract subsystem:
 
 - [unified](https://github.com/unifiedjs/unified) 11.0.5 — MIT — Copyright © 2015 Titus Wormer;
 - [remark-parse](https://github.com/remarkjs/remark/tree/main/packages/remark-parse) 11.0.0 — MIT — Copyright © 2014 Titus Wormer;

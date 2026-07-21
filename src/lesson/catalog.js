@@ -77,6 +77,7 @@ export function createLessonCatalog(entityManifest, fidelityManifest) {
   return deepFreeze({
     schemaVersion: entityManifest.schemaVersion,
     entityIds: entities.map(({ id }) => id),
+    fidelityIds: fidelityRecords.map(({ id }) => id),
     visualIds: ['atlas'],
     cameraPresets: sortedObject(
       Object.entries(entityManifest.cameraPresets)

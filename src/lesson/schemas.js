@@ -4,6 +4,20 @@ import { createDiagnostic, schemaErrorsToDiagnostics } from './diagnostics.js';
 
 export const LESSON_SCHEMA_VERSION = 1;
 
+const ajv = new Ajv({ allErrors: true, strict: true });
+ajv.addFormat('https-url', {
+  type: 'string',
+  validate(value) {
+    try {
+      const url = new URL(value);
+      return url.protocol === 'https:' && Boolean(url.hostname) &&
+        url.username === '' && url.password === '';
+    } catch {
+      return false;
+    }
+  },
+});
+
 const stableId = {
   type: 'string',
   minLength: 1,
@@ -11,7 +25,7 @@ const stableId = {
 };
 
 const nonEmptyText = { type: 'string', minLength: 1 };
-const httpsUrl = { type: 'string', pattern: '^https://' };
+const httpsUrl = { type: 'string', format: 'https-url' };
 const hemisphereFilter = {
   type: 'object',
   additionalProperties: false,
@@ -228,6 +242,11 @@ export const sceneDirectiveSchema = {
       uniqueItems: true,
       items: stableId,
     },
+    fidelity: {
+      type: 'array',
+      uniqueItems: true,
+      items: stableId,
+    },
     hemispheres: {
       type: 'object',
       additionalProperties: false,
@@ -309,7 +328,6 @@ const commandSchemas = Object.fromEntries(
   }]),
 );
 
-const ajv = new Ajv({ allErrors: true, strict: true });
 const lessonMetadataValidator = ajv.compile(lessonMetadataSchema);
 const sceneDirectiveValidator = ajv.compile(sceneDirectiveSchema);
 const entityCatalogValidator = ajv.compile(entityCatalogSchema);

@@ -89,13 +89,53 @@ flake.nix            Nix devShell (Node 22 + git); blocks bare `nix develop`
 .envrc / .envrc.d/   direnv: `use flake`, then npm install on entry
 index.html           app shell + control/legend overlay
 src/main.js          Three.js scene, data loading, activity integration, and controls
-src/activity/        renderer-independent seeded impulse and vibration math
+src/activity/        renderer-independent seeded impulse, vibration, and timing math
+src/lesson/          versioned lesson parsing, catalogs, scene state, and adapter port
 src/pathways.js      schematic anterior-pathway control points
 src/style.css        dark "imaging console" UI
 test/                 focused Node tests for extracted pure behavior
 public/models/       licensed runtime GLB assets, including brain_mni.glb
+public/data/entities.json / fidelity.json   stable lesson bindings and disclosure records
 .workbench/           ignored, non-deployed local asset experiments
 ```
+
+## Lesson contract foundation
+
+The checked-in foundation parses Obsidian-style Markdown: one leading YAML
+frontmatter block for metadata plus explicit inert `atlas-scene` YAML fences as
+the domain-specific Markdown extension:
+
+````markdown
+---
+title: How visual fields cross
+schema: 1
+---
+
+# How visual fields cross
+
+```atlas-scene
+id: chiasm
+title: Crossing at the chiasm
+visual: atlas
+camera: lateral
+show: [pathway.anterior, region.lgn]
+fidelity: [fidelity.anterior-pathway, fidelity.julich-regions]
+controls: { mode: look }
+layout: dominant
+```
+````
+
+Headings, lists, and other code fences remain ordinary prose; they never imply
+camera or renderer behavior. Strict Markdown/YAML/schema validation rejects raw
+HTML, unsafe URLs, unknown IDs/actions/versions, and malformed fields with
+line/column diagnostics. Valid scenes normalize to complete immutable JSON state.
+Stable bindings live in `public/data/entities.json`; geometry and activity status
+remain separate in `public/data/fidelity.json`. See
+[`src/lesson/SPEC.md`](src/lesson/SPEC.md) for the contract.
+
+This is the data/state foundation only. The scrolling lesson presentation and local
+paste/import UI arrive in subsequent roadmap tasks; the current viewer controls below
+remain unchanged.
 
 ## Controls
 

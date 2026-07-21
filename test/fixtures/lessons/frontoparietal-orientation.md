@@ -16,6 +16,7 @@ title: Dorsal overview
 visual: atlas
 camera: dorsal
 show: [region.spl7a, region.dlpfc, tract.slf1]
+fidelity: [fidelity.julich-regions, fidelity.association-tracts]
 hemispheres:
   global: { L: true, R: true }
   entities:

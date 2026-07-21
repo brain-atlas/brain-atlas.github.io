@@ -37,7 +37,16 @@ function semanticDiagnostics(scene, catalog) {
 
   scene.show.forEach((id, index) => unknownEntity(id, `/show/${index}`));
   for (const id of Object.keys(scene.hemispheres?.entities ?? {})) {
-    unknownEntity(id, `/hemispheres/entities/${id}`);
+    const path = `/hemispheres/entities/${id}`;
+    unknownEntity(id, path);
+    const entity = catalog.entitiesById?.[id];
+    if (entity && entity.hemisphereMode !== 'bilateral') {
+      diagnostics.push(createDiagnostic(
+        'scene.semantic.unsupported-hemisphere-filter',
+        `entity does not support independent hemisphere filtering: ${id}`,
+        { path },
+      ));
+    }
   }
   if (scene.selection?.selected) unknownEntity(scene.selection.selected, '/selection/selected');
   scene.selection?.emphasized?.forEach((id, index) => unknownEntity(id, `/selection/emphasized/${index}`));

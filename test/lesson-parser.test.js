@@ -45,6 +45,10 @@ test('reference Markdown parses into an immutable ordered lesson with complete s
   assert.equal(result.value.scenes.length, 2);
   assert.deepEqual(result.value.scenes.map(({ id }) => id), ['chiasm', 'relay']);
   assert.equal(result.value.scenes[0].source.line, 22);
+  assert.deepEqual(result.value.scenes[0].fidelityIds, [
+    'fidelity.anterior-pathway',
+    'fidelity.julich-regions',
+  ]);
   assert.match(result.value.scenes[0].proseMarkdown, /^## Crossing at the chiasm/);
   assert.doesNotMatch(result.value.scenes[0].proseMarkdown, /atlas-scene/);
   assert.equal(result.value.scenes[1].snapshot.playback.playing, false);
@@ -69,6 +73,27 @@ test('a second entity fixture parses without vision-specific rules and keeps ine
   assert.match(result.value.scenes[0].proseMarkdown, /console\.log/);
 });
 
+test('declared reference-style images retain their required source and alt text', async () => {
+  const source = (await fixture('visual-field-crossing.md')).replace(
+    'The declared image is learner-facing content with complete alternative metadata.',
+    '![Diagram showing nasal and temporal retinal fields][retinotopy]\n\n[retinotopy]: https://example.org/retinotopy.png\n\nThe declared image is learner-facing content with complete alternative metadata.',
+  );
+  const result = parseLesson(source, TEST_CATALOG);
+  assert.equal(result.ok, true);
+  assert.match(result.value.scenes[1].proseMarkdown, /!\[Diagram showing nasal and temporal retinal fields\]\[retinotopy\]/);
+});
+
+test('multiple declared alt texts may safely share one HTTPS visual source', () => {
+  const source = minimalSource()
+    .replace(
+      'schema: 1',
+      'schema: 1\nvisuals:\n  - { id: shared-first, type: image, alt: First view, caption: First, credit: Author, src: https://example.org/shared.png, source: https://example.org/source }\n  - { id: shared-second, type: image, alt: Second view, caption: Second, credit: Author, src: https://example.org/shared.png, source: https://example.org/source }',
+    )
+    .replace('Ordinary prose.', '![First view](https://example.org/shared.png)');
+  const result = parseLesson(source, TEST_CATALOG);
+  assert.equal(result.ok, true);
+});
+
 test('ordinary headings and lists do not create scenes without explicit directives', () => {
   const source = `---\ntitle: Prose only\nschema: 1\n---\n\n# Heading\n\n- one\n- two\n`;
   const result = parseLesson(source, TEST_CATALOG);
@@ -81,7 +106,11 @@ test('unsafe Markdown and undeclared images are rejected without a partial lesso
   const cases = [
     [minimalSource().replace('Ordinary prose.', '<script>alert(1)</script>'), 'markdown.raw-html'],
     [minimalSource().replace('Ordinary prose.', '[run](javascript:alert(1))'), 'markdown.unsafe-url'],
+    [minimalSource().replace('Ordinary prose.', '[data](data:text/html,unsafe)'), 'markdown.unsafe-url'],
+    [minimalSource().replace('Ordinary prose.', '[credentials](https://user:secret@example.org/)'), 'markdown.unsafe-url'],
+    [minimalSource().replace('Ordinary prose.', '[run][unsafe]\n\n[unsafe]: javascript:alert(1)'), 'markdown.unsafe-url'],
     [minimalSource().replace('Ordinary prose.', '![unknown](https://example.org/x.png)'), 'markdown.undeclared-image'],
+    [minimalSource().replace('Ordinary prose.', '![unknown][asset]\n\n[asset]: https://example.org/x.png'), 'markdown.undeclared-image'],
   ];
 
   for (const [source, code] of cases) {
@@ -90,6 +119,19 @@ test('unsafe Markdown and undeclared images are rejected without a partial lesso
     assert.equal('value' in result, false);
     assert.equal(result.diagnostics.some((diagnostic) => diagnostic.code === code), true);
   }
+});
+
+test('unknown fidelity references fail with positioned diagnostics', () => {
+  const source = minimalSource().replace(
+    'show: [region.lgn]',
+    'show: [region.lgn]\nfidelity: [fidelity.unknown]',
+  );
+  const result = parseLesson(source, TEST_CATALOG);
+
+  assert.equal(result.ok, false);
+  const diagnostic = result.diagnostics.find(({ code }) => code === 'scene.semantic.unknown-fidelity');
+  assert.equal(diagnostic.path, '/fidelity/0');
+  assert.equal(diagnostic.line, 15);
 });
 
 test('malformed YAML and unknown fields or IDs include line and field diagnostics', () => {

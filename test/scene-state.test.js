@@ -52,7 +52,7 @@ test('normalization expands explicit fields, sorts IDs, and freezes every level'
       global: { L: true, R: false },
       entities: {
         'tract.ilf': { L: false, R: true },
-        'pathway.anterior': { L: true, R: true },
+        'region.lgn': { L: true, R: true },
       },
     },
     cutaway: 42,
@@ -69,7 +69,7 @@ test('normalization expands explicit fields, sorts IDs, and freezes every level'
   }, TEST_CATALOG);
 
   assert.deepEqual(snapshot.visibility.entities, ['pathway.anterior', 'tract.ilf']);
-  assert.deepEqual(Object.keys(snapshot.hemispheres.entities), ['pathway.anterior', 'tract.ilf']);
+  assert.deepEqual(Object.keys(snapshot.hemispheres.entities), ['region.lgn', 'tract.ilf']);
   assert.deepEqual(snapshot.selection.emphasized, ['pathway.anterior', 'tract.ilf']);
   assertDeepFrozen(snapshot);
   assert.throws(() => snapshot.visibility.entities.push('region.lgn'), TypeError);
@@ -84,6 +84,24 @@ test('snapshots round-trip through deterministic JSON serialization', () => {
 
   assert.equal(serializeSceneSnapshot(a), serializeSceneSnapshot(b));
   assert.deepEqual(JSON.parse(serializeSceneSnapshot(a)), a);
+});
+
+test('per-entity hemisphere overrides require bilateral catalog capability', () => {
+  assert.throws(
+    () => normalizeSceneSnapshot({
+      ...MINIMAL_SCENE,
+      hemispheres: {
+        entities: {
+          'pathway.anterior': { L: true, R: false },
+        },
+      },
+    }, TEST_CATALOG),
+    (error) => {
+      assert.equal(error.diagnostics[0].code, 'scene.semantic.unsupported-hemisphere-filter');
+      assert.equal(error.diagnostics[0].path, '/hemispheres/entities/pathway.anterior');
+      return true;
+    },
+  );
 });
 
 test('unknown entities, visuals, and camera presets fail with semantic diagnostics', () => {

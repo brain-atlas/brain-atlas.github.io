@@ -64,7 +64,7 @@ test('unknown lesson schema versions and unknown fields are rejected', () => {
   assert.equal(fieldErrors[0].path, '/onEnter');
 });
 
-test('supplementary visuals require complete metadata and HTTPS sources', () => {
+test('supplementary visuals require complete metadata and valid credential-free HTTPS sources', () => {
   const diagnostics = validateLessonMetadata({
     ...validMetadata,
     visuals: [{
@@ -82,6 +82,14 @@ test('supplementary visuals require complete metadata and HTTPS sources', () => 
     diagnostics.map(({ path }) => path).sort(),
     ['/visuals/0/alt', '/visuals/0/source', '/visuals/0/src'],
   );
+
+  for (const src of ['https://', 'https://user:secret@example.org/image.png']) {
+    const invalidUrl = validateLessonMetadata({
+      ...validMetadata,
+      visuals: [{ ...validMetadata.visuals[0], src }],
+    });
+    assert.equal(invalidUrl.some(({ path }) => path === '/visuals/0/src'), true);
+  }
 });
 
 test('schema diagnostics use a supplied field locator', () => {

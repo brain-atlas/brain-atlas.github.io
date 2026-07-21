@@ -37,6 +37,26 @@ amplitude is sampled with a home interval that keeps the complete sinusoid insid
 contour margins, so `updateSwm` needs no asymmetric endpoint clipping; reduced
 motion settles each dot at its fixed home.
 
+## Lesson contract foundation
+
+`src/lesson/` is a renderer-independent ESM subsystem governed by
+[`src/lesson/SPEC.md`](../src/lesson/SPEC.md). It parses Obsidian-style Markdown:
+one leading YAML frontmatter block for metadata and top-level `atlas-scene` YAML
+fences as the domain-specific content extension,
+then validates catalog references and normalizes every scene to a complete frozen
+plain-data snapshot. Headings, lists, and ordinary code fences carry no runtime
+semantics. Raw HTML, unsafe URLs, unknown IDs/actions/versions, and malformed fields
+produce positioned diagnostics and no partial lesson.
+
+`public/data/entities.json` maps stable prefixed domain IDs to current layer/region/
+tract renderer IDs and camera presets. `public/data/fidelity.json` supplies curated,
+separate geometry/activity disclosure records reconciled with
+`SCIENTIFIC_TRACEABILITY.md`; it does not add anatomy or tract relationships.
+Pure commands create new snapshots without mutation. `createRendererAdapter`
+defines the only snapshot-to-renderer port and requires explicit bindings for every
+state axis; Three.js binding and scrolling UI are deliberately deferred to the
+vertical-slice task.
+
 ## Data loading and build
 
 The app loads the cortical GLB, JSON fibre datasets, association-activity metadata, a region manifest, and region OBJ meshes in parallel. Offline tools must produce web-sized, co-registered assets; runtime fitting and heavy data processing do not belong in the viewer. `SCIENTIFIC_TRACEABILITY.md` records each asset's geometry and model provenance, including unresolved source-space and generator gaps.

@@ -25,6 +25,7 @@ title: Crossing at the chiasm
 visual: atlas
 camera: lateral
 show: [pathway.anterior, region.lgn]
+fidelity: [fidelity.anterior-pathway, fidelity.julich-regions]
 controls:
   mode: look
 layout: dominant

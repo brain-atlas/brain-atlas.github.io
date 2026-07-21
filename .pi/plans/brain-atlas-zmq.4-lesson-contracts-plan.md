@@ -8,20 +8,32 @@
 
 **Branch:** `feat/lesson-contracts`
 
+**Status:** Implemented by `brain-atlas-zmq.4`
+
+**Authoring decision:** `brain-atlas-1m0` — Obsidian-style YAML frontmatter for
+metadata plus explicit domain-specific Markdown content using `atlas-scene` fences
+
 **Goal:** Parse explicit Markdown/YAML lessons into immutable, versioned, renderer-independent lesson and scene data with stable entity/fidelity references, complete deterministic snapshots, actionable diagnostics, and one tested renderer-adapter boundary.
 
 **Architecture:** A small `src/lesson/` subsystem uses established Markdown, YAML, and JSON-schema libraries. Parsing, schema validation, semantic catalog validation, snapshot normalization, and pure command reduction remain independent of Three.js and the DOM. Checked-in project-authored entity/fidelity catalogs bind stable domain IDs to current renderer IDs without placing renderer objects in lesson data. A renderer-adapter port is tested with plain bindings now and wired to the shared Three.js scene by the vertical-slice Bead.
 
+**Implementation record:** `src/lesson/` now owns strict v1 schemas and diagnostics,
+Obsidian-style Markdown/YAML parsing, immutable canonical state, pure commands,
+stable catalog validation, and the renderer port. `public/data/entities.json` and
+`public/data/fidelity.json` bind the current viewer without inventing relationships.
+Two domain-distinct fixtures exercise the contracts. The current Three.js viewer is
+not wired to lessons under this Bead. The subsystem contract is `src/lesson/SPEC.md`.
+
 **Acceptance Criteria:**
-- [ ] Ordinary Markdown with YAML frontmatter and explicit `atlas-scene` YAML fences parses into a schema-v1 normalized lesson; headings and lists never imply runtime behavior.
-- [ ] The normalized object is immutable, plain, JSON-serializable data with introduction prose and ordered scene prose preserved as Markdown source.
-- [ ] Every scene normalizes to a complete snapshot covering camera/target/transition, visibility, global and per-entity hemispheres, cutaway, tissue opacity, playback, selection/emphasis, active visual/layout, and control policy.
-- [ ] Stable entity, visual, camera-preset, and fidelity IDs resolve through a versioned catalog; a second non-chiasm tutorial fixture proves contracts are not vision-pathway hard-coded.
-- [ ] Unknown schema versions, IDs, commands/actions, and keys; `javascript:`, `data:`, `vbscript:`, or non-HTTPS remote media URLs; raw HTML/script/event-handler constructs; duplicate scene IDs; and malformed YAML fail with line/field diagnostics and no partial lesson. Ordinary code fences remain inert prose and are never executed.
-- [ ] An allowlisted command reducer produces new state without mutating the prior state; snapshots round-trip deterministically through JSON.
-- [ ] One renderer-adapter interface applies every snapshot axis through explicit bindings and contains no DOM-event simulation, Three.js object serialization, coordinate transform, plugin system, or speculative service layer.
-- [ ] Current one-transform and scientific-representation invariants remain unchanged; no lesson UI, scroll controller, import surface, or external-image rendering is added under this Bead.
-- [ ] Runtime parser dependencies and notices are minimal and documented; tests, publication build, production-hook check, docs, and independent review pass.
+- [x] Ordinary Markdown with YAML frontmatter and explicit `atlas-scene` YAML fences parses into a schema-v1 normalized lesson; headings and lists never imply runtime behavior.
+- [x] The normalized object is immutable, plain, JSON-serializable data with introduction prose and ordered scene prose preserved as Markdown source.
+- [x] Every scene normalizes to a complete snapshot covering camera/target/transition, visibility, global and per-entity hemispheres, cutaway, tissue opacity, playback, selection/emphasis, active visual/layout, and control policy.
+- [x] Stable entity, visual, camera-preset, and fidelity IDs resolve through a versioned catalog; a second non-chiasm tutorial fixture proves contracts are not vision-pathway hard-coded.
+- [x] Unknown schema versions, IDs, commands/actions, and keys; `javascript:`, `data:`, `vbscript:`, or non-HTTPS remote media URLs; raw HTML/script/event-handler constructs; duplicate scene IDs; and malformed YAML fail with line/field diagnostics and no partial lesson. Ordinary code fences remain inert prose and are never executed.
+- [x] An allowlisted command reducer produces new state without mutating the prior state; snapshots round-trip deterministically through JSON.
+- [x] One renderer-adapter interface applies every snapshot axis through explicit bindings and contains no DOM-event simulation, Three.js object serialization, coordinate transform, plugin system, or speculative service layer.
+- [x] Current one-transform and scientific-representation invariants remain unchanged; no lesson UI, scroll controller, import surface, or external-image rendering is added under this Bead.
+- [x] Runtime parser dependencies and notices are minimal and documented; tests, publication build, production-hook check, docs, and independent review pass.
 
 **Verification Commands:**
 
@@ -36,7 +48,7 @@ git diff --check
 
 ## Authoring and normalization decisions
 
-- YAML frontmatter contains document metadata and declared visuals only.
+- Obsidian-style YAML frontmatter contains document metadata and declared visuals only.
 - `atlas-scene` code fences contain typed YAML scene directives. A fence starts a
   scene; ordinary Markdown after it belongs to that scene until the next scene fence.
 - Markdown before the first scene is the introduction. Runtime semantics are never

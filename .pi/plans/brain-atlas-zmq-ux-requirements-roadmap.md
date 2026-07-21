@@ -150,6 +150,10 @@ The UI must communicate the active policy before the learner attempts a disabled
 
 ### Decision: Markdown prose with explicit scene directives
 
+Decision `brain-atlas-1m0` records the user's v1 wording: **Obsidian-style YAML
+frontmatter for metadata and domain-specific Markdown for content**. The fenced
+`atlas-scene` directive is that explicit domain-specific Markdown extension.
+
 A lesson is one ordinary `.md` document, not a YAML document wrapped in Markdown:
 
 - YAML frontmatter contains only document-wide metadata and reusable visual declarations.
