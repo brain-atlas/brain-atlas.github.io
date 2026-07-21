@@ -111,7 +111,6 @@ function loadBrain() {
     });
     brainGroup.add(g.scene);
     reapplyLessonMaterialFactors(brainGroup);
-    setBadge('Cortical surface: MNI152NLin2009cAsym template shell — see README for sources');
   }, undefined, (e) => console.warn('brain load failed:', e));
 }
 
@@ -636,9 +635,12 @@ function setLessonTransitioning(value) {
 }
 
 function resize() {
-  const w = stage.clientWidth, h = stage.clientHeight;
-  camera.aspect = w / h; camera.updateProjectionMatrix();
-  renderer.setSize(w, h); labelRenderer.setSize(w, h);
+  const { width, height } = stage.getBoundingClientRect();
+  if (!(width > 0 && height > 0)) return;
+  camera.aspect = width / height;
+  camera.updateProjectionMatrix();
+  renderer.setSize(width, height);
+  labelRenderer.setSize(width, height);
 }
 window.addEventListener('resize', resize); resize();
 
@@ -685,11 +687,6 @@ function animate(timestamp) {
 // UI
 const $ = (id) => document.getElementById(id);
 const setFill = (el) => el.style.setProperty('--fill', ((el.value - el.min) / (el.max - el.min) * 100) + '%');
-function setBadge(txt) {
-  let b = document.querySelector('.badge');
-  if (!b) { b = document.createElement('div'); b.className = 'badge'; document.querySelector('.overlay').appendChild(b); }
-  b.textContent = txt;
-}
 
 $('play').addEventListener('click', () => {
   if (reduce) return;

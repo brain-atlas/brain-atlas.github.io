@@ -76,6 +76,11 @@ whose matrix maps that runtime frame into the scene:
 - uniform scale (`MNI_SCALE`, 1 = millimetres) and a recentring translation
   (`MNI_CENTER`).
 
+The renderer derives camera aspect from the stage's exact CSS rectangle rather than
+integer client dimensions, so fractional and zoomed layouts do not stretch one screen
+axis. The WebGL drawing buffer may round to whole pixels, but projection remains matched
+to the displayed box.
+
 No dataset receives runtime fitting. If the provenance audit identifies a source-
 space mismatch, the asset must be converted or regenerated offline rather than
 adding another scene transform. The cortical surface and Jülich regions do share
@@ -93,7 +98,7 @@ src/main.js          lazy Three.js scene, data loading, activity, and lesson bin
 src/activity/        renderer-independent seeded impulse, vibration, and timing math
 src/lesson/          versioned lesson parsing, catalogs, scene state, and adapter port
 src/lessons/         checked-in Obsidian-style lesson content
-src/ui/              renderer-independent presentation, navigation, and camera models
+src/ui/              renderer-independent presentation, navigation, scroll, and camera models
 src/pathways.js      schematic anterior-pathway control points
 src/style.css        responsive editorial scientific-instrument UI
 test/                 focused Node tests for extracted pure behavior
@@ -148,17 +153,21 @@ including no-WebGL mode, without HTML-string injection. An unnumbered topic entr
 filters the atlas to the complete relevant
 pathway before scrolling activates four instructional scenes; fixed-position
 Previous/Next actions traverse the same sequence and can return to that entry view. One
-3D stage is shared throughout; wide layouts pair it with the reading rail, compact
-layouts use a shorter sticky stage plus a bottom transport bar, and short viewports
-return the stage to normal flow. Changed source/destination filters remain eligible
-while their anatomy cross-fades during the first half of a quintic-eased transition.
-The scene-driven **Model & sources** panel keeps geometry and activity status separate
-and restores focus when closed.
+3D stage is shared throughout. The browser root remains fixed; the named, keyboard-
+focusable `#page-scroll` region is the sole vertical lesson surface and retains the
+native scrollbar. Wide layouts pair the reading rail with a pinned stage, compact
+layouts use a shorter pinned stage plus a bottom transport bar, and 601–950 px-tall
+wide layouts reduce canvas height to preserve the complete model box and a 20 px lower
+gutter. Very short viewports retain the normal-flow fallback.
+Changed source/destination filters remain eligible while their anatomy cross-fades
+during the first half of a quintic-eased transition. The scene header owns scene
+identity and progress. The persistent **Model & sources** control opens the sole
+geometry/activity status and provenance surface; the canvas and stage do not duplicate
+those records. Close restores focus and the exact lesson-surface position.
 
 Three.js is dynamically imported only after a WebGL2 probe. If WebGL is unavailable or
 renderer initialization fails, the topic entry view plus four-scene text lesson,
-navigation, representation status, and fidelity records remain usable without
-downloading the renderer. Local
+navigation, and fidelity records remain usable without downloading the renderer. Local
 paste/import remains deferred to `brain-atlas-zmq.6`.
 
 ## Controls
@@ -168,7 +177,7 @@ because its scenes do not yet define replay timelines; **Skip transition** appea
 stage only while camera motion is active, jumps to the authored destination camera, and
 settles activity without accelerating model time.
 Pointer drag rotates only when the scene control policy permits it. In normal lesson
-mode, touch swipes scroll the page without rotating the camera; canvas touch gestures
+mode, touch swipes scroll `#page-scroll` without rotating the camera; canvas touch gestures
 are reserved for the later explicit Explore mode. Reduced-motion preference makes
 camera changes instant, settles activity, disables Play, and removes the Skip action.
 

@@ -11,14 +11,20 @@ import {
   moveScene,
   updateSceneFromScroll,
 } from './ui/scene-navigation.js';
+import {
+  pageScrollKeyAction,
+  relativeAnchorTops,
+  targetScrollTop,
+} from './ui/scroll-surface.js';
 
 const byId = (id) => document.getElementById(id);
 const app = byId('app');
+const pageScroll = byId('page-scroll');
 const skipLink = document.querySelector('.skip-link');
 const sceneContainer = byId('lesson-scenes');
 const reducedMotionQuery = matchMedia('(prefers-reduced-motion: reduce)');
 const compactDisclosureQuery = matchMedia('(max-width: 700px)');
-let disclosureScrollY = null;
+let disclosureScrollTop = null;
 let catalog;
 let lesson;
 let presentation;
@@ -234,7 +240,6 @@ function renderFidelity(index) {
     fragment.append(details);
   }
   content.replaceChildren(fragment);
-  byId('representation-status').textContent = `Geometry: ${model.geometryStatuses.join(' + ')} · Activity: ${model.activityStatuses.join(' + ')}`;
 }
 
 function updateActivePresentation(index, reason = 'initial') {
@@ -249,8 +254,6 @@ function updateActivePresentation(index, reason = 'initial') {
   byId('scene-count').textContent = isEntry ? 'Topic overview' : `Scene ${index + 1} of ${count}`;
   byId('stage-heading').textContent = isEntry ? lesson.title : scene.title;
   byId('scene-position').textContent = isEntry ? 'Scroll to begin' : `Scene ${index + 1} of ${count}`;
-  byId('progress-label').textContent = isEntry ? 'Topic overview' : `${index + 1} / ${count}`;
-  byId('progress-fill').style.width = `${isEntry ? 0 : ((index + 1) / count) * 100}%`;
   byId('scene-previous').disabled = isEntry;
   byId('scene-next').disabled = index === count - 1;
   byId('stage-fallback').querySelector('#fallback-message').textContent = isEntry
@@ -278,8 +281,28 @@ function focusSceneAfterScroll(target) {
     focused = true;
     target.focus({ preventScroll: true });
   };
-  addEventListener('scrollend', focus, { once: true });
+  pageScroll.addEventListener('scrollend', focus, { once: true });
   setTimeout(focus, 700);
+}
+
+function surfaceClearance() {
+  const topbarBottom = document.querySelector('.topbar').getBoundingClientRect().bottom;
+  const stageShell = document.querySelector('.stage-shell');
+  return getComputedStyle(stageShell).position === 'sticky' && innerWidth <= 980
+    ? stageShell.getBoundingClientRect().bottom + 16
+    : topbarBottom + 16;
+}
+
+function scrollToSurfaceTarget(target) {
+  pageScroll.scrollTo({
+    top: targetScrollTop({
+      scrollTop: pageScroll.scrollTop,
+      targetTop: target.getBoundingClientRect().top,
+      clearanceTop: surfaceClearance(),
+      maxScrollTop: pageScroll.scrollHeight - pageScroll.clientHeight,
+    }),
+    behavior: reducedMotionQuery.matches ? 'auto' : 'smooth',
+  });
 }
 
 function moveExplicit(delta) {
@@ -290,16 +313,7 @@ function moveExplicit(delta) {
   if (controller) controller.activate(next.activeIndex, { reason: next.lastReason });
   const destination = next.activeIndex === -1 ? byId('lesson-intro') : sceneCards[next.activeIndex];
   const focusTarget = destination.querySelector('h1, h2, h3, h4, h5, h6') ?? destination;
-  const topbarBottom = document.querySelector('.topbar').getBoundingClientRect().bottom;
-  const stageShell = document.querySelector('.stage-shell');
-  const stageIsSticky = getComputedStyle(stageShell).position === 'sticky';
-  const clearance = stageIsSticky && innerWidth <= 980
-    ? stageShell.getBoundingClientRect().bottom + 16
-    : topbarBottom + 16;
-  scrollTo({
-    top: Math.max(0, scrollY + focusTarget.getBoundingClientRect().top - clearance),
-    behavior: reducedMotionQuery.matches ? 'auto' : 'smooth',
-  });
+  scrollToSurfaceTarget(focusTarget);
   focusSceneAfterScroll(focusTarget);
 }
 
@@ -307,10 +321,14 @@ function onScroll() {
   if (scrollFrame) return;
   scrollFrame = requestAnimationFrame(() => {
     scrollFrame = 0;
+    const surfaceTop = pageScroll.getBoundingClientRect().top;
     const next = updateSceneFromScroll(navigation, {
-      anchorTops: sceneCards.map((card) => card.getBoundingClientRect().top),
-      viewportHeight: innerHeight,
-      scrollY,
+      anchorTops: relativeAnchorTops(
+        sceneCards.map((card) => card.getBoundingClientRect().top),
+        surfaceTop,
+      ),
+      viewportHeight: pageScroll.clientHeight,
+      scrollY: pageScroll.scrollTop,
     });
     const changed = next.activeIndex !== navigation.activeIndex;
     navigation = next;
@@ -321,11 +339,58 @@ function onScroll() {
   });
 }
 
+function keyboardTargetKind(target) {
+  if (!(target instanceof Element)) return 'page';
+  if (target.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"])')) return 'editable';
+  if (target.closest('button, summary')) return 'interactive';
+  return 'page';
+}
+
+function onPageScrollKey(event) {
+  const target = event.target;
+  const action = pageScrollKeyAction({
+    key: event.key,
+    code: event.code,
+    shiftKey: event.shiftKey,
+    altKey: event.altKey,
+    ctrlKey: event.ctrlKey,
+    metaKey: event.metaKey,
+    targetHasScrollContext: pageScroll.contains(target) || byId('fidelity-panel').contains(target),
+    targetKind: keyboardTargetKind(target),
+    blocked: disclosureScrollTop !== null,
+  });
+  if (!action) return;
+
+  event.preventDefault();
+  const pageStep = pageScroll.clientHeight * 0.9;
+  if (action === 'start') pageScroll.scrollTo({ top: 0, behavior: 'auto' });
+  else if (action === 'end') pageScroll.scrollTo({ top: pageScroll.scrollHeight, behavior: 'auto' });
+  else pageScroll.scrollBy({
+    top: action === 'page-forward' ? pageStep : -pageStep,
+    behavior: 'auto',
+  });
+}
+
 function bindNavigation() {
   byId('scene-previous').addEventListener('click', () => moveExplicit(-1));
   byId('scene-next').addEventListener('click', () => moveExplicit(1));
   byId('scene-skip').addEventListener('click', () => controller?.skip());
-  addEventListener('scroll', onScroll, { passive: true });
+  skipLink.addEventListener('click', (event) => {
+    event.preventDefault();
+    const target = byId('lesson-title') ?? byId('lesson-reader');
+    scrollToSurfaceTarget(target);
+    focusSceneAfterScroll(target);
+  });
+  document.querySelector('.brand').addEventListener('click', (event) => {
+    if (event.button !== 0 || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+    event.preventDefault();
+    pageScroll.scrollTo({
+      top: 0,
+      behavior: reducedMotionQuery.matches ? 'auto' : 'smooth',
+    });
+  });
+  pageScroll.addEventListener('scroll', onScroll, { passive: true });
+  addEventListener('keydown', onPageScrollKey);
 }
 
 function isCompactDisclosure() {
@@ -333,23 +398,21 @@ function isCompactDisclosure() {
 }
 
 function lockPageForDisclosure() {
-  if (disclosureScrollY !== null) return;
-  disclosureScrollY = scrollY;
+  if (disclosureScrollTop !== null) return;
+  disclosureScrollTop = pageScroll.scrollTop;
   app.inert = true;
   skipLink.inert = true;
-  document.documentElement.style.overflowY = 'hidden';
-  document.body.style.overflowY = 'hidden';
+  pageScroll.style.overflowY = 'hidden';
 }
 
 function unlockPageForDisclosure() {
-  const restoreY = disclosureScrollY;
-  disclosureScrollY = null;
+  const restoreTop = disclosureScrollTop;
+  disclosureScrollTop = null;
   app.inert = false;
   skipLink.inert = false;
-  if (restoreY === null) return;
-  document.documentElement.style.removeProperty('overflow-y');
-  document.body.style.removeProperty('overflow-y');
-  scrollTo(0, restoreY);
+  if (restoreTop === null) return;
+  pageScroll.style.removeProperty('overflow-y');
+  pageScroll.scrollTop = restoreTop;
 }
 
 function syncFidelityMode() {
@@ -427,7 +490,6 @@ function showRendererFallback(message) {
   byId('stage').hidden = true;
   byId('stage-fallback').hidden = false;
   byId('fallback-message').textContent = message;
-  byId('stage-state').textContent = 'Text lesson available';
   byId('scene-skip').hidden = true;
   byId('scene-skip').disabled = true;
   byId('viewer-controls-fieldset').disabled = true;
@@ -499,14 +561,13 @@ async function start() {
         adapter,
         reducedMotion: reducedMotionQuery.matches,
         onChange(state) {
-          byId('stage-state').textContent = state.status === 'error'
-            ? `Renderer error: ${state.error}`
-            : (state.manualSettled || state.reducedMotion ? 'Activity settled' : 'Scene synchronized');
+          if (state.status === 'error') {
+            showRendererFallback('The current 3D scene could not be displayed. The lesson and Model & sources remain available.');
+          }
         },
       });
       controller.setReady();
       updateActivePresentation(navigation.activeIndex);
-      byId('stage-state').textContent = reducedMotionQuery.matches ? 'Activity settled' : 'Scene synchronized';
       byId('app-status').textContent = 'Lesson ready';
       updateActivePresentation(navigation.activeIndex);
       app.dataset.state = 'ready';

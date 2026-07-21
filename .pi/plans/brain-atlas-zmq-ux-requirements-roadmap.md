@@ -106,7 +106,8 @@ Reviewed repository lessons may become browsable static content after the local 
 
 ### Scene activation
 
-- Vertical scroll chooses a discrete semantic scene.
+- One named, keyboard-focusable lesson surface below the fixed topbar owns vertical scrolling; the browser root remains fixed and horizontal travel is forbidden.
+- Surface-relative vertical scroll chooses a discrete semantic scene.
 - Activation uses stable thresholds, hysteresis, and an insensitive dwell zone.
 - Incidental wheel/touch movement inside the active zone does not scrub or restart playback.
 - Previous and Next move to vertical scene anchors.
@@ -227,7 +228,7 @@ Removing it from the retina-to-V1 lesson requires explicit approval through
 Scientific traceability must be easy to find without competing with the spatial lesson:
 
 - Keep a quiet, persistent **Model & sources** affordance beside the active visual rather than burying it in settings or documentation.
-- Show separate concise statuses for geometry and behavior, for example **Data-derived geometry · Modeled activity**. A single badge cannot honestly describe mixed representations.
+- Inside that disclosure, show separate concise statuses for geometry and behavior, for example **Data-derived geometry · Modeled activity**. Do not duplicate them in a canvas badge, persistent stage row, or global progress/status strip; a single badge cannot honestly describe mixed representations.
 - When a representation category first matters in a lesson, show a short contextual model note; do not repeat warnings in every scene.
 - One click/tap or keyboard activation opens the method, citations, assumptions, uncertainty, limitations, and material known gaps while preserving scene context.
 - Distinguish intentional design decisions from known gaps. Flag an open gap only when it could materially alter interpretation, confidence, or intended use, or when higher-fidelity work is planned.

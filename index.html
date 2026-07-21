@@ -18,13 +18,10 @@
         <span class="brand-kicker">Brain Atlas</span>
         <span class="brand-title"><span id="lesson-brand-title">From retina to V1</span> <span id="lesson-status" class="lesson-status" aria-label="Lesson status: Draft" hidden>[DRAFT]</span></span>
       </a>
-      <div class="lesson-progress" aria-label="Lesson progress">
-        <span id="progress-label">Preparing lesson</span>
-        <span class="progress-track" aria-hidden="true"><span id="progress-fill"></span></span>
-      </div>
       <span id="app-status" class="app-status">Loading lesson data…</span>
     </header>
 
+    <div id="page-scroll" class="page-scroll" role="region" aria-label="Lesson content" tabindex="0">
     <main class="lesson-layout">
       <article id="lesson-reader" class="lesson-reader" tabindex="-1" aria-labelledby="lesson-title">
         <header id="lesson-intro" class="lesson-intro"></header>
@@ -45,7 +42,6 @@
 
         <div id="stage" class="stage" aria-label="Interactive 3D visual-system atlas">
           <button id="scene-skip" class="transition-skip" type="button" hidden>Skip transition</button>
-          <div class="overlay" aria-hidden="true"></div>
         </div>
         <section id="stage-fallback" class="stage-fallback" hidden aria-labelledby="fallback-title">
           <p class="stage-kicker">Readable lesson mode</p>
@@ -53,10 +49,6 @@
           <p id="fallback-message">The lesson remains available. Scene summaries and model disclosures appear alongside the prose.</p>
         </section>
 
-        <div class="stage-status-row">
-          <span id="representation-status">Geometry: loading · Activity: loading</span>
-          <span id="stage-state">Waiting for renderer</span>
-        </div>
         <nav class="scene-transport" aria-label="Lesson scene controls">
           <button id="scene-previous" type="button">← Previous</button>
           <span id="scene-position" aria-live="polite">Scroll to begin</span>
@@ -103,6 +95,7 @@
         <a href="https://github.com/brain-atlas/brain-atlas.github.io">Source</a>
       </nav>
     </footer>
+    </div>
   </div>
 
   <aside id="fidelity-panel" class="fidelity-panel" hidden aria-labelledby="fidelity-title">
