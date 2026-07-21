@@ -14,6 +14,7 @@ import {
   updateAssociationEventPool,
 } from './activity/association-impulses.js';
 import { createSwmVibration, vibrationContourParameter } from './activity/swm-vibration.js';
+import { createFrameDeltaReader } from './activity/frame-time.js';
 
 // ---------------------------------------------------------------------------
 const stage = document.getElementById('stage');
@@ -566,7 +567,9 @@ function updateSwm(dt) {
 // ---------------------------------------------------------------------------
 // State + loop
 const st = { flow: !reduce, speed: 70, phase: 0 };
-const clock = new THREE.Clock();
+const timer = new THREE.Timer();
+timer.connect(document);
+const readFrameDelta = createFrameDeltaReader(timer);
 
 function resize() {
   const w = stage.clientWidth, h = stage.clientHeight;
@@ -585,8 +588,8 @@ function updateAnteriorFlow() {
     f.geo.attributes.position.needsUpdate = true;
   }
 }
-function animate() {
-  const dt = Math.min(0.05, clock.getDelta());
+function animate(timestamp) {
+  const dt = readFrameDelta(timestamp);
   if (st.flow) {
     st.phase = (st.phase + dt * (st.speed / 70) * 0.075) % 1;
     updateAnteriorFlow();
@@ -734,4 +737,4 @@ loadFibres();
 loadRegions();
 loadTracts();
 loadSwm();
-animate();
+requestAnimationFrame(animate);

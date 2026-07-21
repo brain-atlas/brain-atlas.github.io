@@ -25,10 +25,15 @@ export default defineConfig({
     // Three.js and its addons form a deliberate ~646 kB (~163 kB gzip) cacheable chunk.
     // Keep warning on unexpected chunks that grow beyond that known dependency.
     chunkSizeWarningLimit: 650,
-    rollupOptions: {
+    rolldownOptions: {
       output: {
-        manualChunks(id) {
-          if (/[\\/]node_modules[\\/]three[\\/]/.test(id)) return 'three';
+        codeSplitting: {
+          groups: [
+            {
+              name: 'three',
+              test: /[\\/]node_modules[\\/]three[\\/]/,
+            },
+          ],
         },
       },
     },

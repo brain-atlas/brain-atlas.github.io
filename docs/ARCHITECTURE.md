@@ -4,7 +4,7 @@
 
 ## Runtime shape
 
-`src/main.js` owns the scene, loaders, renderer integration, and layer panel. `src/pathways.js` contains only schematic anterior-pathway coordinates. `src/activity/association-impulses.js` owns the renderer-independent seeded event engine, inhibition math, canonical endpoint mapping, and plain-data pool adapter. `src/activity/swm-vibration.js` owns bounded home/amplitude sampling and analytic zero-mean contour motion. The Three.js adapters stay in `main.js`. Keep tightly shared scene concerns in `main.js`; extract modules only when they have an independent interface or testable lifecycle.
+`src/main.js` owns the scene, loaders, renderer integration, and layer panel. `src/pathways.js` contains only schematic anterior-pathway coordinates. `src/activity/association-impulses.js` owns the renderer-independent seeded event engine, inhibition math, canonical endpoint mapping, and plain-data pool adapter. `src/activity/swm-vibration.js` owns bounded home/amplitude sampling and analytic zero-mean contour motion. `src/activity/frame-time.js` adapts `THREE.Timer` to the render loop's first-frame-zero and 50 ms clamp contract. The Three.js adapters stay in `main.js`. Keep tightly shared scene concerns in `main.js`; extract modules only when they have an independent interface or testable lifecycle.
 
 Every anatomical layer is a child of `mniGroup`:
 
@@ -37,9 +37,14 @@ amplitude is sampled with a home interval that keeps the complete sinusoid insid
 contour margins, so `updateSwm` needs no asymmetric endpoint clipping; reduced
 motion settles each dot at its fixed home.
 
-## Data loading
+## Data loading and build
 
 The app loads the cortical GLB, JSON fibre datasets, association-activity metadata, a region manifest, and region OBJ meshes in parallel. Offline tools must produce web-sized, co-registered assets; runtime fitting and heavy data processing do not belong in the viewer. `SCIENTIFIC_TRACEABILITY.md` records each asset's geometry and model provenance, including unresolved source-space and generator gaps.
+
+Vite uses native Rolldown `codeSplitting.groups` to keep Three.js and its addons in
+a deliberate cacheable `three` chunk. The 650 kB warning threshold sits just above
+that known dependency; it is a regression signal, not a claim that chunking reduces
+total bytes or first-render cost.
 
 ## Architecture review
 
@@ -65,4 +70,4 @@ These changes are worthwhile but structural; implement them through a scoped Bea
 
 - A runtime asset manifest would not simplify loading: manifests already exist where metadata is needed, and independent top-level fetches correctly run in parallel.
 - Event delegation would save little for the small, infrequently rebuilt panel and would make its state transitions less explicit.
-- Manual vendor chunking would silence Vite's size warning but would not reduce Three.js bytes or improve first render by itself.
+- Splitting the existing Three.js vendor group further would add requests without reducing total dependency bytes; do so only after measured loading evidence.
