@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "space": "activity metadata only; geometry remains in tracts.json",
+  "seed": 1096043603,
+  "directionSamplingUnit": "accepted-code-event",
+  "model": {
+    "kind": "illustrative-inhibited-stochastic-display-process",
+    "seed": 1096043603,
+    "prng": "mulberry32",
+    "channelsPerGroup": 12,
+    "baseEventsPerModelSecond": [0.24, 0.64],
+    "privateModulationAmplitude": [0.15, 0.55],
+    "privateModulationCyclesPerModelSecond": [0.08, 0.35],
+    "refractoryModelSeconds": 0.05,
+    "recoveryTauModelSeconds": 0.2,
+    "contourUnitsPerModelSecond": [0.3, 0.48],
+    "maxActiveRenderedImpulses": 520,
+    "commonCrossTractDrive": false,
+    "forcedBursts": false,
+    "physiologicalClaim": false
+  },
+  "methodSources": [
+    "https://doi.org/10.1089/brain.2011.0033",
+    "https://doi.org/10.1109/TIT.1981.1056305"
+  ],
+  "disclosure": "Direction is not measured by diffusion MRI. Every named association tract uses an explicit 50/50 source-to-endpoint assumption because this review found no defensible quantitative human ratio. Event timing, inhibition, and speed are illustrative display algorithms, not measured neuronal physiology.",
+  "tracts": [
+    {
+      "id": "ilf",
+      "endpointA": {
+        "label": "posterior occipital/occipitotemporal",
+        "classifier": { "coordinate": "y", "select": "minimum", "scope": "raw-endpoints-only" }
+      },
+      "endpointB": { "label": "anterior temporal" },
+      "probabilityAToB": { "L": 0.5, "R": 0.5 },
+      "evidenceStatus": "qualitative-bidirectional-no-quantitative-ratio",
+      "assumption": "symmetric-50-50",
+      "sources": ["https://doi.org/10.3389/fnana.2018.00077"]
+    },
+    {
+      "id": "ifof",
+      "endpointA": {
+        "label": "posterior occipital/temporal/parietal",
+        "classifier": { "coordinate": "y", "select": "minimum", "scope": "raw-endpoints-only" }
+      },
+      "endpointB": { "label": "prefrontal" },
+      "probabilityAToB": { "L": 0.5, "R": 0.5 },
+      "evidenceStatus": "no-qualifying-human-direction-ratio",
+      "assumption": "symmetric-50-50",
+      "sources": ["https://doi.org/10.1093/brain/awaf055"]
+    },
+    {
+      "id": "slf1",
+      "endpointA": {
+        "label": "posterior superior parietal",
+        "classifier": { "coordinate": "y", "select": "minimum", "scope": "raw-endpoints-only" }
+      },
+      "endpointB": { "label": "dorsal/medial frontal" },
+      "probabilityAToB": { "L": 0.5, "R": 0.5 },
+      "evidenceStatus": "no-qualifying-human-direction-ratio",
+      "assumption": "symmetric-50-50",
+      "sources": ["https://doi.org/10.3389/fneur.2022.794618"]
+    },
+    {
+      "id": "slf2",
+      "endpointA": {
+        "label": "posterior parietal",
+        "classifier": { "coordinate": "y", "select": "minimum", "scope": "raw-endpoints-only" }
+      },
+      "endpointB": { "label": "dorsolateral frontal" },
+      "probabilityAToB": { "L": 0.5, "R": 0.5 },
+      "evidenceStatus": "no-qualifying-human-direction-ratio",
+      "assumption": "symmetric-50-50",
+      "sources": ["https://doi.org/10.3389/fneur.2022.794618"]
+    },
+    {
+      "id": "slf3",
+      "endpointA": {
+        "label": "posterior inferior parietal/opercular",
+        "classifier": { "coordinate": "y", "select": "minimum", "scope": "raw-endpoints-only" }
+      },
+      "endpointB": { "label": "inferior frontal/opercular" },
+      "probabilityAToB": { "L": 0.5, "R": 0.5 },
+      "evidenceStatus": "no-qualifying-human-direction-ratio",
+      "assumption": "symmetric-50-50",
+      "sources": ["https://doi.org/10.3389/fneur.2022.794618"]
+    },
+    {
+      "id": "vof",
+      "endpointA": {
+        "label": "dorsal occipital/visual",
+        "classifier": { "coordinate": "z", "select": "maximum", "scope": "raw-endpoints-only" }
+      },
+      "endpointB": { "label": "ventral occipitotemporal/visual" },
+      "probabilityAToB": { "L": 0.5, "R": 0.5 },
+      "evidenceStatus": "no-qualifying-human-direction-ratio",
+      "assumption": "symmetric-50-50",
+      "sources": ["https://doi.org/10.1073/pnas.1418503111"]
+    },
+    {
+      "id": "af",
+      "endpointA": {
+        "label": "posterior temporal",
+        "classifier": { "coordinate": "y", "select": "minimum", "scope": "raw-endpoints-only" }
+      },
+      "endpointB": { "label": "frontal" },
+      "probabilityAToB": { "L": 0.5, "R": 0.5 },
+      "evidenceStatus": "no-qualifying-human-direction-ratio",
+      "assumption": "symmetric-50-50",
+      "sources": ["https://doi.org/10.1002/brb3.3107"]
+    },
+    {
+      "id": "mdlf",
+      "endpointA": {
+        "label": "posterior parietal/occipital",
+        "classifier": { "coordinate": "y", "select": "minimum", "scope": "raw-endpoints-only" }
+      },
+      "endpointB": { "label": "superior/anterior temporal" },
+      "probabilityAToB": { "L": 0.5, "R": 0.5 },
+      "evidenceStatus": "no-qualifying-human-direction-ratio",
+      "assumption": "symmetric-50-50",
+      "sources": ["https://doi.org/10.3389/fnana.2020.610324"]
+    }
+  ]
+}

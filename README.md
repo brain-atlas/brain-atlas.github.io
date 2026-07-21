@@ -6,12 +6,13 @@ LGN → optic radiations → V1), rendered as animated, field-quadrant-coded flo
 smooth with tens of thousands of vertices — unlike the Canvas-2D prototype it
 replaces.
 
-**Everything posterior to the chiasm is real, co-registered data in one space.**
-The cortical surface, the optic-radiation streamlines, and the LGN/V1 region
-shells are all in **MNI152NLin2009cAsym** millimetres, so they line up with no
-per-dataset fitting — the app applies a *single* transform (a proper rotation
-from MNI RAS into the scene frame). Only the anterior segment (eye → chiasm →
-LGN) is schematic. See "What's real vs schematic" below.
+**Everything posterior to the chiasm uses real atlas/template data in one runtime
+MNI/ICBM RAS-millimetre frame.** The cortical surface and LGN/V1 shells identify
+MNI152NLin2009cAsym; upstream HCP fibre sources identify ICBM 2009a or generic
+ICBM152, and their exact release/conversion provenance is under audit. The app
+performs no per-dataset fitting and applies one runtime transform. Only the
+anterior eye → chiasm → LGN segment is schematic. See “What's real vs
+schematic” and the scientific traceability inventory below.
 
 ## Run it
 
@@ -31,9 +32,11 @@ npm install
 npm run dev
 ```
 
-Build a static bundle for any local webhost (`base: './'` keeps paths relative):
+Run the focused renderer-independent tests, then build a static bundle for any
+local webhost (`base: './'` keeps paths relative):
 
 ```bash
+npm test
 npm run build             # → dist/ for local development
 npm run build:publish     # refuse untracked public/ assets, then build
 npm run preview           # serve dist/ on :5180
@@ -61,9 +64,11 @@ published `dist/` directory.
 
 ## Coordinate handling
 
-There is exactly one coordinate transform in the app. Every dataset is authored
-in **MNI152NLin2009cAsym RAS millimetres**, and `src/main.js` parents them all to
-a single `mniGroup` whose matrix maps MNI → the scene frame:
+There is exactly one runtime coordinate transform in the app. The cortical and
+region assets are MNI152NLin2009cAsym RAS millimetres; fibre assets are consumed
+as MNI/ICBM RAS millimetres while their exact 2009a/2009c derivation is audited
+under `brain-atlas-yum.5`. `src/main.js` parents every layer to one `mniGroup`
+whose matrix maps that runtime frame into the scene:
 
 - scene `+x` = right, `+y` = up (MNI superior), `+z` = posterior (MNI −anterior);
 - that is a proper −90° rotation about the R axis (determinant +1), so left/right
@@ -71,9 +76,11 @@ a single `mniGroup` whose matrix maps MNI → the scene frame:
 - uniform scale (`MNI_SCALE`, 1 = millimetres) and a recentring translation
   (`MNI_CENTER`).
 
-Because co-registration comes from the shared MNI grid, no dataset needs any
-per-file fitting. To regenerate the surface, marching-cubes the MNI152 brain mask
-(same grid as the Jülich regions) — see the scratchpad `mesh_gen.py` pattern.
+No dataset receives runtime fitting. If the provenance audit identifies a source-
+space mismatch, the asset must be converted or regenerated offline rather than
+adding another scene transform. The cortical surface and Jülich regions do share
+the declared 2009c grid; their checked-in generation pipeline is tracked by
+`brain-atlas-yum.6`.
 
 ## Layout
 
@@ -81,18 +88,22 @@ per-file fitting. To regenerate the surface, marching-cubes the MNI152 brain mas
 flake.nix            Nix devShell (Node 22 + git); blocks bare `nix develop`
 .envrc / .envrc.d/   direnv: `use flake`, then npm install on entry
 index.html           app shell + control/legend overlay
-src/main.js          Three.js scene, data loading, activity models, and controls
+src/main.js          Three.js scene, data loading, activity integration, and controls
+src/activity/        renderer-independent seeded impulse and vibration math
 src/pathways.js      schematic anterior-pathway control points
 src/style.css        dark "imaging console" UI
+test/                 focused Node tests for extracted pure behavior
 public/models/       licensed runtime GLB assets, including brain_mni.glb
 .workbench/           ignored, non-deployed local asset experiments
 ```
 
 ## Controls
 
-Drag to orbit, scroll to zoom. Play/Pause flow + speed; **Cutaway** (a real mesh
+Drag to orbit, scroll to zoom. Play/Pause activity + speed; **Cutaway** (a real mesh
 clipping plane that slices the near hemisphere); **Tissue** opacity; Side / Top /
-Back / Front presets; Auto-rotate, Labels, Reset.
+Back / Front presets; Auto-rotate, Labels, Reset. With reduced-motion preference,
+traveling activity and auto-rotation start paused and the activity button remains
+disabled.
 
 ## What's real vs schematic
 
@@ -103,14 +114,24 @@ overall anatomy reads correctly**:
   shell); the amber **optic radiation** (HCP-1065 streamlines, re-tracked so they
   terminate at the LGN — the density you see is real fibre density); and the
   **LGN** and **V1** region shells (Jülich-Brain).
+- **Modeled activity on data-derived geometry:** all eight named association
+  bundles carry seeded, inhibited code-like impulses in both directions.
+  Diffusion MRI does not measure polarity, so direction is sampled per accepted
+  event from an explicit 50/50 assumption for each tract and hemisphere. Rates,
+  inhibition/refractory timing, and speed are illustrative display algorithms,
+  not measured spikes or physiology. The in-view **Association model & sources**
+  disclosure links the tract evidence. “Inhibition” means per-channel refractory
+  self-inhibition and recovery, not inhibition between anatomical tracts.
 - **Schematic (labelled in the legend):** the anterior pathway (eye → chiasm →
   LGN) and its flow dots, the eye markers, and the LGN→V1 tracer *timing* — a
-  physiologically-patterned but illustrative firing model (superposition +
+  physiologically patterned but illustrative firing model (superposition +
   thinning, with refractoriness and bursts), not recorded spikes. Biological
   time is dilated so the pattern is legible on screen.
+- **Undirected activity:** superficial-WM/U-fibre dots vibrate along real
+  bilateral contours without assigned travel direction.
 - **Mirrored:** the right optic radiation is a sagittal mirror of the left until
-  real right-side streamlines are added. Region and superficial-WM data are real
-  bilateral data.
+  independently generated right-side streamlines replace it. Region,
+  association-tract, and superficial-WM geometry are real bilateral data.
 
 ## Citing the viewer
 
@@ -144,6 +165,9 @@ Principal sources:
 
 See [`DATA_LICENSES.md`](DATA_LICENSES.md) for source links, citations, license
 terms, modification disclosures, and the required WU-Minn HCP acknowledgment.
+See [`docs/SCIENTIFIC_TRACEABILITY.md`](docs/SCIENTIFIC_TRACEABILITY.md) for the
+layer-by-layer separation of anatomical data, derivation, modeled activity,
+display choices, assumptions, and known fidelity gaps.
 See [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) for software and model
 notices.
 
@@ -158,8 +182,9 @@ or models, which remain under their respective terms.
 
 The viewer currently renders the MNI cortical shell, real bilateral Jülich region
 meshes, optic-radiation streamlines, association tracts, and superficial
-white-matter fibres. Directed tracers are limited to the biologically directed
-visual pathway; undirected bundles use non-travelling activity textures.
+white-matter fibres. The biologically directed visual pathway retains one-way
+travel; every named long association tract uses disclosed stochastic 50/50
+population impulses; superficial U-fibres retain direction-neutral vibration.
 
 See [`docs/FUTURE_FEATURES.md`](docs/FUTURE_FEATURES.md) for researched future
 directions and [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the current

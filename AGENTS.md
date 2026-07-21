@@ -2,23 +2,25 @@
 
 `brain-atlas` is an interactive 3D WebGL/Three.js viewer of the human **visual
 system**, rendered as animated flow inside a real translucent cortical surface.
-Everything posterior to the optic chiasm is real, co-registered data in one MNI152
-space; only the anterior eye→chiasm→LGN segment is schematic. `src/main.js` is
-essentially the whole app.
+Everything posterior to the optic chiasm is real atlas/template data interpreted
+in one runtime MNI/ICBM RAS-millimetre frame; only the anterior
+eye→chiasm→LGN segment is schematic. `src/main.js` is essentially the whole app.
 
 ## The two rules that matter most
 
-### 1. One coordinate space, one transform
-Every dataset — cortical surface, region shells, optic-radiation and association
-streamlines, superficial-WM fibres — is authored in **MNI152NLin2009cAsym RAS
-millimetres**. They are all parented to a single `mniGroup` whose matrix
-(`sceneFromMni`) is the ONLY coordinate transform in the app: a proper −90°
-rotation about the R axis (determinant +1, so left/right **and** chirality are
-preserved — Meyer's loop hooks the anatomical way), a uniform mm scale, and a
-recentring translation.
+### 1. One coordinate frame, one runtime transform
+The cortical surface and region shells are authored in
+**MNI152NLin2009cAsym RAS millimetres**. Fibre assets are also loaded as MNI/ICBM
+RAS millimetres, but their upstream HCP sources identify ICBM 2009a or generic
+ICBM152; the exact release/conversion history is an open provenance gate
+(`brain-atlas-yum.5`). Every layer is parented to one `mniGroup` whose matrix
+(`sceneFromMni`) is the ONLY runtime transform: a proper −90° rotation about the
+R axis (determinant +1, so left/right and chirality are preserved), uniform mm
+scale, and recentering translation.
 
-- Do not add a second transform, per-dataset fitting, or marker-based alignment.
-  Co-registration is free because everything shares the MNI grid.
+- Do not add a second runtime transform, per-dataset fitting, or marker-based
+  alignment. If the provenance audit finds a mismatch, convert or regenerate the
+  asset offline, record the derivation, and keep the single runtime transform.
 - Jülich MPM right label = left label + 1000. Render real bilateral region meshes;
   do not introduce new mirroring. The optic-radiation dataset remains the one
   documented legacy exception until real right-side streamlines replace it.
@@ -26,13 +28,13 @@ recentring translation.
 ### 2. Honesty of representation — never imply structure the data lacks
 This is the project's defining constraint.
 
-- **Direction.** Draw directed, travelling flow ONLY where biology supplies a
-  direction (retina→LGN→V1: the optic radiation and the anterior pathway). For
-  **undirected** bundles (superficial WM, association tracts) never imply a flow
-  direction — no arrowheads, no net travel. Show orientation as a *static tangent
-  grain*; show activity as *vibration ALONG the contour* (a zero-mean sinusoid
-  with random per-dot phase, so there is no net displacement). See the SWM texture
-  (`swmGroup` / `updateSwm` in `src/main.js`).
+- **Direction.** Draw directed travel only when biology or an explicitly
+  disclosed activity model supplies direction. Retina→LGN→V1 is biologically
+  directed. Named long association tracts use modeled stochastic code events:
+  source→endpoint probability comes from cited evidence where defensible and
+  otherwise from a labelled 50/50 assumption. Never use streamline array order
+  as measured polarity. Superficial WM/U-fibres remain a static tangent grain
+  with zero-mean along-contour vibration and no net travel.
 - **Fibre orientation is undirected.** Never average fibre direction vectors
   (average structure tensors if you must combine them).
 - **Amplitude/frequency channels** must map to real structure (e.g. vibration
@@ -42,7 +44,9 @@ This is the project's defining constraint.
   only when labelled and the overall anatomy reads correctly.
 
 ## Data provenance
-- Space: MNI152NLin2009cAsym (TemplateFlow), 1 mm grid.
+- Surface/region space: MNI152NLin2009cAsym (TemplateFlow), 1 mm grid.
+- Fibre source-space identity/conversion: unresolved audit `brain-atlas-yum.5`;
+  do not strengthen the claim beyond the asset metadata and traceability record.
 - Regions: Jülich-Brain v3.0.3 Maximum Probability Map (winner-take-all).
 - Optic radiation / association tracts / superficial WM: HCP-1065 population
   template, tracked with DSI Studio on the ICBM152-2009a FIB.
@@ -134,9 +138,13 @@ Meshing and tractography run offline and emit small JSON/OBJ/GLB into
   renders the collapsible stream tree (regions + tracts, each with L/R pills) and
   leaf toggles (Pathways + Scene). Layer objects live in `layerObjs`; `DEFAULT_OFF`
   starts some hidden.
-- Flow: LGN→V1 firing is a superposition+thinning inhomogeneous-Poisson model
-  (`initFiring` / `generateFiring` / `updateTracers`); tract flow and SWM vibration
-  are separate updaters (`updateTractTracers`, `updateSwm`).
+- Activity: LGN→V1 firing is a superposition+thinning inhomogeneous-Poisson model
+  (`initFiring` / `generateFiring` / `updateTracers`). Named association tracts
+  use the seeded inhibited event engine in `src/activity/association-impulses.js`
+  plus the thin `updateTractImpulses` renderer adapter; v1 samples direction per
+  accepted event from explicit bilateral 50/50 metadata in
+  `public/data/tract_activity.json`. SWM keeps its separate zero-mean vibration
+  updater (`updateSwm`).
 - Region material is a fresnel rim-fade shader (near-transparent interior, bright
   silhouette) so overlapping shells read as outlines.
 - Development mode exposes `window.__view = { camera, controls, scene, THREE }`
@@ -146,13 +154,15 @@ Meshing and tractography run offline and emit small JSON/OBJ/GLB into
 
 ## Run and verify
 ```bash
+npm test                            # focused renderer-independent state/activity tests
 npm run dev                         # Vite dev server → http://localhost:5180
 npm run build && npm run preview    # static, HMR-free — use for stable viewing
 ```
-There is **no automated test suite**. Verify changes visually: load the page,
-confirm the browser console is error-free, drive the scene via the development-only
-`window.__view` hook and the layer panel (see `skills/user.md`), and screenshot. HMR full-reloads can churn
-the WebGL context — prefer the static preview when inspecting.
+The automated suite covers only extracted pure behavior; it does not replace
+visual verification. Load the page, confirm the browser console is error-free,
+drive the scene through the development-only `window.__view` hook and layer panel
+(see `skills/user.md`), and capture a screenshot. HMR full-reloads can churn the
+WebGL context, so prefer the static preview when inspecting.
 
 ## Review expectations
 - Prioritise coordinate/transform correctness, honest labelling (real vs

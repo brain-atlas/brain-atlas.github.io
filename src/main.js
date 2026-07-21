@@ -5,6 +5,14 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 import { ANT_PATHS, LANDMARKS, SPHERES } from './pathways.js';
+import {
+  advanceAssociationTime,
+  associationGroupsFromManifest,
+  associationModelFromManifest,
+  canonicalContourParameter,
+  createAssociationImpulseEngine,
+  updateAssociationEventPool,
+} from './activity/association-impulses.js';
 
 // ---------------------------------------------------------------------------
 const stage = document.getElementById('stage');
@@ -41,15 +49,14 @@ const key = new THREE.DirectionalLight(0xffffff, 1.1); key.position.set(1, 1.2, 
 const fill = new THREE.DirectionalLight(0x88aaff, 0.5); fill.position.set(-1.2, -0.4, -1); scene.add(fill);
 
 // ---------------------------------------------------------------------------
-// MNI -> scene transform. This is the ONLY coordinate transform in the app.
-// Every dataset (brain surface, LGN/V1 regions, optic-radiation streamlines) is
-// authored in MNI152NLin2009cAsym RAS millimetres, so co-registration is free —
-// they share the template grid. The scene frame is RIGHT-HANDED:
+// MNI/ICBM RAS -> scene transform. This is the ONLY runtime coordinate transform.
+// Cortical and region assets identify MNI152NLin2009cAsym; fibre assets are
+// consumed as RAS millimetres while brain-atlas-yum.5 audits their exact
+// 2009a/2009c source-space derivation. The scene frame is RIGHT-HANDED:
 //   +x = right,  +y = up (MNI superior),  +z = posterior (MNI -anterior).
-// That is a proper -90 deg rotation about the R axis (determinant +1): it
-// preserves both left/right and chirality, so Meyer's loop hooks the anatomical
-// way. Objects are parented to mniGroup, whose matrix IS this transform, so no
-// dataset needs any per-file fitting.
+// The proper -90 deg R-axis rotation (determinant +1) preserves left/right and
+// chirality. Never fit a dataset here: any correction belongs in the documented
+// offline pipeline so every layer continues to share this one runtime transform.
 const MNI_CENTER = new THREE.Vector3(0, -17.5, 5);   // MNI bbox centre of the brain shell
 const MNI_SCALE = 1.0;                                // scene units are millimetres
 const sceneFromMni = new THREE.Matrix4()
@@ -144,7 +151,7 @@ const regionsById = {};
 const orLines = {}, orCaps = {};
 const hemiState = { L: true, R: true };     // global master L/R filter (ANDs with per-item)
 const regionHemi = {};                      // id -> {L,R} per-region hemisphere visibility
-const tractsById = {}, tractHemi = {};      // stream white-matter tracts + their L/R visibility
+const tractsById = {}, tractHemi = {};      // association tracts + their L/R visibility
 function applyRegionMesh(id) {
   const grp = regionsById[id], rh = regionHemi[id] || { L: true, R: true };
   if (grp) grp.traverse((n) => { if (n.isMesh && n.userData && n.userData.hemi) n.visible = hemiState[n.userData.hemi] && rh[n.userData.hemi]; });
@@ -344,13 +351,19 @@ function loadFibres() {
 }
 
 // ---------------------------------------------------------------------------
-// Visual-stream white-matter tracts (HCP-1065): faint bundles + coloured flow.
+// Visual-stream association tracts (HCP-1065): real population contours plus
+// modeled stochastic code-like impulses. Diffusion MRI supplies no polarity, so
+// direction is sampled per event from disclosed metadata, never array order.
 const tractGroup = new THREE.Group(); mniGroup.add(tractGroup);
-let tractsMeta = null, _regions = null;
+let tractsMeta = null, tractActivityMeta = null, _regions = null;
 function hexRGB(hex) { const n = parseInt(hex.replace('#', ''), 16); return [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255]; }
 function loadTracts() {
-  fetch('/data/tracts.json').then((r) => r.json()).then(({ tracts }) => {
+  Promise.all([
+    fetch('/data/tracts.json').then((r) => r.json()),
+    fetch('/data/tract_activity.json').then((r) => r.json()),
+  ]).then(([{ tracts }, activity]) => {
     tractsMeta = tracts;
+    tractActivityMeta = activity;
     for (const tr of tracts) {
       tractHemi[tr.id] = tractHemi[tr.id] || { L: true, R: true };
       const mat = new THREE.LineBasicMaterial({ color: tr.color, transparent: true, opacity: 0.06, blending: THREE.AdditiveBlending, depthWrite: false });
@@ -375,40 +388,100 @@ function loadTracts() {
       }
       tractsById[tr.id] = entry;
     }
+    initTractImpulses(activity);
     if (_regions) buildPanel(_regions, tractsMeta);   // rebuild the panel with the tracts section
-  }).catch((e) => console.warn('tracts load failed:', e));
+  }).catch((e) => console.warn('tract load failed:', e));
 }
 
-const MAXTT = 520;
-const ttGeo = new THREE.BufferGeometry();
-ttGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(MAXTT * 3), 3).setUsage(THREE.DynamicDrawUsage));
-ttGeo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(MAXTT * 3), 3).setUsage(THREE.DynamicDrawUsage));
-ttGeo.setDrawRange(0, 0);
-tractGroup.add(new THREE.Points(ttGeo, new THREE.PointsMaterial({ size: 2.0, map: SPR, vertexColors: true, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, sizeAttenuation: true })));
-const tractTracers = []; let ttAcc = 0;
-function updateTractTracers(dt) {
-  const sp = st.speed / 70, arr = ttGeo.attributes.position.array, col = ttGeo.attributes.color.array;
-  if (st.flow) {
-    const pairs = [];
-    for (const id in tractsById) for (const h of ['L', 'R']) if (tractsById[id].lines[h] && tractsById[id].lines[h].visible) pairs.push([id, h]);
-    ttAcc += dt * sp * 9 * pairs.length;   // constant density PER visible tract-hemisphere
-    while (ttAcc >= 1) {
-      ttAcc -= 1;
-      if (tractTracers.length < MAXTT && pairs.length) {
-        const [id, h] = pairs[Math.floor(Math.random() * pairs.length)];
-        const polys = tractsById[id][h];
-        tractTracers.push({ poly: polys[Math.floor(Math.random() * polys.length)], t: 0, speed: 0.3 + Math.random() * 0.18, rgb: tractsById[id].rgb });
-      }
+const MAX_TRACT_IMPULSES = 520;
+const tractImpulseGeo = new THREE.BufferGeometry();
+tractImpulseGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(MAX_TRACT_IMPULSES * 3), 3).setUsage(THREE.DynamicDrawUsage));
+tractImpulseGeo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(MAX_TRACT_IMPULSES * 3), 3).setUsage(THREE.DynamicDrawUsage));
+tractImpulseGeo.setDrawRange(0, 0);
+const tractImpulsePoints = new THREE.Points(tractImpulseGeo, new THREE.PointsMaterial({ size: 2.0, map: SPR, vertexColors: true, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, sizeAttenuation: true }));
+tractImpulsePoints.name = 'association-impulses';
+tractImpulsePoints.userData = { activity: 'modeled-association-impulses' };
+tractGroup.add(tractImpulsePoints);
+const tractActivityById = {};
+const tractContoursByGroup = {};
+const tractImpulseStats = {};
+let tractImpulseEngine = null;
+let tractImpulseTime = 0;
+let activeTractImpulses = [];
+function initTractImpulses(activity) {
+  for (const key of Object.keys(tractActivityById)) delete tractActivityById[key];
+  for (const key of Object.keys(tractContoursByGroup)) delete tractContoursByGroup[key];
+  for (const key of Object.keys(tractImpulseStats)) delete tractImpulseStats[key];
+  for (const tract of activity.tracts) {
+    tractActivityById[tract.id] = tract;
+    for (const hemi of ['L', 'R']) {
+      const groupId = `${tract.id}:${hemi}`;
+      tractContoursByGroup[groupId] = tractsById[tract.id][hemi];
+      tractImpulseStats[groupId] = { aToB: 0, bToA: 0 };
     }
-    for (const tr of tractTracers) tr.t += dt * sp * tr.speed;
-    for (let i = tractTracers.length - 1; i >= 0; i--) if (tractTracers[i].t > 1) tractTracers.splice(i, 1);
   }
+  tractImpulseEngine = createAssociationImpulseEngine({
+    groups: associationGroupsFromManifest(activity),
+    seed: activity.model.seed,
+    model: associationModelFromManifest(activity),
+  });
+  tractImpulseTime = 0;
+  activeTractImpulses = [];
+  if (import.meta.env.DEV) {
+    window.__view.association = {
+      points: tractImpulsePoints,
+      get modelTime() { return tractImpulseTime; },
+      get activeCount() { return activeTractImpulses.length; },
+      get renderedGroups() {
+        return activeTractImpulses
+          .map((event) => event.groupId)
+          .filter((groupId) => {
+            const [id, hemi] = groupId.split(':');
+            return tractsById[id].lines[hemi].visible;
+          });
+      },
+      get stats() { return structuredClone(tractImpulseStats); },
+    };
+  }
+}
+function updateTractImpulses(dt) {
+  if (!tractImpulseEngine) { tractImpulseGeo.setDrawRange(0, 0); return; }
+  const nextTime = advanceAssociationTime(tractImpulseTime, dt, {
+    playing: st.flow,
+    speed: st.speed / 70,
+    reducedMotion: reduce,
+  });
+  const logicalEvents = nextTime > tractImpulseTime ? tractImpulseEngine.advanceTo(nextTime) : [];
+  tractImpulseTime = nextTime;
+  for (const event of logicalEvents) {
+    const counts = tractImpulseStats[event.groupId];
+    counts[event.aToB ? 'aToB' : 'bToA']++;
+  }
+  const pool = updateAssociationEventPool(activeTractImpulses, logicalEvents, tractImpulseTime, {
+    maxActive: tractActivityMeta.model.maxActiveRenderedImpulses,
+    contoursByGroup: tractContoursByGroup,
+    isVisible: (groupId) => {
+      const [id, hemi] = groupId.split(':');
+      return tractsById[id].lines[hemi].visible;
+    },
+  });
+  activeTractImpulses = reduce ? [] : pool.active;
+
+  const arr = tractImpulseGeo.attributes.position.array;
+  const col = tractImpulseGeo.attributes.color.array;
   let k = 0;
-  for (const tr of tractTracers) {
-    writeFibrePoint(tr.poly, tr.t, arr, k * 3);
-    col[k * 3] = tr.rgb[0]; col[k * 3 + 1] = tr.rgb[1]; col[k * 3 + 2] = tr.rgb[2]; k++;
+  for (const event of activeTractImpulses) {
+    const [id, hemi] = event.groupId.split(':');
+    if (!tractsById[id].lines[hemi].visible) continue;
+    const progress = (tractImpulseTime - event.time) * event.speed;
+    const rawT = canonicalContourParameter(event.contour, tractActivityById[id].endpointA.classifier, event.aToB, progress);
+    writeFibrePoint(event.contour, rawT, arr, k * 3);
+    const rgb = tractsById[id].rgb;
+    col[k * 3] = rgb[0]; col[k * 3 + 1] = rgb[1]; col[k * 3 + 2] = rgb[2]; k++;
   }
-  ttGeo.setDrawRange(0, k); ttGeo.attributes.position.needsUpdate = true; ttGeo.attributes.color.needsUpdate = true;
+  tractImpulseGeo.setDrawRange(0, k);
+  tractImpulseGeo.attributes.position.needsUpdate = true;
+  tractImpulseGeo.attributes.color.needsUpdate = true;
 }
 
 
@@ -508,7 +581,7 @@ function animate() {
     updateAnteriorFlow();
   }
   updateTracers(dt);
-  updateTractTracers(dt);
+  updateTractImpulses(dt);
   updateSwm(dt);
   controls.update();
   renderer.render(scene, camera);
@@ -527,11 +600,18 @@ function setBadge(txt) {
 }
 
 $('play').addEventListener('click', () => {
+  if (reduce) return;
   st.flow = !st.flow;
   $('play').classList.toggle('on', st.flow);
   $('playGlyph').textContent = st.flow ? '❚❚' : '▶';
-  $('playTxt').textContent = st.flow ? 'Pause flow' : 'Play flow';
+  $('playTxt').textContent = st.flow ? 'Pause activity' : 'Play activity';
 });
+if (reduce) {
+  $('play').disabled = true;
+  $('play').classList.remove('on');
+  $('playGlyph').textContent = '▶';
+  $('playTxt').textContent = 'Activity paused — reduced motion';
+}
 $('speed').addEventListener('input', (e) => { st.speed = +e.target.value; $('speedV').textContent = st.speed; setFill(e.target); });
 $('clip').addEventListener('input', (e) => { clipPlane.constant = 80 - (e.target.value / 100) * 160; $('clipV').textContent = e.target.value + '%'; setFill(e.target); });
 $('tissue').addEventListener('input', (e) => { brainMat.opacity = e.target.value / 100; $('tissueV').textContent = e.target.value; setFill(e.target); });
@@ -635,10 +715,7 @@ $('reset').addEventListener('click', () => { camera.position.copy(HOME); control
 
 [$('speed'), $('clip'), $('tissue')].forEach(setFill);
 brainMat.opacity = $('tissue').value / 100;
-if (reduce) {
-  st.flow = false; $('play').classList.remove('on'); $('playGlyph').textContent = '▶'; $('playTxt').textContent = 'Play flow';
-  $('spin').classList.remove('on');
-}
+if (reduce) $('spin').classList.remove('on');
 
 updateAnteriorFlow();
 loadBrain();

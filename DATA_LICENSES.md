@@ -8,6 +8,8 @@ project documentation, not legal advice.
 The hosted viewer is intended for noncommercial research, education, and
 personal use. Its Jülich-Brain-derived assets are licensed for noncommercial
 use only. Contact the relevant rights holders before any commercial use.
+Scientific interpretation and model limitations are inventoried separately in
+[`docs/SCIENTIFIC_TRACEABILITY.md`](docs/SCIENTIFIC_TRACEABILITY.md).
 
 ## License map
 
@@ -16,6 +18,7 @@ use only. Contact the relevant rights holders before any commercial use.
 | `public/models/brain_mni.glb` | MNI152NLin2009cAsym brain mask via TemplateFlow | MNI notice reproduced below |
 | `public/data/regions.json`, `public/data/regions/*.obj` | Jülich-Brain Atlas v3.0.3 maximum probability map | [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) |
 | `public/data/tracts.json` | HCP-1065 population-averaged tractography atlas | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) and WU-Minn HCP Open Access Data Use Terms |
+| `public/data/tract_activity.json` | Project-authored activity assumptions and source links; no anatomical geometry | [AGPL-3.0-only](LICENSE) |
 | `public/data/or_fibres.json`, `public/data/swm_fibres.json` | HCP-1065 population template processed with DSI Studio | WU-Minn HCP Open Access Data Use Terms |
 | `docs/assets/org-avatar.png`, `public/favicon.ico`, `public/favicon-32x32.png`, `public/apple-touch-icon.png` | Viewer-derived rendering of the MNI cortical surface and HCP-derived tracts | Source terms above; adapted artwork under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) and HCP terms |
 
@@ -100,6 +103,11 @@ The atlas and these adapted tract data are licensed under
 [Creative Commons Attribution-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-sa/4.0/).
 They also derive from WU-Minn HCP data and remain subject to the
 [WU-Minn HCP Consortium Open Access Data Use Terms](https://www.humanconnectome.org/study/hcp-young-adult/document/wu-minn-hcp-consortium-open-access-data-use-terms).
+
+`public/data/tract_activity.json` is separate project-authored metadata. It does
+not add direction to the atlas data: it records the viewer's explicit 50/50
+assumption, endpoint-label heuristics, illustrative event parameters, and the
+scientific sources reviewed for each displayed bundle.
 
 ## HCP-1065-template-derived fibres
 

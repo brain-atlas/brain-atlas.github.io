@@ -4,7 +4,7 @@
 
 ## Runtime shape
 
-`src/main.js` owns the scene, loaders, animation models, and layer panel. `src/pathways.js` contains only schematic anterior-pathway coordinates. Keeping these concerns together is reasonable at the project's current size because they share scene state and ordering constraints.
+`src/main.js` owns the scene, loaders, renderer integration, and layer panel. `src/pathways.js` contains only schematic anterior-pathway coordinates. `src/activity/association-impulses.js` owns the renderer-independent seeded event engine, inhibition math, canonical endpoint mapping, and plain-data pool adapter. The Three.js adapter stays in `main.js`. Keep tightly shared scene concerns in `main.js`; extract modules only when they have an independent interface or testable lifecycle.
 
 Every anatomical layer is a child of `mniGroup`:
 
@@ -16,17 +16,27 @@ Every anatomical layer is a child of `mniGroup`:
 6. `tractGroup`
 7. `swmGroup`
 
-`sceneFromMni`, assigned to `mniGroup`, is the only coordinate transform. All child geometry remains in MNI152NLin2009cAsym RAS millimetres. Do not add dataset-specific transforms or alignment logic.
+`sceneFromMni`, assigned to `mniGroup`, is the only runtime coordinate transform. Cortical and region assets identify MNI152NLin2009cAsym; fibre assets are interpreted as MNI/ICBM RAS millimetres while `brain-atlas-yum.5` audits their exact 2009a/2009c provenance. Do not add dataset-specific runtime transforms or fitting: correct mismatches in the offline asset pipeline.
 
 `sceneState.visible` stores leaf-layer visibility. `hemiState` combines with per-region and per-tract hemisphere state. The render loop updates three distinct activity models:
 
 - directed anterior and optic-radiation flow;
-- illustrative tract tracers;
-- zero-mean superficial-white-matter vibration, which does not imply direction.
+- seeded inhibited association-tract impulses, with direction sampled per event
+  from explicit bilateral 50/50 metadata; and
+- zero-mean superficial-white-matter vibration.
+
+`public/data/tract_activity.json` separates association model provenance from
+`tracts.json` geometry. `createAssociationImpulseEngine().advanceTo()` produces
+plain logical events on an absolute model clock; `updateAssociationEventPool`
+handles deterministic visibility, cap, contour selection, and expiration before
+`updateTractImpulses` uploads positions and colours. Endpoint-only geometric
+heuristics orient A/B labels independently of source array order. Equal channel
+counts keep JSON sampling density from becoming an activity-rate claim.
+Superficial-white-matter vibration remains separate.
 
 ## Data loading
 
-The app loads the cortical GLB, JSON fibre datasets, a region manifest, and region OBJ meshes in parallel. Offline tools must produce web-sized, co-registered assets; runtime fitting and heavy data processing do not belong in the viewer.
+The app loads the cortical GLB, JSON fibre datasets, association-activity metadata, a region manifest, and region OBJ meshes in parallel. Offline tools must produce web-sized, co-registered assets; runtime fitting and heavy data processing do not belong in the viewer. `SCIENTIFIC_TRACEABILITY.md` records each asset's geometry and model provenance, including unresolved source-space and generator gaps.
 
 ## Architecture review
 

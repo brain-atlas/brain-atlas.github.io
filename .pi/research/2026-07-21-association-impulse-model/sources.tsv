@@ -1,0 +1,12 @@
+record	status	url	use
+Tractography polarity limits	verified-direct	https://doi.org/10.1089/brain.2011.0033	Diffusion tractography cannot discriminate afferent from efferent polarity
+Human axon-count estimate	verified-direct	https://doi.org/10.1371/journal.pbio.3001575	Axon counts do not classify displayed association bundles by source-to-target polarity
+Human 3D polarized-light imaging	verified-direct	https://doi.org/10.3389/fninf.2011.00034	Maps fibre orientation axes rather than axonal polarity
+Fixed-human DiI review	verified-direct	https://doi.org/10.3390/biom14050536	Bidirectional labeling and limited reach do not yield bundle direction percentages
+ILF review	verified-direct	https://doi.org/10.3389/fnana.2018.00077	Endpoint anatomy and qualitative bidirectionality without a quantitative ratio
+IFOF review	verified-direct	https://doi.org/10.1093/brain/awaf055	Endpoint anatomy and unresolved interpretation without a quantitative ratio
+SLF review	verified-direct	https://doi.org/10.3389/fneur.2022.794618	SLF I-III anatomy and termination uncertainty without a quantitative ratio
+VOF study	verified-direct	https://doi.org/10.1073/pnas.1418503111	Dorsal-ventral visual cortex connectivity without a quantitative ratio
+Arcuate review	verified-direct	https://doi.org/10.1002/brb3.3107	Frontotemporal association anatomy without a quantitative ratio
+MdLF review	verified-direct	https://doi.org/10.3389/fnana.2020.610324	Subcomponents and termination uncertainty without a quantitative ratio
+Ogata thinning method	verified-crossref	https://doi.org/10.1109/TIT.1981.1056305	Candidate superposition and thinning algorithm

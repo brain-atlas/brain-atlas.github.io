@@ -1,0 +1,14 @@
+record	status	url
+TemplateFlow paper	verified-direct	https://doi.org/10.1038/s41592-022-01681-2
+MNI152NLin2009cAsym archive	verified-direct	https://github.com/templateflow/tpl-MNI152NLin2009cAsym
+Jülich-Brain paper	verified-crossref	https://doi.org/10.1126/science.abb4588
+Jülich-Brain v3.0.3 dataset	verified-resolve-and-search-metadata	https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8
+Yeh 2022	verified-crossref	https://doi.org/10.1038/s41467-022-32595-4
+HCP-1065 tract atlas	verified-direct	https://brain.labsolver.org/hcp_trk_atlas.html
+HCP-1065 fibre template	verified-direct	https://brain.labsolver.org/hcp_template.html
+DSI Studio paper	verified-crossref	https://doi.org/10.1038/s41592-025-02762-8
+WU-Minn HCP terms	verified-direct	https://www.humanconnectome.org/study/hcp-young-adult/document/wu-minn-hcp-consortium-open-access-data-use-terms
+WU-Minn HCP citation guidance	verified-direct	https://www.humanconnectome.org/study/hcp-young-adult/document/hcp-citations
+HCP overview paper	verified-crossref	https://doi.org/10.1016/j.neuroimage.2013.05.041
+HCP diffusion paper	verified-crossref	https://doi.org/10.1016/j.neuroimage.2013.05.057
+MNI ICBM152 2009 releases	verified-direct	http://www.bic.mni.mcgill.ca/ServicesAtlases/ICBM152NLin2009

@@ -63,7 +63,7 @@ swm.visible = true; swm.traverse(o => { o.visible = true; });
 ```
 
 ## Controls (DOM ids)
-`#play` play/pause flow · `#speed` flow speed · `#clip` cutaway (near-hemisphere
+`#play` play/pause activity · `#speed` activity speed · `#clip` cutaway (near-hemisphere
 clip plane) · `#tissue` surface opacity · `[data-view]` camera presets
 (`lateral` / `top` / `post` / `ant`) · `#spin` auto-rotate · `#reset` home view.
 
@@ -72,8 +72,10 @@ Describe layers by what the data supports (this mirrors the honesty rule in
 `AGENTS.md`):
 - **Optic radiation** (`or`, amber) — REAL HCP-1065 streamlines; the flowing dots
   are DIRECTED (LGN→V1) because that pathway has a real direction.
-- **White-matter tracts** — REAL bundles; coloured flow reads as directed stream
-  activity along known pathways.
+- **White-matter tracts** — REAL population association-tract contours with
+  MODELED stochastic code-like impulses. Each event independently samples one
+  of two endpoint directions from an explicit 50/50 assumption; diffusion MRI
+  does not measure polarity. Timing, inhibition, and speed are illustrative.
 - **Superficial fibres** (`swm`, violet) — REAL cortico-cortical short-fibre
   ORIENTATION as a static grain; the dots vibrate ALONG each contour with **no net
   direction** (none is measured). Swing width ∝ local fibre length.
@@ -81,5 +83,5 @@ Describe layers by what the data supports (this mirrors the honesty rule in
 - **Structures** — Jülich-Brain MPM region shells (real bilateral, fresnel
   outlines).
 
-Never narrate the undirected layers (SWM, association tracts) as though their flow
-had a direction.
+Never describe association streamline order as biological polarity or the 50/50
+model as measured anatomy. Never narrate SWM/U-fibre vibration as traveling flow.

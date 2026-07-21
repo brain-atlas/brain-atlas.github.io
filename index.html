@@ -27,6 +27,14 @@
       <div class="leg-item"><span class="dot" data-q="ru"></span><span><b>Right eye</b>, nasal fibres → cross at the chiasm → <b>left</b> LGN</span></div>
       <div class="leg-item"><span class="dot" data-q="lu"></span><span><b>Left eye</b>, nasal fibres → cross at the chiasm → <b>right</b> LGN</span></div>
       <div class="leg-item"><span class="dot" style="background:#ffb060"></span><span><b>LGN → V1</b> along the real optic radiation (amber fibres; tracers fired down them)</span></div>
+      <div class="leg-item"><span class="dot" style="background:#c45cff"></span><span><b>Association impulses — modeled:</b> stochastic events travel both ways on data-derived HCP-1065 tractography contours</span></div>
+      <details class="model-sources">
+        <summary>Association model &amp; sources</summary>
+        <p><b>Geometry:</b> population tractography contours from HCP-1065. They are not individual axons and do not contain measured polarity.</p>
+        <p><b>Direction:</b> sampled per event using an explicit 50/50 source-to-endpoint assumption for every named association tract. Diffusion MRI cannot distinguish afferent from efferent axons, and this review found no defensible quantitative human ratios.</p>
+        <p><b>Timing:</b> rates, per-channel refractory self-inhibition and recovery, and travel speed are illustrative display algorithms—not measured spikes, conduction speed, or neuronal physiology.</p>
+        <p class="model-links"><a href="https://doi.org/10.1089/brain.2011.0033" target="_blank" rel="noopener noreferrer">Polarity limits</a> · <a href="https://doi.org/10.3389/fnana.2018.00077" target="_blank" rel="noopener noreferrer">ILF</a> · <a href="https://doi.org/10.1093/brain/awaf055" target="_blank" rel="noopener noreferrer">IFOF</a> · <a href="https://doi.org/10.3389/fneur.2022.794618" target="_blank" rel="noopener noreferrer">SLF</a> · <a href="https://doi.org/10.1073/pnas.1418503111" target="_blank" rel="noopener noreferrer">VOF</a> · <a href="https://doi.org/10.1002/brb3.3107" target="_blank" rel="noopener noreferrer">Arcuate</a> · <a href="https://doi.org/10.3389/fnana.2020.610324" target="_blank" rel="noopener noreferrer">MdLF</a></p>
+      </details>
       <p class="leg-note">Each hemisphere sees the <b>opposite</b> half-field: nasal-retinal fibres cross at
         the chiasm, the LGN relays, then the optic radiation carries the signal back to V1 — the upper field
         detouring forward through Meyer's loop.<br><br><b>Real data (MNI152):</b> cortical surface, the amber
@@ -39,8 +47,8 @@
       <h2>Layers</h2>
       <div id="layers" class="layer-tree"></div>
       <h2 style="margin-top:16px">Controls</h2>
-      <button id="play" class="play on"><span class="glyph" id="playGlyph">❚❚</span><span id="playTxt">Pause flow</span></button>
-      <div class="row"><span class="lbl">Flow speed</span><input id="speed" type="range" min="15" max="160" value="70"><span class="val" id="speedV">70</span></div>
+      <button id="play" class="play on"><span class="glyph" id="playGlyph">❚❚</span><span id="playTxt">Pause activity</span></button>
+      <div class="row"><span class="lbl">Activity speed</span><input id="speed" type="range" min="15" max="160" value="70"><span class="val" id="speedV">70</span></div>
       <div class="row"><span class="lbl">Cutaway</span><input id="clip" type="range" min="0" max="100" value="0"><span class="val" id="clipV">0%</span></div>
       <div class="row"><span class="lbl">Tissue</span><input id="tissue" type="range" min="0" max="100" value="16"><span class="val" id="tissueV">16</span></div>
       <div class="row" style="margin-top:14px"><span class="lbl">View</span>
