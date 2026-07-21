@@ -15,10 +15,26 @@ import {
 } from './activity/association-impulses.js';
 import { createSwmVibration, vibrationContourParameter } from './activity/swm-vibration.js';
 import { createFrameDeltaReader } from './activity/frame-time.js';
+import { createRendererAdapter } from './lesson/index.js';
+import { createCameraTransition, sampleCameraTransition } from './ui/camera-transition.js';
 
 // ---------------------------------------------------------------------------
 const stage = document.getElementById('stage');
 const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+const viewerReadyParts = new Set();
+let resolveViewerReady, rejectViewerReady;
+export const viewerReady = new Promise((resolve, reject) => {
+  resolveViewerReady = resolve;
+  rejectViewerReady = reject;
+});
+function markViewerReady(part) {
+  viewerReadyParts.add(part);
+  if (viewerReadyParts.has('regions') && viewerReadyParts.has('tracts')) resolveViewerReady();
+}
+function failViewerReady(error) {
+  rejectViewerReady(error instanceof Error ? error : new Error(String(error)));
+}
 
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
@@ -154,18 +170,36 @@ const orLines = {}, orCaps = {};
 const hemiState = { L: true, R: true };     // global master L/R filter (ANDs with per-item)
 const regionHemi = {};                      // id -> {L,R} per-region hemisphere visibility
 const tractsById = {}, tractHemi = {};      // association tracts + their L/R visibility
+let lessonVisibilityActive = false;
+let lessonRendererVisibility = new Set();
+function lessonAllows(kind, id) {
+  return !lessonVisibilityActive || lessonRendererVisibility.has(`${kind}:${id}`);
+}
 function applyRegionMesh(id) {
   const grp = regionsById[id], rh = regionHemi[id] || { L: true, R: true };
-  if (grp) grp.traverse((n) => { if (n.isMesh && n.userData && n.userData.hemi) n.visible = hemiState[n.userData.hemi] && rh[n.userData.hemi]; });
+  if (grp) {
+    grp.visible = lessonAllows('region', id);
+    grp.traverse((n) => { if (n.isMesh && n.userData && n.userData.hemi) n.visible = hemiState[n.userData.hemi] && rh[n.userData.hemi]; });
+  }
 }
 function applyTractMesh(id) {
   const t = tractsById[id], th = tractHemi[id] || { L: true, R: true };
-  if (t) for (const h of ['L', 'R']) { const vis = hemiState[h] && th[h]; if (t.lines[h]) t.lines[h].visible = vis; if (t.caps && t.caps[h]) t.caps[h].visible = vis; }
+  if (t) for (const h of ['L', 'R']) {
+    const vis = lessonAllows('tract', id) && hemiState[h] && th[h];
+    if (t.lines[h]) t.lines[h].visible = vis;
+    if (t.caps && t.caps[h]) t.caps[h].visible = vis;
+  }
 }
 function applyHemi() {
   for (const id in regionsById) applyRegionMesh(id);
   for (const id in tractsById) applyTractMesh(id);
-  for (const h of ['L', 'R']) { if (orLines[h]) orLines[h].visible = hemiState[h]; if (orCaps[h]) orCaps[h].visible = hemiState[h]; if (swmLines[h]) swmLines[h].visible = hemiState[h]; }
+  for (const h of ['L', 'R']) {
+    const orVisible = lessonAllows('layer', 'or') && hemiState[h];
+    const swmVisible = lessonAllows('layer', 'swm') && hemiState[h];
+    if (orLines[h]) orLines[h].visible = orVisible;
+    if (orCaps[h]) orCaps[h].visible = orVisible;
+    if (swmLines[h]) swmLines[h].visible = swmVisible;
+  }
 }
 // Region material: fresnel rim-fade. The interior is nearly transparent and the
 // silhouette (where the surface turns away from the camera) glows, so overlapping
@@ -198,7 +232,8 @@ function loadRegions() {
       regionGroup.add(group); regionsById[reg.id] = group;
     }
     _regions = regions; buildPanel(regions, tractsMeta);
-  }).catch((e) => console.warn('regions manifest failed:', e));
+    markViewerReady('regions');
+  }).catch((e) => { console.warn('regions manifest failed:', e); failViewerReady(e); });
 }
 
 // ---------------------------------------------------------------------------
@@ -240,6 +275,9 @@ let simT = 0, nextCandT = 0;
 const burstQueue = [];                           // {t, f} scheduled burst spikes
 
 function initFiring() {
+  simT = 0;
+  burstQueue.length = 0;
+  tracers.length = 0;
   fiberStates = [];
   const sides = [FIB.L, FIB.R];
   for (let s = 0; s < 2; s++) for (let i = 0; i < sides[s].length; i++) {
@@ -392,7 +430,8 @@ function loadTracts() {
     }
     initTractImpulses(activity);
     if (_regions) buildPanel(_regions, tractsMeta);   // rebuild the panel with the tracts section
-  }).catch((e) => console.warn('tract load failed:', e));
+    markViewerReady('tracts');
+  }).catch((e) => { console.warn('tract load failed:', e); failViewerReady(e); });
 }
 
 const MAX_TRACT_IMPULSES = 520;
@@ -553,11 +592,11 @@ function loadSwm() {
 function updateSwm(dt) {
   if (!swmDots.length || !swmGroup.visible) { swmGeo.setDrawRange(0, 0); return; }
   const arr = swmGeo.attributes.position.array;
-  if (st.flow && !reduce) swmT += dt * (st.speed / 70);
+  if (st.flow && !reduce && !st.settled) swmT += dt * (st.speed / 70);
   let k = 0;
   for (const d of swmDots) {
     if (!hemiState[d.hemi]) continue;
-    const t = reduce ? d.home : vibrationContourParameter(d, swmT);   // bounded vibration ALONG the contour
+    const t = (reduce || st.settled) ? d.home : vibrationContourParameter(d, swmT);   // bounded vibration ALONG the contour
     writeFibrePoint(d.poly, t, arr, k * 3); k++;
   }
   swmGeo.setDrawRange(0, k);
@@ -566,10 +605,11 @@ function updateSwm(dt) {
 
 // ---------------------------------------------------------------------------
 // State + loop
-const st = { flow: !reduce, speed: 70, phase: 0 };
+const st = { flow: !reduce, speed: 70, phase: 0, settled: reduce };
 const timer = new THREE.Timer();
 timer.connect(document);
 const readFrameDelta = createFrameDeltaReader(timer);
+let lessonCameraTransition = null;
 
 function resize() {
   const w = stage.clientWidth, h = stage.clientHeight;
@@ -590,6 +630,12 @@ function updateAnteriorFlow() {
 }
 function animate(timestamp) {
   const dt = readFrameDelta(timestamp);
+  if (lessonCameraTransition) {
+    const pose = sampleCameraTransition(lessonCameraTransition, timestamp);
+    camera.position.fromArray(pose.position);
+    controls.target.fromArray(pose.target);
+    if (pose.done) lessonCameraTransition = null;
+  }
   if (st.flow) {
     st.phase = (st.phase + dt * (st.speed / 70) * 0.075) % 1;
     updateAnteriorFlow();
@@ -616,6 +662,7 @@ function setBadge(txt) {
 $('play').addEventListener('click', () => {
   if (reduce) return;
   st.flow = !st.flow;
+  if (st.flow) st.settled = false;
   $('play').classList.toggle('on', st.flow);
   $('playGlyph').textContent = st.flow ? '❚❚' : '▶';
   $('playTxt').textContent = st.flow ? 'Pause activity' : 'Play activity';
@@ -717,6 +764,151 @@ function buildPanel(regions, tracts) {
   leafSec('Pathways', [{ id: 'or', label: 'Optic radiation', color: '#ffb060' }, { id: 'swm', label: 'Superficial fibres', color: '#9a90c0', dim: true }, { id: 'anterior', label: 'Anterior pathway', dim: true }]);
   leafSec('Scene', [{ id: 'brain', label: 'Cortical surface' }, { id: 'labels', label: 'Labels' }]);
   applyHemi();
+}
+
+function layerGroup(id) {
+  return { brain: brainGroup, or: fibreGroup, anterior: anteriorGroup, labels: labelGroup, swm: swmGroup }[id] || null;
+}
+function lessonRendererObjects(entity) {
+  const { kind, id } = entity.renderer;
+  if (kind === 'layer') return [layerGroup(id)].filter(Boolean);
+  if (kind === 'region') return [regionsById[id]].filter(Boolean);
+  if (kind === 'tract') {
+    const tract = tractsById[id];
+    return tract ? [...Object.values(tract.lines), ...Object.values(tract.caps)].filter(Boolean) : [];
+  }
+  return [];
+}
+function setLessonMaterialFactor(object, factor) {
+  object.traverse((node) => {
+    const materials = Array.isArray(node.material) ? node.material : [node.material];
+    for (const material of materials.filter(Boolean)) {
+      material.userData.lessonBaseOpacity ??= material.opacity;
+      material.opacity = Math.min(1, material.userData.lessonBaseOpacity * factor);
+    }
+  });
+}
+function resetLessonActivity() {
+  st.phase = 0;
+  swmT = 0;
+  if (FIB) initFiring();
+  if (tractActivityMeta) initTractImpulses(tractActivityMeta);
+}
+function settleLessonActivity() {
+  st.phase = 0;
+  swmT = 0;
+  tracers.length = 0;
+  trGeo.setDrawRange(0, 0);
+  activeTractImpulses = [];
+  tractImpulseGeo.setDrawRange(0, 0);
+  updateAnteriorFlow();
+  updateSwm(0);
+}
+function syncPlaybackControls() {
+  const playing = st.flow && !st.settled;
+  $('play').classList.toggle('on', playing);
+  $('playGlyph').textContent = playing ? '❚❚' : '▶';
+  $('playTxt').textContent = reduce ? 'Activity paused — reduced motion' : (playing ? 'Pause activity' : 'Play activity');
+  $('speed').value = st.speed;
+  $('speedV').textContent = st.speed;
+  setFill($('speed'));
+}
+
+export function createLessonRendererAdapter(catalog) {
+  let captured = { schemaVersion: 1 };
+  const remember = (axis, value) => { captured = { ...captured, [axis]: value }; };
+  const bindings = {
+    setCamera(value) {
+      remember('camera', value);
+      controls.autoRotate = false;
+      if (value.transition.kind === 'ease' && value.transition.durationMs > 0 && !reduce) {
+        lessonCameraTransition = createCameraTransition({
+          from: { position: camera.position.toArray(), target: controls.target.toArray() },
+          to: value,
+          startTime: performance.now(),
+          durationMs: value.transition.durationMs,
+        });
+      } else {
+        lessonCameraTransition = null;
+        camera.position.fromArray(value.position);
+        controls.target.fromArray(value.target);
+        controls.update();
+      }
+    },
+    setVisibility(value) {
+      remember('visibility', value);
+      lessonVisibilityActive = true;
+      lessonRendererVisibility = new Set(value.entities.map((entityId) => {
+        const rendererBinding = catalog.entitiesById[entityId].renderer;
+        return `${rendererBinding.kind}:${rendererBinding.id}`;
+      }));
+      for (const id of ['brain', 'or', 'anterior', 'labels', 'swm']) {
+        const group = layerGroup(id);
+        if (group) group.visible = lessonAllows('layer', id);
+      }
+      applyHemi();
+    },
+    setHemispheres(value) {
+      remember('hemispheres', value);
+      Object.assign(hemiState, value.global);
+      for (const entity of Object.values(catalog.entitiesById)) {
+        if (entity.renderer.kind === 'region') regionHemi[entity.renderer.id] = { L: true, R: true };
+        if (entity.renderer.kind === 'tract') tractHemi[entity.renderer.id] = { L: true, R: true };
+      }
+      for (const [entityId, hemispheres] of Object.entries(value.entities)) {
+        const entity = catalog.entitiesById[entityId];
+        if (entity.renderer.kind === 'region') regionHemi[entity.renderer.id] = { ...hemispheres };
+        if (entity.renderer.kind === 'tract') tractHemi[entity.renderer.id] = { ...hemispheres };
+      }
+      applyHemi();
+    },
+    setCutaway(value) {
+      remember('cutaway', value);
+      clipPlane.constant = 80 - (value.position / 100) * 160;
+      $('clip').value = value.position;
+      $('clipV').textContent = `${value.position}%`;
+      setFill($('clip'));
+    },
+    setMaterial(value) {
+      remember('material', value);
+      brainMat.opacity = value.tissueOpacity;
+      $('tissue').value = Math.round(value.tissueOpacity * 100);
+      $('tissueV').textContent = $('tissue').value;
+      setFill($('tissue'));
+    },
+    setPlayback(value) {
+      remember('playback', value);
+      st.speed = value.speed;
+      st.settled = reduce || value.settled;
+      st.flow = !st.settled && value.playing;
+      if (st.settled) settleLessonActivity();
+      else if (st.flow) resetLessonActivity();
+      syncPlaybackControls();
+    },
+    setSelection(value) {
+      remember('selection', value);
+      const emphasized = new Set(value.emphasized);
+      if (value.selected) emphasized.add(value.selected);
+      const hasFocus = emphasized.size > 0;
+      for (const entity of Object.values(catalog.entitiesById)) {
+        if (entity.id === 'layer.cortex' || entity.id === 'layer.labels') continue;
+        const factor = hasFocus ? (emphasized.has(entity.id) ? 1 + value.strength * 0.65 : 0.45) : 1;
+        for (const object of lessonRendererObjects(entity)) setLessonMaterialFactor(object, factor);
+      }
+    },
+    setVisual(value) { remember('visual', value); },
+    setControlPolicy(value) {
+      remember('controlPolicy', value);
+      controls.autoRotate = false;
+      controls.enabled = value.mode !== 'guided';
+      controls.enableRotate = value.mode !== 'guided';
+      controls.enablePan = value.mode === 'explore';
+      controls.enableZoom = value.mode === 'explore';
+      renderer.domElement.style.touchAction = value.mode === 'explore' ? 'none' : 'pan-y';
+    },
+    capture() { return structuredClone(captured); },
+  };
+  return createRendererAdapter(bindings, catalog);
 }
 
 const VIEWS = {

@@ -17,7 +17,10 @@ activity. **Model & sources** keeps those categories separate wherever they matt
 id: orientation
 title: Orient the pathway
 visual: atlas
-camera: home
+camera:
+  position: [210, 75, -195]
+  target: [0, 0, 0]
+  transition: { kind: ease, durationMs: 900 }
 show: [layer.cortex, layer.labels, pathway.anterior, region.lgn, region.v1]
 fidelity: [fidelity.anterior-pathway, fidelity.julich-regions]
 cutaway: 20
@@ -49,7 +52,10 @@ this stage does not make the schematic curves measured anatomy.
 id: nasal-crossing
 title: Nasal fibres cross at the chiasm
 visual: atlas
-camera: anterior
+camera:
+  position: [0, 30, -350]
+  target: [0, 0, 0]
+  transition: { kind: ease, durationMs: 900 }
 show: [layer.labels, pathway.anterior, region.lgn]
 fidelity: [fidelity.anterior-pathway, fidelity.julich-regions]
 cutaway: 0
@@ -82,7 +88,10 @@ illustrative.
 id: lgn-relay
 title: The LGN is the thalamic relay
 visual: atlas
-camera: top
+camera:
+  position: [0, 350, 0.01]
+  target: [0, 0, 0]
+  transition: { kind: ease, durationMs: 900 }
 show: [layer.cortex, layer.labels, pathway.anterior, region.lgn]
 fidelity: [fidelity.anterior-pathway, fidelity.julich-regions]
 cutaway: 42
@@ -114,7 +123,10 @@ settled scene does not claim to show recorded LGN firing.
 id: optic-radiation
 title: The optic radiation carries the signal posteriorly
 visual: atlas
-camera: lateral
+camera:
+  position: [300, 15, 0]
+  target: [0, 0, 0]
+  transition: { kind: ease, durationMs: 900 }
 show: [layer.cortex, layer.labels, pathway.optic-radiation, region.lgn, region.v1]
 fidelity: [fidelity.julich-regions, fidelity.optic-radiation]
 cutaway: 58
@@ -147,7 +159,10 @@ illustrative**—they are not recorded spikes or measured physiology.
 id: v1-arrival
 title: The pathway arrives in V1
 visual: atlas
-camera: posterior
+camera:
+  position: [0, 30, 350]
+  target: [0, 0, 0]
+  transition: { kind: ease, durationMs: 900 }
 show: [layer.cortex, layer.labels, pathway.optic-radiation, region.v1]
 fidelity: [fidelity.julich-regions, fidelity.optic-radiation]
 cutaway: 38
