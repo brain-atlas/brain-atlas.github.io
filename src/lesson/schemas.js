@@ -88,6 +88,132 @@ const cameraSchema = {
   ],
 };
 
+const cameraPresetSchema = {
+  type: 'object',
+  additionalProperties: false,
+  required: ['position', 'target'],
+  properties: {
+    position: { type: 'array', minItems: 3, maxItems: 3, items: { type: 'number' } },
+    target: { type: 'array', minItems: 3, maxItems: 3, items: { type: 'number' } },
+  },
+};
+
+export const entityCatalogSchema = {
+  type: 'object',
+  additionalProperties: false,
+  required: ['schemaVersion', 'cameraPresets', 'entities'],
+  properties: {
+    schemaVersion: { const: LESSON_SCHEMA_VERSION },
+    cameraPresets: {
+      type: 'object',
+      minProperties: 1,
+      additionalProperties: cameraPresetSchema,
+    },
+    entities: {
+      type: 'array',
+      items: {
+        type: 'object',
+        additionalProperties: false,
+        required: ['id', 'type', 'label', 'renderer', 'hemisphereMode', 'fidelity'],
+        properties: {
+          id: stableId,
+          type: { enum: ['layer', 'pathway', 'region', 'tract'] },
+          label: nonEmptyText,
+          renderer: {
+            type: 'object',
+            additionalProperties: false,
+            required: ['kind', 'id'],
+            properties: {
+              kind: { enum: ['layer', 'region', 'tract'] },
+              id: nonEmptyText,
+            },
+          },
+          hemisphereMode: { enum: ['none', 'global', 'bilateral'] },
+          fidelity: stableId,
+        },
+      },
+    },
+  },
+};
+
+const fidelityStatuses = [
+  'data-derived', 'derived', 'mirrored', 'modeled', 'schematic',
+  'illustrative', 'display-only', 'none',
+];
+const statusSection = {
+  type: 'object',
+  additionalProperties: false,
+  required: ['statuses', 'summary'],
+  properties: {
+    statuses: {
+      type: 'array',
+      minItems: 1,
+      uniqueItems: true,
+      items: { enum: fidelityStatuses },
+    },
+    summary: nonEmptyText,
+  },
+};
+const sourceRecord = {
+  type: 'object',
+  additionalProperties: false,
+  required: ['label', 'url'],
+  properties: {
+    label: nonEmptyText,
+    url: httpsUrl,
+  },
+};
+
+export const fidelityCatalogSchema = {
+  type: 'object',
+  additionalProperties: false,
+  required: ['schemaVersion', 'records'],
+  properties: {
+    schemaVersion: { const: LESSON_SCHEMA_VERSION },
+    records: {
+      type: 'array',
+      items: {
+        type: 'object',
+        additionalProperties: false,
+        required: [
+          'id', 'geometry', 'activity', 'supports', 'assumptions', 'uncertainties',
+          'limitations', 'sources', 'licenses', 'reviewed',
+        ],
+        properties: {
+          id: stableId,
+          geometry: statusSection,
+          activity: {
+            ...statusSection,
+            required: ['statuses', 'summary', 'direction'],
+            properties: {
+              ...statusSection.properties,
+              direction: { enum: ['directed', 'undirected', 'modeled', 'none', 'unknown'] },
+            },
+          },
+          supports: { type: 'array', items: nonEmptyText },
+          assumptions: { type: 'array', items: nonEmptyText },
+          uncertainties: { type: 'array', items: nonEmptyText },
+          limitations: {
+            type: 'array',
+            items: {
+              type: 'object',
+              additionalProperties: false,
+              required: ['summary', 'material'],
+              properties: {
+                summary: nonEmptyText,
+                material: { type: 'boolean' },
+              },
+            },
+          },
+          sources: { type: 'array', items: sourceRecord },
+          licenses: { type: 'array', items: sourceRecord },
+          reviewed: { type: 'string', pattern: '^\\d{4}-\\d{2}-\\d{2}$' },
+        },
+      },
+    },
+  },
+};
+
 export const sceneDirectiveSchema = {
   type: 'object',
   additionalProperties: false,
@@ -186,6 +312,8 @@ const commandSchemas = Object.fromEntries(
 const ajv = new Ajv({ allErrors: true, strict: true });
 const lessonMetadataValidator = ajv.compile(lessonMetadataSchema);
 const sceneDirectiveValidator = ajv.compile(sceneDirectiveSchema);
+const entityCatalogValidator = ajv.compile(entityCatalogSchema);
+const fidelityCatalogValidator = ajv.compile(fidelityCatalogSchema);
 const commandValidators = Object.fromEntries(
   Object.entries(commandSchemas).map(([type, schema]) => [type, ajv.compile(schema)]),
 );
@@ -201,6 +329,14 @@ export function validateLessonMetadata(value, location) {
 
 export function validateSceneDirective(value, location) {
   return validate(sceneDirectiveValidator, 'scene', value, location);
+}
+
+export function validateEntityCatalog(value, location) {
+  return validate(entityCatalogValidator, 'catalog.entities', value, location);
+}
+
+export function validateFidelityCatalog(value, location) {
+  return validate(fidelityCatalogValidator, 'catalog.fidelity', value, location);
 }
 
 export function validateSceneCommand(value, location) {

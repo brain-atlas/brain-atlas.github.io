@@ -1,0 +1,301 @@
+{
+  "schemaVersion": 1,
+  "records": [
+    {
+      "id": "fidelity.cortex",
+      "geometry": {
+        "statuses": ["data-derived", "derived"],
+        "summary": "A decimated marching-cubes shell derived from the TemplateFlow MNI152NLin2009cAsym brain mask."
+      },
+      "activity": {
+        "statuses": ["none"],
+        "summary": "The cortical shell has no activity model.",
+        "direction": "none"
+      },
+      "supports": [
+        "Population-template tissue context for the co-registered visual-system layers."
+      ],
+      "assumptions": [
+        "The shell is used as translucent context rather than subject anatomy or a cortical parcellation."
+      ],
+      "uncertainties": [
+        "The exact source mask filename and offline meshing and decimation parameters are not checked in."
+      ],
+      "limitations": [
+        {
+          "summary": "This population-template surface must not be interpreted as an individual brain or as cytoarchitectonic boundaries.",
+          "material": true
+        }
+      ],
+      "sources": [
+        {
+          "label": "TemplateFlow method",
+          "url": "https://doi.org/10.1038/s41592-022-01681-2"
+        },
+        {
+          "label": "MNI152NLin2009cAsym archive",
+          "url": "https://github.com/templateflow/tpl-MNI152NLin2009cAsym"
+        }
+      ],
+      "licenses": [
+        {
+          "label": "MNI template notice",
+          "url": "https://github.com/templateflow/tpl-MNI152NLin2009cAsym/blob/master/LICENSE"
+        }
+      ],
+      "reviewed": "2026-07-21"
+    },
+    {
+      "id": "fidelity.julich-regions",
+      "geometry": {
+        "statuses": ["data-derived", "derived"],
+        "summary": "Bilateral shells extracted and simplified from the Jülich-Brain v3.0.3 maximum-probability map."
+      },
+      "activity": {
+        "statuses": ["none"],
+        "summary": "Region shells have no activity model.",
+        "direction": "none"
+      },
+      "supports": [
+        "Approximate population-atlas locations and extents of the selected cytoarchitectonic regions."
+      ],
+      "assumptions": [
+        "Winner-take-all maximum-probability labels are displayed as outline-like shells."
+      ],
+      "uncertainties": [
+        "The source probability distribution is not visualized by the shell surface."
+      ],
+      "limitations": [
+        {
+          "summary": "Boundaries are population-atlas maximum-probability boundaries, not individual functional borders.",
+          "material": true
+        }
+      ],
+      "sources": [
+        {
+          "label": "Jülich-Brain paper",
+          "url": "https://doi.org/10.1126/science.abb4588"
+        },
+        {
+          "label": "Jülich-Brain v3.0.3 dataset",
+          "url": "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
+        }
+      ],
+      "licenses": [
+        {
+          "label": "CC BY-NC-SA 4.0",
+          "url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+        }
+      ],
+      "reviewed": "2026-07-21"
+    },
+    {
+      "id": "fidelity.anterior-pathway",
+      "geometry": {
+        "statuses": ["schematic"],
+        "summary": "Hand-authored eye-to-chiasm-to-LGN teaching curves and illustrative landmarks."
+      },
+      "activity": {
+        "statuses": ["modeled", "illustrative"],
+        "summary": "Evenly spaced display dots travel along the schematic crossing paths.",
+        "direction": "directed"
+      },
+      "supports": [
+        "The represented nasal-retinal paths cross at the optic chiasm before reaching the contralateral LGN."
+      ],
+      "assumptions": [
+        "Control points, landmark positions, speed, spacing, color, and tube width are teaching choices."
+      ],
+      "uncertainties": [
+        "Schematic coordinates are not measured anatomy."
+      ],
+      "limitations": [
+        {
+          "summary": "Uncrossed temporal-retinal pathways are omitted, so this is not a complete depiction of both hemifield projections.",
+          "material": true
+        }
+      ],
+      "sources": [],
+      "licenses": [],
+      "reviewed": "2026-07-21"
+    },
+    {
+      "id": "fidelity.optic-radiation",
+      "geometry": {
+        "statuses": ["data-derived", "derived", "mirrored"],
+        "summary": "Left LGN-to-V1 streamlines tracked on the HCP-1065 template; the displayed right side is mirrored at runtime."
+      },
+      "activity": {
+        "statuses": ["modeled", "illustrative"],
+        "summary": "Directed LGN-to-V1 events use a stochastic refractory display model on the streamline contours.",
+        "direction": "directed"
+      },
+      "supports": [
+        "The optic radiation is represented as a directed LGN-to-V1 projection."
+      ],
+      "assumptions": [
+        "Runtime endpoint orientation uses the current data's validated higher-MNI-y LGN endpoint heuristic."
+      ],
+      "uncertainties": [
+        "The exact fibre template release and any 2009a-to-2009c conversion remain unverified."
+      ],
+      "limitations": [
+        {
+          "summary": "Right-side anatomy is a sagittal mirror of left streamlines rather than independently tracked data.",
+          "material": true
+        },
+        {
+          "summary": "Event rates, rhythms, bursts, time dilation, and travel speed are illustrative rather than measured LGN or V1 physiology.",
+          "material": true
+        }
+      ],
+      "sources": [
+        {
+          "label": "HCP-1065 fibre template",
+          "url": "https://brain.labsolver.org/hcp_template.html"
+        },
+        {
+          "label": "DSI Studio method",
+          "url": "https://doi.org/10.1038/s41592-025-02762-8"
+        }
+      ],
+      "licenses": [
+        {
+          "label": "WU-Minn HCP Open Access Data Use Terms",
+          "url": "https://www.humanconnectome.org/study/hcp-young-adult/document/wu-minn-hcp-consortium-open-access-data-use-terms"
+        }
+      ],
+      "reviewed": "2026-07-21"
+    },
+    {
+      "id": "fidelity.association-tracts",
+      "geometry": {
+        "statuses": ["data-derived", "derived"],
+        "summary": "Selected and resampled bilateral streamlines from the HCP-1065 population tractography atlas."
+      },
+      "activity": {
+        "statuses": ["modeled", "illustrative"],
+        "summary": "Seeded refractory code-like events choose one of two endpoint directions from explicit per-tract probability metadata.",
+        "direction": "modeled"
+      },
+      "supports": [
+        "Sparse code-like population communication can be compared along the displayed named tract contours."
+      ],
+      "assumptions": [
+        "Version 1 samples a 50/50 direction per accepted event because no defensible quantitative human polarity ratio was found."
+      ],
+      "uncertainties": [
+        "Diffusion MRI does not measure afferent versus efferent polarity or precise synaptic endpoints."
+      ],
+      "limitations": [
+        {
+          "summary": "The 50/50 direction, channel rates, refractory recovery, and travel speed are disclosed display assumptions rather than measured axon proportions or physiology.",
+          "material": true
+        },
+        {
+          "summary": "The exact tractography template release and any 2009a-to-2009c conversion remain unverified.",
+          "material": true
+        }
+      ],
+      "sources": [
+        {
+          "label": "HCP-1065 tract atlas",
+          "url": "https://brain.labsolver.org/hcp_trk_atlas.html"
+        },
+        {
+          "label": "Tractography polarity limits",
+          "url": "https://doi.org/10.1089/brain.2011.0033"
+        },
+        {
+          "label": "Ogata thinning method",
+          "url": "https://doi.org/10.1109/TIT.1981.1056305"
+        }
+      ],
+      "licenses": [
+        {
+          "label": "CC BY-SA 4.0",
+          "url": "https://creativecommons.org/licenses/by-sa/4.0/"
+        },
+        {
+          "label": "WU-Minn HCP Open Access Data Use Terms",
+          "url": "https://www.humanconnectome.org/study/hcp-young-adult/document/wu-minn-hcp-consortium-open-access-data-use-terms"
+        }
+      ],
+      "reviewed": "2026-07-21"
+    },
+    {
+      "id": "fidelity.superficial-white-matter",
+      "geometry": {
+        "statuses": ["data-derived", "derived"],
+        "summary": "Real bilateral short superficial-white-matter contours tracked on the HCP-1065 fibre template."
+      },
+      "activity": {
+        "statuses": ["modeled", "illustrative"],
+        "summary": "Independently phased bounded vibration moves around fixed contour homes with no assigned travel direction.",
+        "direction": "undirected"
+      },
+      "supports": [
+        "The static grain conveys short-fibre orientation; vibration amplitude varies with supplied local fibre-length structure."
+      ],
+      "assumptions": [
+        "Frequency, phase, scale factor, margins, and amplitude bounds are display choices."
+      ],
+      "uncertainties": [
+        "The exact template release, tracking generator, and local-neighbourhood calculation are not checked in."
+      ],
+      "limitations": [
+        {
+          "summary": "Vibration is not measured activity, firing rate, conduction, or literal bidirectional signaling by one axon.",
+          "material": true
+        }
+      ],
+      "sources": [
+        {
+          "label": "HCP-1065 fibre template",
+          "url": "https://brain.labsolver.org/hcp_template.html"
+        },
+        {
+          "label": "DSI Studio method",
+          "url": "https://doi.org/10.1038/s41592-025-02762-8"
+        }
+      ],
+      "licenses": [
+        {
+          "label": "WU-Minn HCP Open Access Data Use Terms",
+          "url": "https://www.humanconnectome.org/study/hcp-young-adult/document/wu-minn-hcp-consortium-open-access-data-use-terms"
+        }
+      ],
+      "reviewed": "2026-07-21"
+    },
+    {
+      "id": "fidelity.display-labels",
+      "geometry": {
+        "statuses": ["display-only"],
+        "summary": "Text labels and viewer-authored stream groupings annotate other represented entities."
+      },
+      "activity": {
+        "statuses": ["none"],
+        "summary": "Labels have no activity model.",
+        "direction": "none"
+      },
+      "supports": [
+        "Labels identify atlas regions, pathways, and viewer navigation groups."
+      ],
+      "assumptions": [
+        "Grouping and color families are viewer-authored teaching metadata."
+      ],
+      "uncertainties": [
+        "Some grouping labels may suggest functional or tract relationships beyond the source mesh names."
+      ],
+      "limitations": [
+        {
+          "summary": "Viewer-authored group names and arrows must not be interpreted as measured tract endpoints until separately reviewed.",
+          "material": true
+        }
+      ],
+      "sources": [],
+      "licenses": [],
+      "reviewed": "2026-07-21"
+    }
+  ]
+}

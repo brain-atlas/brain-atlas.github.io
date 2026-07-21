@@ -19,6 +19,7 @@ Scientific interpretation and model limitations are inventoried separately in
 | `public/data/regions.json`, `public/data/regions/*.obj` | Jülich-Brain Atlas v3.0.3 maximum probability map | [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) |
 | `public/data/tracts.json` | HCP-1065 population-averaged tractography atlas | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) and WU-Minn HCP Open Access Data Use Terms |
 | `public/data/tract_activity.json` | Project-authored activity assumptions and source links; no anatomical geometry | [AGPL-3.0-only](LICENSE) |
+| `public/data/entities.json`, `public/data/fidelity.json` | Project-authored stable bindings and scientific-disclosure metadata; no anatomical geometry | [AGPL-3.0-only](LICENSE) |
 | `public/data/or_fibres.json`, `public/data/swm_fibres.json` | HCP-1065 population template processed with DSI Studio | WU-Minn HCP Open Access Data Use Terms |
 | `docs/assets/org-avatar.png`, `public/favicon.ico`, `public/favicon-32x32.png`, `public/apple-touch-icon.png` | Viewer-derived rendering of the MNI cortical surface and HCP-derived tracts | Source terms above; adapted artwork under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) and HCP terms |
 
@@ -108,6 +109,11 @@ They also derive from WU-Minn HCP data and remain subject to the
 not add direction to the atlas data: it records the viewer's explicit 50/50
 assumption, endpoint-label heuristics, illustrative event parameters, and the
 scientific sources reviewed for each displayed bundle.
+
+`public/data/entities.json` and `public/data/fidelity.json` are project-authored
+lesson/disclosure metadata. Their stable renderer bindings, status terms, summaries,
+and source links do not relicense or add anatomy to the referenced MNI, Jülich, or
+HCP-derived assets; those assets remain governed by their source terms above.
 
 ## HCP-1065-template-derived fibres
 

@@ -1,0 +1,717 @@
+{
+  "schemaVersion": 1,
+  "cameraPresets": {
+    "anterior": {
+      "position": [
+        0,
+        30,
+        -350
+      ],
+      "target": [
+        0,
+        0,
+        0
+      ]
+    },
+    "dorsal": {
+      "position": [
+        0,
+        350,
+        0.01
+      ],
+      "target": [
+        0,
+        0,
+        0
+      ]
+    },
+    "home": {
+      "position": [
+        210,
+        75,
+        -195
+      ],
+      "target": [
+        0,
+        0,
+        0
+      ]
+    },
+    "lateral": {
+      "position": [
+        300,
+        15,
+        0
+      ],
+      "target": [
+        0,
+        0,
+        0
+      ]
+    },
+    "posterior": {
+      "position": [
+        0,
+        30,
+        350
+      ],
+      "target": [
+        0,
+        0,
+        0
+      ]
+    },
+    "top": {
+      "position": [
+        0,
+        350,
+        0.01
+      ],
+      "target": [
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "entities": [
+    {
+      "id": "layer.cortex",
+      "type": "layer",
+      "label": "Cortical surface",
+      "renderer": {
+        "kind": "layer",
+        "id": "brain"
+      },
+      "hemisphereMode": "none",
+      "fidelity": "fidelity.cortex"
+    },
+    {
+      "id": "layer.labels",
+      "type": "layer",
+      "label": "Labels",
+      "renderer": {
+        "kind": "layer",
+        "id": "labels"
+      },
+      "hemisphereMode": "none",
+      "fidelity": "fidelity.display-labels"
+    },
+    {
+      "id": "layer.swm",
+      "type": "layer",
+      "label": "Superficial white matter",
+      "renderer": {
+        "kind": "layer",
+        "id": "swm"
+      },
+      "hemisphereMode": "global",
+      "fidelity": "fidelity.superficial-white-matter"
+    },
+    {
+      "id": "pathway.anterior",
+      "type": "pathway",
+      "label": "Anterior eye to LGN pathway",
+      "renderer": {
+        "kind": "layer",
+        "id": "anterior"
+      },
+      "hemisphereMode": "none",
+      "fidelity": "fidelity.anterior-pathway"
+    },
+    {
+      "id": "pathway.optic-radiation",
+      "type": "pathway",
+      "label": "Optic radiation",
+      "renderer": {
+        "kind": "layer",
+        "id": "or"
+      },
+      "hemisphereMode": "global",
+      "fidelity": "fidelity.optic-radiation"
+    },
+    {
+      "id": "region.lgn",
+      "type": "region",
+      "label": "LGN",
+      "renderer": {
+        "kind": "region",
+        "id": "lgn"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.julich-regions"
+    },
+    {
+      "id": "region.v1",
+      "type": "region",
+      "label": "V1",
+      "renderer": {
+        "kind": "region",
+        "id": "v1"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.julich-regions"
+    },
+    {
+      "id": "region.v2",
+      "type": "region",
+      "label": "V2",
+      "renderer": {
+        "kind": "region",
+        "id": "v2"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.julich-regions"
+    },
+    {
+      "id": "region.v3v",
+      "type": "region",
+      "label": "V3v",
+      "renderer": {
+        "kind": "region",
+        "id": "v3v"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.julich-regions"
+    },
+    {
+      "id": "region.v3d",
+      "type": "region",
+      "label": "V3d",
+      "renderer": {
+        "kind": "region",
+        "id": "v3d"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.julich-regions"
+    },
+    {
+      "id": "region.v4v",
+      "type": "region",
+      "label": "V4v",
+      "renderer": {
+        "kind": "region",
+        "id": "v4v"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.julich-regions"
+    },
+    {
+      "id": "region.loa",
+      "type": "region",
+      "label": "LOC-a",
+      "renderer": {
+        "kind": "region",
+        "id": "loa"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.julich-regions"
+    },
+    {
+      "id": "region.lop",
+      "type": "region",
+      "label": "LOC-p",
+      "renderer": {
+        "kind": "region",
+        "id": "lop"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.julich-regions"
+    },
+    {
+      "id": "region.fg1",
+      "type": "region",
+      "label": "FG1",
+      "renderer": {
+        "kind": "region",
+        "id": "fg1"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.julich-regions"
+    },
+    {
+      "id": "region.fg2",
+      "type": "region",
+      "label": "FG2",
+      "renderer": {
+        "kind": "region",
+        "id": "fg2"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.julich-regions"
+    },
+    {
+      "id": "region.fg3",
+      "type": "region",
+      "label": "FG3",
+      "renderer": {
+        "kind": "region",
+        "id": "fg3"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.julich-regions"
+    },
+    {
+      "id": "region.fg4",
+      "type": "region",
+      "label": "FG4",
+      "renderer": {
+        "kind": "region",
+        "id": "fg4"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.julich-regions"
+    },
+    {
+      "id": "region.v3a",
+      "type": "region",
+      "label": "V3A",
+      "renderer": {
+        "kind": "region",
+        "id": "v3a"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.julich-regions"
+    },
+    {
+      "id": "region.v6",
+      "type": "region",
+      "label": "V6",
+      "renderer": {
+        "kind": "region",
+        "id": "v6"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.julich-regions"
+    },
+    {
+      "id": "region.mt",
+      "type": "region",
+      "label": "MT/V5",
+      "renderer": {
+        "kind": "region",
+        "id": "mt"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.julich-regions"
+    },
+    {
+      "id": "region.hip1",
+      "type": "region",
+      "label": "hIP1",
+      "renderer": {
+        "kind": "region",
+        "id": "hip1"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.julich-regions"
+    },
+    {
+      "id": "region.hip2",
+      "type": "region",
+      "label": "hIP2",
+      "renderer": {
+        "kind": "region",
+        "id": "hip2"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.julich-regions"
+    },
+    {
+      "id": "region.hip3",
+      "type": "region",
+      "label": "hIP3",
+      "renderer": {
+        "kind": "region",
+        "id": "hip3"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.julich-regions"
+    },
+    {
+      "id": "region.hip4",
+      "type": "region",
+      "label": "hIP4",
+      "renderer": {
+        "kind": "region",
+        "id": "hip4"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.julich-regions"
+    },
+    {
+      "id": "region.hip5",
+      "type": "region",
+      "label": "hIP5",
+      "renderer": {
+        "kind": "region",
+        "id": "hip5"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.julich-regions"
+    },
+    {
+      "id": "region.hip6",
+      "type": "region",
+      "label": "hIP6",
+      "renderer": {
+        "kind": "region",
+        "id": "hip6"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.julich-regions"
+    },
+    {
+      "id": "region.hip7",
+      "type": "region",
+      "label": "hIP7",
+      "renderer": {
+        "kind": "region",
+        "id": "hip7"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.julich-regions"
+    },
+    {
+      "id": "region.hip8",
+      "type": "region",
+      "label": "hIP8",
+      "renderer": {
+        "kind": "region",
+        "id": "hip8"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.julich-regions"
+    },
+    {
+      "id": "region.spl7a",
+      "type": "region",
+      "label": "7A",
+      "renderer": {
+        "kind": "region",
+        "id": "spl7a"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.julich-regions"
+    },
+    {
+      "id": "region.spl7p",
+      "type": "region",
+      "label": "7P",
+      "renderer": {
+        "kind": "region",
+        "id": "spl7p"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.julich-regions"
+    },
+    {
+      "id": "region.spl5l",
+      "type": "region",
+      "label": "5L",
+      "renderer": {
+        "kind": "region",
+        "id": "spl5l"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.julich-regions"
+    },
+    {
+      "id": "region.spl5m",
+      "type": "region",
+      "label": "5M",
+      "renderer": {
+        "kind": "region",
+        "id": "spl5m"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.julich-regions"
+    },
+    {
+      "id": "region.sts2",
+      "type": "region",
+      "label": "STS2 (ILF\u2192)",
+      "renderer": {
+        "kind": "region",
+        "id": "sts2"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.julich-regions"
+    },
+    {
+      "id": "region.pf",
+      "type": "region",
+      "label": "PF",
+      "renderer": {
+        "kind": "region",
+        "id": "pf"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.julich-regions"
+    },
+    {
+      "id": "region.pft",
+      "type": "region",
+      "label": "PFt",
+      "renderer": {
+        "kind": "region",
+        "id": "pft"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.julich-regions"
+    },
+    {
+      "id": "region.pfm",
+      "type": "region",
+      "label": "PFm",
+      "renderer": {
+        "kind": "region",
+        "id": "pfm"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.julich-regions"
+    },
+    {
+      "id": "region.pga",
+      "type": "region",
+      "label": "PGa",
+      "renderer": {
+        "kind": "region",
+        "id": "pga"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.julich-regions"
+    },
+    {
+      "id": "region.hpo1",
+      "type": "region",
+      "label": "hPO1",
+      "renderer": {
+        "kind": "region",
+        "id": "hpo1"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.julich-regions"
+    },
+    {
+      "id": "region.ofc",
+      "type": "region",
+      "label": "OFC (IFOF\u2192)",
+      "renderer": {
+        "kind": "region",
+        "id": "ofc"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.julich-regions"
+    },
+    {
+      "id": "region.presma",
+      "type": "region",
+      "label": "preSMA (SLF I\u2192)",
+      "renderer": {
+        "kind": "region",
+        "id": "presma"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.julich-regions"
+    },
+    {
+      "id": "region.dlpfc",
+      "type": "region",
+      "label": "DLPFC (SLF II\u2192)",
+      "renderer": {
+        "kind": "region",
+        "id": "dlpfc"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.julich-regions"
+    },
+    {
+      "id": "region.broca",
+      "type": "region",
+      "label": "Broca 44 (SLF III\u2192)",
+      "renderer": {
+        "kind": "region",
+        "id": "broca"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.julich-regions"
+    },
+    {
+      "id": "region.fp1",
+      "type": "region",
+      "label": "Fp1 (pole)",
+      "renderer": {
+        "kind": "region",
+        "id": "fp1"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.julich-regions"
+    },
+    {
+      "id": "region.sfg8",
+      "type": "region",
+      "label": "8d1 (SFG)",
+      "renderer": {
+        "kind": "region",
+        "id": "sfg8"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.julich-regions"
+    },
+    {
+      "id": "region.op6",
+      "type": "region",
+      "label": "Op6 (operc.)",
+      "renderer": {
+        "kind": "region",
+        "id": "op6"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.julich-regions"
+    },
+    {
+      "id": "region.pcg6",
+      "type": "region",
+      "label": "6d1 (premotor)",
+      "renderer": {
+        "kind": "region",
+        "id": "pcg6"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.julich-regions"
+    },
+    {
+      "id": "region.gap-fi",
+      "type": "region",
+      "label": "Frontal (unparc.)",
+      "renderer": {
+        "kind": "region",
+        "id": "gap_fi"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.julich-regions"
+    },
+    {
+      "id": "region.gap-fii",
+      "type": "region",
+      "label": "Frontal-II (unparc.)",
+      "renderer": {
+        "kind": "region",
+        "id": "gap_fii"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.julich-regions"
+    },
+    {
+      "id": "region.gap-fo",
+      "type": "region",
+      "label": "Fronto-occipital (unparc.)",
+      "renderer": {
+        "kind": "region",
+        "id": "gap_fo"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.julich-regions"
+    },
+    {
+      "id": "region.gap-tp",
+      "type": "region",
+      "label": "Temporo-parietal (unparc.)",
+      "renderer": {
+        "kind": "region",
+        "id": "gap_tp"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.julich-regions"
+    },
+    {
+      "id": "tract.ilf",
+      "type": "tract",
+      "label": "ILF",
+      "renderer": {
+        "kind": "tract",
+        "id": "ilf"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.association-tracts"
+    },
+    {
+      "id": "tract.ifof",
+      "type": "tract",
+      "label": "IFOF",
+      "renderer": {
+        "kind": "tract",
+        "id": "ifof"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.association-tracts"
+    },
+    {
+      "id": "tract.slf1",
+      "type": "tract",
+      "label": "SLF I",
+      "renderer": {
+        "kind": "tract",
+        "id": "slf1"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.association-tracts"
+    },
+    {
+      "id": "tract.slf2",
+      "type": "tract",
+      "label": "SLF II",
+      "renderer": {
+        "kind": "tract",
+        "id": "slf2"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.association-tracts"
+    },
+    {
+      "id": "tract.slf3",
+      "type": "tract",
+      "label": "SLF III",
+      "renderer": {
+        "kind": "tract",
+        "id": "slf3"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.association-tracts"
+    },
+    {
+      "id": "tract.vof",
+      "type": "tract",
+      "label": "VOF",
+      "renderer": {
+        "kind": "tract",
+        "id": "vof"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.association-tracts"
+    },
+    {
+      "id": "tract.af",
+      "type": "tract",
+      "label": "Arcuate",
+      "renderer": {
+        "kind": "tract",
+        "id": "af"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.association-tracts"
+    },
+    {
+      "id": "tract.mdlf",
+      "type": "tract",
+      "label": "MdLF",
+      "renderer": {
+        "kind": "tract",
+        "id": "mdlf"
+      },
+      "hemisphereMode": "bilateral",
+      "fidelity": "fidelity.association-tracts"
+    }
+  ]
+}
