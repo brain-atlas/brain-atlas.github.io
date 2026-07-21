@@ -16,7 +16,8 @@ scientific catalogs, authored lesson state, or anatomical coordinates.
    tree. `src/bootstrap.js` creates elements and inserts text; author content never
    becomes an HTML string.
 3. `createLessonPresentation` separates an optional authored entry scene from numbered
-   instructional scenes. `createSceneNavigationState`, `updateSceneFromScroll`, and
+   instructional scenes and projects explicit lifecycle `status` plus its visible label
+   without parsing the title or prose. `createSceneNavigationState`, `updateSceneFromScroll`, and
    `moveScene` use index `-1` only for that pre-scroll entry view, then apply directional
    hysteresis and bounded explicit movement across numbered scenes.
 4. `createLessonSceneController` waits for renderer readiness, initializes from the
@@ -44,7 +45,7 @@ scientific catalogs, authored lesson state, or anatomical coordinates.
 
 | Export | Used by | Contract |
 |---|---|---|
-| `createLessonPresentation(lesson)` | bootstrap/tests | Separates a validated optional entry scene from at least one numbered instructional scene. |
+| `createLessonPresentation(lesson)` | bootstrap/tests | Separates a validated optional entry scene from at least one numbered instructional scene and exposes `status` plus `[DRAFT]` label data. |
 | `createSceneNavigationState(count, initial?)` | bootstrap/tests | Frozen state with one bounded numbered index, or `-1` only when initialized with an entry view. |
 | `updateSceneFromScroll(state, metrics)` | bootstrap/tests | Applies forward/back thresholds and hysteresis; records scroll direction without restarting unchanged scenes. |
 | `moveScene(state, delta)` | bootstrap/tests | Accepts only `-1`/`1`; clamps at lesson bounds and returns the same object at a boundary. |
@@ -73,6 +74,7 @@ scientific catalogs, authored lesson state, or anatomical coordinates.
 | INV-11 | Changed source/destination filters remain logically eligible as a union while their opacity crosses during the first half; at halfway only destination filters remain. Reverse/interrupted motion starts at current opacity. | visibility tests + browser instrumentation | New anatomy does not pop in, old anatomy does not disappear at transition start, and rapid navigation does not reset fades. |
 | INV-12 | An optional entry scene supplies the pre-scroll topic view without appearing in scene count/progress; crossing the first anchor starts scene 1, and reverse scroll/Previous restores the exact entry snapshot. | presentation, navigation, controller, and browser tests | The lesson starts with content rather than a meta scene while preserving a relevant default atlas view. |
 | INV-13 | Non-Explore policies set canvas touch behavior to vertical page scrolling and disable touch pan/zoom/rotation; `look` may still accept mouse/trackpad orbit. Only explicit `explore` may capture touch gestures. | renderer binding review + compact touch browser check | Swiping the visible stage never traps lesson reading or moves the camera accidentally. |
+| INV-14 | Explicit lesson lifecycle `draft` projects to textual `[DRAFT]` identity in the document title, global lesson header, and introduction in rendered and no-WebGL paths; it is never merged with geometry/activity fidelity. | presentation/reference tests + wide/compact/no-WebGL browser checks | Learners can distinguish unfinished curriculum from model/data limitations, and future Home/library surfaces receive stable status data. |
 
 ## Failure Modes
 
@@ -90,6 +92,7 @@ scientific catalogs, authored lesson state, or anatomical coordinates.
 | FAIL-10 | Topic overview appears as scene 1 or disappears on reverse scroll | UI numbers every authored scene or controller lacks entry state | Project `entrySceneId` before navigation and preserve `-1` through presentation/controller boundaries. |
 | FAIL-11 | Prose advances while loading but anatomy opens on another scene | Controller always initializes at entry/scene 0 after navigation already changed | Pass the validated current navigation index into controller construction before `setReady`. |
 | FAIL-12 | Vertical touch scroll also rotates or traps the camera | OrbitControls retains its default touch rotation/capture in `guided` or `look` | Map non-Explore one-finger touch to disabled pan and use `touch-action: pan-y`; reserve rotation/dolly touch mappings for `explore`. |
+| FAIL-13 | Draft lesson appears final or Draft is shown as a fidelity badge | Shell ignores parsed lifecycle metadata or reuses geometry/activity status surfaces | Render presentation `statusLabel` as lesson identity text in every capability path; leave **Model & sources** unchanged. |
 
 ## Decision Framework
 
@@ -100,6 +103,7 @@ scientific catalogs, authored lesson state, or anatomical coordinates.
 | Change camera motion | Preserve target-centered current-pose initialization and add forward/back/pole tests. | INV-8, FAIL-3/4 |
 | Add rendered Markdown syntax | Add a plain view-model node and safe DOM mapping together; never use `innerHTML`. | INV-2 |
 | Add disclosure data | Update scientific traceability and curated fidelity records; do not place citations in directives. | INV-7 |
+| Change lifecycle status | Use validated lesson metadata and the same identity surface in Lesson/Home/library views; do not infer status from title text or fidelity records. | INV-14 |
 | Add free exploration | Use a canonical cloned snapshot and explicit return; enable legacy controls only under `explore`. | INV-5 |
 
 ## Testing
@@ -122,6 +126,7 @@ node --test test/scene-navigation.test.js test/lesson-scene-controller.test.js \
 | INV-11 | `test/visibility-transition.test.js` + rendered opacity/reverse browser sampling |
 | INV-10 | wide/compact disclosure focus checks |
 | INV-13 | compact touch gesture starts on canvas, scrolls the page, and leaves camera pose unchanged |
+| INV-14 | `test/lesson-presentation.test.js`, `test/reference-lesson.test.js`, and rendered/no-WebGL Draft identity checks |
 
 Full repository verification remains `npm test && npm run build:publish` plus
 wide, compact, reduced-motion, no-WebGL, and production-hook browser checks.

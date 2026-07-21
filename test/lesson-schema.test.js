@@ -11,6 +11,7 @@ import { createDiagnostic } from '../src/lesson/diagnostics.js';
 const validMetadata = {
   title: 'How visual fields cross',
   schema: 1,
+  status: 'draft',
   visuals: [{
     id: 'retinotopy-diagram',
     type: 'image',
@@ -54,10 +55,14 @@ test('valid lesson metadata and explicit scene directives pass strict schemas', 
   assert.deepEqual(validateSceneDirective(validScene), []);
 });
 
-test('unknown lesson schema versions and unknown fields are rejected', () => {
+test('unknown lesson schema versions, lifecycle statuses, and fields are rejected', () => {
   const versionErrors = validateLessonMetadata({ ...validMetadata, schema: 2 });
   assert.equal(versionErrors[0].code, 'lesson.schema.const');
   assert.equal(versionErrors[0].path, '/schema');
+
+  const statusErrors = validateLessonMetadata({ ...validMetadata, status: 'reviewed' });
+  assert.equal(statusErrors[0].code, 'lesson.schema.const');
+  assert.equal(statusErrors[0].path, '/status');
 
   const fieldErrors = validateSceneDirective({ ...validScene, onEnter: 'run-code' });
   assert.equal(fieldErrors[0].code, 'scene.schema.additionalProperties');

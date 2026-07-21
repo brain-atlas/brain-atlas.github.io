@@ -33,6 +33,15 @@ Content remains Markdown.
 `;
 }
 
+test('draft lifecycle metadata is preserved as immutable lesson data', () => { // Tests INV-13
+  const source = minimalSource().replace('schema: 1', 'schema: 1\nstatus: draft');
+  const result = parseLesson(source, TEST_CATALOG);
+
+  assert.equal(result.ok, true, JSON.stringify(result.diagnostics));
+  assert.equal(result.value.status, 'draft');
+  assert.equal(Object.isFrozen(result.value), true);
+});
+
 test('reference Markdown parses into an immutable ordered lesson with complete snapshots', async () => {
   const result = parseLesson(await fixture('visual-field-crossing.md'), TEST_CATALOG);
 

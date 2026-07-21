@@ -170,6 +170,7 @@ Literal `lesson.md` example:
 ---
 title: How visual fields cross
 schema: 1
+status: draft
 visuals:
   - id: retinotopy-diagram
     type: image
@@ -208,6 +209,18 @@ Nasal retinal fibres cross at the optic chiasm…
 - Normalize all input into immutable plain data before it reaches the renderer.
 - Require alt text, caption, credit, and source for salient supplementary visuals.
 - Keep anatomical claims and data provenance in the project-curated entity registry, not duplicated freely in every lesson.
+
+### Lesson lifecycle status
+
+Decision `brain-atlas-1w8` permits the first complete MVP to include unfinished
+curriculum only when it is visibly and structurally marked Draft. In v1, optional
+frontmatter `status` accepts only the literal `draft`; the parser preserves it as
+immutable metadata and every lesson identity surface renders `[DRAFT]`. Omission makes
+no lifecycle claim. A local/imported lesson cannot self-assert `reviewed` or `published`
+until a separately approved trusted publication model exists. Draft describes
+curriculum review state and must never be merged with geometry/activity fidelity.
+Removing it from the retina-to-V1 lesson requires explicit approval through
+`brain-atlas-zmq.25`.
 
 ### Model-fidelity disclosure
 

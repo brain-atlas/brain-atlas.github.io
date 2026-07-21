@@ -24,6 +24,7 @@ test('reference lesson parses with an unnumbered entry view and four complete sc
   const { result } = await loadReferenceLesson();
   assert.equal(result.ok, true, JSON.stringify(result.diagnostics));
   assert.equal(result.value.title, 'From retina to V1');
+  assert.equal(result.value.status, 'draft');
   assert.equal(result.value.entrySceneId, 'orientation');
   assert.deepEqual(result.value.scenes.map(({ id }) => id), [
     'orientation', 'nasal-crossing', 'lgn-relay', 'optic-radiation', 'v1-arrival',

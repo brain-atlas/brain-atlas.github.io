@@ -1,6 +1,7 @@
 ---
 title: From retina to V1
 schema: 1
+status: draft
 entryScene: orientation
 summary: Follow a visual signal from the eyes through the thalamus to primary visual cortex.
 ---

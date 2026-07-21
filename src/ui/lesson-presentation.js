@@ -14,7 +14,10 @@ export function createLessonPresentation(lesson) {
   if (scenes.length === 0) {
     throw new RangeError('lesson presentation requires at least one instructional scene');
   }
+  const status = lesson.status ?? null;
   return Object.freeze({
+    status,
+    statusLabel: status === 'draft' ? '[DRAFT]' : null,
     entryScene,
     scenes: Object.freeze(scenes),
   });

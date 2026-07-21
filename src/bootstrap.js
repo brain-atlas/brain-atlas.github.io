@@ -114,6 +114,17 @@ function sceneEntityLabels(scene) {
 }
 
 function renderLesson() {
+  const statusLabel = presentation.statusLabel;
+  byId('lesson-brand-title').textContent = lesson.title;
+  document.querySelector('.brand').setAttribute(
+    'aria-label',
+    `Brain Atlas home: ${lesson.title}${statusLabel ? ', Draft' : ''}`,
+  );
+  const headerStatus = byId('lesson-status');
+  headerStatus.textContent = statusLabel ?? '';
+  headerStatus.hidden = !statusLabel;
+  document.title = `Brain Atlas — ${lesson.title}${statusLabel ? ` ${statusLabel}` : ''}`;
+
   const intro = byId('lesson-intro');
   intro.replaceChildren(markdownFragment(lesson.introductionMarkdown));
   const title = intro.querySelector('h1');
@@ -122,6 +133,11 @@ function renderLesson() {
     title.tabIndex = -1;
   }
   const meta = node('div', 'lesson-meta');
+  if (statusLabel) {
+    const status = node('span', 'lesson-status', statusLabel);
+    status.setAttribute('aria-label', 'Lesson status: Draft');
+    meta.append(status);
+  }
   meta.append(node('span', '', `${presentation.scenes.length} scenes`), node('span', '', 'Data, models & limitations disclosed'));
   intro.append(meta);
 

@@ -129,7 +129,7 @@ Meshing and tractography run offline and emit small JSON/OBJ/GLB into
   memory is the binding constraint, not disk.
 
 ## Architecture
-- `src/bootstrap.js` loads and validates the checked-in lesson/catalogs, projects an optional unnumbered `entryScene` into a pre-scroll topic view, renders semantic prose and scene fidelity records, owns scroll/explicit navigation and responsive disclosure state, probes WebGL2, and dynamically imports `src/main.js` only when rendering is available. The no-WebGL path must remain a complete readable lesson and must not fetch Three.js.
+- `src/bootstrap.js` loads and validates the checked-in lesson/catalogs, projects an optional unnumbered `entryScene` into a pre-scroll topic view, renders semantic prose, explicit lesson lifecycle status, and scene fidelity records, owns scroll/explicit navigation and responsive disclosure state, probes WebGL2, and dynamically imports `src/main.js` only when rendering is available. The no-WebGL path must remain a complete readable lesson, preserve lifecycle identity, and must not fetch Three.js. Lifecycle `Draft` is not a geometry/activity fidelity category and must never be presented as one.
 - `src/main.js` owns the one Three.js scene and exports the renderer-readiness/lesson-adapter boundary. Lesson state reaches it only as complete canonical snapshots—never prose or synthetic DOM events.
 - `mniGroup` (`matrixAutoUpdate = false`) parents every anatomical layer, in add order:
   `brainGroup`, `anteriorGroup`, `labelGroup`, `regionGroup`, `fibreGroup` (optic

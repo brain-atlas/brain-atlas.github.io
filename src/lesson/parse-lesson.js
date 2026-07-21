@@ -303,6 +303,7 @@ export function parseLesson(source, catalog) {
       id: metadata.id ?? null,
       title: metadata.title,
       summary: metadata.summary ?? null,
+      status: metadata.status ?? null,
       entrySceneId: metadata.entryScene ?? null,
       visuals: structuredClone(visuals),
       introductionMarkdown: trimMarkdown(source, introductionStart, introductionEnd),

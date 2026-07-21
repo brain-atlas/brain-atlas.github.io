@@ -112,6 +112,7 @@ the domain-specific Markdown extension:
 ---
 title: How visual fields cross
 schema: 1
+status: draft
 ---
 
 # How visual fields cross
@@ -131,14 +132,20 @@ layout: dominant
 Headings, lists, and other code fences remain ordinary prose; they never imply
 camera or renderer behavior. Strict Markdown/YAML/schema validation rejects raw
 HTML, unsafe URLs, unknown IDs/actions/versions, and malformed fields with
-line/column diagnostics. Valid scenes normalize to complete immutable JSON state.
-Stable bindings live in `public/data/entities.json`; geometry and activity status
+line/column diagnostics. V1 optionally accepts only `status: draft`; the parsed
+lifecycle marker is separate from scientific representation status and cannot be used
+to claim that imported content is reviewed or published. Valid scenes normalize to
+complete immutable JSON state. Stable bindings live in `public/data/entities.json`;
+geometry and activity status
 remain separate in `public/data/fidelity.json`. See
 [`src/lesson/SPEC.md`](src/lesson/SPEC.md) for the contract.
 
-The shipped reference lesson lives at `src/lessons/retina-to-v1.md`. `src/bootstrap.js`
-parses it through this same contract and renders semantic prose without HTML-string
-injection. An unnumbered topic entry view filters the atlas to the complete relevant
+The shipped reference lesson lives at `src/lessons/retina-to-v1.md` and remains
+**[DRAFT]** pending the dedicated scientific and pedagogical content review in
+`brain-atlas-zmq.25`. `src/bootstrap.js` parses it through this same contract and
+renders the lifecycle label in the document title, lesson header, and introduction,
+including no-WebGL mode, without HTML-string injection. An unnumbered topic entry view
+filters the atlas to the complete relevant
 pathway before scrolling activates four instructional scenes; fixed-position
 Previous/Next actions traverse the same sequence and can return to that entry view. One
 3D stage is shared throughout; wide layouts pair it with the reading rail, compact

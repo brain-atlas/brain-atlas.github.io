@@ -12,7 +12,9 @@ This subsystem does **not** render Markdown, own scrolling, import files, fetch 
 1. `parseLesson(source, catalog)` parses a positioned Markdown AST.
 2. Exactly one leading Obsidian-style YAML frontmatter block supplies document
    metadata and visuals. Optional `entryScene` references one authored complete scene
-   for a presentation-layer pre-scroll view; it does not alter renderer state shape.
+   for a presentation-layer pre-scroll view. Optional `status: draft` is explicit
+   authorial lifecycle metadata; v1 accepts no other status claim. Neither field alters
+   renderer state shape.
 3. Top-level `atlas-scene` fences are the domain-specific Markdown extension and
    supply typed YAML scene directives. Prose before the
    first fence is introduction content; prose after each fence belongs to that scene.
@@ -75,8 +77,10 @@ A v1 snapshot contains exactly these top-level fields:
 
 The scene ID, title, fidelity record IDs, prose, and source location belong to the
 normalized scene wrapper, not renderer state. Parsed lesson metadata exposes
-`entrySceneId` as either a validated authored scene ID or `null`; deciding whether to
-number or display that scene belongs to the presentation layer.
+`entrySceneId` as either a validated authored scene ID or `null` and `status` as either
+`draft` or `null`. Draft is an authorial review lifecycle marker, not evidence about
+geometry or activity fidelity. Deciding whether to number an entry scene or display a
+lifecycle badge belongs to the presentation layer.
 
 ## Invariants
 
@@ -94,6 +98,7 @@ number or display that scene belongs to the presentation layer.
 | INV-10 | Unknown schema versions, object keys, command types, and catalog record shapes are rejected; compatibility is never guessed. | strict Ajv schemas | Contract evolution remains explicit and reviewable. |
 | INV-11 | Browser validation uses checked-in standalone functions; runtime validation never requires `eval`, `new Function`, or a relaxed CSP. | generated-validator test + browser CSP smoke | The lesson trust boundary remains compatible with static secure hosting. |
 | INV-12 | Optional `entryScene` resolves to exactly one authored scene before presentation; unknown references reject the lesson rather than falling back to scene order. | strict metadata schema + parser semantic test | A topic entry view remains explicit, portable, and independent of tutorial-specific runtime code. |
+| INV-13 | Optional lifecycle metadata accepts only `status: draft` in v1 and is preserved as frozen parsed data; absence means no lifecycle claim. | strict metadata schema + parser/reference tests | Draft content is visibly identifiable without title parsing, while untrusted lessons cannot self-assert a trusted reviewed/published state. |
 
 ## Failure modes
 
@@ -108,12 +113,13 @@ number or display that scene belongs to the presentation layer.
 | FAIL-7 | `renderer.adapter.missing-binding` | Renderer integration omitted a canonical axis | Implement the binding; silent no-ops are forbidden. |
 | FAIL-8 | `renderer.adapter.capture-mismatch` | Applied renderer state differs from requested canonical state | Treat as integration drift; do not continue scene orchestration. |
 | FAIL-9 | `lesson.semantic.unknown-entry-scene` | Frontmatter `entryScene` does not match an authored scene ID | Correct the metadata or add the intended complete scene; never infer the entry view. |
+| FAIL-10 | `lesson.schema.const` at `/status` | Frontmatter claims an unsupported lifecycle value such as `reviewed` or `published` | Reject the lesson; only explicit `draft` is supported until a separately approved trusted publication model exists. |
 
 ## Decision framework
 
 | Situation | Action | Spec item |
 |---|---|---|
-| Add a lesson field | Decide whether it is document metadata, scene wrapper data, or renderer snapshot state; update strict schema, normalizer, fixtures, and diagnostics together. | INV-3, INV-10 |
+| Add a lesson field | Decide whether it is document metadata, scene wrapper data, or renderer snapshot state; update strict schema, normalizer, fixtures, and diagnostics together. Lifecycle fields must not be confused with scientific fidelity. | INV-3, INV-10, INV-13 |
 | Add a renderer control | Add one canonical axis/field and one explicit adapter binding path; never invoke DOM controls. | INV-3, INV-7 |
 | Add an entity | Add a stable prefixed ID and renderer binding; reference an existing reviewed fidelity record or add one from traceability evidence. | INV-4, INV-8 |
 | Add a scientific claim | Update traceability/citations first, then curated fidelity metadata atomically. | INV-8 |
@@ -137,7 +143,7 @@ node --test test/lesson-schema.test.js test/scene-state.test.js \
 | INV-1, INV-6, INV-9 | `test/lesson-parser.test.js` |
 | INV-2, INV-3, FAIL-6 | `test/scene-state.test.js` |
 | INV-4, INV-8, FAIL-5 | `test/catalog.test.js` and scientific review |
-| INV-5, INV-10, INV-12 | schema, parser, command, and adapter negative tests |
+| INV-5, INV-10, INV-12, INV-13 | schema, parser, command, and adapter negative tests |
 | INV-7, FAIL-7, FAIL-8 | `test/renderer-adapter.test.js` plus structural `rg` check |
 | INV-11 | `test/generated-validators.test.js` plus CSP browser smoke |
 
@@ -152,7 +158,7 @@ Full repository verification remains `npm test && npm run build:publish`.
 | `ajv` | Development-time strict JSON-schema compilation plus small shipped runtime helpers used by generated standalone validators |
 | `docs/SCIENTIFIC_TRACEABILITY.md` | Current scientific claim/limitation authority |
 | `.pi/plans/brain-atlas-zmq.15-lesson-ux-ui-spec.md` | Approved interaction/state behavior |
-| `.pi/plans/brain-atlas-yum.3-model-fidelity-disclosure.md` | Approved status taxonomy and materiality rule |
+| `.pi/plans/brain-atlas-yum.3-model-fidelity-disclosure.md` | Approved scientific representation-status taxonomy and materiality rule; it does not define lesson lifecycle Draft |
 
 ## Non-goals
 
