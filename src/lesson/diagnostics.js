@@ -1,3 +1,11 @@
+export class LessonContractError extends Error {
+  constructor(message, diagnostics) {
+    super(message);
+    this.name = 'LessonContractError';
+    this.diagnostics = diagnostics;
+  }
+}
+
 export function createDiagnostic(code, message, {
   line = 1,
   column = 1,
@@ -20,6 +28,10 @@ function errorPath(error) {
     return `${error.instancePath}/${error.params.missingProperty}`;
   }
   return error.instancePath;
+}
+
+export function throwContractDiagnostics(message, diagnostics) {
+  if (diagnostics.length > 0) throw new LessonContractError(message, diagnostics);
 }
 
 export function schemaErrorsToDiagnostics(scope, errors = [], {

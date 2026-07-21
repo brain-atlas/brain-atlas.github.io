@@ -1,6 +1,6 @@
 import Ajv from 'ajv';
 
-import { schemaErrorsToDiagnostics } from './diagnostics.js';
+import { createDiagnostic, schemaErrorsToDiagnostics } from './diagnostics.js';
 
 export const LESSON_SCHEMA_VERSION = 1;
 
@@ -149,9 +149,46 @@ export const sceneDirectiveSchema = {
   },
 };
 
+const commandProperties = {
+  'scene.replace': { snapshot: { type: 'object' } },
+  'camera.set': { camera: cameraSchema },
+  'visibility.set': { entity: stableId, visible: { type: 'boolean' } },
+  'hemispheres.set-global': { L: { type: 'boolean' }, R: { type: 'boolean' } },
+  'hemispheres.set-entity': { entity: stableId, L: { type: 'boolean' }, R: { type: 'boolean' } },
+  'cutaway.set': { position: { type: 'number', minimum: 0, maximum: 100 } },
+  'material.set': { tissueOpacity: { type: 'number', minimum: 0, maximum: 1 } },
+  'playback.set': {
+    playing: { type: 'boolean' },
+    speed: { type: 'number', minimum: 15, maximum: 160 },
+    settled: { type: 'boolean' },
+  },
+  'selection.set': {
+    selected: { anyOf: [stableId, { type: 'null' }] },
+    emphasized: { type: 'array', uniqueItems: true, items: stableId },
+    strength: { type: 'number', minimum: 0, maximum: 1 },
+  },
+  'visual.set': { visual: stableId, layout: { enum: ['dominant', 'split', 'detail'] } },
+  'controls.set': { mode: { enum: ['guided', 'look', 'explore'] } },
+};
+
+const commandSchemas = Object.fromEntries(
+  Object.entries(commandProperties).map(([type, properties]) => [type, {
+    type: 'object',
+    additionalProperties: false,
+    required: ['type', ...Object.keys(properties)],
+    properties: {
+      type: { const: type },
+      ...properties,
+    },
+  }]),
+);
+
 const ajv = new Ajv({ allErrors: true, strict: true });
 const lessonMetadataValidator = ajv.compile(lessonMetadataSchema);
 const sceneDirectiveValidator = ajv.compile(sceneDirectiveSchema);
+const commandValidators = Object.fromEntries(
+  Object.entries(commandSchemas).map(([type, schema]) => [type, ajv.compile(schema)]),
+);
 
 function validate(validator, scope, value, location) {
   if (validator(value)) return [];
@@ -164,4 +201,16 @@ export function validateLessonMetadata(value, location) {
 
 export function validateSceneDirective(value, location) {
   return validate(sceneDirectiveValidator, 'scene', value, location);
+}
+
+export function validateSceneCommand(value, location) {
+  const validator = commandValidators[value?.type];
+  if (!validator) {
+    return [createDiagnostic(
+      'scene.command.unknown',
+      `unknown scene command: ${value?.type ?? '(missing)'}`,
+      { ...(location?.origin ?? {}), path: '/type' },
+    )];
+  }
+  return validate(validator, 'scene.command', value, location);
 }
