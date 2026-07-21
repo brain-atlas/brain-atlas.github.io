@@ -51,6 +51,66 @@ This is the project's defining constraint.
   matching. DSI Studio writes **gzipped** `.trk` under a plain `.trk` name; detect
   the `1f 8b` magic and gunzip.
 
+## Documentation and traceability lifecycle
+
+Keep future intent, current behavior, work status, and scientific evidence in
+their proper artifacts:
+
+| Artifact | Authority |
+|---|---|
+| Beads | Work status, dependencies, decisions, approvals, blockers, and closeout evidence. |
+| `.pi/plans/` | Beads-backed future design and execution guidance with explicit draft/approval status. A plan is not evidence that behavior has shipped. |
+| `README.md` and user docs | Current public capabilities, controls, setup, and limitations. |
+| `docs/ARCHITECTURE.md` and subsystem `SPEC.md` files | Current implemented structure, interfaces, invariants, and failure modes. Label future opportunities as future work. |
+| `docs/FUTURE_FEATURES.md` | Researched ideas that are not committed work. Move actionable work into Beads. |
+| `AGENTS.md` | Durable contributor rules, scientific invariants, and repository workflow. Do not use it as a backlog. |
+| Public traceability records and `DATA_LICENSES.md` | Scientific claims, geometry and behavior provenance, derivations, assumptions, uncertainty, citations, and data terms. |
+| `CITATION.cff` | The software citation for the released viewer. |
+| `THIRD_PARTY_NOTICES.md` | Notices for shipped third-party software and models. |
+
+Repository invariants in `AGENTS.md` remain operative until deliberately changed.
+A Bead or approved plan may propose a future exception, but it does not override
+these instructions or make public/current documentation true. If implementation
+would conflict with an invariant, stop: record the decision and approval in
+Beads, reconcile `AGENTS.md` and the relevant architecture, provenance, and user
+documentation, then implement through a separate accepted Bead.
+
+Review documentation impact whenever behavior or evidence changes:
+
+| Change | Review and update |
+|---|---|
+| User-visible behavior, controls, accessibility, or limitations | `README.md` or user documentation; keep screenshots and examples truthful. |
+| Runtime architecture, state ownership, interfaces, or technical invariants | `docs/ARCHITECTURE.md` and the nearest `SPEC.md`; update `AGENTS.md` when the contributor rule itself changes. |
+| Scientific representation, label, teaching claim, activity model, or disclosed limitation | Public traceability records and entity/model metadata; update public copy and `AGENTS.md` when its honesty rules change. |
+| Dataset, asset, atlas/template version, generator, transform, mirroring, derivation, or data license | `DATA_LICENSES.md`, traceability records, source/generator metadata, and the `README.md` source summary. |
+| Shipped dependency, model, or license | Lockfiles and `THIRD_PARTY_NOTICES.md`; revisit security documentation when the trust boundary changes. |
+| Release title, version, authorship, repository URL, or public URL | `CITATION.cff` and matching public documentation. |
+| Security, hosting, CSP, or publication workflow | `docs/SECURITY_REVIEW.md`, deployment documentation, and verification commands. |
+
+For scientific sources, prefer canonical dataset records and primary methods.
+Verify the cited record and license terms at their source before adding or
+changing them; do not copy an unverified citation from a plan or model output.
+Record versions, stable URLs or DOIs, licenses, transformations, generator/source
+paths, assumptions, uncertainty, and known limitations. Never infer provenance
+from a filename. A scientific claim needs a citation or an explicit evidence gap;
+do not guess. Change data/model behavior and its provenance, citations, and
+user-visible disclosure together.
+
+Before closing a change Bead:
+
+1. compare the implementation with its approved design and record material
+   deviations or obtain renewed approval;
+2. update current/public docs only for behavior that has landed;
+3. update citations, licenses, traceability records, and notices affected by the
+   change, or record a specific no-impact rationale in the Bead;
+4. mark replaced plans or docs as superseded and link their replacement rather
+   than leaving two apparently authoritative designs; and
+5. record the documentation and verification evidence in the Bead.
+
+See `.pi/plans/README.md` for the design-document lifecycle. The scientific
+inventory being developed under the fidelity work owns detailed claim-level
+traceability; do not duplicate that inventory in `AGENTS.md`.
+
 ## Offline data pipeline (heavy generation is NOT in the app)
 Meshing and tractography run offline and emit small JSON/OBJ/GLB into
 `public/data` and `public/models`.
