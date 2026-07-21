@@ -8,6 +8,8 @@
 
 **Date:** 2026-07-21
 
+**Status:** Implemented by `brain-atlas-zmq.5`; signed commit and closeout evidence are recorded in Beads.
+
 **Branch:** `feat/retina-v1-lesson`
 
 **Goal:** Present one checked-in retina-to-V1 lesson through the normalized v1 lesson contract, a semantic reading rail, one sticky shared atlas, deterministic scene activation, and capability-equivalent explicit navigation on wide and compact layouts.
@@ -17,18 +19,19 @@
 **Design direction:** Extend the existing dark imaging-console identity as an **editorial scientific instrument**: editorial typography and readable line length for the lesson; data-and-analysis restraint for the stage; cool dark foundations, teal as the one interaction accent, anatomical colors only for represented structures, borders and surface shifts rather than floating glass-card stacks, an 8 px technical radius, and motion only for state explanation or disclosed biological/display models.
 
 **Acceptance Criteria:**
-- [ ] A checked-in Obsidian-style retina-to-V1 Markdown lesson parses through the same strict v1 catalog path intended for later imports; no second lesson format or vision-specific parser branch is added.
-- [ ] The reference lesson has an introduction and discrete scenes for orientation, nasal-fibre crossing, LGN relay, optic radiation, and V1 arrival; it explicitly states that uncrossed temporal-retinal paths are omitted from the schematic and does not present the anterior drawing as a complete hemifield projection.
-- [ ] Wide layout keeps semantic prose and one sticky shared atlas visible together; compact layout stacks a usable stage and prose without horizontal scrolling, fixed-panel overlap, or trapped page scrolling.
-- [ ] Scrolling activates one scene only after threshold plus hysteresis; incidental reverse motion in the dwell zone does not change scenes or restart activity. Previous and Next target the same scene anchors.
-- [ ] Re-entry applies the complete authored snapshot. Restart resets the active scene's optional activity without moving lesson position. Skip applies an immediate settled camera/activity variant rather than accelerating time.
-- [ ] Camera transition and activity clocks remain independent. Reduced motion applies the settled camera immediately, keeps automatic activity/auto-rotation off, and preserves prose, controls, status, and disclosure.
-- [ ] The renderer adapter maps stable catalog IDs to the current layer/region/tract bindings; visibility, global/per-entity hemispheres, cutaway, tissue opacity, playback, selection/emphasis state, active visual/layout, and control policy have explicit binding paths and deterministic capture.
-- [ ] `guided`, `look`, and `explore` policies are communicated and applied without simulating current panel clicks. Canvas gestures do not prevent ordinary lesson scrolling.
-- [ ] One persistent **Model & sources** control derives separate geometry and activity statuses from each scene's curated fidelity records; detailed methods, assumptions, uncertainty, material limitations, sources, and licenses preserve scene state and restore focus when closed.
-- [ ] Loading and no-WebGL paths retain lesson identity, scene prose/summaries, explicit navigation, fidelity status/details, and a settled-stage explanation. The existing Three.js viewer is not imported when WebGL2 is unavailable.
-- [ ] The existing directed anterior/optic-radiation activity, bidirectional association impulses, SWM vibration, one-MNI-transform rule, and publication/security behavior do not regress.
-- [ ] Focus, active-scene announcements, explicit navigation focus movement, 200% zoom, touch targets, wide/compact/reduced-motion/no-WebGL behavior, screenshots, tests, build, clean console, documentation, and independent review pass.
+- [x] A checked-in Obsidian-style retina-to-V1 Markdown lesson parses through the same strict v1 catalog path intended for later imports; no second lesson format or vision-specific parser branch is added.
+- [x] The reference lesson has an introduction, an unnumbered topic entry view filtered to the relevant pathway, and four discrete instructional scenes for nasal-fibre crossing, LGN relay, optic radiation, and V1 arrival; it explicitly states that uncrossed temporal-retinal paths are omitted from the schematic and does not present the anterior drawing as a complete hemifield projection.
+- [x] Wide layout keeps semantic prose and one sticky shared atlas visible together; compact layout stacks a usable stage and prose without horizontal scrolling, fixed-panel overlap, or trapped page scrolling.
+- [x] Scrolling activates one scene only after threshold plus hysteresis; incidental reverse motion in the dwell zone does not change scenes or restart activity. Previous and Next target the same scene anchors.
+- [x] Re-entry applies the complete authored snapshot. The controller retains pure Restart/Skip variants, but the reference shell does not expose Restart without an authored replay timeline; Skip appears on the stage only during an active transition and settles it rather than accelerating time.
+- [x] Camera transition and activity clocks remain independent. Reduced motion applies the settled camera immediately, keeps automatic activity/auto-rotation off, and preserves prose, controls, status, and disclosure.
+- [x] During eased scene changes, source and destination filters remain eligible as a union while changed entities cross-fade through the first half; at halfway only destination filters remain. Interrupted forward/back transitions start from current rendered opacity.
+- [x] The renderer adapter maps stable catalog IDs to the current layer/region/tract bindings; visibility, global/per-entity hemispheres, cutaway, tissue opacity, playback, selection/emphasis state, active visual/layout, and control policy have explicit binding paths and deterministic capture.
+- [x] `guided`, `look`, and `explore` policies are communicated and applied without simulating current panel clicks. Canvas gestures do not prevent ordinary lesson scrolling.
+- [x] One persistent **Model & sources** control derives separate geometry and activity statuses from each scene's curated fidelity records; detailed methods, assumptions, uncertainty, material limitations, sources, and licenses preserve scene state and restore focus when closed.
+- [x] Loading and no-WebGL paths retain lesson identity, scene prose/summaries, explicit navigation, fidelity status/details, and a settled-stage explanation. The existing Three.js viewer is not imported when WebGL2 is unavailable.
+- [x] The existing directed anterior/optic-radiation activity, bidirectional association impulses, SWM vibration, one-MNI-transform rule, and publication/security behavior do not regress.
+- [x] Focus, active-scene announcements, explicit navigation focus movement, 200% zoom, touch targets, wide/compact/reduced-motion/no-WebGL behavior, screenshots, tests, build, clean console, documentation, and independent review pass.
 
 **Verification Commands:**
 
@@ -40,30 +43,31 @@ if rg -n "eval\\(|new Function|innerHTML|from ['\"]three|import\\(['\"]three" sr
 git diff --check
 ```
 
-Browser verification must cover wide scrolling and buttons, dwell-zone hysteresis, deterministic re-entry, restart/skip, keyboard focus, compact touch/overflow, reduced motion, forced no-WebGL fallback, current activity non-regression, disclosure focus restoration, screenshots, and console errors.
+Browser verification must cover the unnumbered entry view, all four numbered scenes, wide scrolling and buttons, dwell-zone hysteresis, deterministic re-entry, controller restart semantics plus transition-only Skip UI, keyboard focus, compact touch/overflow, reduced motion, forced no-WebGL fallback, current activity non-regression, disclosure focus restoration, screenshots, and console errors.
 
 ---
 
 ## Experience and content decisions
 
-- The initial page opens directly in Lesson mode with the title, purpose, approximate scope, and a Start/Continue control. Explore mode and import remain owned by `brain-atlas-zmq.7` and `.6`.
-- The atlas is the only visual in this checked-in lesson. The visual selector presents one explicit **3D atlas** item without pretending supplementary media exist.
+- The initial page opens directly in Lesson mode with the title, purpose, and an unnumbered authored topic view that filters the atlas to the complete relevant pathway. Scrolling into the first instructional section begins scene 1, so the redundant planned Start/Continue button and former meta “start with the pathway” scene were removed from numbered progress after user review. Optional frontmatter `entryScene` preserves this domain-neutral distinction. Explore mode and import remain owned by `brain-atlas-zmq.7` and `.6`.
+- The atlas is the only visual in this checked-in lesson. The stage identifies itself directly; a redundant one-item selector was not rendered.
 - Scene prose remains normal Markdown rendered through an allowlisted plain-data view model and DOM `textContent`/element creation. No raw HTML or Markdown `innerHTML` path is introduced.
 - Scene activation updates a polite live region but does not move focus during ordinary scroll. Previous/Next scroll to the same semantic section and focus its heading only after explicit navigation.
-- Restart and Skip appear only for scenes with optional playback. Play/pause changes modeled activity, not camera completion or page position.
+- The initial Restart control was removed after user review because no reference scene defines a replay timeline and the action had no legible spatial effect. Skip transition is stage-local and exists only while a camera transition is active. Play/pause changes modeled activity, not camera completion or page position.
 - The existing dense layer console remains reachable as a collapsed **Viewer controls** disclosure for continuity, but authored scenes use renderer bindings directly. Policy cues explain when manual manipulation is unavailable.
 - The current association-only disclosure is replaced by scene-driven fidelity content. No scientific prose or citations are duplicated into lesson directives.
+- Decision `brain-atlas-jes` hides legacy fixed-anchor labels in all lesson scenes because they overlap and obscure active anatomy; free-viewer labels remain, and responsive placement is tracked by `brain-atlas-zmq.20`.
 - The reference lesson does not add the missing uncrossed temporal-retinal geometry under this Bead. It labels the current nasal-only anterior representation as partial and schematic, per `docs/SCIENTIFIC_TRACEABILITY.md` and the Bead comment.
 
 ## Scene outline
 
 | Scene | Teaching purpose | Primary visible entities | Fidelity emphasis |
 |---|---|---|---|
-| Orientation | Establish eyes, chiasm, LGN, V1, and the posterior direction of travel | cortex, anterior pathway, LGN, V1, labels | schematic anterior + atlas regions |
-| Nasal crossing | Show the represented nasal fibres crossing to contralateral LGN; disclose omitted temporal fibres | anterior pathway, LGN, labels | anterior-pathway material limitation |
-| LGN relay | Isolate bilateral LGN as the thalamic relay without claiming recorded physiology | cortex, anterior pathway, LGN, labels | Jülich geometry + illustrative activity |
-| Optic radiation | Follow real left geometry and mirrored right geometry from LGN toward V1 | cortex, optic radiation, LGN, V1, labels | data-derived/derived/mirrored geometry + modeled timing |
-| V1 arrival | View the posterior landing in bilateral V1 and summarize what the display supports | cortex, optic radiation, V1, labels | Jülich regions + optic-radiation limits |
+| Topic entry view (unnumbered) | Establish only the relevant pathway and its cortical context before instruction; filter unrelated atlas layers | cortex, anterior pathway, optic radiation, LGN, V1 | cortex + schematic anterior + atlas regions/tractography |
+| Nasal crossing | Show the represented nasal fibres crossing to contralateral LGN; disclose omitted temporal fibres | anterior pathway, LGN | anterior-pathway material limitation |
+| LGN relay | Isolate bilateral LGN as the thalamic relay without claiming recorded physiology | cortex, anterior pathway, LGN | Jülich geometry + illustrative activity |
+| Optic radiation | Follow real left geometry and mirrored right geometry from LGN toward V1 | cortex, optic radiation, LGN, V1 | data-derived/derived/mirrored geometry + modeled timing |
+| V1 arrival | View the posterior landing in bilateral V1 and summarize what the display supports | cortex, optic radiation, V1 | Jülich regions + optic-radiation limits |
 
 Every scene has a complete snapshot. Omitted association/SWM entities are hidden rather than implicitly inherited.
 
@@ -72,7 +76,7 @@ Every scene has a complete snapshot. Omitted association/SWM entities are hidden
 - **Authored state:** normalized frozen snapshot from `parseLesson`.
 - **Active lesson state:** active scene index/ID, activation reason, restart generation, and skip state; plain and renderer-independent.
 - **Renderer target state:** canonical snapshot last accepted by `createRendererAdapter`.
-- **Transient render state:** camera interpolation progress, activity event pools, OrbitControls damping, and loaded Three.js objects; never serialized into a lesson.
+- **Transient render state:** camera interpolation progress, first-half source/destination visibility union and per-entity opacity, activity event pools, OrbitControls damping, and loaded Three.js objects; never serialized into a lesson.
 - **DOM state:** scroll positions, focus, open disclosure, loading/fallback copy; never written back into authored state.
 
 Scene re-entry always begins from authored state. Restart/skip derive short-lived canonical variants through existing pure commands; they never mutate the lesson object.
@@ -118,7 +122,7 @@ node --test test/scene-navigation.test.js test/markdown-view-model.test.js test/
 - Read/verify: `docs/SCIENTIFIC_TRACEABILITY.md`
 
 **Steps:**
-1. Write a failing reference-lesson test requiring the five scene IDs/order, complete normalized snapshots, atlas-only visual, expected stable entities, curated fidelity IDs, material anterior omission disclosure, optic-radiation mirrored/illustrative disclosure, and a nonempty settled summary for no-WebGL use.
+1. Write a failing reference-lesson test requiring the entry-view ID plus four instructional scene IDs/order, complete normalized snapshots, atlas-only visual, expected stable entities, curated fidelity IDs, material anterior omission disclosure, optic-radiation mirrored/illustrative disclosure, and a nonempty settled summary for no-WebGL use.
 2. Author the smallest scientifically honest lesson using Obsidian-style frontmatter and `atlas-scene` directives. Keep citations/provenance in fidelity records; use prose only for teaching and one first-use contextual limitation note.
 3. Parse the file from disk against current catalogs in Node and deep-freeze the normalized result.
 4. Verify no scene references association-tract endpoint relationships or characterizes illustrative timing as measured physiology.
@@ -129,7 +133,7 @@ node --test test/scene-navigation.test.js test/markdown-view-model.test.js test/
 node --test test/reference-lesson.test.js test/catalog.test.js test/lesson-parser.test.js
 ```
 
-**Expected result:** One five-scene curriculum file parses through the v1 contract and exposes the known anterior/optic-radiation limits without scientific overclaim.
+**Expected result:** One curriculum file with an unnumbered entry view plus four instructional scenes parses through the v1 contract and exposes the known anterior/optic-radiation limits without scientific overclaim.
 
 ### Task 3: Implement tested viewer bindings and camera transitions [Depends on: Tasks 1-2]
 
@@ -209,7 +213,7 @@ npm run build:publish
 **Steps:**
 1. Document current Lesson mode, checked-in content path, bootstrap/no-WebGL boundary, scroll controller, one-canvas renderer adapter, control policies, responsive behavior, and deferred import/Explore/inspector work.
 2. Run all tests, publication build, production debug-hook search, dependency audit, structural security/one-transform searches, local documentation links, and diff checks. Any audit finding fails the clean gate until its reachability and severity are explicitly triaged; do not ignore noisy output or imply that an unreviewed finding is harmless.
-3. Run instrumented wide-browser checks for all five scenes by scrolling and controls; hysteresis/dead-zone stability; re-entry; Restart/Skip; camera/activity independence; policy gestures; disclosure state/focus; layer visibility; one canvas; and no console errors.
+3. Run instrumented wide-browser checks for the entry view and all four instructional scenes by scrolling and controls; hysteresis/dead-zone stability; re-entry; controller Restart and transition-only Skip behavior; camera/activity independence; policy gestures; disclosure state/focus; layer visibility; one canvas; and no console errors.
 4. Run compact touch/390 px and 200% zoom checks for no horizontal overflow, usable prose/stage, touch targets, scroll continuity, controls, and compact disclosure containment/restoration.
 5. Run reduced-motion checks for immediate settled camera, disabled automatic activity/auto-rotation, all prose/status/disclosure, and stable navigation.
 6. Force no-WebGL before renderer import and confirm no Three.js request/exception, readable scene summaries, all navigation/status/disclosure, and recovery copy.
@@ -247,3 +251,17 @@ Tasks are serial. `src/main.js` is shared by Tasks 3-4; presentation work begins
 Plan saved to: `.pi/plans/brain-atlas-zmq.5-retina-v1-vertical-slice-plan.md`.
 
 Recommended next skill: `test-driven-development` for each behavior task; `verification-before-completion` before closing `brain-atlas-zmq.5`.
+
+## Implementation record
+
+Implemented on `feat/retina-v1-lesson` through `brain-atlas-zmq.5`. The shipped slice includes:
+
+- one unnumbered, pathway-filtered topic entry view plus four instructional scenes;
+- semantic safe-DOM prose, one shared responsive Three.js stage, fixed-position explicit navigation, and readable no-WebGL fallback;
+- renderer-independent navigation, presentation, fidelity, camera, controller, and visibility models;
+- target-centered current-pose camera orbits with quintic endpoint smoothing and first-half anatomy crossfades;
+- progressive wide/compact fidelity disclosure with compact modal containment and exact focus/scroll restoration;
+- reduced-motion settlement and live preference recovery without changing scientific activity semantics;
+- synchronized current/public architecture, traceability, contributor, user, and subsystem documentation.
+
+Final evidence: 96/96 Node tests; publication build; both dependency audits with zero vulnerabilities; production debug-hook/CSP structural checks; wide/compact/short/200%-equivalent/touch/reduced-motion/no-WebGL/loading/interruption browser checks; model-diverse review with final GPT-5.6 Sol PASS; code-simplification and architecture spikes; requirements audit; retrospective. The signed commit hash and clean-worktree/signature evidence are recorded in the Bead closeout.

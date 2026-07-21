@@ -3,24 +3,20 @@
 ## Purpose
 
 `src/lesson/` turns inert Markdown/YAML lessons and project-authored catalogs into
-versioned, immutable, renderer-independent data. It defines the stable seam between
-lesson authorship, future lesson UI/state orchestration, and the single shared
-Three.js renderer.
+versioned, immutable, renderer-independent data. It defines the stable seam between lesson authorship, the `src/bootstrap.js`/`src/ui/` presentation layer, and the single shared Three.js renderer.
 
-This subsystem does **not** render Markdown, own scrolling, import files, fetch remote
-images, instantiate Three.js objects, or change anatomical coordinates. Those concerns
-belong to later UI and renderer bindings.
+This subsystem does **not** render Markdown, own scrolling, import files, fetch remote images, instantiate Three.js objects, or change anatomical coordinates. The shipped checked-in lesson presentation implements the first two concerns outside this subsystem; local import and remote-image behavior remain deferred.
 
 ## Core mechanism
 
 1. `parseLesson(source, catalog)` parses a positioned Markdown AST.
 2. Exactly one leading Obsidian-style YAML frontmatter block supplies document
-   metadata and visuals.
+   metadata and visuals. Optional `entryScene` references one authored complete scene
+   for a presentation-layer pre-scroll view; it does not alter renderer state shape.
 3. Top-level `atlas-scene` fences are the domain-specific Markdown extension and
    supply typed YAML scene directives. Prose before the
    first fence is introduction content; prose after each fence belongs to that scene.
-4. Ajv schemas validate syntax and trust-boundary shape. YAML and Markdown positions
-   become plain diagnostics.
+4. Ajv schemas validate syntax and trust-boundary shape. Validators compile during development into checked-in CSP-safe standalone functions; the browser performs no runtime code generation. YAML and Markdown positions become plain diagnostics.
 5. Catalog checks resolve stable entity, fidelity, visual, and camera IDs.
 6. Scene directives normalize into complete frozen snapshots.
 7. Pure commands return new snapshots. The renderer adapter applies a complete
@@ -28,7 +24,10 @@ belong to later UI and renderer bindings.
 
 **Key files:**
 
-- `schemas.js` — strict v1 Ajv schemas and validators.
+- `schema-definitions.js` — strict v1 JSON-schema definitions.
+- `generated-validators.js` — checked-in CSP-safe standalone Ajv output; regenerate with `npm run generate:lesson-validators`.
+- `schemas.js` — diagnostics-oriented wrappers around the standalone validators.
+- `https-formats.js` — shared credential-free HTTPS format check.
 - `diagnostics.js` — plain diagnostics and `LessonContractError`.
 - `parse-lesson.js` — Markdown/YAML parsing, safety checks, source slicing, semantics.
 - `catalog.js` — stable entity/fidelity/camera catalog validation and lookup data.
@@ -75,7 +74,9 @@ A v1 snapshot contains exactly these top-level fields:
 - `controlPolicy` — guided, look, or explore
 
 The scene ID, title, fidelity record IDs, prose, and source location belong to the
-normalized scene wrapper, not renderer state.
+normalized scene wrapper, not renderer state. Parsed lesson metadata exposes
+`entrySceneId` as either a validated authored scene ID or `null`; deciding whether to
+number or display that scene belongs to the presentation layer.
 
 ## Invariants
 
@@ -91,6 +92,8 @@ normalized scene wrapper, not renderer state.
 | INV-8 | Fidelity records keep geometry and activity statuses separate and reproduce only claims/limitations supported by `docs/SCIENTIFIC_TRACEABILITY.md`. | strict catalog + scientific review | “Data-derived” geometry cannot falsely validate modeled physiology or direction. |
 | INV-9 | YAML/schema/semantic diagnostics preserve line, column, field path, and stable code whenever source positions exist. | line-counter/AST tests | Authors can correct lessons without guesswork. |
 | INV-10 | Unknown schema versions, object keys, command types, and catalog record shapes are rejected; compatibility is never guessed. | strict Ajv schemas | Contract evolution remains explicit and reviewable. |
+| INV-11 | Browser validation uses checked-in standalone functions; runtime validation never requires `eval`, `new Function`, or a relaxed CSP. | generated-validator test + browser CSP smoke | The lesson trust boundary remains compatible with static secure hosting. |
+| INV-12 | Optional `entryScene` resolves to exactly one authored scene before presentation; unknown references reject the lesson rather than falling back to scene order. | strict metadata schema + parser semantic test | A topic entry view remains explicit, portable, and independent of tutorial-specific runtime code. |
 
 ## Failure modes
 
@@ -104,6 +107,7 @@ normalized scene wrapper, not renderer state.
 | FAIL-6 | `scene.snapshot.invalid-shape` | Consumer supplied partial, extra, stale, or non-v1 canonical state | Re-normalize from a valid directive or migrate through a reviewed version step. |
 | FAIL-7 | `renderer.adapter.missing-binding` | Renderer integration omitted a canonical axis | Implement the binding; silent no-ops are forbidden. |
 | FAIL-8 | `renderer.adapter.capture-mismatch` | Applied renderer state differs from requested canonical state | Treat as integration drift; do not continue scene orchestration. |
+| FAIL-9 | `lesson.semantic.unknown-entry-scene` | Frontmatter `entryScene` does not match an authored scene ID | Correct the metadata or add the intended complete scene; never infer the entry view. |
 
 ## Decision framework
 
@@ -124,7 +128,8 @@ Run all contract tests with:
 ```bash
 node --test test/lesson-schema.test.js test/scene-state.test.js \
   test/scene-commands.test.js test/lesson-parser.test.js \
-  test/catalog.test.js test/renderer-adapter.test.js
+  test/catalog.test.js test/renderer-adapter.test.js \
+  test/generated-validators.test.js
 ```
 
 | Spec item | Primary verification |
@@ -132,8 +137,9 @@ node --test test/lesson-schema.test.js test/scene-state.test.js \
 | INV-1, INV-6, INV-9 | `test/lesson-parser.test.js` |
 | INV-2, INV-3, FAIL-6 | `test/scene-state.test.js` |
 | INV-4, INV-8, FAIL-5 | `test/catalog.test.js` and scientific review |
-| INV-5, INV-10 | schema, parser, command, and adapter negative tests |
+| INV-5, INV-10, INV-12 | schema, parser, command, and adapter negative tests |
 | INV-7, FAIL-7, FAIL-8 | `test/renderer-adapter.test.js` plus structural `rg` check |
+| INV-11 | `test/generated-validators.test.js` plus CSP browser smoke |
 
 Full repository verification remains `npm test && npm run build:publish`.
 
@@ -143,7 +149,7 @@ Full repository verification remains `npm test && npm run build:publish`.
 |---|---|
 | `unified`, `remark-parse`, `remark-frontmatter` | Positioned Markdown/frontmatter AST parsing |
 | `yaml` | Structured YAML parsing and field locations |
-| `ajv` | Strict JSON-schema validation |
+| `ajv` | Development-time strict JSON-schema compilation plus small shipped runtime helpers used by generated standalone validators |
 | `docs/SCIENTIFIC_TRACEABILITY.md` | Current scientific claim/limitation authority |
 | `.pi/plans/brain-atlas-zmq.15-lesson-ux-ui-spec.md` | Approved interaction/state behavior |
 | `.pi/plans/brain-atlas-yum.3-model-fidelity-disclosure.md` | Approved status taxonomy and materiality rule |
@@ -151,7 +157,7 @@ Full repository verification remains `npm test && npm run build:publish`.
 ## Non-goals
 
 - No Markdown-to-HTML rendering or author-supplied HTML.
-- No scroll/hysteresis controller or lesson presentation shell.
+- No scroll/hysteresis controller or lesson presentation shell **inside this subsystem**; those are implemented in `src/ui/` and `src/bootstrap.js`.
 - No local import/paste UI or external image fetch.
 - No free-explore pop-out, selection renderer, or inspector.
 - No runtime fitting, anatomy generation, additional coordinate transform, plugin

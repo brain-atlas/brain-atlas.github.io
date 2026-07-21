@@ -5,9 +5,7 @@ description: How an agent drives and inspects the running brain-atlas viewer —
 
 # Using the brain-atlas viewer
 
-For an agent (or person) operating the running viewer — to verify a change, capture
-a view, or answer "what am I looking at". The app is a single Three.js scene
-(`src/main.js`); there is no backend.
+For an agent (or person) operating the running viewer — to verify a change, capture a view, or answer "what am I looking at". `src/bootstrap.js` presents one semantic lesson around the single `src/main.js` Three.js scene; there is no backend.
 
 ## Start it
 ```bash
@@ -19,10 +17,7 @@ It is a heavy WebGL page — prefer the static preview when inspecting; HMR relo
 can churn the GPU context.
 
 ## The development-only debug hook
-In development mode, `src/main.js` exposes
-`window.__view = { camera, controls, scene, THREE }`. Use it to frame, freeze, and
-introspect from Playwright or the console. The `import.meta.env.DEV` guard removes
-it from production builds.
+In development mode, `src/main.js` exposes `window.__view = { camera, controls, scene, THREE }`. `src/bootstrap.js` also exposes `window.__lesson`, containing the frozen lesson/catalog and getters for navigation/controller state. Use them to frame, freeze, navigate, and introspect from browser automation or the console. Their `import.meta.env.DEV` guards remove both hooks from production builds.
 
 ## Driving it with the Playwright MCP
 - `browser_navigate` to the URL, then `browser_console_messages(level:"error")` to
@@ -32,12 +27,12 @@ it from production builds.
   session's working directory / its `.playwright-mcp/`), which may be a *different*
   repo than brain-atlas. Treat those images as throwaway; don't leave them in an
   unrelated project.
-- The panel is built only after `regions.json` loads — poll for a checkbox before
-  clicking it. After changing a draw range, wait two `requestAnimationFrame`s
-  before reading it back.
+- Poll for `window.__lesson?.controllerState?.status === 'ready'` before inspecting the lesson. The layer panel is built only after `regions.json` loads and remains collapsed under **Viewer controls**; lesson policies normally disable it. After changing a draw range, wait two `requestAnimationFrame`s before reading it back.
+- At page entry, `window.__lesson.navigation.activeIndex === -1`: the unnumbered topic view shows only the pathway relevant to the lesson. Scroll into the four `.lesson-scene` sections or click the fixed-position `#scene-previous` / `#scene-next` actions; Previous from scene 1 restores the entry view. In non-Explore policies, canvas `touch-action: pan-y` and disabled touch pan/zoom keep vertical swipes on page scrolling while mouse/trackpad drag may orbit in `look`. `#scene-skip` appears on the stage only during an active transition; the reference lesson intentionally exposes no ineffective Restart action. `#model-sources-trigger` opens scene-specific fidelity records and `#fidelity-close` restores focus.
+- Force the readable renderer-free path with `?no-webgl=1`; verify that no `main`/Three.js resource loads.
 
 ## Layers and how to toggle them
-The panel lives in `#layers`. Three control surfaces:
+The retained panel lives in `#layers` inside `#viewer-console`. It is disabled while a lesson scene's canonical policy owns the display; do not bypass that state by synthesizing panel events. For direct free-viewer diagnostics, the three legacy control surfaces are:
 - **Hemisphere** — `.hemi-chip` checkboxes (Left / Right), the global L/R master.
 - **Structures / White-matter tracts** — each row has **L / R pill buttons**
   (`.pill`); click a pill to toggle that side, click the name to toggle both.
@@ -63,9 +58,9 @@ swm.visible = true; swm.traverse(o => { o.visible = true; });
 ```
 
 ## Controls (DOM ids)
-`#play` play/pause activity · `#speed` activity speed · `#clip` cutaway (near-hemisphere
-clip plane) · `#tissue` surface opacity · `[data-view]` camera presets
-(`lateral` / `top` / `post` / `ant`) · `#spin` auto-rotate · `#reset` home view.
+Lesson: `#scene-previous`, `#scene-next`, transition-only `#scene-skip`, `#model-sources-trigger`, and `#fidelity-close`.
+
+Retained viewer panel: `#play` play/pause activity · `#speed` activity speed · `#clip` cutaway (near-hemisphere clip plane) · `#tissue` surface opacity · `[data-view]` camera presets (`lateral` / `top` / `post` / `ant`) · `#spin` auto-rotate · `#reset` home view.
 
 ## What each layer honestly represents
 Describe layers by what the data supports (this mirrors the honesty rule in

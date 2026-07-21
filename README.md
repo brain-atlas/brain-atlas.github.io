@@ -87,12 +87,15 @@ the declared 2009c grid; their checked-in generation pipeline is tracked by
 ```
 flake.nix            Nix devShell (Node 22 + git); blocks bare `nix develop`
 .envrc / .envrc.d/   direnv: `use flake`, then npm install on entry
-index.html           app shell + control/legend overlay
-src/main.js          Three.js scene, data loading, activity integration, and controls
+index.html           semantic lesson/stage shell and retained viewer controls
+src/bootstrap.js     lesson loading, safe presentation, navigation, fidelity, WebGL gate
+src/main.js          lazy Three.js scene, data loading, activity, and lesson bindings
 src/activity/        renderer-independent seeded impulse, vibration, and timing math
 src/lesson/          versioned lesson parsing, catalogs, scene state, and adapter port
+src/lessons/         checked-in Obsidian-style lesson content
+src/ui/              renderer-independent presentation, navigation, and camera models
 src/pathways.js      schematic anterior-pathway control points
-src/style.css        dark "imaging console" UI
+src/style.css        responsive editorial scientific-instrument UI
 test/                 focused Node tests for extracted pure behavior
 public/models/       licensed runtime GLB assets, including brain_mni.glb
 public/data/entities.json / fidelity.json   stable lesson bindings and disclosure records
@@ -133,17 +136,41 @@ Stable bindings live in `public/data/entities.json`; geometry and activity statu
 remain separate in `public/data/fidelity.json`. See
 [`src/lesson/SPEC.md`](src/lesson/SPEC.md) for the contract.
 
-This is the data/state foundation only. The scrolling lesson presentation and local
-paste/import UI arrive in subsequent roadmap tasks; the current viewer controls below
-remain unchanged.
+The shipped reference lesson lives at `src/lessons/retina-to-v1.md`. `src/bootstrap.js`
+parses it through this same contract and renders semantic prose without HTML-string
+injection. An unnumbered topic entry view filters the atlas to the complete relevant
+pathway before scrolling activates four instructional scenes; fixed-position
+Previous/Next actions traverse the same sequence and can return to that entry view. One
+3D stage is shared throughout; wide layouts pair it with the reading rail, compact
+layouts use a shorter sticky stage plus a bottom transport bar, and short viewports
+return the stage to normal flow. Changed source/destination filters remain eligible
+while their anatomy cross-fades during the first half of a quintic-eased transition.
+The scene-driven **Model & sources** panel keeps geometry and activity status separate
+and restores focus when closed.
+
+Three.js is dynamically imported only after a WebGL2 probe. If WebGL is unavailable or
+renderer initialization fails, the topic entry view plus four-scene text lesson,
+navigation, representation status, and fidelity records remain usable without
+downloading the renderer. Local
+paste/import remains deferred to `brain-atlas-zmq.6`.
 
 ## Controls
 
-Drag to orbit, scroll to zoom. Play/Pause activity + speed; **Cutaway** (a real mesh
-clipping plane that slices the near hemisphere); **Tissue** opacity; Side / Top /
-Back / Front presets; Auto-rotate, Labels, Reset. With reduced-motion preference,
-traveling activity and auto-rotation start paused and the activity button remains
-disabled.
+Scroll or use Previous/Next to activate a scene. The reference lesson omits Restart
+because its scenes do not yet define replay timelines; **Skip transition** appears on the
+stage only while camera motion is active, jumps to the authored destination camera, and
+settles activity without accelerating model time.
+Pointer drag rotates only when the scene control policy permits it. In normal lesson
+mode, touch swipes scroll the page without rotating the camera; canvas touch gestures
+are reserved for the later explicit Explore mode. Reduced-motion preference makes
+camera changes instant, settles activity, disables Play, and removes the Skip action.
+
+The collapsed **Viewer controls** section retains Play/Pause, activity speed,
+**Cutaway**, **Tissue**, Side/Top/Back/Front, hemisphere/layer filters, Auto-rotate,
+and Reset. Lesson scenes keep this fieldset disabled unless their canonical control
+policy is `explore`, so panel clicks cannot bypass lesson state. Legacy fixed-anchor 3D
+labels are hidden in the reference lesson pending the responsive placement work in
+`brain-atlas-zmq.20`; the free viewer label layer remains available.
 
 ## What's real vs schematic
 

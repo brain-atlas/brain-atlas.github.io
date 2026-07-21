@@ -42,6 +42,7 @@ export const lessonMetadataSchema = {
     id: stableId,
     title: nonEmptyText,
     summary: nonEmptyText,
+    entryScene: stableId,
     schema: { const: LESSON_SCHEMA_VERSION },
     visuals: {
       type: 'array',

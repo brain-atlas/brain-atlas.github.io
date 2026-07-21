@@ -5,7 +5,7 @@ import equalRuntime from 'ajv/dist/runtime/equal.js';
 import httpsFormats from './https-formats.js';
 "use strict";
 export const lessonMetadata = validate10;
-const schema11 = {"type":"object","additionalProperties":false,"required":["title","schema"],"properties":{"id":{"type":"string","minLength":1,"pattern":"^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"},"title":{"type":"string","minLength":1},"summary":{"type":"string","minLength":1},"schema":{"const":1},"visuals":{"type":"array","items":{"type":"object","additionalProperties":false,"required":["id","type","src","alt","caption","credit","source"],"properties":{"id":{"type":"string","minLength":1,"pattern":"^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"},"type":{"const":"image"},"src":{"type":"string","format":"https-url"},"alt":{"type":"string","minLength":1},"caption":{"type":"string","minLength":1},"credit":{"type":"string","minLength":1},"source":{"type":"string","format":"https-url"},"aspectRatio":{"type":"number","exclusiveMinimum":0}}}}},"$id":"brain-atlas:lessonMetadata"};
+const schema11 = {"type":"object","additionalProperties":false,"required":["title","schema"],"properties":{"id":{"type":"string","minLength":1,"pattern":"^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"},"title":{"type":"string","minLength":1},"summary":{"type":"string","minLength":1},"entryScene":{"type":"string","minLength":1,"pattern":"^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"},"schema":{"const":1},"visuals":{"type":"array","items":{"type":"object","additionalProperties":false,"required":["id","type","src","alt","caption","credit","source"],"properties":{"id":{"type":"string","minLength":1,"pattern":"^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"},"type":{"const":"image"},"src":{"type":"string","format":"https-url"},"alt":{"type":"string","minLength":1},"caption":{"type":"string","minLength":1},"credit":{"type":"string","minLength":1},"source":{"type":"string","format":"https-url"},"aspectRatio":{"type":"number","exclusiveMinimum":0}}}}},"$id":"brain-atlas:lessonMetadata"};
 const func2 = ucs2Runtime.default;
 const pattern0 = new RegExp("^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$", "u");
 const formats0 = httpsFormats["https-url"];
@@ -36,7 +36,7 @@ vErrors.push(err1);
 errors++;
 }
 for(const key0 in data){
-if(!(((((key0 === "id") || (key0 === "title")) || (key0 === "summary")) || (key0 === "schema")) || (key0 === "visuals"))){
+if(!((((((key0 === "id") || (key0 === "title")) || (key0 === "summary")) || (key0 === "entryScene")) || (key0 === "schema")) || (key0 === "visuals"))){
 const err2 = {instancePath,schemaPath:"#/additionalProperties",keyword:"additionalProperties",params:{additionalProperty: key0},message:"must NOT have additional properties"};
 if(vErrors === null){
 vErrors = [err2];
@@ -132,9 +132,11 @@ vErrors.push(err9);
 errors++;
 }
 }
-if(data.schema !== undefined){
-if(1 !== data.schema){
-const err10 = {instancePath:instancePath+"/schema",schemaPath:"#/properties/schema/const",keyword:"const",params:{allowedValue: 1},message:"must be equal to constant"};
+if(data.entryScene !== undefined){
+let data3 = data.entryScene;
+if(typeof data3 === "string"){
+if(func2(data3) < 1){
+const err10 = {instancePath:instancePath+"/entryScene",schemaPath:"#/properties/entryScene/minLength",keyword:"minLength",params:{limit: 1},message:"must NOT have fewer than 1 characters"};
 if(vErrors === null){
 vErrors = [err10];
 }
@@ -143,16 +145,8 @@ vErrors.push(err10);
 }
 errors++;
 }
-}
-if(data.visuals !== undefined){
-let data4 = data.visuals;
-if(Array.isArray(data4)){
-const len0 = data4.length;
-for(let i0=0; i0<len0; i0++){
-let data5 = data4[i0];
-if(data5 && typeof data5 == "object" && !Array.isArray(data5)){
-if(data5.id === undefined){
-const err11 = {instancePath:instancePath+"/visuals/" + i0,schemaPath:"#/properties/visuals/items/required",keyword:"required",params:{missingProperty: "id"},message:"must have required property '"+"id"+"'"};
+if(!pattern0.test(data3)){
+const err11 = {instancePath:instancePath+"/entryScene",schemaPath:"#/properties/entryScene/pattern",keyword:"pattern",params:{pattern: "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"},message:"must match pattern \""+"^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"+"\""};
 if(vErrors === null){
 vErrors = [err11];
 }
@@ -161,8 +155,9 @@ vErrors.push(err11);
 }
 errors++;
 }
-if(data5.type === undefined){
-const err12 = {instancePath:instancePath+"/visuals/" + i0,schemaPath:"#/properties/visuals/items/required",keyword:"required",params:{missingProperty: "type"},message:"must have required property '"+"type"+"'"};
+}
+else {
+const err12 = {instancePath:instancePath+"/entryScene",schemaPath:"#/properties/entryScene/type",keyword:"type",params:{type: "string"},message:"must be string"};
 if(vErrors === null){
 vErrors = [err12];
 }
@@ -171,8 +166,10 @@ vErrors.push(err12);
 }
 errors++;
 }
-if(data5.src === undefined){
-const err13 = {instancePath:instancePath+"/visuals/" + i0,schemaPath:"#/properties/visuals/items/required",keyword:"required",params:{missingProperty: "src"},message:"must have required property '"+"src"+"'"};
+}
+if(data.schema !== undefined){
+if(1 !== data.schema){
+const err13 = {instancePath:instancePath+"/schema",schemaPath:"#/properties/schema/const",keyword:"const",params:{allowedValue: 1},message:"must be equal to constant"};
 if(vErrors === null){
 vErrors = [err13];
 }
@@ -181,8 +178,16 @@ vErrors.push(err13);
 }
 errors++;
 }
-if(data5.alt === undefined){
-const err14 = {instancePath:instancePath+"/visuals/" + i0,schemaPath:"#/properties/visuals/items/required",keyword:"required",params:{missingProperty: "alt"},message:"must have required property '"+"alt"+"'"};
+}
+if(data.visuals !== undefined){
+let data5 = data.visuals;
+if(Array.isArray(data5)){
+const len0 = data5.length;
+for(let i0=0; i0<len0; i0++){
+let data6 = data5[i0];
+if(data6 && typeof data6 == "object" && !Array.isArray(data6)){
+if(data6.id === undefined){
+const err14 = {instancePath:instancePath+"/visuals/" + i0,schemaPath:"#/properties/visuals/items/required",keyword:"required",params:{missingProperty: "id"},message:"must have required property '"+"id"+"'"};
 if(vErrors === null){
 vErrors = [err14];
 }
@@ -191,8 +196,8 @@ vErrors.push(err14);
 }
 errors++;
 }
-if(data5.caption === undefined){
-const err15 = {instancePath:instancePath+"/visuals/" + i0,schemaPath:"#/properties/visuals/items/required",keyword:"required",params:{missingProperty: "caption"},message:"must have required property '"+"caption"+"'"};
+if(data6.type === undefined){
+const err15 = {instancePath:instancePath+"/visuals/" + i0,schemaPath:"#/properties/visuals/items/required",keyword:"required",params:{missingProperty: "type"},message:"must have required property '"+"type"+"'"};
 if(vErrors === null){
 vErrors = [err15];
 }
@@ -201,8 +206,8 @@ vErrors.push(err15);
 }
 errors++;
 }
-if(data5.credit === undefined){
-const err16 = {instancePath:instancePath+"/visuals/" + i0,schemaPath:"#/properties/visuals/items/required",keyword:"required",params:{missingProperty: "credit"},message:"must have required property '"+"credit"+"'"};
+if(data6.src === undefined){
+const err16 = {instancePath:instancePath+"/visuals/" + i0,schemaPath:"#/properties/visuals/items/required",keyword:"required",params:{missingProperty: "src"},message:"must have required property '"+"src"+"'"};
 if(vErrors === null){
 vErrors = [err16];
 }
@@ -211,8 +216,8 @@ vErrors.push(err16);
 }
 errors++;
 }
-if(data5.source === undefined){
-const err17 = {instancePath:instancePath+"/visuals/" + i0,schemaPath:"#/properties/visuals/items/required",keyword:"required",params:{missingProperty: "source"},message:"must have required property '"+"source"+"'"};
+if(data6.alt === undefined){
+const err17 = {instancePath:instancePath+"/visuals/" + i0,schemaPath:"#/properties/visuals/items/required",keyword:"required",params:{missingProperty: "alt"},message:"must have required property '"+"alt"+"'"};
 if(vErrors === null){
 vErrors = [err17];
 }
@@ -221,9 +226,8 @@ vErrors.push(err17);
 }
 errors++;
 }
-for(const key1 in data5){
-if(!((((((((key1 === "id") || (key1 === "type")) || (key1 === "src")) || (key1 === "alt")) || (key1 === "caption")) || (key1 === "credit")) || (key1 === "source")) || (key1 === "aspectRatio"))){
-const err18 = {instancePath:instancePath+"/visuals/" + i0,schemaPath:"#/properties/visuals/items/additionalProperties",keyword:"additionalProperties",params:{additionalProperty: key1},message:"must NOT have additional properties"};
+if(data6.caption === undefined){
+const err18 = {instancePath:instancePath+"/visuals/" + i0,schemaPath:"#/properties/visuals/items/required",keyword:"required",params:{missingProperty: "caption"},message:"must have required property '"+"caption"+"'"};
 if(vErrors === null){
 vErrors = [err18];
 }
@@ -232,12 +236,8 @@ vErrors.push(err18);
 }
 errors++;
 }
-}
-if(data5.id !== undefined){
-let data6 = data5.id;
-if(typeof data6 === "string"){
-if(func2(data6) < 1){
-const err19 = {instancePath:instancePath+"/visuals/" + i0+"/id",schemaPath:"#/properties/visuals/items/properties/id/minLength",keyword:"minLength",params:{limit: 1},message:"must NOT have fewer than 1 characters"};
+if(data6.credit === undefined){
+const err19 = {instancePath:instancePath+"/visuals/" + i0,schemaPath:"#/properties/visuals/items/required",keyword:"required",params:{missingProperty: "credit"},message:"must have required property '"+"credit"+"'"};
 if(vErrors === null){
 vErrors = [err19];
 }
@@ -246,8 +246,8 @@ vErrors.push(err19);
 }
 errors++;
 }
-if(!pattern0.test(data6)){
-const err20 = {instancePath:instancePath+"/visuals/" + i0+"/id",schemaPath:"#/properties/visuals/items/properties/id/pattern",keyword:"pattern",params:{pattern: "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"},message:"must match pattern \""+"^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"+"\""};
+if(data6.source === undefined){
+const err20 = {instancePath:instancePath+"/visuals/" + i0,schemaPath:"#/properties/visuals/items/required",keyword:"required",params:{missingProperty: "source"},message:"must have required property '"+"source"+"'"};
 if(vErrors === null){
 vErrors = [err20];
 }
@@ -256,9 +256,9 @@ vErrors.push(err20);
 }
 errors++;
 }
-}
-else {
-const err21 = {instancePath:instancePath+"/visuals/" + i0+"/id",schemaPath:"#/properties/visuals/items/properties/id/type",keyword:"type",params:{type: "string"},message:"must be string"};
+for(const key1 in data6){
+if(!((((((((key1 === "id") || (key1 === "type")) || (key1 === "src")) || (key1 === "alt")) || (key1 === "caption")) || (key1 === "credit")) || (key1 === "source")) || (key1 === "aspectRatio"))){
+const err21 = {instancePath:instancePath+"/visuals/" + i0,schemaPath:"#/properties/visuals/items/additionalProperties",keyword:"additionalProperties",params:{additionalProperty: key1},message:"must NOT have additional properties"};
 if(vErrors === null){
 vErrors = [err21];
 }
@@ -268,9 +268,11 @@ vErrors.push(err21);
 errors++;
 }
 }
-if(data5.type !== undefined){
-if("image" !== data5.type){
-const err22 = {instancePath:instancePath+"/visuals/" + i0+"/type",schemaPath:"#/properties/visuals/items/properties/type/const",keyword:"const",params:{allowedValue: "image"},message:"must be equal to constant"};
+if(data6.id !== undefined){
+let data7 = data6.id;
+if(typeof data7 === "string"){
+if(func2(data7) < 1){
+const err22 = {instancePath:instancePath+"/visuals/" + i0+"/id",schemaPath:"#/properties/visuals/items/properties/id/minLength",keyword:"minLength",params:{limit: 1},message:"must NOT have fewer than 1 characters"};
 if(vErrors === null){
 vErrors = [err22];
 }
@@ -279,12 +281,8 @@ vErrors.push(err22);
 }
 errors++;
 }
-}
-if(data5.src !== undefined){
-let data8 = data5.src;
-if(typeof data8 === "string"){
-if(!(formats0.validate(data8))){
-const err23 = {instancePath:instancePath+"/visuals/" + i0+"/src",schemaPath:"#/properties/visuals/items/properties/src/format",keyword:"format",params:{format: "https-url"},message:"must match format \""+"https-url"+"\""};
+if(!pattern0.test(data7)){
+const err23 = {instancePath:instancePath+"/visuals/" + i0+"/id",schemaPath:"#/properties/visuals/items/properties/id/pattern",keyword:"pattern",params:{pattern: "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"},message:"must match pattern \""+"^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"+"\""};
 if(vErrors === null){
 vErrors = [err23];
 }
@@ -295,7 +293,7 @@ errors++;
 }
 }
 else {
-const err24 = {instancePath:instancePath+"/visuals/" + i0+"/src",schemaPath:"#/properties/visuals/items/properties/src/type",keyword:"type",params:{type: "string"},message:"must be string"};
+const err24 = {instancePath:instancePath+"/visuals/" + i0+"/id",schemaPath:"#/properties/visuals/items/properties/id/type",keyword:"type",params:{type: "string"},message:"must be string"};
 if(vErrors === null){
 vErrors = [err24];
 }
@@ -305,11 +303,9 @@ vErrors.push(err24);
 errors++;
 }
 }
-if(data5.alt !== undefined){
-let data9 = data5.alt;
-if(typeof data9 === "string"){
-if(func2(data9) < 1){
-const err25 = {instancePath:instancePath+"/visuals/" + i0+"/alt",schemaPath:"#/properties/visuals/items/properties/alt/minLength",keyword:"minLength",params:{limit: 1},message:"must NOT have fewer than 1 characters"};
+if(data6.type !== undefined){
+if("image" !== data6.type){
+const err25 = {instancePath:instancePath+"/visuals/" + i0+"/type",schemaPath:"#/properties/visuals/items/properties/type/const",keyword:"const",params:{allowedValue: "image"},message:"must be equal to constant"};
 if(vErrors === null){
 vErrors = [err25];
 }
@@ -319,8 +315,11 @@ vErrors.push(err25);
 errors++;
 }
 }
-else {
-const err26 = {instancePath:instancePath+"/visuals/" + i0+"/alt",schemaPath:"#/properties/visuals/items/properties/alt/type",keyword:"type",params:{type: "string"},message:"must be string"};
+if(data6.src !== undefined){
+let data9 = data6.src;
+if(typeof data9 === "string"){
+if(!(formats0.validate(data9))){
+const err26 = {instancePath:instancePath+"/visuals/" + i0+"/src",schemaPath:"#/properties/visuals/items/properties/src/format",keyword:"format",params:{format: "https-url"},message:"must match format \""+"https-url"+"\""};
 if(vErrors === null){
 vErrors = [err26];
 }
@@ -330,11 +329,8 @@ vErrors.push(err26);
 errors++;
 }
 }
-if(data5.caption !== undefined){
-let data10 = data5.caption;
-if(typeof data10 === "string"){
-if(func2(data10) < 1){
-const err27 = {instancePath:instancePath+"/visuals/" + i0+"/caption",schemaPath:"#/properties/visuals/items/properties/caption/minLength",keyword:"minLength",params:{limit: 1},message:"must NOT have fewer than 1 characters"};
+else {
+const err27 = {instancePath:instancePath+"/visuals/" + i0+"/src",schemaPath:"#/properties/visuals/items/properties/src/type",keyword:"type",params:{type: "string"},message:"must be string"};
 if(vErrors === null){
 vErrors = [err27];
 }
@@ -344,8 +340,11 @@ vErrors.push(err27);
 errors++;
 }
 }
-else {
-const err28 = {instancePath:instancePath+"/visuals/" + i0+"/caption",schemaPath:"#/properties/visuals/items/properties/caption/type",keyword:"type",params:{type: "string"},message:"must be string"};
+if(data6.alt !== undefined){
+let data10 = data6.alt;
+if(typeof data10 === "string"){
+if(func2(data10) < 1){
+const err28 = {instancePath:instancePath+"/visuals/" + i0+"/alt",schemaPath:"#/properties/visuals/items/properties/alt/minLength",keyword:"minLength",params:{limit: 1},message:"must NOT have fewer than 1 characters"};
 if(vErrors === null){
 vErrors = [err28];
 }
@@ -355,11 +354,8 @@ vErrors.push(err28);
 errors++;
 }
 }
-if(data5.credit !== undefined){
-let data11 = data5.credit;
-if(typeof data11 === "string"){
-if(func2(data11) < 1){
-const err29 = {instancePath:instancePath+"/visuals/" + i0+"/credit",schemaPath:"#/properties/visuals/items/properties/credit/minLength",keyword:"minLength",params:{limit: 1},message:"must NOT have fewer than 1 characters"};
+else {
+const err29 = {instancePath:instancePath+"/visuals/" + i0+"/alt",schemaPath:"#/properties/visuals/items/properties/alt/type",keyword:"type",params:{type: "string"},message:"must be string"};
 if(vErrors === null){
 vErrors = [err29];
 }
@@ -369,8 +365,11 @@ vErrors.push(err29);
 errors++;
 }
 }
-else {
-const err30 = {instancePath:instancePath+"/visuals/" + i0+"/credit",schemaPath:"#/properties/visuals/items/properties/credit/type",keyword:"type",params:{type: "string"},message:"must be string"};
+if(data6.caption !== undefined){
+let data11 = data6.caption;
+if(typeof data11 === "string"){
+if(func2(data11) < 1){
+const err30 = {instancePath:instancePath+"/visuals/" + i0+"/caption",schemaPath:"#/properties/visuals/items/properties/caption/minLength",keyword:"minLength",params:{limit: 1},message:"must NOT have fewer than 1 characters"};
 if(vErrors === null){
 vErrors = [err30];
 }
@@ -380,11 +379,8 @@ vErrors.push(err30);
 errors++;
 }
 }
-if(data5.source !== undefined){
-let data12 = data5.source;
-if(typeof data12 === "string"){
-if(!(formats0.validate(data12))){
-const err31 = {instancePath:instancePath+"/visuals/" + i0+"/source",schemaPath:"#/properties/visuals/items/properties/source/format",keyword:"format",params:{format: "https-url"},message:"must match format \""+"https-url"+"\""};
+else {
+const err31 = {instancePath:instancePath+"/visuals/" + i0+"/caption",schemaPath:"#/properties/visuals/items/properties/caption/type",keyword:"type",params:{type: "string"},message:"must be string"};
 if(vErrors === null){
 vErrors = [err31];
 }
@@ -394,8 +390,11 @@ vErrors.push(err31);
 errors++;
 }
 }
-else {
-const err32 = {instancePath:instancePath+"/visuals/" + i0+"/source",schemaPath:"#/properties/visuals/items/properties/source/type",keyword:"type",params:{type: "string"},message:"must be string"};
+if(data6.credit !== undefined){
+let data12 = data6.credit;
+if(typeof data12 === "string"){
+if(func2(data12) < 1){
+const err32 = {instancePath:instancePath+"/visuals/" + i0+"/credit",schemaPath:"#/properties/visuals/items/properties/credit/minLength",keyword:"minLength",params:{limit: 1},message:"must NOT have fewer than 1 characters"};
 if(vErrors === null){
 vErrors = [err32];
 }
@@ -405,11 +404,8 @@ vErrors.push(err32);
 errors++;
 }
 }
-if(data5.aspectRatio !== undefined){
-let data13 = data5.aspectRatio;
-if((typeof data13 == "number") && (isFinite(data13))){
-if(data13 <= 0 || isNaN(data13)){
-const err33 = {instancePath:instancePath+"/visuals/" + i0+"/aspectRatio",schemaPath:"#/properties/visuals/items/properties/aspectRatio/exclusiveMinimum",keyword:"exclusiveMinimum",params:{comparison: ">", limit: 0},message:"must be > 0"};
+else {
+const err33 = {instancePath:instancePath+"/visuals/" + i0+"/credit",schemaPath:"#/properties/visuals/items/properties/credit/type",keyword:"type",params:{type: "string"},message:"must be string"};
 if(vErrors === null){
 vErrors = [err33];
 }
@@ -419,8 +415,11 @@ vErrors.push(err33);
 errors++;
 }
 }
-else {
-const err34 = {instancePath:instancePath+"/visuals/" + i0+"/aspectRatio",schemaPath:"#/properties/visuals/items/properties/aspectRatio/type",keyword:"type",params:{type: "number"},message:"must be number"};
+if(data6.source !== undefined){
+let data13 = data6.source;
+if(typeof data13 === "string"){
+if(!(formats0.validate(data13))){
+const err34 = {instancePath:instancePath+"/visuals/" + i0+"/source",schemaPath:"#/properties/visuals/items/properties/source/format",keyword:"format",params:{format: "https-url"},message:"must match format \""+"https-url"+"\""};
 if(vErrors === null){
 vErrors = [err34];
 }
@@ -430,9 +429,8 @@ vErrors.push(err34);
 errors++;
 }
 }
-}
 else {
-const err35 = {instancePath:instancePath+"/visuals/" + i0,schemaPath:"#/properties/visuals/items/type",keyword:"type",params:{type: "object"},message:"must be object"};
+const err35 = {instancePath:instancePath+"/visuals/" + i0+"/source",schemaPath:"#/properties/visuals/items/properties/source/type",keyword:"type",params:{type: "string"},message:"must be string"};
 if(vErrors === null){
 vErrors = [err35];
 }
@@ -442,9 +440,11 @@ vErrors.push(err35);
 errors++;
 }
 }
-}
-else {
-const err36 = {instancePath:instancePath+"/visuals",schemaPath:"#/properties/visuals/type",keyword:"type",params:{type: "array"},message:"must be array"};
+if(data6.aspectRatio !== undefined){
+let data14 = data6.aspectRatio;
+if((typeof data14 == "number") && (isFinite(data14))){
+if(data14 <= 0 || isNaN(data14)){
+const err36 = {instancePath:instancePath+"/visuals/" + i0+"/aspectRatio",schemaPath:"#/properties/visuals/items/properties/aspectRatio/exclusiveMinimum",keyword:"exclusiveMinimum",params:{comparison: ">", limit: 0},message:"must be > 0"};
 if(vErrors === null){
 vErrors = [err36];
 }
@@ -454,14 +454,49 @@ vErrors.push(err36);
 errors++;
 }
 }
-}
 else {
-const err37 = {instancePath,schemaPath:"#/type",keyword:"type",params:{type: "object"},message:"must be object"};
+const err37 = {instancePath:instancePath+"/visuals/" + i0+"/aspectRatio",schemaPath:"#/properties/visuals/items/properties/aspectRatio/type",keyword:"type",params:{type: "number"},message:"must be number"};
 if(vErrors === null){
 vErrors = [err37];
 }
 else {
 vErrors.push(err37);
+}
+errors++;
+}
+}
+}
+else {
+const err38 = {instancePath:instancePath+"/visuals/" + i0,schemaPath:"#/properties/visuals/items/type",keyword:"type",params:{type: "object"},message:"must be object"};
+if(vErrors === null){
+vErrors = [err38];
+}
+else {
+vErrors.push(err38);
+}
+errors++;
+}
+}
+}
+else {
+const err39 = {instancePath:instancePath+"/visuals",schemaPath:"#/properties/visuals/type",keyword:"type",params:{type: "array"},message:"must be array"};
+if(vErrors === null){
+vErrors = [err39];
+}
+else {
+vErrors.push(err39);
+}
+errors++;
+}
+}
+}
+else {
+const err40 = {instancePath,schemaPath:"#/type",keyword:"type",params:{type: "object"},message:"must be object"};
+if(vErrors === null){
+vErrors = [err40];
+}
+else {
+vErrors.push(err40);
 }
 errors++;
 }
@@ -471,7 +506,7 @@ return errors === 0;
 
 export const sceneDirective = validate11;
 const schema12 = {"type":"object","additionalProperties":false,"required":["id","visual","camera","show","controls","layout"],"properties":{"id":{"type":"string","minLength":1,"pattern":"^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"},"title":{"type":"string","minLength":1},"visual":{"type":"string","minLength":1,"pattern":"^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"},"camera":{"oneOf":[{"type":"string","minLength":1,"pattern":"^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"},{"type":"object","additionalProperties":false,"required":["position","target"],"properties":{"position":{"type":"array","minItems":3,"maxItems":3,"items":{"type":"number"}},"target":{"type":"array","minItems":3,"maxItems":3,"items":{"type":"number"}},"transition":{"type":"object","additionalProperties":false,"required":["kind"],"properties":{"kind":{"enum":["instant","ease"]},"durationMs":{"type":"integer","minimum":0,"maximum":30000}}}}}]},"show":{"type":"array","uniqueItems":true,"items":{"type":"string","minLength":1,"pattern":"^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"}},"fidelity":{"type":"array","uniqueItems":true,"items":{"type":"string","minLength":1,"pattern":"^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"}},"hemispheres":{"type":"object","additionalProperties":false,"properties":{"global":{"type":"object","additionalProperties":false,"required":["L","R"],"properties":{"L":{"type":"boolean"},"R":{"type":"boolean"}}},"entities":{"type":"object","additionalProperties":{"type":"object","additionalProperties":false,"required":["L","R"],"properties":{"L":{"type":"boolean"},"R":{"type":"boolean"}}}}}},"cutaway":{"type":"number","minimum":0,"maximum":100},"tissueOpacity":{"type":"number","minimum":0,"maximum":1},"playback":{"type":"object","additionalProperties":false,"properties":{"playing":{"type":"boolean"},"speed":{"type":"number","minimum":15,"maximum":160},"settled":{"type":"boolean"}}},"selection":{"type":"object","additionalProperties":false,"properties":{"selected":{"anyOf":[{"type":"string","minLength":1,"pattern":"^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"},{"type":"null"}]},"emphasized":{"type":"array","uniqueItems":true,"items":{"type":"string","minLength":1,"pattern":"^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"}},"strength":{"type":"number","minimum":0,"maximum":1}}},"controls":{"type":"object","additionalProperties":false,"required":["mode"],"properties":{"mode":{"enum":["guided","look","explore"]}}},"layout":{"enum":["dominant","split","detail"]}},"$id":"brain-atlas:sceneDirective"};
-const func9 = Object.prototype.hasOwnProperty;
+const func10 = Object.prototype.hasOwnProperty;
 
 function validate11(data, {instancePath="", parentData, parentDataProperty, rootData=data}={}){
 /*# sourceURL="brain-atlas:sceneDirective" */;
@@ -539,7 +574,7 @@ vErrors.push(err5);
 errors++;
 }
 for(const key0 in data){
-if(!(func9.call(schema12.properties, key0))){
+if(!(func10.call(schema12.properties, key0))){
 const err6 = {instancePath,schemaPath:"#/additionalProperties",keyword:"additionalProperties",params:{additionalProperty: key0},message:"must NOT have additional properties"};
 if(vErrors === null){
 vErrors = [err6];
@@ -2289,7 +2324,7 @@ return errors === 0;
 export const fidelityCatalog = validate13;
 const schema14 = {"type":"object","additionalProperties":false,"required":["schemaVersion","records"],"properties":{"schemaVersion":{"const":1},"records":{"type":"array","items":{"type":"object","additionalProperties":false,"required":["id","geometry","activity","supports","assumptions","uncertainties","limitations","sources","licenses","reviewed"],"properties":{"id":{"type":"string","minLength":1,"pattern":"^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"},"geometry":{"type":"object","additionalProperties":false,"required":["statuses","summary"],"properties":{"statuses":{"type":"array","minItems":1,"uniqueItems":true,"items":{"enum":["data-derived","derived","mirrored","modeled","schematic","illustrative","display-only","none"]}},"summary":{"type":"string","minLength":1}}},"activity":{"type":"object","additionalProperties":false,"required":["statuses","summary","direction"],"properties":{"statuses":{"type":"array","minItems":1,"uniqueItems":true,"items":{"enum":["data-derived","derived","mirrored","modeled","schematic","illustrative","display-only","none"]}},"summary":{"type":"string","minLength":1},"direction":{"enum":["directed","undirected","modeled","none","unknown"]}}},"supports":{"type":"array","items":{"type":"string","minLength":1}},"assumptions":{"type":"array","items":{"type":"string","minLength":1}},"uncertainties":{"type":"array","items":{"type":"string","minLength":1}},"limitations":{"type":"array","items":{"type":"object","additionalProperties":false,"required":["summary","material"],"properties":{"summary":{"type":"string","minLength":1},"material":{"type":"boolean"}}}},"sources":{"type":"array","items":{"type":"object","additionalProperties":false,"required":["label","url"],"properties":{"label":{"type":"string","minLength":1},"url":{"type":"string","format":"https-url"}}}},"licenses":{"type":"array","items":{"type":"object","additionalProperties":false,"required":["label","url"],"properties":{"label":{"type":"string","minLength":1},"url":{"type":"string","format":"https-url"}}}},"reviewed":{"type":"string","pattern":"^\\d{4}-\\d{2}-\\d{2}$"}}}}},"$id":"brain-atlas:fidelityCatalog"};
 const func0 = equalRuntime.default;
-const pattern12 = new RegExp("^\\d{4}-\\d{2}-\\d{2}$", "u");
+const pattern13 = new RegExp("^\\d{4}-\\d{2}-\\d{2}$", "u");
 
 function validate13(data, {instancePath="", parentData, parentDataProperty, rootData=data}={}){
 /*# sourceURL="brain-atlas:fidelityCatalog" */;
@@ -2448,7 +2483,7 @@ vErrors.push(err13);
 errors++;
 }
 for(const key1 in data2){
-if(!(func9.call(schema14.properties.records.items.properties, key1))){
+if(!(func10.call(schema14.properties.records.items.properties, key1))){
 const err14 = {instancePath:instancePath+"/records/" + i0,schemaPath:"#/properties/records/items/additionalProperties",keyword:"additionalProperties",params:{additionalProperty: key1},message:"must NOT have additional properties"};
 if(vErrors === null){
 vErrors = [err14];
@@ -3231,7 +3266,7 @@ errors++;
 if(data2.reviewed !== undefined){
 let data31 = data2.reviewed;
 if(typeof data31 === "string"){
-if(!pattern12.test(data31)){
+if(!pattern13.test(data31)){
 const err75 = {instancePath:instancePath+"/records/" + i0+"/reviewed",schemaPath:"#/properties/records/items/properties/reviewed/pattern",keyword:"pattern",params:{pattern: "^\\d{4}-\\d{2}-\\d{2}$"},message:"must match pattern \""+"^\\d{4}-\\d{2}-\\d{2}$"+"\""};
 if(vErrors === null){
 vErrors = [err75];

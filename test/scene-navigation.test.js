@@ -15,8 +15,31 @@ test('scene navigation starts with exactly one active scene', () => {
     activationCount: 1,
     lastReason: 'initial',
     lastScrollY: null,
+    hasEntryScene: false,
   });
   assert.equal(Object.isFrozen(state), true);
+});
+
+test('an entry view remains outside numbered scenes and reappears above the first anchor', () => {
+  let state = createSceneNavigationState(4, -1);
+  assert.equal(state.activeIndex, -1);
+  assert.equal(state.hasEntryScene, true);
+  assert.equal(moveScene(state, -1).activeIndex, -1);
+
+  state = updateSceneFromScroll(state, {
+    anchorTops: [400, 1200, 2000, 2800],
+    viewportHeight: 800,
+    scrollY: 100,
+  });
+  assert.equal(state.activeIndex, 0);
+
+  state = updateSceneFromScroll(state, {
+    anchorTops: [700, 1500, 2300, 3100],
+    viewportHeight: 800,
+    scrollY: 0,
+  });
+  assert.equal(state.activeIndex, -1);
+  assert.equal(moveScene(state, 1).activeIndex, 0);
 });
 
 test('forward scroll activates only after the next anchor crosses its threshold', () => {

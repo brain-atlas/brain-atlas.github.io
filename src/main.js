@@ -1,4 +1,3 @@
-import './style.css';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -17,10 +16,17 @@ import { createSwmVibration, vibrationContourParameter } from './activity/swm-vi
 import { createFrameDeltaReader } from './activity/frame-time.js';
 import { createRendererAdapter } from './lesson/index.js';
 import { createCameraTransition, sampleCameraTransition } from './ui/camera-transition.js';
+import { createVisibilityTransition, sampleVisibilityTransition } from './ui/visibility-transition.js';
 
 // ---------------------------------------------------------------------------
 const stage = document.getElementById('stage');
-const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
+const rendererReducedMotionQuery = matchMedia('(prefers-reduced-motion: reduce)');
+let reduce = rendererReducedMotionQuery.matches;
+rendererReducedMotionQuery.addEventListener('change', ({ matches }) => {
+  reduce = matches;
+  if (matches) controls.autoRotate = false;
+  applyLessonPlaybackRequest();
+});
 
 const viewerReadyParts = new Set();
 let resolveViewerReady, rejectViewerReady;
@@ -104,6 +110,7 @@ function loadBrain() {
       }
     });
     brainGroup.add(g.scene);
+    reapplyLessonMaterialFactors(brainGroup);
     setBadge('Cortical surface: MNI152NLin2009cAsym template shell — see README for sources');
   }, undefined, (e) => console.warn('brain load failed:', e));
 }
@@ -227,6 +234,8 @@ function loadRegions() {
           const mesh = new THREE.Mesh(geom, mat); mesh.frustumCulled = false; mesh.userData = { hemi };
           mesh.visible = hemiState[hemi] && (regionHemi[reg.id] ? regionHemi[reg.id][hemi] : true);
           group.add(mesh);
+          reapplyLessonMaterialFactors(group);
+          applyRegionMesh(reg.id);
         }, undefined, (e) => console.warn('region mesh failed:', reg.meshes[hemi].file, e));
       }
       regionGroup.add(group); regionsById[reg.id] = group;
@@ -387,6 +396,7 @@ function loadFibres() {
       const caps = new THREE.Points(cg, capMat); caps.visible = hemiState[h]; fibreGroup.add(caps); orCaps[h] = caps;
     }
     initFiring();          // build per-fibre firing states now that FIB is populated
+    reapplyLessonMaterialFactors(fibreGroup);
   }).catch((e) => console.warn('fibres load failed:', e));
 }
 
@@ -518,7 +528,8 @@ function updateTractImpulses(dt) {
     const rawT = canonicalContourParameter(event.contour, tractActivityById[id].endpointA.classifier, event.aToB, progress);
     writeFibrePoint(event.contour, rawT, arr, k * 3);
     const rgb = tractsById[id].rgb;
-    col[k * 3] = rgb[0]; col[k * 3 + 1] = rgb[1]; col[k * 3 + 2] = rgb[2]; k++;
+    const opacity = lessonEntityOpacities[`tract.${id}`] ?? 1;
+    col[k * 3] = rgb[0] * opacity; col[k * 3 + 1] = rgb[1] * opacity; col[k * 3 + 2] = rgb[2] * opacity; k++;
   }
   tractImpulseGeo.setDrawRange(0, k);
   tractImpulseGeo.attributes.position.needsUpdate = true;
@@ -587,6 +598,7 @@ function loadSwm() {
       const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(linePos[h], 3));
       const lines = new THREE.LineSegments(g, grainMat); lines.visible = hemiState[h]; swmGroup.add(lines); swmLines[h] = lines;
     }
+    reapplyLessonMaterialFactors(swmGroup);
   }).catch((e) => console.warn('swm load failed:', e));
 }
 function updateSwm(dt) {
@@ -606,10 +618,22 @@ function updateSwm(dt) {
 // ---------------------------------------------------------------------------
 // State + loop
 const st = { flow: !reduce, speed: 70, phase: 0, settled: reduce };
+let requestedLessonPlayback = null;
 const timer = new THREE.Timer();
 timer.connect(document);
 const readFrameDelta = createFrameDeltaReader(timer);
 let lessonCameraTransition = null;
+let lessonVisibilityTransition = null;
+let lessonEntityOpacities = Object.freeze({});
+let updateLessonVisibility = () => {};
+let lessonControlMode = 'explore';
+let lessonTransitionStateChange = () => {};
+let lessonTransitioning = false;
+function setLessonTransitioning(value) {
+  if (lessonTransitioning === value) return;
+  lessonTransitioning = value;
+  lessonTransitionStateChange(value);
+}
 
 function resize() {
   const w = stage.clientWidth, h = stage.clientHeight;
@@ -630,11 +654,19 @@ function updateAnteriorFlow() {
 }
 function animate(timestamp) {
   const dt = readFrameDelta(timestamp);
+  let cameraTransitioning = false;
+  updateLessonVisibility(timestamp);
   if (lessonCameraTransition) {
     const pose = sampleCameraTransition(lessonCameraTransition, timestamp);
     camera.position.fromArray(pose.position);
     controls.target.fromArray(pose.target);
-    if (pose.done) lessonCameraTransition = null;
+    camera.lookAt(controls.target);
+    cameraTransitioning = !pose.done;
+    if (pose.done) {
+      lessonCameraTransition = null;
+      controls.enabled = lessonControlMode !== 'guided';
+      setLessonTransitioning(false);
+    }
   }
   if (st.flow) {
     st.phase = (st.phase + dt * (st.speed / 70) * 0.075) % 1;
@@ -643,7 +675,7 @@ function animate(timestamp) {
   updateTracers(dt);
   updateTractImpulses(dt);
   updateSwm(dt);
-  controls.update();
+  if (!cameraTransitioning) controls.update();
   renderer.render(scene, camera);
   labelRenderer.render(scene, camera);
   requestAnimationFrame(animate);
@@ -779,14 +811,33 @@ function lessonRendererObjects(entity) {
   }
   return [];
 }
-function setLessonMaterialFactor(object, factor) {
+function applyLessonMaterialOpacity(material) {
+  const selection = material.userData.lessonSelectionFactor ?? 1;
+  const visibility = material.userData.lessonVisibilityFactor ?? 1;
+  const factor = selection * visibility;
+  if (material.uniforms?.uOpacity) {
+    material.userData.lessonBaseUniformOpacity ??= material.uniforms.uOpacity.value;
+    material.uniforms.uOpacity.value = Math.min(1, material.userData.lessonBaseUniformOpacity * factor);
+  } else {
+    material.userData.lessonBaseOpacity ??= material.opacity;
+    material.opacity = Math.min(1, material.userData.lessonBaseOpacity * factor);
+  }
+}
+function setLessonMaterialFactor(object, axis, factor) {
+  const key = axis === 'selection' ? 'lessonSelectionFactor' : 'lessonVisibilityFactor';
+  object.userData[key] = factor;
   object.traverse((node) => {
     const materials = Array.isArray(node.material) ? node.material : [node.material];
     for (const material of materials.filter(Boolean)) {
-      material.userData.lessonBaseOpacity ??= material.opacity;
-      material.opacity = Math.min(1, material.userData.lessonBaseOpacity * factor);
+      material.userData[key] = factor;
+      applyLessonMaterialOpacity(material);
     }
   });
+}
+function reapplyLessonMaterialFactors(object) {
+  for (const [axis, key] of [['selection', 'lessonSelectionFactor'], ['visibility', 'lessonVisibilityFactor']]) {
+    if (object.userData[key] !== undefined) setLessonMaterialFactor(object, axis, object.userData[key]);
+  }
 }
 function resetLessonActivity() {
   st.phase = 0;
@@ -804,8 +855,19 @@ function settleLessonActivity() {
   updateAnteriorFlow();
   updateSwm(0);
 }
+function applyLessonPlaybackRequest() {
+  if (requestedLessonPlayback) {
+    st.speed = requestedLessonPlayback.speed;
+    st.settled = reduce || requestedLessonPlayback.settled;
+    st.flow = !st.settled && requestedLessonPlayback.playing;
+    if (st.settled) settleLessonActivity();
+    else if (st.flow) resetLessonActivity();
+  }
+  syncPlaybackControls();
+}
 function syncPlaybackControls() {
   const playing = st.flow && !st.settled;
+  $('play').disabled = reduce;
   $('play').classList.toggle('on', playing);
   $('playGlyph').textContent = playing ? '❚❚' : '▶';
   $('playTxt').textContent = reduce ? 'Activity paused — reduced motion' : (playing ? 'Pause activity' : 'Play activity');
@@ -814,22 +876,65 @@ function syncPlaybackControls() {
   setFill($('speed'));
 }
 
-export function createLessonRendererAdapter(catalog) {
+export function createLessonRendererAdapter(catalog, { onTransitionStateChange = () => {} } = {}) {
+  controls.autoRotate = false;
+  controls.enableDamping = false;
+  controls.update();
+  lessonTransitionStateChange = onTransitionStateChange;
+  lessonTransitionStateChange(lessonTransitioning);
+  if (import.meta.env.DEV) {
+    window.__view.lesson = {
+      get visibilityOpacities() { return structuredClone(lessonEntityOpacities); },
+      get visibilityTransitioning() { return Boolean(lessonVisibilityTransition); },
+      get cameraTransitioning() { return Boolean(lessonCameraTransition); },
+    };
+  }
   let captured = { schemaVersion: 1 };
   const remember = (axis, value) => { captured = { ...captured, [axis]: value }; };
+  const entityIds = Object.keys(catalog.entitiesById);
+  function applyVisibilitySample(sample) {
+    lessonEntityOpacities = sample.opacities;
+    lessonRendererVisibility = new Set(sample.visibleIds.map((entityId) => {
+      const rendererBinding = catalog.entitiesById[entityId].renderer;
+      return `${rendererBinding.kind}:${rendererBinding.id}`;
+    }));
+    for (const id of ['brain', 'or', 'anterior', 'labels', 'swm']) {
+      const group = layerGroup(id);
+      if (group) group.visible = lessonAllows('layer', id);
+    }
+    applyHemi();
+    for (const entityId of entityIds) {
+      const factor = sample.opacities[entityId] ?? 0;
+      for (const object of lessonRendererObjects(catalog.entitiesById[entityId])) {
+        setLessonMaterialFactor(object, 'visibility', factor);
+      }
+    }
+  }
+  updateLessonVisibility = (time) => {
+    if (!lessonVisibilityTransition) return;
+    const sample = sampleVisibilityTransition(lessonVisibilityTransition, time);
+    applyVisibilitySample(sample);
+    if (sample.done) lessonVisibilityTransition = null;
+  };
   const bindings = {
     setCamera(value) {
       remember('camera', value);
+      const now = performance.now();
+      updateLessonVisibility(now);
       controls.autoRotate = false;
       if (value.transition.kind === 'ease' && value.transition.durationMs > 0 && !reduce) {
         lessonCameraTransition = createCameraTransition({
           from: { position: camera.position.toArray(), target: controls.target.toArray() },
           to: value,
-          startTime: performance.now(),
+          startTime: now,
           durationMs: value.transition.durationMs,
+          path: 'orbit',
         });
+        controls.enabled = false;
+        setLessonTransitioning(true);
       } else {
         lessonCameraTransition = null;
+        setLessonTransitioning(false);
         camera.position.fromArray(value.position);
         controls.target.fromArray(value.target);
         controls.update();
@@ -838,15 +943,14 @@ export function createLessonRendererAdapter(catalog) {
     setVisibility(value) {
       remember('visibility', value);
       lessonVisibilityActive = true;
-      lessonRendererVisibility = new Set(value.entities.map((entityId) => {
-        const rendererBinding = catalog.entitiesById[entityId].renderer;
-        return `${rendererBinding.kind}:${rendererBinding.id}`;
-      }));
-      for (const id of ['brain', 'or', 'anterior', 'labels', 'swm']) {
-        const group = layerGroup(id);
-        if (group) group.visible = lessonAllows('layer', id);
-      }
-      applyHemi();
+      const now = performance.now();
+      lessonVisibilityTransition = createVisibilityTransition({
+        fromOpacities: lessonEntityOpacities,
+        toIds: value.entities,
+        startTime: lessonCameraTransition?.startTime ?? now,
+        durationMs: lessonCameraTransition?.durationMs ?? 0,
+      });
+      updateLessonVisibility(now);
     },
     setHemispheres(value) {
       remember('hemispheres', value);
@@ -871,19 +975,16 @@ export function createLessonRendererAdapter(catalog) {
     },
     setMaterial(value) {
       remember('material', value);
-      brainMat.opacity = value.tissueOpacity;
+      brainMat.userData.lessonBaseOpacity = value.tissueOpacity;
+      applyLessonMaterialOpacity(brainMat);
       $('tissue').value = Math.round(value.tissueOpacity * 100);
       $('tissueV').textContent = $('tissue').value;
       setFill($('tissue'));
     },
     setPlayback(value) {
       remember('playback', value);
-      st.speed = value.speed;
-      st.settled = reduce || value.settled;
-      st.flow = !st.settled && value.playing;
-      if (st.settled) settleLessonActivity();
-      else if (st.flow) resetLessonActivity();
-      syncPlaybackControls();
+      requestedLessonPlayback = value;
+      applyLessonPlaybackRequest();
     },
     setSelection(value) {
       remember('selection', value);
@@ -893,17 +994,20 @@ export function createLessonRendererAdapter(catalog) {
       for (const entity of Object.values(catalog.entitiesById)) {
         if (entity.id === 'layer.cortex' || entity.id === 'layer.labels') continue;
         const factor = hasFocus ? (emphasized.has(entity.id) ? 1 + value.strength * 0.65 : 0.45) : 1;
-        for (const object of lessonRendererObjects(entity)) setLessonMaterialFactor(object, factor);
+        for (const object of lessonRendererObjects(entity)) setLessonMaterialFactor(object, 'selection', factor);
       }
     },
     setVisual(value) { remember('visual', value); },
     setControlPolicy(value) {
       remember('controlPolicy', value);
+      lessonControlMode = value.mode;
       controls.autoRotate = false;
-      controls.enabled = value.mode !== 'guided';
+      controls.enabled = value.mode !== 'guided' && !lessonCameraTransition;
       controls.enableRotate = value.mode !== 'guided';
       controls.enablePan = value.mode === 'explore';
       controls.enableZoom = value.mode === 'explore';
+      controls.touches.ONE = value.mode === 'explore' ? THREE.TOUCH.ROTATE : THREE.TOUCH.PAN;
+      controls.touches.TWO = THREE.TOUCH.DOLLY_PAN;
       renderer.domElement.style.touchAction = value.mode === 'explore' ? 'none' : 'pan-y';
     },
     capture() { return structuredClone(captured); },

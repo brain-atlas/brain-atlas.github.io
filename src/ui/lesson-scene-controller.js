@@ -25,17 +25,28 @@ function validateScenes(scenes) {
 
 export function createLessonSceneController({
   scenes,
+  entryScene = null,
+  initialIndex = null,
   adapter,
   reducedMotion = false,
   onChange = () => {},
 }) {
   validateScenes(scenes);
+  if (entryScene && (!entryScene.id || !entryScene.snapshot)) {
+    throw new TypeError('lesson entry scene requires an id and snapshot');
+  }
   if (typeof adapter?.apply !== 'function') throw new TypeError('lesson scene controller requires a renderer adapter');
+  const startingIndex = initialIndex ?? (entryScene ? -1 : 0);
+  const startsAtEntry = startingIndex === -1 && entryScene !== null;
+  if (!Number.isInteger(startingIndex)
+    || (!startsAtEntry && (startingIndex < 0 || startingIndex >= scenes.length))) {
+    throw new RangeError('initial lesson scene index is out of bounds');
+  }
 
   let state = freezeDeep({
     status: 'loading',
-    activeIndex: 0,
-    activeSceneId: scenes[0].id,
+    activeIndex: startingIndex,
+    activeSceneId: startsAtEntry ? entryScene.id : scenes[startingIndex].id,
     activationCount: 1,
     replayCount: 0,
     lastReason: 'initial',
@@ -50,10 +61,14 @@ export function createLessonSceneController({
     return state;
   }
 
+  function currentScene() {
+    return state.activeIndex === -1 ? entryScene : scenes[state.activeIndex];
+  }
+
   function effectiveSnapshot() {
-    const snapshot = scenes[state.activeIndex].snapshot;
+    const snapshot = currentScene().snapshot;
     if (state.reducedMotion) return settledSnapshot(snapshot, { instantCamera: true });
-    if (state.manualSettled) return settledSnapshot(snapshot);
+    if (state.manualSettled) return settledSnapshot(snapshot, { instantCamera: true });
     return snapshot;
   }
 
@@ -68,7 +83,7 @@ export function createLessonSceneController({
 
   const controller = {
     get state() { return state; },
-    get activeScene() { return scenes[state.activeIndex]; },
+    get activeScene() { return currentScene(); },
     setReady() {
       if (state.status === 'ready') return state;
       setState({ status: 'ready', error: null });
@@ -76,13 +91,14 @@ export function createLessonSceneController({
       return state;
     },
     activate(index, { reason = 'navigation', force = false } = {}) {
-      if (!Number.isInteger(index) || index < 0 || index >= scenes.length) {
+      const isEntry = index === -1 && entryScene;
+      if (!Number.isInteger(index) || (!isEntry && (index < 0 || index >= scenes.length))) {
         throw new RangeError('lesson scene index is out of bounds');
       }
       if (index === state.activeIndex && !force) return state;
       setState({
         activeIndex: index,
-        activeSceneId: scenes[index].id,
+        activeSceneId: isEntry ? entryScene.id : scenes[index].id,
         activationCount: state.activationCount + 1,
         lastReason: reason,
         manualSettled: false,
@@ -93,7 +109,7 @@ export function createLessonSceneController({
     },
     restart() {
       if (state.reducedMotion || state.status !== 'ready') return state;
-      adapter.apply(settledSnapshot(scenes[state.activeIndex].snapshot));
+      adapter.apply(settledSnapshot(currentScene().snapshot));
       setState({
         replayCount: state.replayCount + 1,
         lastReason: 'restart',

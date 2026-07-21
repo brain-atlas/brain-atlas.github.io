@@ -279,6 +279,17 @@ export function parseLesson(source, catalog) {
     }
   }
 
+  if (metadata?.entryScene && !sceneIds.has(metadata.entryScene)) {
+    diagnostics.push(createDiagnostic(
+      'lesson.semantic.unknown-entry-scene',
+      `unknown entry scene ID: ${metadata.entryScene}`,
+      {
+        ...(metadataYaml.locate('/entryScene') ?? metadataYaml.origin),
+        path: '/entryScene',
+      },
+    ));
+  }
+
   if (diagnostics.length > 0 || metadata === undefined) {
     return { ok: false, diagnostics: sortedDiagnostics(diagnostics) };
   }
@@ -292,6 +303,7 @@ export function parseLesson(source, catalog) {
       id: metadata.id ?? null,
       title: metadata.title,
       summary: metadata.summary ?? null,
+      entrySceneId: metadata.entryScene ?? null,
       visuals: structuredClone(visuals),
       introductionMarkdown: trimMarkdown(source, introductionStart, introductionEnd),
       scenes,

@@ -381,7 +381,7 @@ P0 bug `brain-atlas-zmq.2` removed the unlabelled array-order travel as an inter
 | 1b | `brain-atlas-yum.3` | P1 | Design unobtrusive progressive model-fidelity disclosure. | `yum.1` |
 | 2 | `brain-atlas-zmq.15` | P1 | Approve lesson journeys, responsive UI anatomy, interface states, and selective BDD scenarios. | `yum.3` |
 | 3 | `brain-atlas-zmq.4` | P1 | Define domain-neutral lesson/entity/scene contracts and tests. | `zmq.2`, `eoa`, `yum.3`, `.15` |
-| 4 | `brain-atlas-zmq.5` | P1 | Build retina→V1 scrolling vertical slice from an in-memory lesson object. | `.4` |
+| 4 | `brain-atlas-zmq.5` | P1 | Build the retina→V1 scrolling vertical slice from a checked-in contract-valid Markdown lesson. | `.4` |
 | 5 | `brain-atlas-zmq.6` | P1 | Add local Markdown paste/import, sanitization, validation, and linked images. | `.5` |
 | 6 | `brain-atlas-zmq.7` | P1 | Add scene-controlled free-exploration pop-out. | `.6` |
 | 7 | `brain-atlas-zmq.8` | P2 | Add selection and cited inspector foundation with starter entities. | `.7` |

@@ -121,6 +121,14 @@ test('unsafe Markdown and undeclared images are rejected without a partial lesso
   }
 });
 
+test('entry scene metadata must reference an authored scene', () => {
+  const source = minimalSource().replace('schema: 1', 'schema: 1\nentryScene: missing');
+  const result = parseLesson(source, TEST_CATALOG);
+  assert.equal(result.ok, false);
+  assert.equal(result.diagnostics.some(({ code, path }) =>
+    code === 'lesson.semantic.unknown-entry-scene' && path === '/entryScene'), true);
+});
+
 test('unknown fidelity references fail with positioned diagnostics', () => {
   const source = minimalSource().replace(
     'show: [region.lgn]',

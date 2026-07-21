@@ -10,7 +10,7 @@ function assertSceneCount(sceneCount) {
 
 export function createSceneNavigationState(sceneCount, initialIndex = 0) {
   assertSceneCount(sceneCount);
-  if (!Number.isInteger(initialIndex) || initialIndex < 0 || initialIndex >= sceneCount) {
+  if (!Number.isInteger(initialIndex) || initialIndex < -1 || initialIndex >= sceneCount) {
     throw new RangeError('initial scene index is out of bounds');
   }
   return freezeState({
@@ -19,6 +19,7 @@ export function createSceneNavigationState(sceneCount, initialIndex = 0) {
     activationCount: 1,
     lastReason: 'initial',
     lastScrollY: null,
+    hasEntryScene: initialIndex === -1,
   });
 }
 
@@ -40,7 +41,8 @@ export function moveScene(state, delta) {
   if (!Number.isInteger(delta) || Math.abs(delta) !== 1) {
     throw new TypeError('scene movement must be -1 or 1');
   }
-  const target = Math.max(0, Math.min(state.sceneCount - 1, state.activeIndex + delta));
+  const minimumIndex = state.hasEntryScene ? -1 : 0;
+  const target = Math.max(minimumIndex, Math.min(state.sceneCount - 1, state.activeIndex + delta));
   return activate(state, target, delta > 0 ? 'explicit-next' : 'explicit-previous');
 }
 
@@ -68,7 +70,8 @@ export function updateSceneFromScroll(state, {
     while (target + 1 < state.sceneCount && anchorTops[target + 1] <= boundary) target++;
   } else if (direction < 0) {
     const boundary = viewportHeight * backwardThreshold;
-    while (target > 0 && anchorTops[target] >= boundary) target--;
+    const minimumIndex = state.hasEntryScene ? -1 : 0;
+    while (target > minimumIndex && anchorTops[target] >= boundary) target--;
   }
 
   return activate(

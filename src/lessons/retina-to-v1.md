@@ -1,13 +1,14 @@
 ---
 title: From retina to V1
 schema: 1
+entryScene: orientation
 summary: Follow a visual signal from the eyes through the thalamus to primary visual cortex.
 ---
 
 # From retina to V1
 
 A visual signal reaches cortex through a sequence of relays and long-range projections.
-In five scenes, follow the represented path from the eyes to the optic chiasm, bilateral
+In four scenes, follow the represented path from the eyes to the optic chiasm, bilateral
 LGN, optic radiation, and V1.
 
 The 3D stage combines atlas-derived anatomy with teaching geometry and modeled display
@@ -15,38 +16,49 @@ activity. **Model & sources** keeps those categories separate wherever they matt
 
 ```atlas-scene
 id: orientation
-title: Orient the pathway
+title: Topic overview
 visual: atlas
 camera:
   position: [210, 75, -195]
   target: [0, 0, 0]
   transition: { kind: ease, durationMs: 900 }
-show: [layer.cortex, layer.labels, pathway.anterior, region.lgn, region.v1]
-fidelity: [fidelity.anterior-pathway, fidelity.julich-regions]
-cutaway: 20
+show:
+  - layer.cortex
+  - pathway.anterior
+  - pathway.optic-radiation
+  - region.lgn
+  - region.v1
+fidelity:
+  - fidelity.cortex
+  - fidelity.julich-regions
+  - fidelity.anterior-pathway
+  - fidelity.optic-radiation
+cutaway: 24
 tissueOpacity: 0.14
 playback:
-  playing: false
+  playing: true
   speed: 70
-  settled: true
+  settled: false
 selection:
   selected: null
-  emphasized: [pathway.anterior, region.lgn, region.v1]
-  strength: 0.45
+  emphasized: [pathway.anterior, pathway.optic-radiation, region.lgn, region.v1]
+  strength: 0.5
 controls:
   mode: look
 layout: dominant
 ```
 
-## Orient the pathway
+## Topic overview
 
-Begin at the two eye markers. The represented anterior paths converge at the optic
-chiasm, reach the lateral geniculate nucleus (**LGN**) in each hemisphere, and continue
-posteriorly along the optic radiation toward primary visual cortex (**V1**).
+The entry view shows the pathway relevant to this topic: eyes and chiasm, bilateral LGN,
+optic radiation, V1, and the cortical surface that contains them. Other atlas regions,
+association bundles, and superficial white matter are filtered out so the topic begins
+without unrelated anatomy.
 
-The anterior eye-to-LGN curves are **schematic teaching geometry**. The LGN and V1
-shells are derived from a population cytoarchitectonic atlas. Their shared position in
-this stage does not make the schematic curves measured anatomy.
+The overview still mixes representation types. The anterior eye-to-LGN curves are
+**schematic teaching geometry**; the LGN, V1, cortex, and optic-radiation contours are
+atlas-derived or derived from atlas data; and the activity timing is modeled. Shared
+placement does not make the schematic curves measured anatomy.
 
 ```atlas-scene
 id: nasal-crossing
@@ -56,7 +68,7 @@ camera:
   position: [0, 30, -350]
   target: [0, 0, 0]
   transition: { kind: ease, durationMs: 900 }
-show: [layer.labels, pathway.anterior, region.lgn]
+show: [pathway.anterior, region.lgn]
 fidelity: [fidelity.anterior-pathway, fidelity.julich-regions]
 cutaway: 0
 tissueOpacity: 0.08
@@ -89,10 +101,10 @@ id: lgn-relay
 title: The LGN is the thalamic relay
 visual: atlas
 camera:
-  position: [0, 350, 0.01]
+  position: [130, 280, -180]
   target: [0, 0, 0]
   transition: { kind: ease, durationMs: 900 }
-show: [layer.cortex, layer.labels, pathway.anterior, region.lgn]
+show: [layer.cortex, pathway.anterior, region.lgn]
 fidelity: [fidelity.anterior-pathway, fidelity.julich-regions]
 cutaway: 42
 tissueOpacity: 0.11
@@ -127,7 +139,7 @@ camera:
   position: [300, 15, 0]
   target: [0, 0, 0]
   transition: { kind: ease, durationMs: 900 }
-show: [layer.cortex, layer.labels, pathway.optic-radiation, region.lgn, region.v1]
+show: [layer.cortex, pathway.optic-radiation, region.lgn, region.v1]
 fidelity: [fidelity.julich-regions, fidelity.optic-radiation]
 cutaway: 58
 tissueOpacity: 0.12
@@ -163,7 +175,7 @@ camera:
   position: [0, 30, 350]
   target: [0, 0, 0]
   transition: { kind: ease, durationMs: 900 }
-show: [layer.cortex, layer.labels, pathway.optic-radiation, region.v1]
+show: [layer.cortex, pathway.optic-radiation, region.v1]
 fidelity: [fidelity.julich-regions, fidelity.optic-radiation]
 cutaway: 38
 tissueOpacity: 0.16
@@ -190,5 +202,5 @@ It does not show an individual's cortex, measured spike timing, or a complete re
 wiring diagram. The right optic-radiation geometry remains mirrored, and the event
 timing remains illustrative rather than measured physiology.
 
-You can revisit any scene with Previous and Next, restart an active display sequence,
-or settle it immediately with Skip.
+You can revisit any scene with Previous and Next. During a camera transition, Skip
+moves directly to the authored destination and settles the display.
