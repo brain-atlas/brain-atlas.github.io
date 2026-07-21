@@ -21,7 +21,12 @@
     "preview": "vite preview --port 5180"
   },
   "dependencies": {
-    "three": "^0.185.1"
+    "ajv": "^8.20.0",
+    "remark-frontmatter": "^5.0.0",
+    "remark-parse": "^11.0.0",
+    "three": "^0.185.1",
+    "unified": "^11.0.5",
+    "yaml": "^2.9.0"
   },
   "devDependencies": {
     "vite": "^8.1.5"
