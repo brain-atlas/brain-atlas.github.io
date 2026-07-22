@@ -1,10 +1,14 @@
 import './style.css';
 
-import { createLessonCatalog, parseLesson } from './lesson/index.js';
+import { createLessonCatalog } from './lesson/index.js';
 import lessonSource from './lessons/retina-to-v1.md?raw';
 import { createFidelityViewModel } from './ui/fidelity-view-model.js';
 import { createLessonSceneController } from './ui/lesson-scene-controller.js';
-import { createLessonPresentation } from './ui/lesson-presentation.js';
+import {
+  createLessonRuntimeCatalog,
+  MAX_LESSON_SOURCE_BYTES,
+  validateLessonImport,
+} from './ui/lesson-import.js';
 import { markdownToViewModel } from './ui/markdown-view-model.js';
 import {
   createSceneNavigationState,
@@ -30,6 +34,13 @@ let lesson;
 let presentation;
 let navigation;
 let controller = null;
+let rendererAdapter = null;
+let rendererAdapterFactory = null;
+let rendererUnavailable = false;
+let selectedVisualId = 'atlas';
+let lessonSourceKind = 'reference';
+let lessonImportCandidate = null;
+let importCloseFocus = 'trigger';
 let sceneCards = [];
 let scrollFrame = 0;
 
@@ -38,6 +49,50 @@ function node(tag, className, text) {
   if (className) element.className = className;
   if (text !== undefined) element.textContent = text;
   return element;
+}
+
+function createDeclaredImageFigure(visual, className = 'lesson-inline-visual') {
+  const figure = document.createElement('figure');
+  figure.className = className;
+  const frame = node('div', 'lesson-inline-image-frame');
+  frame.style.aspectRatio = String(visual.aspectRatio ?? (16 / 9));
+  const image = document.createElement('img');
+  image.alt = visual.alt;
+  image.loading = 'lazy';
+  image.decoding = 'async';
+  image.referrerPolicy = 'no-referrer';
+  const failure = node('div', 'lesson-inline-image-failure');
+  failure.setAttribute('role', 'status');
+  failure.setAttribute('aria-live', 'polite');
+  failure.hidden = true;
+  const retry = node('button', '', 'Retry image');
+  retry.type = 'button';
+  failure.append(node('strong', '', visual.alt), node('span', '', 'Image unavailable. Use the source link below.'), retry);
+  image.addEventListener('error', () => {
+    image.hidden = true;
+    failure.hidden = false;
+  });
+  image.addEventListener('load', () => {
+    image.hidden = false;
+    failure.hidden = true;
+  });
+  retry.addEventListener('click', () => {
+    image.hidden = false;
+    failure.hidden = true;
+    image.removeAttribute('src');
+    image.src = visual.src;
+  });
+  frame.append(image, failure);
+  const caption = document.createElement('figcaption');
+  caption.append(node('span', '', visual.caption), node('span', '', `Credit: ${visual.credit}`));
+  const source = node('a', '', 'Open image source');
+  source.href = visual.source;
+  source.target = '_blank';
+  source.rel = 'noopener noreferrer';
+  caption.append(source);
+  figure.append(frame, caption);
+  image.src = visual.src;
+  return figure;
 }
 
 function renderMarkdownNode(model) {
@@ -99,12 +154,9 @@ function renderMarkdownNode(model) {
       return element;
     }
     case 'image': {
-      const element = document.createElement('img');
-      element.src = model.url;
-      element.alt = model.alt;
-      if (model.title) element.title = model.title;
-      element.loading = 'lazy';
-      return element;
+      const visual = lesson.visuals.find(({ src, alt }) => src === model.url && alt === model.alt);
+      if (!visual) throw new Error(`undeclared lesson image: ${model.url}`);
+      return createDeclaredImageFigure(visual);
     }
     default:
       throw new Error(`unsupported presentation node: ${model.type}`);
@@ -144,6 +196,7 @@ function renderLesson() {
     status.setAttribute('aria-label', 'Lesson status: Draft');
     meta.append(status);
   }
+  if (lessonSourceKind === 'local') meta.append(node('span', '', 'Local lesson · not saved'));
   meta.append(node('span', '', `${presentation.scenes.length} scenes`), node('span', '', 'Data, models & limitations disclosed'));
   intro.append(meta);
 
@@ -166,6 +219,106 @@ function renderLesson() {
     return card;
   });
   sceneContainer.replaceChildren(fragment);
+  renderVisualSelector();
+}
+
+function renderVisualSelector() {
+  const selector = byId('visual-selector');
+  const visuals = [{ id: 'atlas', caption: '3D atlas', alt: 'Interactive 3D atlas' }, ...lesson.visuals];
+  selector.hidden = lesson.visuals.length === 0;
+  const fragment = document.createDocumentFragment();
+  for (const visual of visuals) {
+    const button = node('button', '', visual.caption);
+    button.type = 'button';
+    button.dataset.visualId = visual.id;
+    button.title = visual.alt;
+    button.setAttribute('aria-pressed', String(visual.id === selectedVisualId));
+    button.addEventListener('click', () => {
+      const scene = activePresentationScene(navigation.activeIndex);
+      showLessonVisual(visual.id, scene.snapshot.visual.layout, { announce: true });
+    });
+    fragment.append(button);
+  }
+  selector.replaceChildren(fragment);
+}
+
+function showLessonVisual(visualId, layout, { announce = false } = {}) {
+  const visual = visualId === 'atlas'
+    ? null
+    : lesson.visuals.find(({ id }) => id === visualId);
+  if (visualId !== 'atlas' && !visual) throw new RangeError(`unknown lesson visual: ${visualId}`);
+
+  selectedVisualId = visualId;
+  const surface = byId('visual-surface');
+  const atlasSurface = byId('atlas-surface');
+  const figure = byId('supplementary-visual');
+  surface.dataset.visual = visualId;
+  surface.dataset.layout = layout;
+  surface.classList.toggle('is-split', Boolean(visual && layout === 'split'));
+  atlasSurface.hidden = Boolean(visual && layout !== 'split');
+  figure.hidden = !visual;
+  byId('stage').hidden = rendererUnavailable;
+  byId('stage-fallback').hidden = !rendererUnavailable;
+
+  for (const button of byId('visual-selector').querySelectorAll('button')) {
+    button.setAttribute('aria-pressed', String(button.dataset.visualId === visualId));
+  }
+
+  if (visual) {
+    const image = byId('supplementary-image');
+    const failure = byId('supplementary-image-failure');
+    image.alt = visual.alt;
+    byId('supplementary-image-alt').textContent = visual.alt;
+    byId('supplementary-caption').textContent = visual.caption;
+    byId('supplementary-credit').textContent = visual.credit;
+    const source = byId('supplementary-source');
+    source.href = visual.source;
+    image.onload = () => {
+      image.hidden = false;
+      failure.hidden = true;
+      figure.dataset.state = 'loaded';
+    };
+    image.onerror = () => {
+      image.hidden = true;
+      failure.hidden = false;
+      figure.dataset.state = 'error';
+    };
+    if (image.dataset.src !== visual.src) {
+      image.dataset.src = visual.src;
+      image.hidden = false;
+      failure.hidden = true;
+      figure.dataset.state = 'loading';
+      image.src = visual.src;
+    }
+  }
+
+  if (announce) {
+    byId('announcer').textContent = visual ? `Showing lesson visual: ${visual.caption}` : 'Showing interactive 3D atlas';
+  }
+}
+
+function resetSupplementaryImage() {
+  const image = byId('supplementary-image');
+  image.onload = null;
+  image.onerror = null;
+  image.removeAttribute('src');
+  delete image.dataset.src;
+  image.hidden = false;
+  byId('supplementary-image-failure').hidden = true;
+  delete byId('supplementary-visual').dataset.state;
+}
+
+function retrySupplementaryImage() {
+  const visual = lesson.visuals.find(({ id }) => id === selectedVisualId);
+  if (!visual) return;
+  const image = byId('supplementary-image');
+  image.removeAttribute('src');
+  delete image.dataset.src;
+  showLessonVisual(visual.id, byId('visual-surface').dataset.layout);
+}
+
+function bindVisualPresentation() {
+  byId('supplementary-image-retry').addEventListener('click', retrySupplementaryImage);
 }
 
 function addLabeledStatus(container, label, values, kind) {
@@ -249,6 +402,7 @@ function updateActivePresentation(index, reason = 'initial') {
     if (active) card.setAttribute('aria-current', 'step'); else card.removeAttribute('aria-current');
   });
   const scene = activePresentationScene(index);
+  showLessonVisual(scene.snapshot.visual.id, scene.snapshot.visual.layout);
   const isEntry = index === -1;
   const count = presentation.scenes.length;
   byId('scene-count').textContent = isEntry ? 'Topic overview' : `Scene ${index + 1} of ${count}`;
@@ -477,6 +631,152 @@ function bindFidelity() {
   });
 }
 
+function setImportResultState(kind) {
+  const result = byId('lesson-import-result');
+  result.classList.toggle('is-error', kind === 'error');
+  result.classList.toggle('is-valid', kind === 'valid');
+  if (kind === 'error') result.setAttribute('role', 'alert');
+  else result.removeAttribute('role');
+  return result;
+}
+
+function renderImportMessage(message) {
+  const result = setImportResultState('idle');
+  if (result.dataset.message === message) return;
+  result.dataset.message = message;
+  result.replaceChildren(node('p', '', message));
+}
+
+function renderImportDiagnostics(diagnostics) {
+  const result = setImportResultState('error');
+  delete result.dataset.message;
+  const heading = node('h3', '', diagnostics.length === 1 ? 'Lesson needs one correction' : `Lesson needs ${diagnostics.length} corrections`);
+  const list = document.createElement('ol');
+  list.className = 'import-diagnostics';
+  for (const diagnostic of diagnostics) {
+    const item = document.createElement('li');
+    const location = diagnostic.line > 0
+      ? `Line ${diagnostic.line}, column ${diagnostic.column}`
+      : 'Lesson source';
+    item.append(node('strong', '', `${location}: `), document.createTextNode(diagnostic.message));
+    if (diagnostic.path) item.append(document.createTextNode(' '), node('code', '', diagnostic.path));
+    list.append(item);
+  }
+  result.replaceChildren(heading, list);
+}
+
+function renderImportSummary(summary) {
+  const result = setImportResultState('valid');
+  delete result.dataset.message;
+  const heading = node('h3', '', 'Lesson is ready to open');
+  const details = document.createElement('dl');
+  details.className = 'import-summary';
+  const rows = [
+    ['Title', summary.title],
+    ['Status', summary.statusLabel ?? 'No lifecycle claim'],
+    ['Scenes', String(summary.sceneCount)],
+    ['Images', String(summary.imageCount)],
+    ['Image hosts', summary.externalHosts.length ? summary.externalHosts.join(', ') : 'None'],
+  ];
+  for (const [label, value] of rows) details.append(node('dt', '', label), node('dd', '', value));
+  const message = summary.externalHosts.length
+    ? `Opening this lesson permits image requests to ${summary.externalHosts.join(', ')}. No referrer is sent.`
+    : 'Opening this lesson makes no external image requests.';
+  result.replaceChildren(heading, details, node('p', '', message));
+}
+
+function invalidateImport(message = 'Changes have not been validated.') {
+  lessonImportCandidate = null;
+  byId('lesson-import-open').disabled = true;
+  renderImportMessage(message);
+}
+
+async function loadImportFile() {
+  const file = byId('lesson-import-file').files?.[0];
+  if (!file) return;
+  if (!/\.md$/i.test(file.name)) {
+    lessonImportCandidate = null;
+    byId('lesson-import-open').disabled = true;
+    renderImportDiagnostics([{
+      code: 'import.file.type',
+      message: 'Choose a .md file. Other local file types are not opened.',
+      line: 1,
+      column: 1,
+      path: '',
+    }]);
+    return;
+  }
+  if (file.size > MAX_LESSON_SOURCE_BYTES) {
+    lessonImportCandidate = null;
+    byId('lesson-import-open').disabled = true;
+    renderImportDiagnostics([{
+      code: 'import.file.too-large',
+      message: 'The selected file exceeds the 512 KiB local import limit and was not read.',
+      line: 1,
+      column: 1,
+      path: '',
+    }]);
+    return;
+  }
+  try {
+    byId('lesson-import-source').value = await file.text();
+    invalidateImport(`${file.name} loaded. Validate the lesson before opening it.`);
+  } catch (error) {
+    lessonImportCandidate = null;
+    byId('lesson-import-open').disabled = true;
+    renderImportDiagnostics([{
+      code: 'import.file.read',
+      message: `The selected file could not be read: ${error.message}`,
+      line: 1,
+      column: 1,
+      path: '',
+    }]);
+  }
+}
+
+function validateImportSource() {
+  const result = validateLessonImport(byId('lesson-import-source').value, catalog);
+  lessonImportCandidate = result.ok ? result.value : null;
+  byId('lesson-import-open').disabled = !result.ok;
+  if (result.ok) renderImportSummary(result.value.summary);
+  else renderImportDiagnostics(result.diagnostics);
+}
+
+function openValidatedImport() {
+  if (!lessonImportCandidate) return;
+  const candidate = lessonImportCandidate;
+  importCloseFocus = 'lesson';
+  byId('lesson-import-dialog').close();
+  activatePreparedLesson(candidate, { sourceKind: 'local' });
+  byId('announcer').textContent = `Opened local lesson: ${candidate.lesson.title}`;
+}
+
+function bindLessonImport() {
+  const dialog = byId('lesson-import-dialog');
+  const trigger = byId('lesson-import-trigger');
+  trigger.addEventListener('click', () => {
+    if (!byId('fidelity-panel').hidden) closeFidelity();
+    importCloseFocus = 'trigger';
+    if (!dialog.open) dialog.showModal();
+    byId('lesson-import-source').focus();
+  });
+  byId('lesson-import-close').addEventListener('click', () => dialog.close());
+  byId('lesson-import-cancel').addEventListener('click', () => dialog.close());
+  byId('lesson-import-source').addEventListener('input', () => invalidateImport());
+  byId('lesson-import-file').addEventListener('change', loadImportFile);
+  byId('lesson-import-validate').addEventListener('click', validateImportSource);
+  byId('lesson-import-open').addEventListener('click', openValidatedImport);
+  dialog.addEventListener('close', () => {
+    const destination = importCloseFocus;
+    importCloseFocus = 'trigger';
+    if (destination === 'lesson') {
+      requestAnimationFrame(() => (byId('lesson-title') ?? byId('lesson-reader')).focus({ preventScroll: true }));
+    } else {
+      trigger.focus();
+    }
+  });
+}
+
 function probeWebGL2() {
   if (new URLSearchParams(location.search).has('no-webgl')) return false;
   const canvas = document.createElement('canvas');
@@ -487,6 +787,7 @@ function probeWebGL2() {
 }
 
 function showRendererFallback(message) {
+  rendererUnavailable = true;
   byId('stage').hidden = true;
   byId('stage-fallback').hidden = false;
   byId('fallback-message').textContent = message;
@@ -495,7 +796,9 @@ function showRendererFallback(message) {
   byId('viewer-controls-fieldset').disabled = true;
   byId('viewer-console').hidden = true;
   document.querySelector('.stage-hint').hidden = true;
-  byId('app-status').textContent = 'Lesson ready · 3D unavailable';
+  byId('app-status').textContent = lessonSourceKind === 'local'
+    ? 'Local lesson · 3D unavailable'
+    : 'Lesson ready · 3D unavailable';
   app.dataset.state = 'fallback';
 }
 
@@ -516,6 +819,76 @@ async function fetchJson(path) {
   return response.json();
 }
 
+function exposeLessonDebugState() {
+  if (!import.meta.env.DEV) return;
+  window.__lesson = {
+    get lesson() { return lesson; },
+    get presentation() { return presentation; },
+    get catalog() { return catalog; },
+    get navigation() { return navigation; },
+    get controllerState() { return controller?.state ?? null; },
+    get sourceKind() { return lessonSourceKind; },
+  };
+}
+
+function onRendererTransitionStateChange(isTransitioning) {
+  const skip = byId('scene-skip');
+  skip.hidden = !isTransitioning || reducedMotionQuery.matches;
+  skip.disabled = !isTransitioning || reducedMotionQuery.matches;
+}
+
+function refreshRendererAdapter() {
+  if (!rendererAdapterFactory) return;
+  rendererAdapter = rendererAdapterFactory(createLessonRuntimeCatalog(catalog, lesson), {
+    onTransitionStateChange: onRendererTransitionStateChange,
+  });
+}
+
+function createCurrentController() {
+  if (!rendererAdapter) {
+    controller = null;
+    return;
+  }
+  controller = createLessonSceneController({
+    scenes: presentation.scenes,
+    entryScene: presentation.entryScene,
+    initialIndex: navigation.activeIndex,
+    adapter: rendererAdapter,
+    reducedMotion: reducedMotionQuery.matches,
+    onChange(state) {
+      if (state.status === 'error') {
+        showRendererFallback('The current 3D scene could not be displayed. The lesson and Model & sources remain available.');
+      }
+    },
+  });
+  controller.setReady();
+}
+
+function activatePreparedLesson(candidate, { sourceKind = 'reference' } = {}) {
+  lessonSourceKind = sourceKind;
+  lesson = candidate.lesson;
+  presentation = candidate.presentation;
+  navigation = createSceneNavigationState(
+    presentation.scenes.length,
+    presentation.entryScene ? -1 : 0,
+  );
+  selectedVisualId = activePresentationScene(navigation.activeIndex).snapshot.visual.id;
+  resetSupplementaryImage();
+  renderLesson();
+  refreshRendererAdapter();
+  createCurrentController();
+  updateActivePresentation(navigation.activeIndex);
+  pageScroll.scrollTo({ top: 0, behavior: 'auto' });
+  if (app.dataset.state === 'ready') {
+    byId('app-status').textContent = sourceKind === 'local' ? 'Local lesson · not saved' : 'Lesson ready';
+  } else if (app.dataset.state === 'fallback') {
+    byId('app-status').textContent = sourceKind === 'local'
+      ? 'Local lesson · 3D unavailable'
+      : 'Lesson ready · 3D unavailable';
+  }
+  exposeLessonDebugState();
+}
+
 async function start() {
   try {
     app.dataset.state = 'loading';
@@ -524,18 +897,13 @@ async function start() {
       fetchJson('/data/fidelity.json'),
     ]);
     catalog = createLessonCatalog(entities, fidelity);
-    const parsed = parseLesson(lessonSource, catalog);
-    if (!parsed.ok) throw new Error(`reference lesson failed validation: ${JSON.stringify(parsed.diagnostics)}`);
-    lesson = parsed.value;
-    presentation = createLessonPresentation(lesson);
-    navigation = createSceneNavigationState(
-      presentation.scenes.length,
-      presentation.entryScene ? -1 : 0,
-    );
-    renderLesson();
+    const prepared = validateLessonImport(lessonSource, catalog);
+    if (!prepared.ok) throw new Error(`reference lesson failed validation: ${JSON.stringify(prepared.diagnostics)}`);
+    activatePreparedLesson(prepared.value);
     bindNavigation();
     bindFidelity();
-    updateActivePresentation(navigation.activeIndex);
+    bindLessonImport();
+    bindVisualPresentation();
     document.body.classList.toggle('reduced-motion', reducedMotionQuery.matches);
 
     if (!probeWebGL2()) {
@@ -547,50 +915,26 @@ async function start() {
     try {
       const renderer = await import('./main.js');
       await renderer.viewerReady;
-      const adapter = renderer.createLessonRendererAdapter(catalog, {
-        onTransitionStateChange(isTransitioning) {
-          const skip = byId('scene-skip');
-          skip.hidden = !isTransitioning || reducedMotionQuery.matches;
-          skip.disabled = !isTransitioning || reducedMotionQuery.matches;
-        },
-      });
-      controller = createLessonSceneController({
-        scenes: presentation.scenes,
-        entryScene: presentation.entryScene,
-        initialIndex: navigation.activeIndex,
-        adapter,
-        reducedMotion: reducedMotionQuery.matches,
-        onChange(state) {
-          if (state.status === 'error') {
-            showRendererFallback('The current 3D scene could not be displayed. The lesson and Model & sources remain available.');
-          }
-        },
-      });
-      controller.setReady();
+      rendererUnavailable = false;
+      rendererAdapterFactory = renderer.createLessonRendererAdapter;
+      refreshRendererAdapter();
+      createCurrentController();
       updateActivePresentation(navigation.activeIndex);
-      byId('app-status').textContent = 'Lesson ready';
-      updateActivePresentation(navigation.activeIndex);
+      byId('app-status').textContent = lessonSourceKind === 'local' ? 'Local lesson · not saved' : 'Lesson ready';
       app.dataset.state = 'ready';
 
       reducedMotionQuery.addEventListener('change', ({ matches }) => {
         document.body.classList.toggle('reduced-motion', matches);
-        controller.setReducedMotion(matches);
+        controller?.setReducedMotion(matches);
         updateActivePresentation(navigation.activeIndex);
       });
     } catch (error) {
+      rendererAdapter = null;
+      rendererAdapterFactory = null;
       console.error('3D renderer failed:', error);
       showRendererFallback('The 3D renderer could not initialize. The complete text lesson and scene-specific Model & sources records remain accessible.');
     }
-
-    if (import.meta.env.DEV) {
-      window.__lesson = {
-        lesson,
-        presentation,
-        catalog,
-        get navigation() { return navigation; },
-        get controllerState() { return controller?.state ?? null; },
-      };
-    }
+    exposeLessonDebugState();
   } catch (error) {
     showLessonError(error);
   }

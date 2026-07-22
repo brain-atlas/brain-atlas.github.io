@@ -5,7 +5,7 @@
 `src/lesson/` turns inert Markdown/YAML lessons and project-authored catalogs into
 versioned, immutable, renderer-independent data. It defines the stable seam between lesson authorship, the `src/bootstrap.js`/`src/ui/` presentation layer, and the single shared Three.js renderer.
 
-This subsystem does **not** render Markdown, own scrolling, import files, fetch remote images, instantiate Three.js objects, or change anatomical coordinates. The shipped checked-in lesson presentation implements the first two concerns outside this subsystem; local import and remote-image behavior remain deferred.
+This subsystem does **not** render Markdown, own scrolling, import files, fetch remote images, instantiate Three.js objects, or change anatomical coordinates. The checked-in and locally imported lesson presentations implement those concerns outside this subsystem: `src/ui/lesson-import.js` composes this parser for bounded validation, while `src/bootstrap.js` owns activation and declared-image DOM presentation.
 
 ## Core mechanism
 
@@ -164,7 +164,7 @@ Full repository verification remains `npm test && npm run build:publish`.
 
 - No Markdown-to-HTML rendering or author-supplied HTML.
 - No scroll/hysteresis controller or lesson presentation shell **inside this subsystem**; those are implemented in `src/ui/` and `src/bootstrap.js`.
-- No local import/paste UI or external image fetch.
+- No local import/paste UI or external image fetch **inside this subsystem**; bootstrap/UI consumers may activate only complete validated lessons and may request only their declared HTTPS images after explicit opening.
 - No free-explore pop-out, selection renderer, or inspector.
 - No runtime fitting, anatomy generation, additional coordinate transform, plugin
   system, UI framework, backend, or WebAssembly.

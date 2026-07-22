@@ -32,7 +32,30 @@ In development mode, `src/main.js` exposes `window.__view = { camera, controls, 
 - At page entry, `window.__lesson.navigation.activeIndex === -1`: the unnumbered topic view centers the complete brain with the lesson pathway visible. `#page-scroll` is the sole lesson scroller; `window.scrollX` and `window.scrollY` must remain zero. Scroll it into the eight `.lesson-scene` sections or click the fixed-position `#scene-previous` / `#scene-next` actions; Previous from scene 1 restores the entry view. The global brand link returns `#page-scroll.scrollTop` to zero. In non-Explore policies, canvas `touch-action: pan-y` and disabled touch pan/zoom keep vertical swipes on this surface while mouse/trackpad drag may orbit in `look`. `#scene-skip` appears on the stage only during an active transition; the reference lesson intentionally exposes no ineffective Restart action.
 - `#model-sources-trigger` opens the sole scene-specific geometry/activity status, provenance, limitation, and source surface; there is no duplicate canvas badge, stage status row, or global progress strip. `#fidelity-close` restores trigger focus and the exact `#page-scroll` position.
 - To check display aspect, compare `window.__view.camera.aspect` with `document.querySelector('#stage canvas').getBoundingClientRect().width / height`. They should match to floating-point precision; the MNI group (`matrixAutoUpdate === false`) must retain equal basis lengths and positive determinant.
-- Force the readable renderer-free path with `?no-webgl=1`; verify that no `main`/Three.js resource loads.
+- Force the readable renderer-free path with `?no-webgl=1`; verify that no `main`/Three.js resource loads. Imported supplementary images remain available as semantic figures in this path.
+
+## Opening a local lesson
+
+1. Activate header **Open lesson** (`#lesson-import-trigger`). Paste source into
+   `#lesson-import-source` or choose one `.md` file with `#lesson-import-file`.
+2. Use **Validate lesson**. Invalid source keeps the active lesson unchanged and
+   reports positioned diagnostics in `#lesson-import-result`; the 512 KiB
+   bound applies before parsing. Editing source invalidates any prior preview.
+3. For valid source, inspect `#lesson-import-preview`: title, Draft state,
+   instructional-scene count, supplementary-image count, and external HTTPS hosts.
+   Validation alone must make no remote request.
+4. Activate **Open lesson** only after accepting the preview/privacy boundary.
+   The lesson replaces the current session in memory through the same controller and
+   renderer; it is not uploaded, saved, or persisted, and reload restores the
+   checked-in lesson. `window.__lesson.lesson` updates in development mode.
+5. In image scenes, `#visual-selector` always offers **3D atlas** first. Wide
+   `split` scenes may show atlas and image together; compact scenes show the selected
+   visual. `#supplementary-image` uses lazy/no-referrer loading and complete
+   caption/credit/source metadata. Confirm `#supplementary-image-failure` announces
+   an error and `#supplementary-image-retry` recovers without changing scene state.
+
+Use a disposable imported fixture for browser checks. Do not assume a locally opened
+lesson is scientifically reviewed merely because it passes the structural contract.
 
 ## Layers and how to toggle them
 The retained panel lives in `#layers` inside `#viewer-console`. It is disabled while a lesson scene's canonical policy owns the display; do not bypass that state by synthesizing panel events. For direct free-viewer diagnostics, the three legacy control surfaces are:
@@ -61,7 +84,7 @@ swm.visible = true; swm.traverse(o => { o.visible = true; });
 ```
 
 ## Controls (DOM ids)
-Lesson: `#scene-previous`, `#scene-next`, transition-only `#scene-skip`, `#model-sources-trigger`, and `#fidelity-close`.
+Lesson: `#lesson-import-trigger`, `#lesson-import-dialog`, `#lesson-import-source`, `#lesson-import-file`, `#lesson-import-validate`, `#lesson-import-open`, `#visual-selector`, `#scene-previous`, `#scene-next`, transition-only `#scene-skip`, `#model-sources-trigger`, and `#fidelity-close`.
 
 Retained viewer panel: `#play` play/pause activity · `#speed` activity speed · `#clip` cutaway (near-hemisphere clip plane) · `#tissue` surface opacity · `[data-view]` camera presets (`lateral` / `top` / `post` / `ant`) · `#spin` auto-rotate · `#reset` home view.
 

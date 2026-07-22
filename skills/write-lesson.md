@@ -223,6 +223,10 @@ technical source lists into lesson prose when curated fidelity or traceability r
 own them. Offer public further-study resources only when the lesson contract permits
 them and they add learning value.
 
+Every presented scene in a locally opened lesson must reference at least one curated
+fidelity record so **Model & sources** remains complete; unknown or empty disclosure
+references fail import instead of receiving a reassuring default.
+
 For every scene, ask:
 
 - Is the claim anatomical, physiological, functional, clinical, or historical?
@@ -238,7 +242,9 @@ claim or limitation changes.
 
 Meet the project accessibility contract and WCAG 2.2. In particular:
 
-- provide equivalent text for meaningful non-text content;
+- provide equivalent text for meaningful non-text content; for declared supplementary
+  images, supply accurate alt text, caption, credit, source URL, and aspect ratio, keep
+  sources credential-free HTTPS, and make the lesson intelligible if the image fails;
 - provide captions and a transcript for narration, and audio description or an
   equivalent text account when visual action carries meaning;
 - preserve meaningful reading and focus order;
@@ -261,9 +267,12 @@ Review the lesson in four separate passes:
    narration or repeated caveats.
 
 Run the focused contract/content tests, full repository tests, publication build, and
-the required browser matrix. Inspect every scene rather than treating a successful
-parser or screenshot as evidence of learning quality. Keep draft status until the
-project's explicit human review gate is satisfied.
+the required browser matrix. Also stage the authored Markdown through header **Open
+lesson**: confirm the preview's title, Draft state, counts, and external hosts before
+activation; confirm validation makes no image request; then inspect atlas/image selection,
+wide split, compact single-visual, no-WebGL, and image-failure/retry paths. Inspect every
+scene rather than treating a successful parser or screenshot as evidence of learning
+quality. Keep draft status until the project's explicit human review gate is satisfied.
 
 ## 10. Conduct the post-authoring retrospective
 

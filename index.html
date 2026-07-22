@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'" />
   <meta name="referrer" content="no-referrer" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <link rel="icon" href="/favicon.ico" sizes="any" />
@@ -18,7 +18,10 @@
         <span class="brand-kicker">Brain Atlas</span>
         <span class="brand-title"><span id="lesson-brand-title">From retina to V1</span> <span id="lesson-status" class="lesson-status" aria-label="Lesson status: Draft" hidden>[DRAFT]</span></span>
       </a>
-      <span id="app-status" class="app-status">Loading lesson data…</span>
+      <div class="topbar-actions">
+        <span id="app-status" class="app-status">Loading lesson data…</span>
+        <button id="lesson-import-trigger" class="topbar-action" type="button" aria-haspopup="dialog">Open lesson</button>
+      </div>
     </header>
 
     <div id="page-scroll" class="page-scroll" role="region" aria-label="Lesson content" tabindex="0">
@@ -40,14 +43,34 @@
           </button>
         </header>
 
-        <div id="stage" class="stage" aria-label="Interactive 3D visual-system atlas">
-          <button id="scene-skip" class="transition-skip" type="button" hidden>Skip transition</button>
+        <nav id="visual-selector" class="visual-selector" aria-label="Lesson visuals" hidden></nav>
+        <div id="visual-surface" class="visual-surface" data-layout="dominant" data-visual="atlas">
+          <div id="atlas-surface" class="atlas-surface">
+            <div id="stage" class="stage" aria-label="Interactive 3D visual-system atlas">
+              <button id="scene-skip" class="transition-skip" type="button" hidden>Skip transition</button>
+            </div>
+            <section id="stage-fallback" class="stage-fallback" hidden aria-labelledby="fallback-title">
+              <p class="stage-kicker">Readable lesson mode</p>
+              <h3 id="fallback-title">The 3D stage is unavailable</h3>
+              <p id="fallback-message">The lesson remains available. Scene summaries and model disclosures appear alongside the prose.</p>
+            </section>
+          </div>
+          <figure id="supplementary-visual" class="supplementary-visual" hidden>
+            <div id="supplementary-image-frame" class="supplementary-image-frame">
+              <img id="supplementary-image" class="supplementary-image" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" />
+              <div id="supplementary-image-failure" class="supplementary-image-failure" role="status" aria-live="polite" hidden>
+                <p id="supplementary-image-alt"></p>
+                <p>The image could not be displayed. Its description and source remain available.</p>
+                <button id="supplementary-image-retry" type="button">Retry image</button>
+              </div>
+            </div>
+            <figcaption>
+              <span id="supplementary-caption"></span>
+              <span id="supplementary-credit"></span>
+              <a id="supplementary-source" target="_blank" rel="noopener noreferrer">Open image source</a>
+            </figcaption>
+          </figure>
         </div>
-        <section id="stage-fallback" class="stage-fallback" hidden aria-labelledby="fallback-title">
-          <p class="stage-kicker">Readable lesson mode</p>
-          <h3 id="fallback-title">The 3D stage is unavailable</h3>
-          <p id="fallback-message">The lesson remains available. Scene summaries and model disclosures appear alongside the prose.</p>
-        </section>
 
         <nav class="scene-transport" aria-label="Lesson scene controls">
           <button id="scene-previous" type="button">← Previous</button>
@@ -97,6 +120,35 @@
     </footer>
     </div>
   </div>
+
+  <dialog id="lesson-import-dialog" class="lesson-import-dialog" aria-labelledby="lesson-import-title">
+    <header class="import-header">
+      <div>
+        <p class="stage-kicker">Local lesson</p>
+        <h2 id="lesson-import-title">Open lesson Markdown</h2>
+      </div>
+      <button id="lesson-import-close" type="button" aria-label="Close lesson import">×</button>
+    </header>
+    <div class="import-body">
+      <p>Paste a Brain Atlas lesson or choose a local Markdown file. Validation happens in this browser.</p>
+      <label class="import-file" for="lesson-import-file">
+        <span>Choose Markdown file</span>
+        <input id="lesson-import-file" type="file" accept=".md,text/markdown" />
+      </label>
+      <label for="lesson-import-source">Lesson Markdown</label>
+      <textarea id="lesson-import-source" rows="16" spellcheck="false"
+        placeholder="---&#10;title: My lesson&#10;schema: 1&#10;---"></textarea>
+      <p class="import-privacy">Nothing is uploaded or saved. Opening a validated lesson may contact the HTTPS image hosts listed in its preview.</p>
+      <section id="lesson-import-result" class="import-result" aria-live="polite" aria-atomic="true">
+        <p>Source has not been validated.</p>
+      </section>
+    </div>
+    <footer class="import-actions">
+      <button id="lesson-import-cancel" type="button">Cancel</button>
+      <button id="lesson-import-validate" type="button">Validate lesson</button>
+      <button id="lesson-import-open" type="button" disabled>Open lesson</button>
+    </footer>
+  </dialog>
 
   <aside id="fidelity-panel" class="fidelity-panel" hidden aria-labelledby="fidelity-title">
     <header>

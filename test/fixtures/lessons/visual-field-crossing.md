@@ -41,6 +41,7 @@ title: Compare the relay visual
 visual: retinotopy-diagram
 camera: home
 show: [region.lgn]
+fidelity: [fidelity.julich-regions]
 playback:
   playing: false
   settled: true

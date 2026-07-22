@@ -12,7 +12,7 @@
 **Architecture:** One Three.js renderer supports two first-class presentation modes: Lesson and Explore. A Markdown-first lesson document is parsed, sanitized, validated, and normalized into domain-neutral lesson, visual, entity, and scene objects. A scene controller applies deterministic, serializable snapshots through a narrow renderer adapter; vertical scroll selects scenes with hysteresis, while camera and biological/illustrative animations run independently.
 
 **Acceptance Criteria:**
-- [ ] A learner can paste or import a valid lesson and complete it without an account or backend.
+- [x] A learner can paste or import a valid lesson and complete it without an account or backend.
 - [ ] The retina→chiasm→LGN→optic-radiation→V1 reference lesson works through vertical scrolling and explicit scene controls on desktop and mobile.
 - [ ] Every lesson can enter a prepared free-exploration state and return to the exact lesson scene.
 - [ ] Atlas entities can expose an unobtrusive highlight/short-label preview and explicit cited details through capability-equivalent pointer, keyboard, and touch interactions.
@@ -430,14 +430,20 @@ Use test-driven development. Keep state objects plain and renderer-independent. 
 
 Build desktop and mobile interaction paths together. Use one WebGL renderer; do not instantiate one brain per visual-rail entry.
 
-### Import and external visuals (`brain-atlas-zmq.6`)
+### Import and external visuals (`brain-atlas-zmq.6`) — Implemented
 
-**Likely files:**
-- Extend lesson parsing/validation modules and tests.
-- Modify: `index.html` CSP and import UI.
-- Modify: `src/style.css` for errors and external visual states.
+`src/ui/lesson-import.js` composes the existing strict parser/presentation path rather
+than adding a second parser. The header modal stages bounded local paste or `.md` source,
+reports non-destructive positioned diagnostics and a lifecycle/scene/image/host preview,
+and activates only through explicit **Open lesson**. Source remains memory-only and
+reuses one controller, renderer adapter, canvas, and catalog extended only with validated
+lesson visual IDs.
 
-Treat pasted content as untrusted. Verify valid, invalid, malicious, unavailable-image, and offline cases.
+Declared credential-free HTTPS images render as attributed semantic DOM figures after
+activation, never as WebGL textures. Wide split, compact selection, no-WebGL, renderer
+failure, image retry, no-referrer loading, responsive stage aspect, invalid/malicious
+source, repeated import, and production behavior were verified in Firefox and Chromium.
+See `.pi/plans/brain-atlas-zmq.6-local-lesson-import-plan.md` for implementation evidence.
 
 ### Explore and inspector (`brain-atlas-zmq.7-.8`)
 

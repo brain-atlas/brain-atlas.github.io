@@ -642,7 +642,9 @@ function resize() {
   renderer.setSize(width, height);
   labelRenderer.setSize(width, height);
 }
-window.addEventListener('resize', resize); resize();
+window.addEventListener('resize', resize);
+new ResizeObserver(resize).observe(stage);
+resize();
 
 function updateAnteriorFlow() {
   for (const f of flows) {

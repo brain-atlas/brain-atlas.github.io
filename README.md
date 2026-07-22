@@ -176,12 +176,25 @@ those records. Close restores focus and the exact lesson-surface position.
 
 Three.js is dynamically imported only after a WebGL2 probe. If WebGL is unavailable or
 renderer initialization fails, the topic entry view plus eight-scene text lesson,
-navigation, and fidelity records remain usable without downloading the renderer. Local
-paste/import remains deferred to `brain-atlas-zmq.6`.
+navigation, fidelity records, and supplementary images remain usable without downloading
+the renderer.
+
+**Open lesson** in the header accepts a local `.md` file or pasted source up to 512 KiB.
+Validation is non-destructive and uses the same strict contract as the checked-in lesson;
+the preview reports title, Draft state, scene/image counts, and external image hosts before
+**Open lesson** is enabled. Explicit opening replaces the current lesson in memory through
+the same controller and renderer adapter. It does not upload, save, or persist the source,
+and reload restores the checked-in lesson. Declared HTTPS supplementary images begin
+loading only after opening. They remain semantic DOM figures—not WebGL textures—with alt
+text, caption, credit, source link, no-referrer loading, and an accessible retry state.
+Scripts, styles, frames, raw HTML, unsafe URL schemes, arbitrary fetches, and undeclared
+images remain forbidden.
 
 ## Controls
 
-Scroll or use Previous/Next to activate a scene. The reference lesson omits Restart
+Use **Open lesson** to stage local Markdown by paste or `.md` file, correct positioned
+validation errors without losing the active lesson, review the preview/privacy summary,
+and explicitly activate it. Scroll or use Previous/Next to activate a scene. The reference lesson omits Restart
 because its scenes do not yet define replay timelines; **Skip transition** appears on the
 stage only while camera motion is active, jumps to the authored destination camera, and
 settles activity without accelerating model time.
