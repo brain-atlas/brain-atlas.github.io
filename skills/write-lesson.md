@@ -164,6 +164,9 @@ Then compose with these rules:
 9. **Review the real shell at every supported size.** Capture every scene stage-only for
    comparison, then inspect the complete wide and compact lesson shell. Check the active
    animation after the camera settles; thumbnails and one aspect ratio are insufficient.
+   For the checked reference lesson, run `scripts/browser/animation-continuity.spec.cjs`
+   in Firefox and Chromium so model clocks, point motion, in-frame events, endpoint caps,
+   and emphasis state support rather than replace the visual review.
 
 Use `src/lessons/retina-to-v1.md` as the reference example:
 

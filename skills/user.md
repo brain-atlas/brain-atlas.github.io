@@ -17,7 +17,7 @@ It is a heavy WebGL page — prefer the static preview when inspecting; HMR relo
 can churn the GPU context.
 
 ## The development-only debug hook
-In development mode, `src/main.js` exposes `window.__view = { camera, controls, scene, THREE }`. `src/bootstrap.js` also exposes `window.__lesson`, containing the frozen lesson/catalog and getters for navigation/controller state. Use them to frame, freeze, navigate, and introspect from browser automation or the console. Their `import.meta.env.DEV` guards remove both hooks from production builds.
+In development mode, `src/main.js` exposes `window.__view` with camera, controls, scene, Three.js, and named activity diagnostics. `src/bootstrap.js` also exposes `window.__lesson`, containing the frozen lesson/catalog and getters for navigation/controller state. Use them to frame, freeze, navigate, and introspect from browser automation or the console. Their `import.meta.env.DEV` guards remove both hooks from production builds.
 
 ## Driving it with the Playwright MCP
 - `browser_navigate` to the URL, then `browser_console_messages(level:"error")` to
@@ -33,6 +33,7 @@ In development mode, `src/main.js` exposes `window.__view = { camera, controls, 
 - `#model-sources-trigger` opens the sole geometry/activity status, provenance, limitation, and source surface; there is no duplicate canvas badge, stage status row, or global progress strip. In Lesson, `#fidelity-close` restores trigger focus and exact `#page-scroll`; in Atlas, records follow visible entities without changing workspace history.
 - Lesson `#back-to-atlas` restores the persistent global Atlas camera/filters. `#return-to-lesson` restores the saved lesson title/scene, selected visual, canonical state, rendered camera, exact lesson-surface position, and focus. Stage `#explore-scene-trigger` enters a temporary scene-derived Atlas branch and leaves the persistent global snapshot unchanged. `window.__lesson.exploreState` reports `{ phase, kind, snapshot }`; `window.__lesson.workspaceState` exposes development-only mode/token diagnostics. There must still be exactly one canvas.
 - To check display aspect, compare `window.__view.camera.aspect` with `document.querySelector('#stage canvas').getBoundingClientRect().width / height`. They should match to floating-point precision; the MNI group (`matrixAutoUpdate === false`) must retain equal basis lengths and positive determinant.
+- To distinguish stopped activity from sparse, occluded, clipped, or dimmed activity, inspect `window.__view.activity.state`, `.anterior.phase`, `.opticRadiation.modelTime`, `.opticRadiation.activeCount`, named point geometries, `window.__view.association`, and `window.__view.swm`. Run `scripts/browser/animation-continuity.spec.cjs` in Firefox and Chromium; it waits for every authored camera to settle, then checks model clocks, point checksums/draw ranges, in-frame events, optic-radiation endpoint proximity and cap visibility, selected tract groups, stable camera pose, and the distinct Skip/Pause/Play/reduced-motion semantics.
 - Force the readable renderer-free path with `?no-webgl=1`; verify that no `main`/Three.js resource loads. Imported supplementary images remain available as semantic figures in this path.
 
 ## Opening a local lesson

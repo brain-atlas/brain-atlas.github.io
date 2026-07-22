@@ -116,6 +116,7 @@ scientific catalogs, authored lesson state, or anatomical coordinates.
 | INV-30 | The modal Lessons drawer has one checked Start/Resume/Start-over surface, local-import entry, shared project links, native focus restoration, 44 px targets, and contained wide/compact layouts. | drawer/zoom/short-wide browser checks | Atlas Home remains primary while lesson discovery stays accessible and future-library-ready. |
 | INV-31 | No-WebGL and renderer-import failure preserve semantic Atlas Home, Lessons, import, project links, readable lessons, images, and Model & sources; only renderer controls and scene inspection disappear. | fallback resource/browser checks | GPU failure cannot erase the product's learning and provenance paths. |
 | INV-32 | Reduced motion settles active Atlas/Lesson playback and camera changes without altering requested canonical state. Atlas/Lesson Return replays the latest preference and auto-rotate stays off. | controller/reduced-motion browser checks | Motion preference remains truthful across workspace switches. |
+| INV-33 | Normal camera-transition completion never changes a playing scene's requested activity. After the authored camera settles, every expected visible engine keeps advancing and remains perceptible through nonzero in-frame point motion, while V1-directed views retain visible endpoint caps and endpoint-proximal events. Skip applies the authored settled state; Pause freezes model clocks without becoming settled; Play resumes; reduced motion settles and disables Play. | `animation-continuity.spec.cjs` in wide/compact Firefox and Chromium | A technically live model cannot silently read as stopped, and learner/system motion controls remain semantically distinct. |
 
 ## Failure Modes
 
@@ -151,6 +152,7 @@ scientific catalogs, authored lesson state, or anatomical coordinates.
 | FAIL-28 | Reduced motion, Skip, or Return snaps a resumed lesson to authored camera/filter state | Controller lacks a transient resume base | Restore one complete validated snapshot as the effective base until Start, Restart, or navigation clears it. |
 | FAIL-29 | Renderer failure leaves a blank Home or inaccessible lessons | Atlas shell assumes an adapter/controller exists | Keep the workspace/history/candidate state machine active in semantic fallback; remove only renderer controls. |
 | FAIL-30 | Unknown checked or stale session route leaves URL and UI inconsistent | Recovery changes one without the other | Replace the current history entry with Atlas and announce the specific recovery. |
+| FAIL-31 | A playing lesson view appears frozen after its camera settles | Model clock stopped, expected layer is hidden, stochastic events are temporarily sparse, teaching geometry is clipped/occluded, or visibility/selection factors dim events and endpoint caps | Compare canonical playback, model clocks, draw ranges and position checksums, in-frame events, endpoint proximity/cap opacity, and selected renderer groups through the development diagnostics before changing an activity engine. Correct the failing layer only. |
 
 ## Decision Framework
 
@@ -189,6 +191,7 @@ node --test test/scene-navigation.test.js test/lesson-scene-controller.test.js \
 | INV-15, INV-16 | `test/scroll-surface.test.js` + Firefox/Chromium root/surface/keyboard checks |
 | INV-17, INV-18, INV-19, FAIL-16–FAIL-20 | `test/lesson-import.test.js` + paste/file/network/repeated-import/image-failure/responsive browser checks |
 | INV-20–INV-32, FAIL-21–FAIL-30 | `test/explore-session.test.js`, `test/workspace-session.test.js`, controller tests, and `scripts/browser/{explore,home}-*.spec.cjs` in Firefox and Chromium |
+| INV-33, FAIL-31 | `scripts/browser/animation-continuity.spec.cjs` in wide/compact Firefox and Chromium plus settled stage-only visual review |
 
 Full repository verification remains `npm test && npm run build:publish` plus
 wide, compact, reduced-motion, no-WebGL, and production-hook browser checks.

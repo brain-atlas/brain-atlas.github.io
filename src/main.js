@@ -146,10 +146,11 @@ for (const path of ANT_PATHS) {
   const pos = new Float32Array(NP * 3);
   const geo = new THREE.BufferGeometry();
   geo.setAttribute('position', new THREE.BufferAttribute(pos, 3).setUsage(THREE.DynamicDrawUsage));
-  anteriorGroup.add(new THREE.Points(geo, new THREE.PointsMaterial({
+  const points = new THREE.Points(geo, new THREE.PointsMaterial({
     color: col, size: 1.25, map: SPR, transparent: true, depthWrite: false,
-    blending: THREE.AdditiveBlending, sizeAttenuation: true })));
-  flows.push({ curve, geo, pos });
+    blending: THREE.AdditiveBlending, sizeAttenuation: true }));
+  anteriorGroup.add(points);
+  flows.push({ curve, geo, pos, points });
 }
 
 // Landmark spheres (eyes/chiasm) + CSS2D labels
@@ -255,9 +256,10 @@ const MAXTR = 600;   // pool cap; firing model targets ~500 concurrent (see BIO_
 const trGeo = new THREE.BufferGeometry();
 trGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(MAXTR * 3), 3).setUsage(THREE.DynamicDrawUsage));
 trGeo.setDrawRange(0, 0);
-fibreGroup.add(new THREE.Points(trGeo, new THREE.PointsMaterial({
+const opticRadiationPoints = new THREE.Points(trGeo, new THREE.PointsMaterial({
   color: 0xfff0d8, size: 1.3, map: SPR, transparent: true, depthWrite: false,
-  blending: THREE.AdditiveBlending, sizeAttenuation: true })));
+  blending: THREE.AdditiveBlending, sizeAttenuation: true }));
+fibreGroup.add(opticRadiationPoints);
 const tracers = [];
 function writeFibrePoint(poly, t, target, offset) {
   const np = poly.length, x = Math.max(0, Math.min(1, t)) * (np - 1);
@@ -617,6 +619,31 @@ function updateSwm(dt) {
 // ---------------------------------------------------------------------------
 // State + loop
 const st = { flow: !reduce, speed: 70, phase: 0, settled: reduce };
+if (import.meta.env.DEV) {
+  window.__view.activity = {
+    get state() {
+      return Object.freeze({
+        playing: st.flow && !st.settled,
+        settled: st.settled,
+        reducedMotion: reduce,
+        speed: st.speed,
+      });
+    },
+    anterior: {
+      points: Object.freeze(flows.map(({ points }) => points)),
+      get phase() { return st.phase; },
+    },
+    opticRadiation: {
+      points: opticRadiationPoints,
+      get modelTime() { return simT; },
+      get activeCount() { return tracers.length; },
+      get endpointCaps() { return Object.freeze([orCaps.L, orCaps.R].filter(Boolean)); },
+      get v1Endpoints() {
+        return FIB ? Object.freeze([...FIB.L, ...FIB.R].map((poly) => poly[poly.length - 1])) : Object.freeze([]);
+      },
+    },
+  };
+}
 let requestedLessonPlayback = null;
 const timer = new THREE.Timer();
 timer.connect(document);
