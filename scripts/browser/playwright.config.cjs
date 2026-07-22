@@ -7,7 +7,7 @@ if (process.env.PLAYWRIGHT_EXECUTABLE_PATH) {
 
 module.exports = {
   testDir: __dirname,
-  testMatch: /(animation|explore|home)-.*\.spec\.cjs/,
+  testMatch: /(anatomy|animation|explore|home)-.*\.spec\.cjs/,
   timeout: 60_000,
   workers: 1,
   use: {

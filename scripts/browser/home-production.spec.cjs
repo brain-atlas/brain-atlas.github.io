@@ -66,6 +66,10 @@ test('production no-WebGL Atlas keeps checked lessons without loading a canvas',
   await open(page, '?no-webgl=1', ['fallback']);
   await expect(page.locator('#atlas-workspace')).toBeVisible();
   expect(await page.locator('canvas').count()).toBe(0);
+  await page.locator('#anatomy-browser > summary').click();
+  await page.locator('#anatomy-options [data-inspectable-id="landmark.optic-chiasm"]').click();
+  await expect(page.locator('#anatomy-inspector')).toContainText('Mason & Erskine 2001');
+  await page.locator('#anatomy-inspector-close').click();
   await page.locator('#lessons-trigger').click();
   await page.locator('[data-start-lesson="retina-to-v1"]').click();
   await expect(page.locator('#lesson-title')).toBeVisible();

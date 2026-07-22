@@ -32,6 +32,7 @@ scientific catalogs, authored lesson state, or anatomical coordinates.
 9. `validateLessonImport` bounds untrusted local source, composes the same strict parser and presentation path used by checked-in content, and returns either frozen diagnostics or a frozen candidate plus a host-disclosing preview. It never activates a lesson or reads a file. `createLessonRuntimeCatalog` immutably extends only the base visual-ID allowlist so a validated imported snapshot can pass the same renderer-adapter boundary.
 10. Explore helpers derive either a scene snapshot with the actual rendered camera or the complete-atlas default, apply allowlisted command batches only after synchronizing that camera, project truthful panel state by stable entity ID, and resolve fidelity records from visible entities plus approved context records.
 11. Workspace helpers project checked drawer records, validate static-safe query/history intent, synchronize persistent Atlas cameras, and create complete lesson-resume or lesson-derived Atlas tokens. Bootstrap alone owns candidate maps, History API effects, DOM moves, transition epochs, and explicit lesson closeout.
+12. Anatomy-inspector helpers filter strict inspectables through canonical owner visibility/hemispheres, compose anatomy explanations with owner fidelity, reduce input-equivalent transient selection state, reject drags as taps, and normalize exact canvas coordinates without importing Three.js or the DOM.
 
 **Key files:**
 
@@ -46,6 +47,7 @@ scientific catalogs, authored lesson state, or anatomical coordinates.
 - `workspace-session.js` — checked drawer records, query/history validation, Atlas capture, lesson resume tokens, and scene-inspection capture.
 - `markdown-view-model.js` — allowlisted semantic Markdown plain data.
 - `fidelity-view-model.js` — scene fidelity status/detail projection.
+- `anatomy-inspector.js` — inspectable availability/detail projection, modality state, tap threshold, exact-canvas NDC, and nearest-hit choice.
 - `src/bootstrap.js` — DOM consumer, WebGL gate, focus, scrolling, responsive disclosure.
 - `src/main.js#createLessonRendererAdapter` — the only concrete Three.js consumer.
 
@@ -79,6 +81,11 @@ scientific catalogs, authored lesson state, or anatomical coordinates.
 | `createSceneInspectionSnapshot(snapshot, camera, catalog)` | bootstrap/tests | Creates a full-control temporary Atlas branch from effective lesson state and rendered camera. |
 | `markdownToViewModel(source)` | bootstrap/tests | Frozen allowlisted plain tree; rejects raw HTML and unsafe URLs defensively. |
 | `createFidelityViewModel(input, catalog)` | bootstrap/tests | Frozen scene records with separate ordered geometry/activity statuses; unknown records fail. |
+| `availableInspectableIds(snapshot, catalog)` | bootstrap/tests | Returns sorted inspectable IDs whose canonical owner is visible under effective global/per-entity hemispheres; unresolved owners fail. |
+| `createAnatomyDetailViewModel(id, catalog)` | bootstrap/tests | Composes one frozen model with curated anatomy, supported relationships, owner fidelity, material limitations, citations, and licenses; unknown records fail. |
+| `createAnatomySelectionState()` / `applyAnatomySelectionIntent(state, intent)` | bootstrap/tests | Frozen transient hover/focus/touch/details state. Preview is nonsticky; touch stages; explicit activation alone opens details. |
+| `anatomyTapIntent(input)` | main/tests | Distinguishes a bounded tap from orbit/scroll drag movement. |
+| `anatomyPointerNdc(input)` / `nearestAnatomyHit(hits)` | main/tests | Converts the exact renderer-canvas rectangle to NDC and deterministically selects the nearest hit. |
 
 ## Invariants
 
@@ -118,6 +125,16 @@ scientific catalogs, authored lesson state, or anatomical coordinates.
 | INV-32 | Reduced motion settles active Atlas/Lesson playback and camera changes without altering requested canonical state. Atlas/Lesson Return replays the latest preference and auto-rotate stays off. | controller/reduced-motion browser checks | Motion preference remains truthful across workspace switches. |
 | INV-33 | Normal camera-transition completion never changes a playing scene's requested activity. After the authored camera settles, every expected visible engine keeps advancing and remains perceptible through nonzero in-frame point motion, while V1-directed views retain visible endpoint caps and endpoint-proximal events. Skip applies the authored settled state; Pause freezes model clocks without becoming settled; Play resumes; reduced motion settles and disables Play. | `animation-continuity.spec.cjs` in wide/compact Firefox and Chromium | A technically live model cannot silently read as stopped, and learner/system motion controls remain semantically distinct. |
 | INV-34 | Every active-Lesson → Atlas action preserves the actual rendered camera and complete canonical lesson filters in one temporary branch. Atlas exposes compact 44 px **Return to lesson** and **Exit lesson** actions: Return exactly replays the token; Exit clears resume/session keys, removes session chrome, replaces history with Atlas, and applies the authored complete default. Unsaved local Exit requires a focused confirmation. | Home/Explore workspace tests in wide/compact Firefox and Chromium, no-WebGL, renderer-failure, and production preview | Leaving a lesson cannot cause a spatial snap, dominant banner, accidental local loss, or ambiguous half-ended session. |
+| INV-35 | The strict project catalog exposes exactly the reviewed starter inspectables with stable owner/fidelity/renderer bindings; selection-only landmarks do not enter canonical scene entity IDs. | catalog tests | Selection and future search reuse domain IDs without forking visibility state. |
+| INV-36 | Inspectable availability follows canonical owner visibility plus effective hemisphere state and clears a hidden selection. | anatomy model + browser filter tests | DOM actions and canvas targets cannot describe anatomy that the current view has removed. |
+| INV-37 | Cited detail models visibly separate established anatomy from displayed geometry/activity status, material limitations, anatomy citations, dataset/method sources, and licenses. Unknown data fails. | anatomy model + no-WebGL browser tests | Anatomical explanation cannot upgrade representation fidelity or receive reassuring defaults. |
+| INV-38 | Mouse hover and DOM focus produce the same transient highlight plus short label; neither opens details. Mouse/keyboard semantic activation is explicit and preserves canonical scene state. | anatomy model + wide browser tests | Discoverability remains quiet, input-equivalent, and non-destructive. |
+| INV-39 | First raw-canvas touch creates a sticky preview; a second tap on the same target or the revealed semantic label opens details. | anatomy model + real-touch Chromium test | Touch does not accidentally open citation-length content. |
+| INV-40 | Raycasting uses the renderer canvas's exact CSS rectangle, current world matrices under the one `mniGroup`, rendered roots only, and deterministic nearest distance. Drag movement is not a tap. | pure geometry helpers + browser diagnostics | Selection cannot introduce coordinate fitting, stale aspect math, or orbit-triggered disclosure. |
+| INV-41 | One shared **Inspect anatomy** disclosure exposes a semantic DOM button for every available canvas target; one transient short-label button is the canvas invoker. | wide browser test | Keyboard and screen-reader users never depend on raw WebGL hit targets. |
+| INV-42 | Wide anatomy details are nonmodal. Compact details live outside the inert app, own a named page lock, cycle visible focus, support Escape/Close, and restore the connected invoker or stage fallback. | compact browser test | Details preserve context without leaking focus or stranding it on a removed control. |
+| INV-43 | No-WebGL retains the same semantic names, anatomy copy, statuses, limitations, citations, and licenses; only raycast/highlight is absent. | no-WebGL browser test | GPU capability does not gate scientific inspection. |
+| INV-44 | Inspection highlight is a transient material factor composed with canonical visibility/authored-selection factors; it never dispatches `selection.set`, changes camera/filter/playback, mutates geometry, or enters resume/history state. | main/bootstrap review + canonical snapshot browser assertion | Inspection remains an overlay on the one renderer rather than another scene/filter system. |
 
 ## Failure Modes
 
@@ -155,6 +172,11 @@ scientific catalogs, authored lesson state, or anatomical coordinates.
 | FAIL-30 | Unknown checked or stale session route leaves URL and UI inconsistent | Recovery changes one without the other | Replace the current history entry with Atlas and announce the specific recovery. |
 | FAIL-31 | A playing lesson view appears frozen after its camera settles | Model clock stopped, expected layer is hidden, stochastic events are temporarily sparse, teaching geometry is clipped/occluded, or visibility/selection factors dim events and endpoint caps | Compare canonical playback, model clocks, draw ranges and position checksums, in-frame events, endpoint proximity/cap opacity, and selected renderer groups through the development diagnostics before changing an activity engine. Correct the failing layer only. |
 | FAIL-32 | Back snaps to an unrelated Atlas, Return dominates the header, or Exit leaves stale resume/local history | Lesson-origin actions selected global state, visible copy included the full title/position, or closeout cleared only part of bootstrap-owned state | Derive one actual-camera lesson branch, keep title/position in Return's accessible name, confirm unsaved local loss, then atomically clear token/maps/session chrome and apply the complete default Atlas; stale local history normalizes with the not-retained announcement. |
+| FAIL-33 | Canvas hit and short label disagree or change during a drag | Picking used stale/non-canvas coordinates, hidden objects, array order, or treated OrbitControls movement as a tap | Use `anatomyPointerNdc`, `nearestAnatomyHit`, rendered-root filtering, and the tested movement threshold; never add a fitting transform. |
+| FAIL-34 | Hover erases authored emphasis or persists after the owner is hidden | Transient inspection overwrote canonical selection or availability was not reconciled | Multiply a separate inspection factor, then clear through owner visibility without dispatching a scene command. |
+| FAIL-35 | Unknown anatomy record appears with generic copy/status | Detail projection guessed a record or fidelity fallback | Throw before DOM rendering; built-in catalog failure is an application error. |
+| FAIL-36 | First touch opens details or an orbit/scroll drag selects anatomy | Pointer type/staging or movement threshold was bypassed | Route raw intents through the pure reducer and require a bounded tap before emitting touch. |
+| FAIL-37 | Compact sheet leaks focus/scroll or close returns to a removed button | Inspector was placed inside the inert app, shared another lock owner, or trusted a disconnected invoker | Keep the sheet external, lock by `anatomy-inspector`, filter visible focusables, and fall back to the connected preview/summary. |
 
 ## Decision Framework
 
@@ -167,6 +189,7 @@ scientific catalogs, authored lesson state, or anatomical coordinates.
 | Add disclosure data | Update scientific traceability and curated fidelity records; do not place citations in directives. | INV-7 |
 | Change lifecycle status | Use validated lesson metadata and the same identity surface in Lesson/Home/library views; do not infer status from title text or fidelity records. | INV-14 |
 | Add free exploration | Use the Atlas workspace and canonical working snapshot; do not create another renderer/filter surface. Keep lesson-derived inspection temporary and explicit Exit as the only reset to default Home. | INV-20–INV-34 |
+| Add an inspectable | Extend the strict project catalog and traceability, inherit owner fidelity, provide a DOM-equivalent action, and bind only an existing renderer root or explicit schematic landmark. Do not add association endpoints without their research Bead. | INV-35–INV-44 |
 
 ## Testing
 
@@ -175,7 +198,8 @@ node --test test/scene-navigation.test.js test/lesson-scene-controller.test.js \
   test/camera-transition.test.js test/visibility-transition.test.js \
   test/markdown-view-model.test.js test/fidelity-view-model.test.js \
   test/lesson-presentation.test.js test/reference-lesson.test.js \
-  test/explore-session.test.js test/workspace-session.test.js
+  test/explore-session.test.js test/workspace-session.test.js \
+  test/anatomy-inspector.test.js
 ```
 
 | Spec item | Verification |
@@ -195,6 +219,8 @@ node --test test/scene-navigation.test.js test/lesson-scene-controller.test.js \
 | INV-20–INV-32, FAIL-21–FAIL-30 | `test/explore-session.test.js`, `test/workspace-session.test.js`, controller tests, and `scripts/browser/{explore,home}-*.spec.cjs` in Firefox and Chromium |
 | INV-33, FAIL-31 | `scripts/browser/animation-continuity.spec.cjs` in wide/compact Firefox and Chromium plus settled stage-only visual review |
 | INV-34, FAIL-32 | `scripts/browser/explore-lifecycle.spec.cjs`, `home-workspace.spec.cjs`, `home-edge.spec.cjs`, and `home-production.spec.cjs` in Firefox and Chromium |
+| INV-35–INV-40, FAIL-33–FAIL-36 | `test/catalog.test.js`, `test/anatomy-inspector.test.js` |
+| INV-41–INV-44, FAIL-37 | `scripts/browser/anatomy-inspector.spec.cjs` in Firefox/Chromium, including real Chromium touch and no-WebGL |
 
 Full repository verification remains `npm test && npm run build:publish` plus
 wide, compact, reduced-motion, no-WebGL, and production-hook browser checks.

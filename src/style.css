@@ -97,6 +97,17 @@ button:disabled, fieldset:disabled button, fieldset:disabled input { cursor: not
 .stage { position: relative; width: 100%; height: 100%; overflow: hidden; background: radial-gradient(circle at center, rgba(33, 63, 88, 0.2), transparent 62%); }
 .stage canvas, .label-layer { position: absolute; inset: 0; width: 100% !important; height: 100% !important; }
 .label-layer { pointer-events: none; }
+.anatomy-controls { position: absolute; z-index: 7; left: 12px; bottom: 12px; display: flex; align-items: flex-end; gap: 8px; }
+.anatomy-preview { min-height: 44px; padding: 7px 10px; color: #031613; border-color: var(--accent); background: var(--accent); font-family: var(--font-mono); font-size: 0.68rem; font-weight: 650; }
+.anatomy-preview[hidden], .anatomy-browser[hidden] { display: none; }
+.anatomy-browser { position: relative; }
+.anatomy-browser > summary { min-height: 44px; display: flex; align-items: center; padding: 7px 10px; list-style: none; color: #bff8f1; border: 1px solid rgba(67,220,203,0.38); border-radius: 4px; background: rgba(5,12,20,0.9); cursor: pointer; font-family: var(--font-mono); font-size: 0.66rem; }
+.anatomy-browser > summary::-webkit-details-marker { display: none; }
+.anatomy-browser > summary::before { content: "+"; margin-right: 7px; color: var(--accent); }
+.anatomy-browser[open] > summary::before { content: "−"; }
+.anatomy-options { position: absolute; bottom: calc(100% + 8px); left: 0; width: min(320px, calc(100vw - 24px)); max-height: min(44vh, 360px); display: grid; gap: 4px; overflow: auto; overscroll-behavior: contain; padding: 8px; border: 1px solid var(--line-strong); border-radius: 6px; background: rgba(5,12,20,0.98); box-shadow: 0 14px 48px rgba(0,0,0,0.48); }
+.anatomy-options button { min-height: 44px; padding: 7px 9px; color: var(--muted); background: transparent; text-align: left; font-size: 0.72rem; }
+.anatomy-options button:hover, .anatomy-options button:focus-visible { color: var(--text); background: var(--accent-soft); }
 .lbl3d { padding: 3px 7px; border: 1px solid rgba(142, 181, 219, 0.35); border-radius: 2px; color: #d8e6f4; background: rgba(5,12,20,0.8); font-family: var(--font-mono); font-size: 9px; white-space: nowrap; }
 .stage-fallback { width: 100%; height: 100%; display: grid; align-content: center; padding: clamp(28px, 7vw, 80px); background: linear-gradient(145deg, rgba(34,55,73,0.24), rgba(8,16,25,0.8)); }
 .stage-fallback[hidden] { display: none; }
@@ -247,6 +258,20 @@ input[type="range"] { flex: 1; min-width: 80px; accent-color: var(--accent); }
 .explore-placeholder-stage { width: 100%; }
 .atlas-workspace .fidelity-panel { z-index: 8; top: calc(var(--topbar) + 68px); max-height: calc(100dvh - var(--topbar) - 68px); }
 
+.anatomy-inspector { position: fixed; z-index: 82; top: var(--topbar); right: 0; bottom: 0; width: min(460px, 40vw); overflow: auto; overscroll-behavior: contain; border-left: 1px solid var(--line-strong); background: rgba(7,16,25,0.98); box-shadow: -24px 0 70px rgba(0,0,0,0.44); }
+.anatomy-inspector[hidden] { display: none; }
+.anatomy-inspector > header { position: sticky; top: 0; z-index: 2; min-height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 14px 18px; border-bottom: 1px solid var(--line); background: rgba(7,16,25,0.96); backdrop-filter: blur(14px); }
+.anatomy-inspector h2 { margin: 4px 0 0; font-size: 1.1rem; }
+#anatomy-inspector-close { width: 44px; padding: 0; font-size: 1.4rem; }
+.anatomy-inspector-content { padding: 8px 18px 48px; }
+.anatomy-inspector-section { padding: 16px 0; border-bottom: 1px solid var(--line); }
+.anatomy-inspector-section h3 { margin: 0 0 9px; color: var(--text); font-size: 0.82rem; }
+.anatomy-inspector-section p, .anatomy-inspector-section li { color: var(--muted); font-size: 0.82rem; line-height: 1.58; }
+.anatomy-inspector-section p { margin: 0; }
+.anatomy-inspector-section ul { margin: 0; padding-left: 18px; }
+.anatomy-inspector-section .fidelity-statuses { margin-bottom: 14px; padding-bottom: 14px; }
+.anatomy-relationship-meta { display: block; margin-top: 4px; color: var(--dim); font-family: var(--font-mono); font-size: 0.6rem; }
+
 .fidelity-panel { position: fixed; z-index: 80; top: var(--topbar); right: 0; bottom: 0; width: min(480px, 42vw); overflow: auto; overscroll-behavior: contain; border-left: 1px solid var(--line-strong); background: rgba(7,16,25,0.98); box-shadow: -24px 0 70px rgba(0,0,0,0.44); }
 .fidelity-panel[hidden] { display: none; }
 .fidelity-panel > header { position: sticky; top: 0; z-index: 2; min-height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 14px 18px; border-bottom: 1px solid var(--line); background: rgba(7,16,25,0.96); backdrop-filter: blur(14px); }
@@ -350,7 +375,11 @@ input[type="range"] { flex: 1; min-width: 80px; accent-color: var(--accent); }
   #lesson-import-source { min-height: 220px; }
   .import-actions { display: grid; grid-template-columns: repeat(3, 1fr); padding: 8px; }
   .import-actions button { min-width: 0; padding-inline: 6px; font-size: 0.7rem; }
-  .fidelity-panel { top: auto; left: 0; width: 100%; max-height: 80vh; border: 1px solid var(--line-strong); border-bottom: 0; border-radius: 16px 16px 0 0; box-shadow: 0 -24px 80px rgba(0,0,0,0.68); }
+  .anatomy-controls { right: 8px; bottom: 8px; left: 8px; align-items: flex-end; }
+  .anatomy-preview { max-width: 48%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .anatomy-browser { margin-left: auto; }
+  .anatomy-options { right: 0; left: auto; width: min(320px, calc(100vw - 16px)); max-height: 36vh; }
+  .anatomy-inspector, .fidelity-panel { top: auto; left: 0; width: 100%; max-height: 80vh; border: 1px solid var(--line-strong); border-bottom: 0; border-radius: 16px 16px 0 0; box-shadow: 0 -24px 80px rgba(0,0,0,0.68); }
   .atlas-workspace .fidelity-panel { top: auto; max-height: 80vh; }
   .fidelity-panel > header { min-height: 64px; }
   #fidelity-close { width: 44px; }

@@ -96,16 +96,76 @@ const cameraPresetSchema = {
   },
 };
 
+const inspectableRendererSchema = {
+  type: 'object',
+  additionalProperties: false,
+  required: ['kind', 'id'],
+  properties: {
+    kind: { enum: ['layer', 'region', 'tract', 'landmark'] },
+    id: nonEmptyText,
+  },
+};
+
+const inspectableRelationshipSchema = {
+  type: 'object',
+  additionalProperties: false,
+  required: ['target', 'direction', 'evidence', 'summary'],
+  properties: {
+    target: stableId,
+    direction: { enum: ['directed', 'undirected', 'unknown'] },
+    evidence: { enum: ['established-anatomy', 'displayed-dataset', 'schematic-teaching'] },
+    summary: nonEmptyText,
+  },
+};
+
+const inspectableSourceSchema = {
+  type: 'object',
+  additionalProperties: false,
+  required: ['label', 'url'],
+  properties: {
+    label: nonEmptyText,
+    url: httpsUrl,
+  },
+};
+
 export const entityCatalogSchema = {
   type: 'object',
   additionalProperties: false,
-  required: ['schemaVersion', 'cameraPresets', 'entities'],
+  required: ['schemaVersion', 'cameraPresets', 'inspectables', 'entities'],
   properties: {
     schemaVersion: { const: LESSON_SCHEMA_VERSION },
     cameraPresets: {
       type: 'object',
       minProperties: 1,
       additionalProperties: cameraPresetSchema,
+    },
+    inspectables: {
+      type: 'array',
+      items: {
+        type: 'object',
+        additionalProperties: false,
+        required: [
+          'id', 'entity', 'label', 'shortLabel', 'renderer', 'description',
+          'relationships', 'sources',
+        ],
+        properties: {
+          id: stableId,
+          entity: stableId,
+          label: nonEmptyText,
+          shortLabel: nonEmptyText,
+          renderer: inspectableRendererSchema,
+          description: nonEmptyText,
+          relationships: {
+            type: 'array',
+            items: inspectableRelationshipSchema,
+          },
+          sources: {
+            type: 'array',
+            minItems: 1,
+            items: inspectableSourceSchema,
+          },
+        },
+      },
     },
     entities: {
       type: 'array',

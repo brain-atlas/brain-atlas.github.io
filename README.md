@@ -114,7 +114,7 @@ src/style.css        responsive editorial scientific-instrument UI
 test/                 focused Node tests for extracted pure behavior
 scripts/browser/      replayable Firefox/Chromium Atlas, Lesson, history, and input checks
 public/models/       licensed runtime GLB assets, including brain_mni.glb
-public/data/entities.json / fidelity.json   stable lesson bindings and disclosure records
+public/data/entities.json / fidelity.json   stable scene/inspectable IDs and disclosure records
 .workbench/           ignored, non-deployed local asset experiments
 ```
 
@@ -199,7 +199,13 @@ Changed source/destination filters remain eligible while their anatomy cross-fad
 during the first half of a quintic-eased transition. The scene header owns scene
 identity and progress. The persistent **Model & sources** control opens the sole
 geometry/activity status and provenance surface; the canvas and stage do not duplicate
-those records. Close restores focus and the exact lesson-surface position.
+those records. **Inspect anatomy** exposes a small DOM-backed list for LGN, V1, optic
+radiation, the two schematic eye markers, and the optic chiasm. Hover or keyboard focus
+shows the same transient highlight and short label; mouse click, Enter, or the revealed
+label opens cited details. A first raw-canvas touch previews and a second activation opens.
+Wide details are nonmodal; compact details use a focus-contained bottom sheet. Both close
+without changing camera, filters, playback, lesson position, or canonical scene selection.
+Close restores focus and the exact lesson-surface position.
 
 Within a lesson, every Atlas entry uses the same top-level surface and temporary
 lesson-derived branch with the active filters and exact rendered camera. It grants full
@@ -215,9 +221,10 @@ Reload removes that marker, returns to Atlas, and announces that local content w
 retained.
 
 Three.js is dynamically imported only after a WebGL2 probe. If WebGL is unavailable or
-renderer initialization fails, Atlas orientation, sources, Lessons, and local import remain
-usable. Checked or local lessons retain prose, navigation, fidelity records, and
-supplementary images without downloading the renderer.
+renderer initialization fails, Atlas orientation, sources, Lessons, local import, and the
+semantic cited anatomy inspector remain usable. Checked or local lessons retain prose,
+navigation, fidelity records, and supplementary images without downloading the renderer;
+only canvas raycasting and visual highlighting are unavailable.
 
 **Open lesson** in the header accepts a local `.md` file or pasted source up to 512 KiB.
 Validation is non-destructive and uses the same strict contract as the checked-in lesson;
@@ -242,8 +249,10 @@ settles activity without accelerating model time.
 Pointer drag rotates only when the scene control policy permits it. In normal Lesson
 mode, touch swipes scroll `#page-scroll` without rotating the camera. Atlas Home and the
 lesson-derived Atlas view grant full orbit, wheel/pinch zoom, right-drag/two-finger pan,
-and canonical viewer-filter editing. Reduced-motion preference makes authored camera
-changes instant, settles activity, disables Play, and removes the Skip action.
+and canonical viewer-filter editing. Use **Inspect anatomy** for an equivalent named
+keyboard/screen-reader path to each seeded canvas target; focus previews, and activation
+opens the same cited detail view. Reduced-motion preference makes authored camera changes
+instant, settles activity, disables Play, and removes the Skip action.
 
 The collapsed **Viewer controls** section retains Play/Pause, activity speed,
 **Cutaway**, **Tissue**, Side/Top/Back/Front, hemisphere/layer filters, Auto-rotate,

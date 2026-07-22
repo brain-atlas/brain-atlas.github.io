@@ -34,5 +34,7 @@ export const LANDMARKS = [
 // Only the schematic anterior landmarks get marker spheres; the LGN and V1 now
 // have real region shells, so their dots are removed.
 export const SPHERES = [
-  { p: LE, r: 5.5 }, { p: RE, r: 5.5 }, { p: CHI, r: 4 },
+  { id: 'eye-left', p: LE, r: 5.5 },
+  { id: 'eye-right', p: RE, r: 5.5 },
+  { id: 'optic-chiasm', p: CHI, r: 4 },
 ];

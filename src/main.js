@@ -17,6 +17,11 @@ import { createFrameDeltaReader } from './activity/frame-time.js';
 import { createRendererAdapter } from './lesson/index.js';
 import { createCameraTransition, sampleCameraTransition } from './ui/camera-transition.js';
 import { createVisibilityTransition, sampleVisibilityTransition } from './ui/visibility-transition.js';
+import {
+  anatomyPointerNdc,
+  anatomyTapIntent,
+  nearestAnatomyHit,
+} from './ui/anatomy-inspector.js';
 
 // ---------------------------------------------------------------------------
 const stage = document.getElementById('stage');
@@ -159,9 +164,14 @@ for (const path of ANT_PATHS) {
 // Landmark spheres (eyes/chiasm) + CSS2D labels
 const sphereGeo = new THREE.SphereGeometry(1, 20, 20);
 const sphereMat = new THREE.MeshBasicMaterial({ color: 0xe8f0fb });
+const landmarkMarkersById = {};
 for (const s of SPHERES) {
-  const m = new THREE.Mesh(sphereGeo, sphereMat);
+  const material = sphereMat.clone();
+  material.userData.inspectionBaseColor = material.color.getHex();
+  const m = new THREE.Mesh(sphereGeo, material);
+  m.userData = { landmarkId: s.id };
   m.position.set(...s.p); m.scale.setScalar(s.r); anteriorGroup.add(m);
+  landmarkMarkersById[s.id] = m;
 }
 const labelGroup = new THREE.Group(); mniGroup.add(labelGroup);
 for (const lb of LANDMARKS) {
@@ -732,6 +742,154 @@ function entityIdForRenderer(kind, id) {
   return rendererEntityIds.get(`${kind}:${id}`) ?? null;
 }
 
+const anatomyRaycaster = new THREE.Raycaster();
+anatomyRaycaster.params.Line.threshold = 5;
+anatomyRaycaster.params.Points.threshold = 6;
+let anatomyCatalog = null;
+let anatomyIntentHandler = null;
+let highlightedInspectableId = null;
+let hoveredInspectableId = null;
+let anatomyPointerStart = null;
+
+function inspectableRendererObjects(inspectable) {
+  if (inspectable.renderer.kind === 'landmark') {
+    return [landmarkMarkersById[inspectable.renderer.id]].filter(Boolean);
+  }
+  const owner = anatomyCatalog?.entitiesById?.[inspectable.entity];
+  return owner ? lessonRendererObjects(owner) : [];
+}
+
+function objectIsRendered(object) {
+  for (let current = object; current; current = current.parent) {
+    if (!current.visible) return false;
+    if (current === scene) break;
+  }
+  const materials = Array.isArray(object.material) ? object.material : [object.material];
+  if (!materials.filter(Boolean).length) return true;
+  return materials.filter(Boolean).some((material) => {
+    if (material.uniforms?.uOpacity) return material.uniforms.uOpacity.value > 0.01;
+    return material.opacity === undefined || material.opacity > 0.01;
+  });
+}
+
+function pickAnatomy(clientX, clientY) {
+  if (!anatomyCatalog) return null;
+  const rect = renderer.domElement.getBoundingClientRect();
+  if (!(rect.width > 0 && rect.height > 0)) return null;
+  const ndc = anatomyPointerNdc({ clientX, clientY, rect });
+  scene.updateMatrixWorld(true);
+  camera.updateMatrixWorld();
+  anatomyRaycaster.setFromCamera(ndc, camera);
+  const hits = [];
+  for (const id of anatomyCatalog.inspectableIds) {
+    const inspectable = anatomyCatalog.inspectablesById[id];
+    let nearest = Infinity;
+    for (const root of inspectableRendererObjects(inspectable)) {
+      if (!objectIsRendered(root)) continue;
+      const intersection = anatomyRaycaster.intersectObject(root, true)
+        .find(({ object }) => objectIsRendered(object));
+      if (intersection) nearest = Math.min(nearest, intersection.distance);
+    }
+    if (Number.isFinite(nearest)) hits.push({ id, distance: nearest });
+  }
+  return nearestAnatomyHit(hits);
+}
+
+function emitAnatomyIntent(intent) {
+  if (anatomyIntentHandler) anatomyIntentHandler(Object.freeze({ ...intent }));
+}
+
+function updateAnatomyHover(clientX, clientY) {
+  const id = pickAnatomy(clientX, clientY)?.id ?? null;
+  renderer.domElement.style.cursor = id ? 'pointer' : '';
+  if (id === hoveredInspectableId) return;
+  if (hoveredInspectableId) emitAnatomyIntent({ type: 'clear', input: 'pointer' });
+  hoveredInspectableId = id;
+  if (id) emitAnatomyIntent({ type: 'preview', id, input: 'pointer' });
+}
+
+renderer.domElement.addEventListener('pointermove', (event) => {
+  if (event.pointerType === 'mouse' && event.buttons === 0) {
+    updateAnatomyHover(event.clientX, event.clientY);
+  }
+});
+renderer.domElement.addEventListener('pointerleave', (event) => {
+  if (event.pointerType !== 'mouse') return;
+  renderer.domElement.style.cursor = '';
+  hoveredInspectableId = null;
+  emitAnatomyIntent({ type: 'clear', input: 'pointer' });
+});
+renderer.domElement.addEventListener('pointerdown', (event) => {
+  if (!event.isPrimary || event.button !== 0) return;
+  anatomyPointerStart = {
+    pointerId: event.pointerId,
+    x: event.clientX,
+    y: event.clientY,
+  };
+});
+renderer.domElement.addEventListener('pointercancel', () => {
+  anatomyPointerStart = null;
+});
+renderer.domElement.addEventListener('pointerup', (event) => {
+  const start = anatomyPointerStart;
+  anatomyPointerStart = null;
+  if (!start || start.pointerId !== event.pointerId || !event.isPrimary || event.button !== 0) return;
+  if (!anatomyTapIntent({
+    startX: start.x,
+    startY: start.y,
+    endX: event.clientX,
+    endY: event.clientY,
+  })) return;
+  const hit = pickAnatomy(event.clientX, event.clientY);
+  if (!hit) {
+    emitAnatomyIntent({ type: 'reset' });
+    return;
+  }
+  if (event.pointerType === 'touch') {
+    emitAnatomyIntent({ type: 'touch', id: hit.id });
+  } else {
+    emitAnatomyIntent({ type: 'activate', id: hit.id, input: 'pointer' });
+  }
+});
+
+function setInspectableHighlight(id) {
+  if (id !== null && !anatomyCatalog?.inspectablesById?.[id]) {
+    throw new RangeError(`unknown inspectable highlight: ${id}`);
+  }
+  if (highlightedInspectableId === id) return;
+  const apply = (inspectableId, active) => {
+    if (!inspectableId) return;
+    const inspectable = anatomyCatalog.inspectablesById[inspectableId];
+    for (const object of inspectableRendererObjects(inspectable)) {
+      setLessonMaterialFactor(object, 'inspection', active ? 3.2 : 1);
+      if (inspectable.renderer.kind === 'landmark') {
+        const materials = Array.isArray(object.material) ? object.material : [object.material];
+        for (const material of materials.filter(Boolean)) {
+          material.color?.setHex(active ? 0x43dccb : material.userData.inspectionBaseColor);
+        }
+      }
+    }
+  };
+  apply(highlightedInspectableId, false);
+  highlightedInspectableId = id;
+  apply(highlightedInspectableId, true);
+}
+
+function configureAnatomyInspector(catalog) {
+  setInspectableHighlight(null);
+  anatomyCatalog = catalog;
+  anatomyIntentHandler = null;
+  hoveredInspectableId = null;
+  renderer.domElement.style.cursor = '';
+  if (import.meta.env.DEV) {
+    window.__view.inspector = {
+      get candidateIds() { return Object.freeze([...anatomyCatalog.inspectableIds]); },
+      get highlightedId() { return highlightedInspectableId; },
+      pickAt(clientX, clientY) { return pickAnatomy(clientX, clientY); },
+    };
+  }
+}
+
 $('play').addEventListener('click', () => {
   if (reduce) return;
   if (explorePanelModel) {
@@ -969,7 +1127,8 @@ function lessonRendererObjects(entity) {
 function applyLessonMaterialOpacity(material) {
   const selection = material.userData.lessonSelectionFactor ?? 1;
   const visibility = material.userData.lessonVisibilityFactor ?? 1;
-  const factor = selection * visibility;
+  const inspection = material.userData.lessonInspectionFactor ?? 1;
+  const factor = selection * visibility * inspection;
   if (material.uniforms?.uOpacity) {
     material.userData.lessonBaseUniformOpacity ??= material.uniforms.uOpacity.value;
     material.uniforms.uOpacity.value = Math.min(1, material.userData.lessonBaseUniformOpacity * factor);
@@ -979,7 +1138,13 @@ function applyLessonMaterialOpacity(material) {
   }
 }
 function setLessonMaterialFactor(object, axis, factor) {
-  const key = axis === 'selection' ? 'lessonSelectionFactor' : 'lessonVisibilityFactor';
+  const keys = {
+    selection: 'lessonSelectionFactor',
+    visibility: 'lessonVisibilityFactor',
+    inspection: 'lessonInspectionFactor',
+  };
+  const key = keys[axis];
+  if (!key) throw new RangeError(`unknown material factor axis: ${axis}`);
   object.userData[key] = factor;
   object.traverse((node) => {
     const materials = Array.isArray(node.material) ? node.material : [node.material];
@@ -990,7 +1155,11 @@ function setLessonMaterialFactor(object, axis, factor) {
   });
 }
 function reapplyLessonMaterialFactors(object) {
-  for (const [axis, key] of [['selection', 'lessonSelectionFactor'], ['visibility', 'lessonVisibilityFactor']]) {
+  for (const [axis, key] of [
+    ['selection', 'lessonSelectionFactor'],
+    ['visibility', 'lessonVisibilityFactor'],
+    ['inspection', 'lessonInspectionFactor'],
+  ]) {
     if (object.userData[key] !== undefined) setLessonMaterialFactor(object, axis, object.userData[key]);
   }
 }
@@ -1032,6 +1201,7 @@ function syncPlaybackControls() {
 }
 
 export function createLessonRendererAdapter(catalog, { onTransitionStateChange = () => {} } = {}) {
+  configureAnatomyInspector(catalog);
   controls.autoRotate = false;
   controls.enableDamping = false;
   controls.update();
@@ -1181,6 +1351,13 @@ export function createLessonRendererAdapter(catalog, { onTransitionStateChange =
         target: controls.target.toArray(),
       };
     },
+    setAnatomyIntentHandler(handler) {
+      if (handler !== null && typeof handler !== 'function') {
+        throw new TypeError('Anatomy intent handler must be a function or null');
+      }
+      anatomyIntentHandler = handler;
+    },
+    setInspectableHighlight,
     resizeToStage() { resize(); },
     setExploreCommandHandler(handler) {
       if (handler !== null && typeof handler !== 'function') throw new TypeError('Explore command handler must be a function or null');

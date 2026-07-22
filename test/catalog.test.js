@@ -36,6 +36,74 @@ test('current entity catalog binds every region and tract manifest ID exactly on
   assert.equal(Object.isFrozen(catalog), true);
 });
 
+test('catalog exposes the six curated inspectables with stable owner and fidelity bindings', async () => { // Tests INV-35
+  const [entities, fidelity] = await manifests();
+  const catalog = createLessonCatalog(entities, fidelity);
+
+  assert.deepEqual(catalog.inspectableIds, [
+    'landmark.eye-left',
+    'landmark.eye-right',
+    'landmark.optic-chiasm',
+    'pathway.optic-radiation',
+    'region.lgn',
+    'region.v1',
+  ]);
+  for (const inspectable of Object.values(catalog.inspectablesById)) {
+    assert.equal(inspectable.fidelity, catalog.entitiesById[inspectable.entity].fidelity);
+    assert.ok(inspectable.shortLabel.length > 0);
+    assert.ok(inspectable.description.length > 0);
+    assert.ok(inspectable.sources.length > 0);
+    assert.equal(Object.isFrozen(inspectable), true);
+  }
+  assert.deepEqual(catalog.inspectablesById['region.lgn'].renderer, { kind: 'region', id: 'lgn' });
+  assert.deepEqual(catalog.inspectablesById['landmark.optic-chiasm'].renderer, {
+    kind: 'landmark', id: 'optic-chiasm',
+  });
+  assert.equal(catalog.entityIds.includes('landmark.optic-chiasm'), false);
+});
+
+test('inspectable owner and relationship references must resolve', async () => { // Tests FAIL-33
+  const [entities, fidelity] = await manifests();
+  const unknownOwner = structuredClone(entities);
+  unknownOwner.inspectables[0].entity = 'pathway.missing';
+  assert.throws(
+    () => createLessonCatalog(unknownOwner, fidelity),
+    (error) => error.diagnostics.some(({ code }) => code === 'catalog.semantic.unknown-inspectable-owner'),
+  );
+
+  const unknownTarget = structuredClone(entities);
+  unknownTarget.inspectables[0].relationships[0].target = 'region.missing';
+  assert.throws(
+    () => createLessonCatalog(unknownTarget, fidelity),
+    (error) => error.diagnostics.some(({ code }) => code === 'catalog.semantic.unknown-inspectable-target'),
+  );
+});
+
+test('inspectable renderer bindings and relationships cannot drift or collide', async () => { // Tests FAIL-34
+  const [entities, fidelity] = await manifests();
+  const rendererDrift = structuredClone(entities);
+  const lgn = rendererDrift.inspectables.find(({ id }) => id === 'region.lgn');
+  lgn.renderer.id = 'v1';
+  assert.throws(
+    () => createLessonCatalog(rendererDrift, fidelity),
+    (error) => error.diagnostics.some(({ code }) => code === 'catalog.semantic.inspectable-renderer-drift'),
+  );
+
+  const duplicateBinding = structuredClone(entities);
+  duplicateBinding.inspectables[1].renderer = structuredClone(duplicateBinding.inspectables[0].renderer);
+  assert.throws(
+    () => createLessonCatalog(duplicateBinding, fidelity),
+    (error) => error.diagnostics.some(({ code }) => code === 'catalog.semantic.duplicate-inspectable-binding'),
+  );
+
+  const selfTarget = structuredClone(entities);
+  selfTarget.inspectables[0].relationships[0].target = selfTarget.inspectables[0].id;
+  assert.throws(
+    () => createLessonCatalog(selfTarget, fidelity),
+    (error) => error.diagnostics.some(({ code }) => code === 'catalog.semantic.inspectable-self-relationship'),
+  );
+});
+
 test('catalog records use explicit renderer and fidelity bindings with complete camera presets', async () => {
   const [entities, fidelity] = await manifests();
   const catalog = createLessonCatalog(entities, fidelity);

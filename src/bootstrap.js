@@ -4,6 +4,12 @@ import { createLessonCatalog } from './lesson/index.js';
 import lessonSource from './lessons/retina-to-v1.md?raw';
 import { createFidelityViewModel } from './ui/fidelity-view-model.js';
 import {
+  applyAnatomySelectionIntent,
+  availableInspectableIds,
+  createAnatomyDetailViewModel,
+  createAnatomySelectionState,
+} from './ui/anatomy-inspector.js';
+import {
   applyExploreCommands,
   createAtlasExploreSnapshot,
   createExplorePanelModel,
@@ -44,6 +50,11 @@ const sceneContainer = byId('lesson-scenes');
 const reducedMotionQuery = matchMedia('(prefers-reduced-motion: reduce)');
 const compactDisclosureQuery = matchMedia('(max-width: 700px)');
 let disclosureScrollTop = null;
+let anatomyScrollTop = null;
+let anatomySelection = createAnatomySelectionState();
+let anatomyAvailableIds = [];
+let anatomyAvailabilityKey = '';
+let anatomyInvoker = null;
 const pageLockOwners = new Set();
 let pageLockScrollTop = null;
 let catalog;
@@ -480,6 +491,281 @@ function appendLinks(container, heading, links) {
   container.append(section);
 }
 
+function titleCaseStatus(value) {
+  return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+function readableEvidence(value) {
+  return titleCaseStatus(value.replaceAll('-', ' '));
+}
+
+function appendInspectorLinks(container, heading, links, className) {
+  if (!links.length) return;
+  const section = node('section', `anatomy-inspector-section ${className}`);
+  section.append(node('h3', '', heading));
+  const list = document.createElement('ul');
+  for (const link of links) {
+    const item = document.createElement('li');
+    const anchor = node('a', '', link.label);
+    anchor.href = link.url;
+    anchor.target = '_blank';
+    anchor.rel = 'noopener noreferrer';
+    item.append(anchor);
+    list.append(item);
+  }
+  section.append(list);
+  container.append(section);
+}
+
+function renderAnatomyDetail(id) {
+  const model = createAnatomyDetailViewModel(id, catalog);
+  const content = byId('anatomy-inspector-content');
+  const fragment = document.createDocumentFragment();
+  const anatomy = node('section', 'anatomy-inspector-section anatomy-inspector-anatomy');
+  anatomy.append(node('h3', '', 'Anatomy'), node('p', '', model.description));
+  fragment.append(anatomy);
+
+  if (model.relationships.length) {
+    const relationships = node('section', 'anatomy-inspector-section anatomy-inspector-relationships');
+    relationships.append(node('h3', '', 'Supported relationships'));
+    const list = document.createElement('ul');
+    for (const relationship of model.relationships) {
+      const item = document.createElement('li');
+      item.append(node('p', '', relationship.summary));
+      item.append(node(
+        'span',
+        'anatomy-relationship-meta',
+        `${titleCaseStatus(relationship.direction)} · ${readableEvidence(relationship.evidence)} · ${relationship.targetLabel}`,
+      ));
+      list.append(item);
+    }
+    relationships.append(list);
+    fragment.append(relationships);
+  }
+
+  const shown = node('section', 'anatomy-inspector-section anatomy-inspector-shown');
+  shown.append(node('h3', '', 'Shown here'));
+  const statuses = node('div', 'fidelity-statuses');
+  addLabeledStatus(statuses, 'Geometry', model.geometry.statuses.map(titleCaseStatus), 'geometry');
+  addLabeledStatus(statuses, 'Activity', model.activity.statuses.map(titleCaseStatus), 'activity');
+  shown.append(statuses, node('p', '', model.geometry.summary), node('p', '', model.activity.summary));
+  fragment.append(shown);
+
+  if (model.limitations.length) {
+    const limitations = node('section', 'anatomy-inspector-section anatomy-inspector-limitations');
+    limitations.append(node('h3', '', 'What not to infer'));
+    const list = document.createElement('ul');
+    for (const limitation of model.limitations) list.append(node('li', '', limitation.summary));
+    limitations.append(list);
+    fragment.append(limitations);
+  }
+
+  appendInspectorLinks(fragment, 'Anatomy sources', model.anatomySources, 'anatomy-inspector-anatomy-sources');
+  appendInspectorLinks(fragment, 'Data and method sources', model.dataSources, 'anatomy-inspector-data-sources');
+  appendInspectorLinks(fragment, 'Licenses', model.licenses, 'anatomy-inspector-licenses');
+  fragment.append(node('p', 'review-date', `Representation record reviewed ${model.reviewed}`));
+
+  byId('anatomy-inspector-context').textContent = id.startsWith('landmark.')
+    ? 'Schematic landmark'
+    : (catalog.entitiesById[model.entity].type === 'region' ? 'Atlas region' : 'Visual pathway');
+  byId('anatomy-inspector-title').textContent = model.label;
+  content.replaceChildren(fragment);
+}
+
+function lockPageForAnatomy() {
+  if (anatomyScrollTop !== null) return;
+  anatomyScrollTop = pageScroll.scrollTop;
+  acquirePageLock('anatomy-inspector');
+  app.inert = true;
+  skipLink.inert = true;
+}
+
+function unlockPageForAnatomy() {
+  const restoreTop = anatomyScrollTop;
+  anatomyScrollTop = null;
+  app.inert = false;
+  skipLink.inert = false;
+  releasePageLock('anatomy-inspector');
+  if (restoreTop !== null && !exploreState) pageScroll.scrollTop = restoreTop;
+}
+
+function syncAnatomyMode() {
+  const panel = byId('anatomy-inspector');
+  if (panel.hidden) return;
+  if (isCompactDisclosure()) {
+    panel.setAttribute('role', 'dialog');
+    panel.setAttribute('aria-modal', 'true');
+    lockPageForAnatomy();
+    if (!panel.contains(document.activeElement)) byId('anatomy-inspector-close').focus();
+  } else {
+    panel.removeAttribute('role');
+    panel.removeAttribute('aria-modal');
+    unlockPageForAnatomy();
+  }
+}
+
+function anatomyFallbackInvoker() {
+  const preview = byId('anatomy-preview');
+  if (!preview.hidden && preview.isConnected) return preview;
+  const summary = byId('anatomy-browser').querySelector(':scope > summary');
+  return summary.getClientRects().length ? summary : null;
+}
+
+function hideAnatomyInspector({ restoreFocus = true } = {}) {
+  const panel = byId('anatomy-inspector');
+  if (panel.hidden) return;
+  panel.hidden = true;
+  panel.removeAttribute('role');
+  panel.removeAttribute('aria-modal');
+  unlockPageForAnatomy();
+  if (restoreFocus && anatomyInvoker?.closest('#anatomy-browser')) {
+    byId('anatomy-browser').open = true;
+  }
+  const invoker = anatomyInvoker?.isConnected && anatomyInvoker.getClientRects().length
+    ? anatomyInvoker
+    : anatomyFallbackInvoker();
+  anatomyInvoker = null;
+  if (restoreFocus) invoker?.focus({ preventScroll: true });
+}
+
+function renderAnatomySelection() {
+  const preview = byId('anatomy-preview');
+  const inspectable = anatomySelection.previewedId
+    ? catalog.inspectablesById[anatomySelection.previewedId]
+    : null;
+  preview.hidden = !inspectable;
+  preview.textContent = inspectable?.shortLabel ?? '';
+  if (inspectable) {
+    preview.dataset.inspectableId = inspectable.id;
+    preview.setAttribute('aria-label', `Open details about ${inspectable.label}`);
+  } else {
+    delete preview.dataset.inspectableId;
+    preview.removeAttribute('aria-label');
+  }
+  rendererAdapter?.setInspectableHighlight(inspectable?.id ?? null);
+}
+
+function openAnatomyInspector(id, invoker) {
+  byId('anatomy-browser').open = false;
+  if (!byId('fidelity-panel').hidden) closeFidelity({ restoreFocus: false });
+  anatomyInvoker = invoker?.isConnected ? invoker : byId('anatomy-preview');
+  renderAnatomyDetail(id);
+  const panel = byId('anatomy-inspector');
+  panel.hidden = false;
+  syncAnatomyMode();
+  byId('anatomy-inspector-close').focus();
+}
+
+function applyAnatomyIntent(intent, { invoker = null, restoreFocusOnClose = false } = {}) {
+  if (intent.id && !anatomyAvailableIds.includes(intent.id)) return;
+  const previousDetailsId = anatomySelection.detailsId;
+  anatomySelection = applyAnatomySelectionIntent(anatomySelection, intent);
+  renderAnatomySelection();
+  if (anatomySelection.detailsId && anatomySelection.detailsId !== previousDetailsId) {
+    openAnatomyInspector(
+      anatomySelection.detailsId,
+      invoker ?? byId('anatomy-preview'),
+    );
+  } else if (previousDetailsId && !anatomySelection.detailsId) {
+    hideAnatomyInspector({ restoreFocus: restoreFocusOnClose });
+  }
+}
+
+function closeAnatomyInspector({ restoreFocus = true, clear = false } = {}) {
+  anatomySelection = applyAnatomySelectionIntent(
+    anatomySelection,
+    clear ? { type: 'reset' } : { type: 'close-details' },
+  );
+  renderAnatomySelection();
+  hideAnatomyInspector({ restoreFocus });
+}
+
+function resetAnatomyInspector() {
+  anatomySelection = applyAnatomySelectionIntent(anatomySelection, { type: 'reset' });
+  renderAnatomySelection();
+  hideAnatomyInspector({ restoreFocus: false });
+}
+
+function renderAnatomyOptions() {
+  const key = anatomyAvailableIds.join('|');
+  if (key === anatomyAvailabilityKey) return;
+  anatomyAvailabilityKey = key;
+  const controls = byId('anatomy-controls');
+  const browser = byId('anatomy-browser');
+  const options = byId('anatomy-options');
+  const fragment = document.createDocumentFragment();
+  for (const id of anatomyAvailableIds) {
+    const inspectable = catalog.inspectablesById[id];
+    const button = node('button', '', inspectable.label);
+    button.type = 'button';
+    button.dataset.inspectableId = id;
+    button.addEventListener('focus', () => {
+      applyAnatomyIntent({ type: 'preview', id, input: 'focus' });
+    });
+    button.addEventListener('blur', () => {
+      requestAnimationFrame(() => {
+        const active = document.activeElement;
+        if (!controls.contains(active) && !byId('anatomy-inspector').contains(active)) {
+          applyAnatomyIntent({ type: 'clear', input: 'focus' });
+        }
+      });
+    });
+    button.addEventListener('click', (event) => {
+      applyAnatomyIntent({
+        type: 'activate',
+        id,
+        input: event.detail === 0 ? 'keyboard' : 'pointer',
+      }, { invoker: button });
+    });
+    fragment.append(button);
+  }
+  options.replaceChildren(fragment);
+  browser.hidden = anatomyAvailableIds.length === 0;
+  if (browser.hidden) browser.open = false;
+}
+
+function syncAnatomyAvailability(snapshot) {
+  anatomyAvailableIds = availableInspectableIds(snapshot, catalog);
+  const previousDetailsId = anatomySelection.detailsId;
+  anatomySelection = applyAnatomySelectionIntent(anatomySelection, {
+    type: 'availability',
+    ids: anatomyAvailableIds,
+  });
+  if (previousDetailsId && !anatomySelection.detailsId) {
+    hideAnatomyInspector({ restoreFocus: false });
+  }
+  renderAnatomyOptions();
+  renderAnatomySelection();
+}
+
+function bindAnatomyInspector() {
+  byId('anatomy-preview').addEventListener('click', () => {
+    if (!anatomySelection.previewedId) return;
+    applyAnatomyIntent({
+      type: 'activate',
+      id: anatomySelection.previewedId,
+      input: 'keyboard',
+    }, { invoker: byId('anatomy-preview') });
+  });
+  byId('anatomy-inspector-close').addEventListener('click', () => closeAnatomyInspector());
+  compactDisclosureQuery.addEventListener('change', syncAnatomyMode);
+  document.addEventListener('keydown', (event) => {
+    const panel = byId('anatomy-inspector');
+    if (panel.hidden) return;
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      closeAnatomyInspector();
+      return;
+    }
+    if (event.key !== 'Tab' || !isCompactDisclosure()) return;
+    const focusable = [...panel.querySelectorAll('button, a[href]')]
+      .filter((element) => !element.disabled && element.getClientRects().length > 0);
+    const first = focusable[0], last = focusable.at(-1);
+    if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+    else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+  });
+}
+
 function activePresentationScene(index) {
   return index === -1 ? presentation.entryScene : presentation.scenes[index];
 }
@@ -530,6 +816,7 @@ function updateActivePresentation(index, reason = 'initial') {
     if (active) card.setAttribute('aria-current', 'step'); else card.removeAttribute('aria-current');
   });
   const scene = activePresentationScene(index);
+  syncAnatomyAvailability(scene.snapshot);
   showLessonVisual(scene.snapshot.visual.id, scene.snapshot.visual.layout);
   const isEntry = index === -1;
   const count = presentation.scenes.length;
@@ -758,6 +1045,7 @@ function closeFidelity({ restoreFocus = true } = {}) {
 }
 
 function openFidelity() {
+  if (!byId('anatomy-inspector').hidden) closeAnatomyInspector({ restoreFocus: false });
   const panel = byId('fidelity-panel');
   panel.hidden = false;
   byId('model-sources-trigger').setAttribute('aria-expanded', 'true');
@@ -978,6 +1266,7 @@ function setExploreAvailability(available) {
 }
 
 function renderExploreFidelity(snapshot, includedFidelityIds) {
+  syncAnatomyAvailability(snapshot);
   const fidelityIds = exploreFidelityIds(snapshot, catalog, includedFidelityIds);
   byId('fidelity-context').textContent = 'Visible in Atlas';
   renderFidelityModel(createFidelityViewModel({
@@ -1107,6 +1396,7 @@ function beginExplore(kind, trigger = null) {
       createLessonRuntimeCatalog(catalog, lesson),
     );
   const savedScrollTop = pageScroll.scrollTop;
+  resetAnatomyInspector();
   if (!byId('fidelity-panel').hidden) closeFidelity({ restoreFocus: false });
   cancelSceneFocusSettlement();
   if (scrollFrame) cancelAnimationFrame(scrollFrame);
@@ -1168,6 +1458,7 @@ function beginExplore(kind, trigger = null) {
 function exitExplore() {
   if (!exploreState || exploreState.phase === 'closing' || exploreState.origin !== 'lesson') return;
   const state = exploreState;
+  resetAnatomyInspector();
   state.phase = 'closing';
   workspace.phase = 'switching';
   let restoreError = null;
@@ -1343,6 +1634,7 @@ function exitLessonSession() {
     || !workspace.lesson.token || !exploreState) return;
   workspace.phase = 'switching';
   workspace.epoch += 1;
+  resetAnatomyInspector();
   if (!byId('fidelity-panel').hidden) closeFidelity({ restoreFocus: false });
   if (byId('lesson-drawer').open) byId('lesson-drawer').close();
   if (byId('lesson-import-dialog').open) {
@@ -1508,12 +1800,16 @@ function onRendererTransitionStateChange(isTransitioning) {
 
 function refreshRendererAdapter() {
   if (!rendererAdapterFactory) return;
+  rendererAdapter?.setAnatomyIntentHandler(null);
+  rendererAdapter?.setInspectableHighlight(null);
   rendererAdapter?.setExploreCommandHandler(null);
   rendererAdapter?.endExplore();
   controller = null;
   rendererAdapter = rendererAdapterFactory(createLessonRuntimeCatalog(catalog, lesson), {
     onTransitionStateChange: onRendererTransitionStateChange,
   });
+  rendererAdapter.setAnatomyIntentHandler((intent) => applyAnatomyIntent(intent));
+  rendererAdapter.setInspectableHighlight(anatomySelection.previewedId);
 }
 
 function createCurrentController() {
@@ -1707,6 +2003,7 @@ function activatePreparedLesson(candidate, {
   initialIndex = null,
   resumeToken = null,
 } = {}) {
+  resetAnatomyInspector();
   lessonSourceKind = sourceKind;
   lesson = candidate.lesson;
   presentation = candidate.presentation;
@@ -1722,6 +2019,7 @@ function activatePreparedLesson(candidate, {
   updateActivePresentation(navigation.activeIndex, resumeToken ? 'workspace-resume' : 'initial');
   if (resumeToken && controller) {
     controller.restore(resumeToken.snapshot, { reason: 'workspace-resume' });
+    syncAnatomyAvailability(resumeToken.snapshot);
     const scene = activePresentationScene(navigation.activeIndex);
     showLessonVisual(resumeVisualId, scene.snapshot.visual.layout);
   }
@@ -1757,6 +2055,7 @@ async function start() {
     activatePreparedLesson(referenceCandidate);
     bindNavigation();
     bindFidelity();
+    bindAnatomyInspector();
     bindLessonImport();
     bindLessonDrawer();
     bindVisualPresentation();

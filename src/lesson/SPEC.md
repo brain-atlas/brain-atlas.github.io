@@ -19,7 +19,7 @@ This subsystem does **not** render Markdown, own scrolling, import files, fetch 
    supply typed YAML scene directives. Prose before the
    first fence is introduction content; prose after each fence belongs to that scene.
 4. Ajv schemas validate syntax and trust-boundary shape. Validators compile during development into checked-in CSP-safe standalone functions; the browser performs no runtime code generation. YAML and Markdown positions become plain diagnostics.
-5. Catalog checks resolve stable entity, fidelity, visual, and camera IDs.
+5. Catalog checks resolve stable entity, inspectable, fidelity, visual, and camera IDs. Selection-only landmark records inherit a canonical owner entity and fidelity record without entering scene visibility IDs.
 6. Scene directives normalize into complete frozen snapshots.
 7. Pure commands return new snapshots. The renderer adapter applies a complete
    snapshot through explicit bindings and verifies captured state.
@@ -32,12 +32,12 @@ This subsystem does **not** render Markdown, own scrolling, import files, fetch 
 - `https-formats.js` — shared credential-free HTTPS format check.
 - `diagnostics.js` — plain diagnostics and `LessonContractError`.
 - `parse-lesson.js` — Markdown/YAML parsing, safety checks, source slicing, semantics.
-- `catalog.js` — stable entity/fidelity/camera catalog validation and lookup data.
+- `catalog.js` — stable entity/inspectable/fidelity/camera catalog validation and lookup data.
 - `scene-state.js` — complete snapshot normalization, freezing, serialization.
 - `commands.js` — allowlisted pure scene-state transitions.
 - `renderer-adapter.js` — single renderer port; no Three.js dependency.
 - `index.js` — supported consumer entry point.
-- `public/data/entities.json` — stable domain IDs to current renderer bindings.
+- `public/data/entities.json` — stable scene and inspectable domain IDs to current renderer bindings plus curated anatomy citations.
 - `public/data/fidelity.json` — curated geometry/activity disclosure records.
 
 ## Public interface
@@ -46,7 +46,7 @@ Import consumer APIs from `src/lesson/index.js`.
 
 | Export | Contract |
 |---|---|
-| `createLessonCatalog(entityManifest, fidelityManifest)` | Validates strict catalogs and returns frozen sorted IDs, presets, and record lookups. |
+| `createLessonCatalog(entityManifest, fidelityManifest)` | Validates strict catalogs and returns frozen sorted entity/inspectable/fidelity IDs, presets, and record lookups. Inspectables derive fidelity only from their resolved owner entity. |
 | `parseLesson(source, catalog)` | Returns `{ ok: true, value }` or `{ ok: false, diagnostics }`; never returns partial lesson data. |
 | `normalizeSceneSnapshot(directive, catalog)` | Expands an author directive to the complete canonical v1 state. Throws `LessonContractError` on invalid shape/reference. |
 | `normalizeCanonicalSnapshot(snapshot, catalog)` | Revalidates exact canonical keys and semantics, then returns a new frozen snapshot. |
@@ -75,8 +75,10 @@ A v1 snapshot contains exactly these top-level fields:
 - `visual` — declared visual and layout
 - `controlPolicy` — guided, look, or explore
 
-The scene ID, title, fidelity record IDs, prose, and source location belong to the
-normalized scene wrapper, not renderer state. Parsed lesson metadata exposes
+Inspectable child IDs such as `landmark.optic-chiasm` are catalog/UI identities, not
+canonical visibility entities, so they never appear in `visibility.entities`, hemisphere
+overrides, or authored `selection`. The scene ID, title, fidelity record IDs, prose, and
+source location belong to the normalized scene wrapper, not renderer state. Parsed lesson metadata exposes
 `entrySceneId` as either a validated authored scene ID or `null` and `status` as either
 `draft` or `null`. Draft is an authorial review lifecycle marker, not evidence about
 geometry or activity fidelity. Deciding whether to number an entry scene or display a
@@ -99,6 +101,7 @@ lifecycle badge belongs to the presentation layer.
 | INV-11 | Browser validation uses checked-in standalone functions; runtime validation never requires `eval`, `new Function`, or a relaxed CSP. | generated-validator test + browser CSP smoke | The lesson trust boundary remains compatible with static secure hosting. |
 | INV-12 | Optional `entryScene` resolves to exactly one authored scene before presentation; unknown references reject the lesson rather than falling back to scene order. | strict metadata schema + parser semantic test | A topic entry view remains explicit, portable, and independent of tutorial-specific runtime code. |
 | INV-13 | Optional lifecycle metadata accepts only `status: draft` in v1 and is preserved as frozen parsed data; absence means no lifecycle claim. | strict metadata schema + parser/reference tests | Draft content is visibly identifiable without title parsing, while untrusted lessons cannot self-assert a trusted reviewed/published state. |
+| INV-14 | Every inspectable has a unique stable ID/binding, a resolved canonical owner, owner-derived fidelity, resolved non-self relationship targets, strict evidence/direction vocabulary, and verified-shape HTTPS citations. Child landmarks use only `landmark` renderer bindings and remain outside scene entity IDs. | catalog schema/semantics + tests | Search, canvas picking, DOM equivalence, and cited details share one honest registry without creating a second visibility system. |
 
 ## Failure modes
 
@@ -114,6 +117,7 @@ lifecycle badge belongs to the presentation layer.
 | FAIL-8 | `renderer.adapter.capture-mismatch` | Applied renderer state differs from requested canonical state | Treat as integration drift; do not continue scene orchestration. |
 | FAIL-9 | `lesson.semantic.unknown-entry-scene` | Frontmatter `entryScene` does not match an authored scene ID | Correct the metadata or add the intended complete scene; never infer the entry view. |
 | FAIL-10 | `lesson.schema.const` at `/status` | Frontmatter claims an unsupported lifecycle value such as `reviewed` or `published` | Reject the lesson; only explicit `draft` is supported until a separately approved trusted publication model exists. |
+| FAIL-11 | `catalog.semantic.*inspectable*` | Inspectable owner/target is missing, a relationship targets itself, renderer binding drifts/collides, or a selection-only child is not a landmark | Fix the project-authored catalog before starting the renderer; never infer an owner, target, fidelity, or binding from a label. |
 
 ## Decision framework
 
@@ -122,6 +126,7 @@ lifecycle badge belongs to the presentation layer.
 | Add a lesson field | Decide whether it is document metadata, scene wrapper data, or renderer snapshot state; update strict schema, normalizer, fixtures, and diagnostics together. Lifecycle fields must not be confused with scientific fidelity. | INV-3, INV-10, INV-13 |
 | Add a renderer control | Add one canonical axis/field and one explicit adapter binding path; never invoke DOM controls. | INV-3, INV-7 |
 | Add an entity | Add a stable prefixed ID and renderer binding; reference an existing reviewed fidelity record or add one from traceability evidence. | INV-4, INV-8 |
+| Add an inspectable | Reuse a canonical entity ID/binding or add a stable selection-only `landmark.*` child with a resolved owner. Add anatomy claims/citations to traceability, keep representation in the inherited fidelity record, and do not add unsupported tract endpoints. | INV-8, INV-14 |
 | Add a scientific claim | Update traceability/citations first, then curated fidelity metadata atomically. | INV-8 |
 | Add Markdown presentation | Keep source inert here; implement rendering/sanitization in the UI Bead without weakening parser rejection. | INV-1, INV-6 |
 | Change schema version | Add an explicit migration/compatibility decision and tests; do not broaden v1 silently. | INV-10 |
@@ -142,7 +147,7 @@ node --test test/lesson-schema.test.js test/scene-state.test.js \
 |---|---|
 | INV-1, INV-6, INV-9 | `test/lesson-parser.test.js` |
 | INV-2, INV-3, FAIL-6 | `test/scene-state.test.js` |
-| INV-4, INV-8, FAIL-5 | `test/catalog.test.js` and scientific review |
+| INV-4, INV-8, INV-14, FAIL-5, FAIL-11 | `test/catalog.test.js`, `test/anatomy-inspector.test.js`, and scientific review |
 | INV-5, INV-10, INV-12, INV-13 | schema, parser, command, and adapter negative tests |
 | INV-7, FAIL-7, FAIL-8 | `test/renderer-adapter.test.js` plus structural `rg` check |
 | INV-11 | `test/generated-validators.test.js` plus CSP browser smoke |
@@ -165,6 +170,6 @@ Full repository verification remains `npm test && npm run build:publish`.
 - No Markdown-to-HTML rendering or author-supplied HTML.
 - No scroll/hysteresis controller or lesson presentation shell **inside this subsystem**; those are implemented in `src/ui/` and `src/bootstrap.js`.
 - No local import/paste UI or external image fetch **inside this subsystem**; bootstrap/UI consumers may activate only complete validated lessons and may request only their declared HTTPS images after explicit opening.
-- No free-explore pop-out, selection renderer, or inspector.
+- No free-explore, raycasting, highlight materials, DOM selection controls, or inspector panel **inside this subsystem**; it supplies only strict stable records consumed by `src/ui/anatomy-inspector.js`, bootstrap, and the single renderer.
 - No runtime fitting, anatomy generation, additional coordinate transform, plugin
   system, UI framework, backend, or WebAssembly.

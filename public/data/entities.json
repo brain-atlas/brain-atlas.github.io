@@ -74,6 +74,155 @@
       ]
     }
   },
+  "inspectables": [
+    {
+      "id": "landmark.eye-left",
+      "entity": "pathway.anterior",
+      "label": "Left eye marker",
+      "shortLabel": "Left eye",
+      "renderer": {
+        "kind": "landmark",
+        "id": "eye-left"
+      },
+      "description": "A schematic eye marker anchors the viewer's hand-authored left-eye nasal-retinal route. Its position and size are illustrative, not measured orbital or retinal anatomy.",
+      "relationships": [
+        {
+          "target": "landmark.optic-chiasm",
+          "direction": "directed",
+          "evidence": "schematic-teaching",
+          "summary": "The drawn nasal-retinal route runs from this eye marker to the optic chiasm before crossing toward the contralateral LGN."
+        }
+      ],
+      "sources": [
+        {
+          "label": "Mason & Erskine 2001 — optic-chiasm organization",
+          "url": "https://doi.org/10.1152/physrev.2001.81.4.1393"
+        }
+      ]
+    },
+    {
+      "id": "landmark.eye-right",
+      "entity": "pathway.anterior",
+      "label": "Right eye marker",
+      "shortLabel": "Right eye",
+      "renderer": {
+        "kind": "landmark",
+        "id": "eye-right"
+      },
+      "description": "A schematic eye marker anchors the viewer's hand-authored right-eye nasal-retinal route. Its position and size are illustrative, not measured orbital or retinal anatomy.",
+      "relationships": [
+        {
+          "target": "landmark.optic-chiasm",
+          "direction": "directed",
+          "evidence": "schematic-teaching",
+          "summary": "The drawn nasal-retinal route runs from this eye marker to the optic chiasm before crossing toward the contralateral LGN."
+        }
+      ],
+      "sources": [
+        {
+          "label": "Mason & Erskine 2001 — optic-chiasm organization",
+          "url": "https://doi.org/10.1152/physrev.2001.81.4.1393"
+        }
+      ]
+    },
+    {
+      "id": "landmark.optic-chiasm",
+      "entity": "pathway.anterior",
+      "label": "Optic chiasm",
+      "shortLabel": "Optic chiasm",
+      "renderer": {
+        "kind": "landmark",
+        "id": "optic-chiasm"
+      },
+      "description": "The optic chiasm is the midline junction where nasal-retinal axons cross while temporal-retinal axons remain uncrossed. The viewer marks it schematically and currently draws only the crossing nasal routes.",
+      "relationships": [
+        {
+          "target": "region.lgn",
+          "direction": "directed",
+          "evidence": "established-anatomy",
+          "summary": "Nasal-retinal fibres cross at the chiasm and continue in the contralateral optic tract toward the LGN."
+        }
+      ],
+      "sources": [
+        {
+          "label": "Mason & Erskine 2001 — optic-chiasm organization",
+          "url": "https://doi.org/10.1152/physrev.2001.81.4.1393"
+        }
+      ]
+    },
+    {
+      "id": "pathway.optic-radiation",
+      "entity": "pathway.optic-radiation",
+      "label": "Optic radiation",
+      "shortLabel": "Optic radiation",
+      "renderer": {
+        "kind": "layer",
+        "id": "or"
+      },
+      "description": "The optic radiation is the posterior thalamocortical projection carrying LGN relay-cell axons through the retrolenticular internal capsule toward primary visual cortex.",
+      "relationships": [
+        {
+          "target": "region.v1",
+          "direction": "directed",
+          "evidence": "displayed-dataset",
+          "summary": "The displayed projection runs from the LGN toward V1."
+        }
+      ],
+      "sources": [
+        {
+          "label": "Maciag et al. 2024 — visual-pathway anatomy and localization",
+          "url": "https://doi.org/10.1148/rg.230081"
+        }
+      ]
+    },
+    {
+      "id": "region.lgn",
+      "entity": "region.lgn",
+      "label": "Lateral geniculate nucleus (LGN)",
+      "shortLabel": "LGN",
+      "renderer": {
+        "kind": "region",
+        "id": "lgn"
+      },
+      "description": "The lateral geniculate nucleus is a paired thalamic visual nucleus that preserves an ordered representation of the contralateral visual field while regulating retinocortical transmission.",
+      "relationships": [
+        {
+          "target": "pathway.optic-radiation",
+          "direction": "directed",
+          "evidence": "established-anatomy",
+          "summary": "LGN relay-cell axons project toward V1 through the optic radiation."
+        }
+      ],
+      "sources": [
+        {
+          "label": "Sherman & Koch 1986 — regulated retinogeniculate transmission",
+          "url": "https://doi.org/10.1007/BF00235642"
+        }
+      ]
+    },
+    {
+      "id": "region.v1",
+      "entity": "region.v1",
+      "label": "Primary visual cortex (V1)",
+      "shortLabel": "V1",
+      "renderer": {
+        "kind": "region",
+        "id": "v1"
+      },
+      "description": "Primary visual cortex lies mainly along calcarine cortex, contains a retinotopic representation of the contralateral visual field, and transforms local visual structure.",
+      "relationships": [],
+      "sources": [
+        {
+          "label": "Hubel & Wiesel 1962 — V1 receptive fields and functional architecture",
+          "url": "https://doi.org/10.1113/jphysiol.1962.sp006837"
+        },
+        {
+          "label": "Benson et al. 2012 — human V1 retinotopy and variation",
+          "url": "https://doi.org/10.1016/j.cub.2012.09.014"
+        }
+      ]
+    }
+  ],
   "entities": [
     {
       "id": "layer.cortex",

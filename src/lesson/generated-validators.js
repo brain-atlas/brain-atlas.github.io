@@ -1778,7 +1778,7 @@ return errors === 0;
 }
 
 export const entityCatalog = validate12;
-const schema13 = {"type":"object","additionalProperties":false,"required":["schemaVersion","cameraPresets","entities"],"properties":{"schemaVersion":{"const":1},"cameraPresets":{"type":"object","minProperties":1,"additionalProperties":{"type":"object","additionalProperties":false,"required":["position","target"],"properties":{"position":{"type":"array","minItems":3,"maxItems":3,"items":{"type":"number"}},"target":{"type":"array","minItems":3,"maxItems":3,"items":{"type":"number"}}}}},"entities":{"type":"array","items":{"type":"object","additionalProperties":false,"required":["id","type","label","renderer","hemisphereMode","fidelity"],"properties":{"id":{"type":"string","minLength":1,"pattern":"^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"},"type":{"enum":["layer","pathway","region","tract"]},"label":{"type":"string","minLength":1},"renderer":{"type":"object","additionalProperties":false,"required":["kind","id"],"properties":{"kind":{"enum":["layer","region","tract"]},"id":{"type":"string","minLength":1}}},"hemisphereMode":{"enum":["none","global","bilateral"]},"fidelity":{"type":"string","minLength":1,"pattern":"^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"}}}}},"$id":"brain-atlas:entityCatalog"};
+const schema13 = {"type":"object","additionalProperties":false,"required":["schemaVersion","cameraPresets","inspectables","entities"],"properties":{"schemaVersion":{"const":1},"cameraPresets":{"type":"object","minProperties":1,"additionalProperties":{"type":"object","additionalProperties":false,"required":["position","target"],"properties":{"position":{"type":"array","minItems":3,"maxItems":3,"items":{"type":"number"}},"target":{"type":"array","minItems":3,"maxItems":3,"items":{"type":"number"}}}}},"inspectables":{"type":"array","items":{"type":"object","additionalProperties":false,"required":["id","entity","label","shortLabel","renderer","description","relationships","sources"],"properties":{"id":{"type":"string","minLength":1,"pattern":"^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"},"entity":{"type":"string","minLength":1,"pattern":"^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"},"label":{"type":"string","minLength":1},"shortLabel":{"type":"string","minLength":1},"renderer":{"type":"object","additionalProperties":false,"required":["kind","id"],"properties":{"kind":{"enum":["layer","region","tract","landmark"]},"id":{"type":"string","minLength":1}}},"description":{"type":"string","minLength":1},"relationships":{"type":"array","items":{"type":"object","additionalProperties":false,"required":["target","direction","evidence","summary"],"properties":{"target":{"type":"string","minLength":1,"pattern":"^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"},"direction":{"enum":["directed","undirected","unknown"]},"evidence":{"enum":["established-anatomy","displayed-dataset","schematic-teaching"]},"summary":{"type":"string","minLength":1}}}},"sources":{"type":"array","minItems":1,"items":{"type":"object","additionalProperties":false,"required":["label","url"],"properties":{"label":{"type":"string","minLength":1},"url":{"type":"string","format":"https-url"}}}}}}},"entities":{"type":"array","items":{"type":"object","additionalProperties":false,"required":["id","type","label","renderer","hemisphereMode","fidelity"],"properties":{"id":{"type":"string","minLength":1,"pattern":"^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"},"type":{"enum":["layer","pathway","region","tract"]},"label":{"type":"string","minLength":1},"renderer":{"type":"object","additionalProperties":false,"required":["kind","id"],"properties":{"kind":{"enum":["layer","region","tract"]},"id":{"type":"string","minLength":1}}},"hemisphereMode":{"enum":["none","global","bilateral"]},"fidelity":{"type":"string","minLength":1,"pattern":"^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"}}}}},"$id":"brain-atlas:entityCatalog"};
 
 function validate12(data, {instancePath="", parentData, parentDataProperty, rootData=data}={}){
 /*# sourceURL="brain-atlas:entityCatalog" */;
@@ -1805,8 +1805,8 @@ vErrors.push(err1);
 }
 errors++;
 }
-if(data.entities === undefined){
-const err2 = {instancePath,schemaPath:"#/required",keyword:"required",params:{missingProperty: "entities"},message:"must have required property '"+"entities"+"'"};
+if(data.inspectables === undefined){
+const err2 = {instancePath,schemaPath:"#/required",keyword:"required",params:{missingProperty: "inspectables"},message:"must have required property '"+"inspectables"+"'"};
 if(vErrors === null){
 vErrors = [err2];
 }
@@ -1815,9 +1815,8 @@ vErrors.push(err2);
 }
 errors++;
 }
-for(const key0 in data){
-if(!(((key0 === "schemaVersion") || (key0 === "cameraPresets")) || (key0 === "entities"))){
-const err3 = {instancePath,schemaPath:"#/additionalProperties",keyword:"additionalProperties",params:{additionalProperty: key0},message:"must NOT have additional properties"};
+if(data.entities === undefined){
+const err3 = {instancePath,schemaPath:"#/required",keyword:"required",params:{missingProperty: "entities"},message:"must have required property '"+"entities"+"'"};
 if(vErrors === null){
 vErrors = [err3];
 }
@@ -1826,10 +1825,9 @@ vErrors.push(err3);
 }
 errors++;
 }
-}
-if(data.schemaVersion !== undefined){
-if(1 !== data.schemaVersion){
-const err4 = {instancePath:instancePath+"/schemaVersion",schemaPath:"#/properties/schemaVersion/const",keyword:"const",params:{allowedValue: 1},message:"must be equal to constant"};
+for(const key0 in data){
+if(!((((key0 === "schemaVersion") || (key0 === "cameraPresets")) || (key0 === "inspectables")) || (key0 === "entities"))){
+const err4 = {instancePath,schemaPath:"#/additionalProperties",keyword:"additionalProperties",params:{additionalProperty: key0},message:"must NOT have additional properties"};
 if(vErrors === null){
 vErrors = [err4];
 }
@@ -1839,11 +1837,9 @@ vErrors.push(err4);
 errors++;
 }
 }
-if(data.cameraPresets !== undefined){
-let data1 = data.cameraPresets;
-if(data1 && typeof data1 == "object" && !Array.isArray(data1)){
-if(Object.keys(data1).length < 1){
-const err5 = {instancePath:instancePath+"/cameraPresets",schemaPath:"#/properties/cameraPresets/minProperties",keyword:"minProperties",params:{limit: 1},message:"must NOT have fewer than 1 properties"};
+if(data.schemaVersion !== undefined){
+if(1 !== data.schemaVersion){
+const err5 = {instancePath:instancePath+"/schemaVersion",schemaPath:"#/properties/schemaVersion/const",keyword:"const",params:{allowedValue: 1},message:"must be equal to constant"};
 if(vErrors === null){
 vErrors = [err5];
 }
@@ -1852,11 +1848,12 @@ vErrors.push(err5);
 }
 errors++;
 }
-for(const key1 in data1){
-let data2 = data1[key1];
-if(data2 && typeof data2 == "object" && !Array.isArray(data2)){
-if(data2.position === undefined){
-const err6 = {instancePath:instancePath+"/cameraPresets/" + key1.replace(/~/g, "~0").replace(/\//g, "~1"),schemaPath:"#/properties/cameraPresets/additionalProperties/required",keyword:"required",params:{missingProperty: "position"},message:"must have required property '"+"position"+"'"};
+}
+if(data.cameraPresets !== undefined){
+let data1 = data.cameraPresets;
+if(data1 && typeof data1 == "object" && !Array.isArray(data1)){
+if(Object.keys(data1).length < 1){
+const err6 = {instancePath:instancePath+"/cameraPresets",schemaPath:"#/properties/cameraPresets/minProperties",keyword:"minProperties",params:{limit: 1},message:"must NOT have fewer than 1 properties"};
 if(vErrors === null){
 vErrors = [err6];
 }
@@ -1865,8 +1862,11 @@ vErrors.push(err6);
 }
 errors++;
 }
-if(data2.target === undefined){
-const err7 = {instancePath:instancePath+"/cameraPresets/" + key1.replace(/~/g, "~0").replace(/\//g, "~1"),schemaPath:"#/properties/cameraPresets/additionalProperties/required",keyword:"required",params:{missingProperty: "target"},message:"must have required property '"+"target"+"'"};
+for(const key1 in data1){
+let data2 = data1[key1];
+if(data2 && typeof data2 == "object" && !Array.isArray(data2)){
+if(data2.position === undefined){
+const err7 = {instancePath:instancePath+"/cameraPresets/" + key1.replace(/~/g, "~0").replace(/\//g, "~1"),schemaPath:"#/properties/cameraPresets/additionalProperties/required",keyword:"required",params:{missingProperty: "position"},message:"must have required property '"+"position"+"'"};
 if(vErrors === null){
 vErrors = [err7];
 }
@@ -1875,9 +1875,8 @@ vErrors.push(err7);
 }
 errors++;
 }
-for(const key2 in data2){
-if(!((key2 === "position") || (key2 === "target"))){
-const err8 = {instancePath:instancePath+"/cameraPresets/" + key1.replace(/~/g, "~0").replace(/\//g, "~1"),schemaPath:"#/properties/cameraPresets/additionalProperties/additionalProperties",keyword:"additionalProperties",params:{additionalProperty: key2},message:"must NOT have additional properties"};
+if(data2.target === undefined){
+const err8 = {instancePath:instancePath+"/cameraPresets/" + key1.replace(/~/g, "~0").replace(/\//g, "~1"),schemaPath:"#/properties/cameraPresets/additionalProperties/required",keyword:"required",params:{missingProperty: "target"},message:"must have required property '"+"target"+"'"};
 if(vErrors === null){
 vErrors = [err8];
 }
@@ -1886,12 +1885,9 @@ vErrors.push(err8);
 }
 errors++;
 }
-}
-if(data2.position !== undefined){
-let data3 = data2.position;
-if(Array.isArray(data3)){
-if(data3.length > 3){
-const err9 = {instancePath:instancePath+"/cameraPresets/" + key1.replace(/~/g, "~0").replace(/\//g, "~1")+"/position",schemaPath:"#/properties/cameraPresets/additionalProperties/properties/position/maxItems",keyword:"maxItems",params:{limit: 3},message:"must NOT have more than 3 items"};
+for(const key2 in data2){
+if(!((key2 === "position") || (key2 === "target"))){
+const err9 = {instancePath:instancePath+"/cameraPresets/" + key1.replace(/~/g, "~0").replace(/\//g, "~1"),schemaPath:"#/properties/cameraPresets/additionalProperties/additionalProperties",keyword:"additionalProperties",params:{additionalProperty: key2},message:"must NOT have additional properties"};
 if(vErrors === null){
 vErrors = [err9];
 }
@@ -1900,8 +1896,12 @@ vErrors.push(err9);
 }
 errors++;
 }
-if(data3.length < 3){
-const err10 = {instancePath:instancePath+"/cameraPresets/" + key1.replace(/~/g, "~0").replace(/\//g, "~1")+"/position",schemaPath:"#/properties/cameraPresets/additionalProperties/properties/position/minItems",keyword:"minItems",params:{limit: 3},message:"must NOT have fewer than 3 items"};
+}
+if(data2.position !== undefined){
+let data3 = data2.position;
+if(Array.isArray(data3)){
+if(data3.length > 3){
+const err10 = {instancePath:instancePath+"/cameraPresets/" + key1.replace(/~/g, "~0").replace(/\//g, "~1")+"/position",schemaPath:"#/properties/cameraPresets/additionalProperties/properties/position/maxItems",keyword:"maxItems",params:{limit: 3},message:"must NOT have more than 3 items"};
 if(vErrors === null){
 vErrors = [err10];
 }
@@ -1910,11 +1910,8 @@ vErrors.push(err10);
 }
 errors++;
 }
-const len0 = data3.length;
-for(let i0=0; i0<len0; i0++){
-let data4 = data3[i0];
-if(!((typeof data4 == "number") && (isFinite(data4)))){
-const err11 = {instancePath:instancePath+"/cameraPresets/" + key1.replace(/~/g, "~0").replace(/\//g, "~1")+"/position/" + i0,schemaPath:"#/properties/cameraPresets/additionalProperties/properties/position/items/type",keyword:"type",params:{type: "number"},message:"must be number"};
+if(data3.length < 3){
+const err11 = {instancePath:instancePath+"/cameraPresets/" + key1.replace(/~/g, "~0").replace(/\//g, "~1")+"/position",schemaPath:"#/properties/cameraPresets/additionalProperties/properties/position/minItems",keyword:"minItems",params:{limit: 3},message:"must NOT have fewer than 3 items"};
 if(vErrors === null){
 vErrors = [err11];
 }
@@ -1923,10 +1920,11 @@ vErrors.push(err11);
 }
 errors++;
 }
-}
-}
-else {
-const err12 = {instancePath:instancePath+"/cameraPresets/" + key1.replace(/~/g, "~0").replace(/\//g, "~1")+"/position",schemaPath:"#/properties/cameraPresets/additionalProperties/properties/position/type",keyword:"type",params:{type: "array"},message:"must be array"};
+const len0 = data3.length;
+for(let i0=0; i0<len0; i0++){
+let data4 = data3[i0];
+if(!((typeof data4 == "number") && (isFinite(data4)))){
+const err12 = {instancePath:instancePath+"/cameraPresets/" + key1.replace(/~/g, "~0").replace(/\//g, "~1")+"/position/" + i0,schemaPath:"#/properties/cameraPresets/additionalProperties/properties/position/items/type",keyword:"type",params:{type: "number"},message:"must be number"};
 if(vErrors === null){
 vErrors = [err12];
 }
@@ -1936,11 +1934,9 @@ vErrors.push(err12);
 errors++;
 }
 }
-if(data2.target !== undefined){
-let data5 = data2.target;
-if(Array.isArray(data5)){
-if(data5.length > 3){
-const err13 = {instancePath:instancePath+"/cameraPresets/" + key1.replace(/~/g, "~0").replace(/\//g, "~1")+"/target",schemaPath:"#/properties/cameraPresets/additionalProperties/properties/target/maxItems",keyword:"maxItems",params:{limit: 3},message:"must NOT have more than 3 items"};
+}
+else {
+const err13 = {instancePath:instancePath+"/cameraPresets/" + key1.replace(/~/g, "~0").replace(/\//g, "~1")+"/position",schemaPath:"#/properties/cameraPresets/additionalProperties/properties/position/type",keyword:"type",params:{type: "array"},message:"must be array"};
 if(vErrors === null){
 vErrors = [err13];
 }
@@ -1949,8 +1945,12 @@ vErrors.push(err13);
 }
 errors++;
 }
-if(data5.length < 3){
-const err14 = {instancePath:instancePath+"/cameraPresets/" + key1.replace(/~/g, "~0").replace(/\//g, "~1")+"/target",schemaPath:"#/properties/cameraPresets/additionalProperties/properties/target/minItems",keyword:"minItems",params:{limit: 3},message:"must NOT have fewer than 3 items"};
+}
+if(data2.target !== undefined){
+let data5 = data2.target;
+if(Array.isArray(data5)){
+if(data5.length > 3){
+const err14 = {instancePath:instancePath+"/cameraPresets/" + key1.replace(/~/g, "~0").replace(/\//g, "~1")+"/target",schemaPath:"#/properties/cameraPresets/additionalProperties/properties/target/maxItems",keyword:"maxItems",params:{limit: 3},message:"must NOT have more than 3 items"};
 if(vErrors === null){
 vErrors = [err14];
 }
@@ -1959,11 +1959,8 @@ vErrors.push(err14);
 }
 errors++;
 }
-const len1 = data5.length;
-for(let i1=0; i1<len1; i1++){
-let data6 = data5[i1];
-if(!((typeof data6 == "number") && (isFinite(data6)))){
-const err15 = {instancePath:instancePath+"/cameraPresets/" + key1.replace(/~/g, "~0").replace(/\//g, "~1")+"/target/" + i1,schemaPath:"#/properties/cameraPresets/additionalProperties/properties/target/items/type",keyword:"type",params:{type: "number"},message:"must be number"};
+if(data5.length < 3){
+const err15 = {instancePath:instancePath+"/cameraPresets/" + key1.replace(/~/g, "~0").replace(/\//g, "~1")+"/target",schemaPath:"#/properties/cameraPresets/additionalProperties/properties/target/minItems",keyword:"minItems",params:{limit: 3},message:"must NOT have fewer than 3 items"};
 if(vErrors === null){
 vErrors = [err15];
 }
@@ -1972,10 +1969,11 @@ vErrors.push(err15);
 }
 errors++;
 }
-}
-}
-else {
-const err16 = {instancePath:instancePath+"/cameraPresets/" + key1.replace(/~/g, "~0").replace(/\//g, "~1")+"/target",schemaPath:"#/properties/cameraPresets/additionalProperties/properties/target/type",keyword:"type",params:{type: "array"},message:"must be array"};
+const len1 = data5.length;
+for(let i1=0; i1<len1; i1++){
+let data6 = data5[i1];
+if(!((typeof data6 == "number") && (isFinite(data6)))){
+const err16 = {instancePath:instancePath+"/cameraPresets/" + key1.replace(/~/g, "~0").replace(/\//g, "~1")+"/target/" + i1,schemaPath:"#/properties/cameraPresets/additionalProperties/properties/target/items/type",keyword:"type",params:{type: "number"},message:"must be number"};
 if(vErrors === null){
 vErrors = [err16];
 }
@@ -1987,7 +1985,7 @@ errors++;
 }
 }
 else {
-const err17 = {instancePath:instancePath+"/cameraPresets/" + key1.replace(/~/g, "~0").replace(/\//g, "~1"),schemaPath:"#/properties/cameraPresets/additionalProperties/type",keyword:"type",params:{type: "object"},message:"must be object"};
+const err17 = {instancePath:instancePath+"/cameraPresets/" + key1.replace(/~/g, "~0").replace(/\//g, "~1")+"/target",schemaPath:"#/properties/cameraPresets/additionalProperties/properties/target/type",keyword:"type",params:{type: "array"},message:"must be array"};
 if(vErrors === null){
 vErrors = [err17];
 }
@@ -1999,7 +1997,7 @@ errors++;
 }
 }
 else {
-const err18 = {instancePath:instancePath+"/cameraPresets",schemaPath:"#/properties/cameraPresets/type",keyword:"type",params:{type: "object"},message:"must be object"};
+const err18 = {instancePath:instancePath+"/cameraPresets/" + key1.replace(/~/g, "~0").replace(/\//g, "~1"),schemaPath:"#/properties/cameraPresets/additionalProperties/type",keyword:"type",params:{type: "object"},message:"must be object"};
 if(vErrors === null){
 vErrors = [err18];
 }
@@ -2009,15 +2007,9 @@ vErrors.push(err18);
 errors++;
 }
 }
-if(data.entities !== undefined){
-let data7 = data.entities;
-if(Array.isArray(data7)){
-const len2 = data7.length;
-for(let i2=0; i2<len2; i2++){
-let data8 = data7[i2];
-if(data8 && typeof data8 == "object" && !Array.isArray(data8)){
-if(data8.id === undefined){
-const err19 = {instancePath:instancePath+"/entities/" + i2,schemaPath:"#/properties/entities/items/required",keyword:"required",params:{missingProperty: "id"},message:"must have required property '"+"id"+"'"};
+}
+else {
+const err19 = {instancePath:instancePath+"/cameraPresets",schemaPath:"#/properties/cameraPresets/type",keyword:"type",params:{type: "object"},message:"must be object"};
 if(vErrors === null){
 vErrors = [err19];
 }
@@ -2026,8 +2018,16 @@ vErrors.push(err19);
 }
 errors++;
 }
-if(data8.type === undefined){
-const err20 = {instancePath:instancePath+"/entities/" + i2,schemaPath:"#/properties/entities/items/required",keyword:"required",params:{missingProperty: "type"},message:"must have required property '"+"type"+"'"};
+}
+if(data.inspectables !== undefined){
+let data7 = data.inspectables;
+if(Array.isArray(data7)){
+const len2 = data7.length;
+for(let i2=0; i2<len2; i2++){
+let data8 = data7[i2];
+if(data8 && typeof data8 == "object" && !Array.isArray(data8)){
+if(data8.id === undefined){
+const err20 = {instancePath:instancePath+"/inspectables/" + i2,schemaPath:"#/properties/inspectables/items/required",keyword:"required",params:{missingProperty: "id"},message:"must have required property '"+"id"+"'"};
 if(vErrors === null){
 vErrors = [err20];
 }
@@ -2036,8 +2036,8 @@ vErrors.push(err20);
 }
 errors++;
 }
-if(data8.label === undefined){
-const err21 = {instancePath:instancePath+"/entities/" + i2,schemaPath:"#/properties/entities/items/required",keyword:"required",params:{missingProperty: "label"},message:"must have required property '"+"label"+"'"};
+if(data8.entity === undefined){
+const err21 = {instancePath:instancePath+"/inspectables/" + i2,schemaPath:"#/properties/inspectables/items/required",keyword:"required",params:{missingProperty: "entity"},message:"must have required property '"+"entity"+"'"};
 if(vErrors === null){
 vErrors = [err21];
 }
@@ -2046,8 +2046,8 @@ vErrors.push(err21);
 }
 errors++;
 }
-if(data8.renderer === undefined){
-const err22 = {instancePath:instancePath+"/entities/" + i2,schemaPath:"#/properties/entities/items/required",keyword:"required",params:{missingProperty: "renderer"},message:"must have required property '"+"renderer"+"'"};
+if(data8.label === undefined){
+const err22 = {instancePath:instancePath+"/inspectables/" + i2,schemaPath:"#/properties/inspectables/items/required",keyword:"required",params:{missingProperty: "label"},message:"must have required property '"+"label"+"'"};
 if(vErrors === null){
 vErrors = [err22];
 }
@@ -2056,8 +2056,8 @@ vErrors.push(err22);
 }
 errors++;
 }
-if(data8.hemisphereMode === undefined){
-const err23 = {instancePath:instancePath+"/entities/" + i2,schemaPath:"#/properties/entities/items/required",keyword:"required",params:{missingProperty: "hemisphereMode"},message:"must have required property '"+"hemisphereMode"+"'"};
+if(data8.shortLabel === undefined){
+const err23 = {instancePath:instancePath+"/inspectables/" + i2,schemaPath:"#/properties/inspectables/items/required",keyword:"required",params:{missingProperty: "shortLabel"},message:"must have required property '"+"shortLabel"+"'"};
 if(vErrors === null){
 vErrors = [err23];
 }
@@ -2066,8 +2066,8 @@ vErrors.push(err23);
 }
 errors++;
 }
-if(data8.fidelity === undefined){
-const err24 = {instancePath:instancePath+"/entities/" + i2,schemaPath:"#/properties/entities/items/required",keyword:"required",params:{missingProperty: "fidelity"},message:"must have required property '"+"fidelity"+"'"};
+if(data8.renderer === undefined){
+const err24 = {instancePath:instancePath+"/inspectables/" + i2,schemaPath:"#/properties/inspectables/items/required",keyword:"required",params:{missingProperty: "renderer"},message:"must have required property '"+"renderer"+"'"};
 if(vErrors === null){
 vErrors = [err24];
 }
@@ -2076,9 +2076,8 @@ vErrors.push(err24);
 }
 errors++;
 }
-for(const key3 in data8){
-if(!((((((key3 === "id") || (key3 === "type")) || (key3 === "label")) || (key3 === "renderer")) || (key3 === "hemisphereMode")) || (key3 === "fidelity"))){
-const err25 = {instancePath:instancePath+"/entities/" + i2,schemaPath:"#/properties/entities/items/additionalProperties",keyword:"additionalProperties",params:{additionalProperty: key3},message:"must NOT have additional properties"};
+if(data8.description === undefined){
+const err25 = {instancePath:instancePath+"/inspectables/" + i2,schemaPath:"#/properties/inspectables/items/required",keyword:"required",params:{missingProperty: "description"},message:"must have required property '"+"description"+"'"};
 if(vErrors === null){
 vErrors = [err25];
 }
@@ -2087,12 +2086,8 @@ vErrors.push(err25);
 }
 errors++;
 }
-}
-if(data8.id !== undefined){
-let data9 = data8.id;
-if(typeof data9 === "string"){
-if(func2(data9) < 1){
-const err26 = {instancePath:instancePath+"/entities/" + i2+"/id",schemaPath:"#/properties/entities/items/properties/id/minLength",keyword:"minLength",params:{limit: 1},message:"must NOT have fewer than 1 characters"};
+if(data8.relationships === undefined){
+const err26 = {instancePath:instancePath+"/inspectables/" + i2,schemaPath:"#/properties/inspectables/items/required",keyword:"required",params:{missingProperty: "relationships"},message:"must have required property '"+"relationships"+"'"};
 if(vErrors === null){
 vErrors = [err26];
 }
@@ -2101,8 +2096,8 @@ vErrors.push(err26);
 }
 errors++;
 }
-if(!pattern0.test(data9)){
-const err27 = {instancePath:instancePath+"/entities/" + i2+"/id",schemaPath:"#/properties/entities/items/properties/id/pattern",keyword:"pattern",params:{pattern: "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"},message:"must match pattern \""+"^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"+"\""};
+if(data8.sources === undefined){
+const err27 = {instancePath:instancePath+"/inspectables/" + i2,schemaPath:"#/properties/inspectables/items/required",keyword:"required",params:{missingProperty: "sources"},message:"must have required property '"+"sources"+"'"};
 if(vErrors === null){
 vErrors = [err27];
 }
@@ -2111,9 +2106,9 @@ vErrors.push(err27);
 }
 errors++;
 }
-}
-else {
-const err28 = {instancePath:instancePath+"/entities/" + i2+"/id",schemaPath:"#/properties/entities/items/properties/id/type",keyword:"type",params:{type: "string"},message:"must be string"};
+for(const key3 in data8){
+if(!((((((((key3 === "id") || (key3 === "entity")) || (key3 === "label")) || (key3 === "shortLabel")) || (key3 === "renderer")) || (key3 === "description")) || (key3 === "relationships")) || (key3 === "sources"))){
+const err28 = {instancePath:instancePath+"/inspectables/" + i2,schemaPath:"#/properties/inspectables/items/additionalProperties",keyword:"additionalProperties",params:{additionalProperty: key3},message:"must NOT have additional properties"};
 if(vErrors === null){
 vErrors = [err28];
 }
@@ -2123,10 +2118,11 @@ vErrors.push(err28);
 errors++;
 }
 }
-if(data8.type !== undefined){
-let data10 = data8.type;
-if(!((((data10 === "layer") || (data10 === "pathway")) || (data10 === "region")) || (data10 === "tract"))){
-const err29 = {instancePath:instancePath+"/entities/" + i2+"/type",schemaPath:"#/properties/entities/items/properties/type/enum",keyword:"enum",params:{allowedValues: schema13.properties.entities.items.properties.type.enum},message:"must be equal to one of the allowed values"};
+if(data8.id !== undefined){
+let data9 = data8.id;
+if(typeof data9 === "string"){
+if(func2(data9) < 1){
+const err29 = {instancePath:instancePath+"/inspectables/" + i2+"/id",schemaPath:"#/properties/inspectables/items/properties/id/minLength",keyword:"minLength",params:{limit: 1},message:"must NOT have fewer than 1 characters"};
 if(vErrors === null){
 vErrors = [err29];
 }
@@ -2135,12 +2131,8 @@ vErrors.push(err29);
 }
 errors++;
 }
-}
-if(data8.label !== undefined){
-let data11 = data8.label;
-if(typeof data11 === "string"){
-if(func2(data11) < 1){
-const err30 = {instancePath:instancePath+"/entities/" + i2+"/label",schemaPath:"#/properties/entities/items/properties/label/minLength",keyword:"minLength",params:{limit: 1},message:"must NOT have fewer than 1 characters"};
+if(!pattern0.test(data9)){
+const err30 = {instancePath:instancePath+"/inspectables/" + i2+"/id",schemaPath:"#/properties/inspectables/items/properties/id/pattern",keyword:"pattern",params:{pattern: "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"},message:"must match pattern \""+"^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"+"\""};
 if(vErrors === null){
 vErrors = [err30];
 }
@@ -2151,7 +2143,7 @@ errors++;
 }
 }
 else {
-const err31 = {instancePath:instancePath+"/entities/" + i2+"/label",schemaPath:"#/properties/entities/items/properties/label/type",keyword:"type",params:{type: "string"},message:"must be string"};
+const err31 = {instancePath:instancePath+"/inspectables/" + i2+"/id",schemaPath:"#/properties/inspectables/items/properties/id/type",keyword:"type",params:{type: "string"},message:"must be string"};
 if(vErrors === null){
 vErrors = [err31];
 }
@@ -2161,11 +2153,11 @@ vErrors.push(err31);
 errors++;
 }
 }
-if(data8.renderer !== undefined){
-let data12 = data8.renderer;
-if(data12 && typeof data12 == "object" && !Array.isArray(data12)){
-if(data12.kind === undefined){
-const err32 = {instancePath:instancePath+"/entities/" + i2+"/renderer",schemaPath:"#/properties/entities/items/properties/renderer/required",keyword:"required",params:{missingProperty: "kind"},message:"must have required property '"+"kind"+"'"};
+if(data8.entity !== undefined){
+let data10 = data8.entity;
+if(typeof data10 === "string"){
+if(func2(data10) < 1){
+const err32 = {instancePath:instancePath+"/inspectables/" + i2+"/entity",schemaPath:"#/properties/inspectables/items/properties/entity/minLength",keyword:"minLength",params:{limit: 1},message:"must NOT have fewer than 1 characters"};
 if(vErrors === null){
 vErrors = [err32];
 }
@@ -2174,8 +2166,8 @@ vErrors.push(err32);
 }
 errors++;
 }
-if(data12.id === undefined){
-const err33 = {instancePath:instancePath+"/entities/" + i2+"/renderer",schemaPath:"#/properties/entities/items/properties/renderer/required",keyword:"required",params:{missingProperty: "id"},message:"must have required property '"+"id"+"'"};
+if(!pattern0.test(data10)){
+const err33 = {instancePath:instancePath+"/inspectables/" + i2+"/entity",schemaPath:"#/properties/inspectables/items/properties/entity/pattern",keyword:"pattern",params:{pattern: "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"},message:"must match pattern \""+"^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"+"\""};
 if(vErrors === null){
 vErrors = [err33];
 }
@@ -2184,9 +2176,9 @@ vErrors.push(err33);
 }
 errors++;
 }
-for(const key4 in data12){
-if(!((key4 === "kind") || (key4 === "id"))){
-const err34 = {instancePath:instancePath+"/entities/" + i2+"/renderer",schemaPath:"#/properties/entities/items/properties/renderer/additionalProperties",keyword:"additionalProperties",params:{additionalProperty: key4},message:"must NOT have additional properties"};
+}
+else {
+const err34 = {instancePath:instancePath+"/inspectables/" + i2+"/entity",schemaPath:"#/properties/inspectables/items/properties/entity/type",keyword:"type",params:{type: "string"},message:"must be string"};
 if(vErrors === null){
 vErrors = [err34];
 }
@@ -2196,10 +2188,11 @@ vErrors.push(err34);
 errors++;
 }
 }
-if(data12.kind !== undefined){
-let data13 = data12.kind;
-if(!(((data13 === "layer") || (data13 === "region")) || (data13 === "tract"))){
-const err35 = {instancePath:instancePath+"/entities/" + i2+"/renderer/kind",schemaPath:"#/properties/entities/items/properties/renderer/properties/kind/enum",keyword:"enum",params:{allowedValues: schema13.properties.entities.items.properties.renderer.properties.kind.enum},message:"must be equal to one of the allowed values"};
+if(data8.label !== undefined){
+let data11 = data8.label;
+if(typeof data11 === "string"){
+if(func2(data11) < 1){
+const err35 = {instancePath:instancePath+"/inspectables/" + i2+"/label",schemaPath:"#/properties/inspectables/items/properties/label/minLength",keyword:"minLength",params:{limit: 1},message:"must NOT have fewer than 1 characters"};
 if(vErrors === null){
 vErrors = [err35];
 }
@@ -2209,11 +2202,8 @@ vErrors.push(err35);
 errors++;
 }
 }
-if(data12.id !== undefined){
-let data14 = data12.id;
-if(typeof data14 === "string"){
-if(func2(data14) < 1){
-const err36 = {instancePath:instancePath+"/entities/" + i2+"/renderer/id",schemaPath:"#/properties/entities/items/properties/renderer/properties/id/minLength",keyword:"minLength",params:{limit: 1},message:"must NOT have fewer than 1 characters"};
+else {
+const err36 = {instancePath:instancePath+"/inspectables/" + i2+"/label",schemaPath:"#/properties/inspectables/items/properties/label/type",keyword:"type",params:{type: "string"},message:"must be string"};
 if(vErrors === null){
 vErrors = [err36];
 }
@@ -2223,8 +2213,11 @@ vErrors.push(err36);
 errors++;
 }
 }
-else {
-const err37 = {instancePath:instancePath+"/entities/" + i2+"/renderer/id",schemaPath:"#/properties/entities/items/properties/renderer/properties/id/type",keyword:"type",params:{type: "string"},message:"must be string"};
+if(data8.shortLabel !== undefined){
+let data12 = data8.shortLabel;
+if(typeof data12 === "string"){
+if(func2(data12) < 1){
+const err37 = {instancePath:instancePath+"/inspectables/" + i2+"/shortLabel",schemaPath:"#/properties/inspectables/items/properties/shortLabel/minLength",keyword:"minLength",params:{limit: 1},message:"must NOT have fewer than 1 characters"};
 if(vErrors === null){
 vErrors = [err37];
 }
@@ -2234,9 +2227,8 @@ vErrors.push(err37);
 errors++;
 }
 }
-}
 else {
-const err38 = {instancePath:instancePath+"/entities/" + i2+"/renderer",schemaPath:"#/properties/entities/items/properties/renderer/type",keyword:"type",params:{type: "object"},message:"must be object"};
+const err38 = {instancePath:instancePath+"/inspectables/" + i2+"/shortLabel",schemaPath:"#/properties/inspectables/items/properties/shortLabel/type",keyword:"type",params:{type: "string"},message:"must be string"};
 if(vErrors === null){
 vErrors = [err38];
 }
@@ -2246,10 +2238,11 @@ vErrors.push(err38);
 errors++;
 }
 }
-if(data8.hemisphereMode !== undefined){
-let data15 = data8.hemisphereMode;
-if(!(((data15 === "none") || (data15 === "global")) || (data15 === "bilateral"))){
-const err39 = {instancePath:instancePath+"/entities/" + i2+"/hemisphereMode",schemaPath:"#/properties/entities/items/properties/hemisphereMode/enum",keyword:"enum",params:{allowedValues: schema13.properties.entities.items.properties.hemisphereMode.enum},message:"must be equal to one of the allowed values"};
+if(data8.renderer !== undefined){
+let data13 = data8.renderer;
+if(data13 && typeof data13 == "object" && !Array.isArray(data13)){
+if(data13.kind === undefined){
+const err39 = {instancePath:instancePath+"/inspectables/" + i2+"/renderer",schemaPath:"#/properties/inspectables/items/properties/renderer/required",keyword:"required",params:{missingProperty: "kind"},message:"must have required property '"+"kind"+"'"};
 if(vErrors === null){
 vErrors = [err39];
 }
@@ -2258,12 +2251,8 @@ vErrors.push(err39);
 }
 errors++;
 }
-}
-if(data8.fidelity !== undefined){
-let data16 = data8.fidelity;
-if(typeof data16 === "string"){
-if(func2(data16) < 1){
-const err40 = {instancePath:instancePath+"/entities/" + i2+"/fidelity",schemaPath:"#/properties/entities/items/properties/fidelity/minLength",keyword:"minLength",params:{limit: 1},message:"must NOT have fewer than 1 characters"};
+if(data13.id === undefined){
+const err40 = {instancePath:instancePath+"/inspectables/" + i2+"/renderer",schemaPath:"#/properties/inspectables/items/properties/renderer/required",keyword:"required",params:{missingProperty: "id"},message:"must have required property '"+"id"+"'"};
 if(vErrors === null){
 vErrors = [err40];
 }
@@ -2272,8 +2261,9 @@ vErrors.push(err40);
 }
 errors++;
 }
-if(!pattern0.test(data16)){
-const err41 = {instancePath:instancePath+"/entities/" + i2+"/fidelity",schemaPath:"#/properties/entities/items/properties/fidelity/pattern",keyword:"pattern",params:{pattern: "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"},message:"must match pattern \""+"^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"+"\""};
+for(const key4 in data13){
+if(!((key4 === "kind") || (key4 === "id"))){
+const err41 = {instancePath:instancePath+"/inspectables/" + i2+"/renderer",schemaPath:"#/properties/inspectables/items/properties/renderer/additionalProperties",keyword:"additionalProperties",params:{additionalProperty: key4},message:"must NOT have additional properties"};
 if(vErrors === null){
 vErrors = [err41];
 }
@@ -2283,8 +2273,10 @@ vErrors.push(err41);
 errors++;
 }
 }
-else {
-const err42 = {instancePath:instancePath+"/entities/" + i2+"/fidelity",schemaPath:"#/properties/entities/items/properties/fidelity/type",keyword:"type",params:{type: "string"},message:"must be string"};
+if(data13.kind !== undefined){
+let data14 = data13.kind;
+if(!((((data14 === "layer") || (data14 === "region")) || (data14 === "tract")) || (data14 === "landmark"))){
+const err42 = {instancePath:instancePath+"/inspectables/" + i2+"/renderer/kind",schemaPath:"#/properties/inspectables/items/properties/renderer/properties/kind/enum",keyword:"enum",params:{allowedValues: schema13.properties.inspectables.items.properties.renderer.properties.kind.enum},message:"must be equal to one of the allowed values"};
 if(vErrors === null){
 vErrors = [err42];
 }
@@ -2294,9 +2286,11 @@ vErrors.push(err42);
 errors++;
 }
 }
-}
-else {
-const err43 = {instancePath:instancePath+"/entities/" + i2,schemaPath:"#/properties/entities/items/type",keyword:"type",params:{type: "object"},message:"must be object"};
+if(data13.id !== undefined){
+let data15 = data13.id;
+if(typeof data15 === "string"){
+if(func2(data15) < 1){
+const err43 = {instancePath:instancePath+"/inspectables/" + i2+"/renderer/id",schemaPath:"#/properties/inspectables/items/properties/renderer/properties/id/minLength",keyword:"minLength",params:{limit: 1},message:"must NOT have fewer than 1 characters"};
 if(vErrors === null){
 vErrors = [err43];
 }
@@ -2306,9 +2300,8 @@ vErrors.push(err43);
 errors++;
 }
 }
-}
 else {
-const err44 = {instancePath:instancePath+"/entities",schemaPath:"#/properties/entities/type",keyword:"type",params:{type: "array"},message:"must be array"};
+const err44 = {instancePath:instancePath+"/inspectables/" + i2+"/renderer/id",schemaPath:"#/properties/inspectables/items/properties/renderer/properties/id/type",keyword:"type",params:{type: "string"},message:"must be string"};
 if(vErrors === null){
 vErrors = [err44];
 }
@@ -2320,12 +2313,674 @@ errors++;
 }
 }
 else {
-const err45 = {instancePath,schemaPath:"#/type",keyword:"type",params:{type: "object"},message:"must be object"};
+const err45 = {instancePath:instancePath+"/inspectables/" + i2+"/renderer",schemaPath:"#/properties/inspectables/items/properties/renderer/type",keyword:"type",params:{type: "object"},message:"must be object"};
 if(vErrors === null){
 vErrors = [err45];
 }
 else {
 vErrors.push(err45);
+}
+errors++;
+}
+}
+if(data8.description !== undefined){
+let data16 = data8.description;
+if(typeof data16 === "string"){
+if(func2(data16) < 1){
+const err46 = {instancePath:instancePath+"/inspectables/" + i2+"/description",schemaPath:"#/properties/inspectables/items/properties/description/minLength",keyword:"minLength",params:{limit: 1},message:"must NOT have fewer than 1 characters"};
+if(vErrors === null){
+vErrors = [err46];
+}
+else {
+vErrors.push(err46);
+}
+errors++;
+}
+}
+else {
+const err47 = {instancePath:instancePath+"/inspectables/" + i2+"/description",schemaPath:"#/properties/inspectables/items/properties/description/type",keyword:"type",params:{type: "string"},message:"must be string"};
+if(vErrors === null){
+vErrors = [err47];
+}
+else {
+vErrors.push(err47);
+}
+errors++;
+}
+}
+if(data8.relationships !== undefined){
+let data17 = data8.relationships;
+if(Array.isArray(data17)){
+const len3 = data17.length;
+for(let i3=0; i3<len3; i3++){
+let data18 = data17[i3];
+if(data18 && typeof data18 == "object" && !Array.isArray(data18)){
+if(data18.target === undefined){
+const err48 = {instancePath:instancePath+"/inspectables/" + i2+"/relationships/" + i3,schemaPath:"#/properties/inspectables/items/properties/relationships/items/required",keyword:"required",params:{missingProperty: "target"},message:"must have required property '"+"target"+"'"};
+if(vErrors === null){
+vErrors = [err48];
+}
+else {
+vErrors.push(err48);
+}
+errors++;
+}
+if(data18.direction === undefined){
+const err49 = {instancePath:instancePath+"/inspectables/" + i2+"/relationships/" + i3,schemaPath:"#/properties/inspectables/items/properties/relationships/items/required",keyword:"required",params:{missingProperty: "direction"},message:"must have required property '"+"direction"+"'"};
+if(vErrors === null){
+vErrors = [err49];
+}
+else {
+vErrors.push(err49);
+}
+errors++;
+}
+if(data18.evidence === undefined){
+const err50 = {instancePath:instancePath+"/inspectables/" + i2+"/relationships/" + i3,schemaPath:"#/properties/inspectables/items/properties/relationships/items/required",keyword:"required",params:{missingProperty: "evidence"},message:"must have required property '"+"evidence"+"'"};
+if(vErrors === null){
+vErrors = [err50];
+}
+else {
+vErrors.push(err50);
+}
+errors++;
+}
+if(data18.summary === undefined){
+const err51 = {instancePath:instancePath+"/inspectables/" + i2+"/relationships/" + i3,schemaPath:"#/properties/inspectables/items/properties/relationships/items/required",keyword:"required",params:{missingProperty: "summary"},message:"must have required property '"+"summary"+"'"};
+if(vErrors === null){
+vErrors = [err51];
+}
+else {
+vErrors.push(err51);
+}
+errors++;
+}
+for(const key5 in data18){
+if(!((((key5 === "target") || (key5 === "direction")) || (key5 === "evidence")) || (key5 === "summary"))){
+const err52 = {instancePath:instancePath+"/inspectables/" + i2+"/relationships/" + i3,schemaPath:"#/properties/inspectables/items/properties/relationships/items/additionalProperties",keyword:"additionalProperties",params:{additionalProperty: key5},message:"must NOT have additional properties"};
+if(vErrors === null){
+vErrors = [err52];
+}
+else {
+vErrors.push(err52);
+}
+errors++;
+}
+}
+if(data18.target !== undefined){
+let data19 = data18.target;
+if(typeof data19 === "string"){
+if(func2(data19) < 1){
+const err53 = {instancePath:instancePath+"/inspectables/" + i2+"/relationships/" + i3+"/target",schemaPath:"#/properties/inspectables/items/properties/relationships/items/properties/target/minLength",keyword:"minLength",params:{limit: 1},message:"must NOT have fewer than 1 characters"};
+if(vErrors === null){
+vErrors = [err53];
+}
+else {
+vErrors.push(err53);
+}
+errors++;
+}
+if(!pattern0.test(data19)){
+const err54 = {instancePath:instancePath+"/inspectables/" + i2+"/relationships/" + i3+"/target",schemaPath:"#/properties/inspectables/items/properties/relationships/items/properties/target/pattern",keyword:"pattern",params:{pattern: "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"},message:"must match pattern \""+"^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"+"\""};
+if(vErrors === null){
+vErrors = [err54];
+}
+else {
+vErrors.push(err54);
+}
+errors++;
+}
+}
+else {
+const err55 = {instancePath:instancePath+"/inspectables/" + i2+"/relationships/" + i3+"/target",schemaPath:"#/properties/inspectables/items/properties/relationships/items/properties/target/type",keyword:"type",params:{type: "string"},message:"must be string"};
+if(vErrors === null){
+vErrors = [err55];
+}
+else {
+vErrors.push(err55);
+}
+errors++;
+}
+}
+if(data18.direction !== undefined){
+let data20 = data18.direction;
+if(!(((data20 === "directed") || (data20 === "undirected")) || (data20 === "unknown"))){
+const err56 = {instancePath:instancePath+"/inspectables/" + i2+"/relationships/" + i3+"/direction",schemaPath:"#/properties/inspectables/items/properties/relationships/items/properties/direction/enum",keyword:"enum",params:{allowedValues: schema13.properties.inspectables.items.properties.relationships.items.properties.direction.enum},message:"must be equal to one of the allowed values"};
+if(vErrors === null){
+vErrors = [err56];
+}
+else {
+vErrors.push(err56);
+}
+errors++;
+}
+}
+if(data18.evidence !== undefined){
+let data21 = data18.evidence;
+if(!(((data21 === "established-anatomy") || (data21 === "displayed-dataset")) || (data21 === "schematic-teaching"))){
+const err57 = {instancePath:instancePath+"/inspectables/" + i2+"/relationships/" + i3+"/evidence",schemaPath:"#/properties/inspectables/items/properties/relationships/items/properties/evidence/enum",keyword:"enum",params:{allowedValues: schema13.properties.inspectables.items.properties.relationships.items.properties.evidence.enum},message:"must be equal to one of the allowed values"};
+if(vErrors === null){
+vErrors = [err57];
+}
+else {
+vErrors.push(err57);
+}
+errors++;
+}
+}
+if(data18.summary !== undefined){
+let data22 = data18.summary;
+if(typeof data22 === "string"){
+if(func2(data22) < 1){
+const err58 = {instancePath:instancePath+"/inspectables/" + i2+"/relationships/" + i3+"/summary",schemaPath:"#/properties/inspectables/items/properties/relationships/items/properties/summary/minLength",keyword:"minLength",params:{limit: 1},message:"must NOT have fewer than 1 characters"};
+if(vErrors === null){
+vErrors = [err58];
+}
+else {
+vErrors.push(err58);
+}
+errors++;
+}
+}
+else {
+const err59 = {instancePath:instancePath+"/inspectables/" + i2+"/relationships/" + i3+"/summary",schemaPath:"#/properties/inspectables/items/properties/relationships/items/properties/summary/type",keyword:"type",params:{type: "string"},message:"must be string"};
+if(vErrors === null){
+vErrors = [err59];
+}
+else {
+vErrors.push(err59);
+}
+errors++;
+}
+}
+}
+else {
+const err60 = {instancePath:instancePath+"/inspectables/" + i2+"/relationships/" + i3,schemaPath:"#/properties/inspectables/items/properties/relationships/items/type",keyword:"type",params:{type: "object"},message:"must be object"};
+if(vErrors === null){
+vErrors = [err60];
+}
+else {
+vErrors.push(err60);
+}
+errors++;
+}
+}
+}
+else {
+const err61 = {instancePath:instancePath+"/inspectables/" + i2+"/relationships",schemaPath:"#/properties/inspectables/items/properties/relationships/type",keyword:"type",params:{type: "array"},message:"must be array"};
+if(vErrors === null){
+vErrors = [err61];
+}
+else {
+vErrors.push(err61);
+}
+errors++;
+}
+}
+if(data8.sources !== undefined){
+let data23 = data8.sources;
+if(Array.isArray(data23)){
+if(data23.length < 1){
+const err62 = {instancePath:instancePath+"/inspectables/" + i2+"/sources",schemaPath:"#/properties/inspectables/items/properties/sources/minItems",keyword:"minItems",params:{limit: 1},message:"must NOT have fewer than 1 items"};
+if(vErrors === null){
+vErrors = [err62];
+}
+else {
+vErrors.push(err62);
+}
+errors++;
+}
+const len4 = data23.length;
+for(let i4=0; i4<len4; i4++){
+let data24 = data23[i4];
+if(data24 && typeof data24 == "object" && !Array.isArray(data24)){
+if(data24.label === undefined){
+const err63 = {instancePath:instancePath+"/inspectables/" + i2+"/sources/" + i4,schemaPath:"#/properties/inspectables/items/properties/sources/items/required",keyword:"required",params:{missingProperty: "label"},message:"must have required property '"+"label"+"'"};
+if(vErrors === null){
+vErrors = [err63];
+}
+else {
+vErrors.push(err63);
+}
+errors++;
+}
+if(data24.url === undefined){
+const err64 = {instancePath:instancePath+"/inspectables/" + i2+"/sources/" + i4,schemaPath:"#/properties/inspectables/items/properties/sources/items/required",keyword:"required",params:{missingProperty: "url"},message:"must have required property '"+"url"+"'"};
+if(vErrors === null){
+vErrors = [err64];
+}
+else {
+vErrors.push(err64);
+}
+errors++;
+}
+for(const key6 in data24){
+if(!((key6 === "label") || (key6 === "url"))){
+const err65 = {instancePath:instancePath+"/inspectables/" + i2+"/sources/" + i4,schemaPath:"#/properties/inspectables/items/properties/sources/items/additionalProperties",keyword:"additionalProperties",params:{additionalProperty: key6},message:"must NOT have additional properties"};
+if(vErrors === null){
+vErrors = [err65];
+}
+else {
+vErrors.push(err65);
+}
+errors++;
+}
+}
+if(data24.label !== undefined){
+let data25 = data24.label;
+if(typeof data25 === "string"){
+if(func2(data25) < 1){
+const err66 = {instancePath:instancePath+"/inspectables/" + i2+"/sources/" + i4+"/label",schemaPath:"#/properties/inspectables/items/properties/sources/items/properties/label/minLength",keyword:"minLength",params:{limit: 1},message:"must NOT have fewer than 1 characters"};
+if(vErrors === null){
+vErrors = [err66];
+}
+else {
+vErrors.push(err66);
+}
+errors++;
+}
+}
+else {
+const err67 = {instancePath:instancePath+"/inspectables/" + i2+"/sources/" + i4+"/label",schemaPath:"#/properties/inspectables/items/properties/sources/items/properties/label/type",keyword:"type",params:{type: "string"},message:"must be string"};
+if(vErrors === null){
+vErrors = [err67];
+}
+else {
+vErrors.push(err67);
+}
+errors++;
+}
+}
+if(data24.url !== undefined){
+let data26 = data24.url;
+if(typeof data26 === "string"){
+if(!(formats0.validate(data26))){
+const err68 = {instancePath:instancePath+"/inspectables/" + i2+"/sources/" + i4+"/url",schemaPath:"#/properties/inspectables/items/properties/sources/items/properties/url/format",keyword:"format",params:{format: "https-url"},message:"must match format \""+"https-url"+"\""};
+if(vErrors === null){
+vErrors = [err68];
+}
+else {
+vErrors.push(err68);
+}
+errors++;
+}
+}
+else {
+const err69 = {instancePath:instancePath+"/inspectables/" + i2+"/sources/" + i4+"/url",schemaPath:"#/properties/inspectables/items/properties/sources/items/properties/url/type",keyword:"type",params:{type: "string"},message:"must be string"};
+if(vErrors === null){
+vErrors = [err69];
+}
+else {
+vErrors.push(err69);
+}
+errors++;
+}
+}
+}
+else {
+const err70 = {instancePath:instancePath+"/inspectables/" + i2+"/sources/" + i4,schemaPath:"#/properties/inspectables/items/properties/sources/items/type",keyword:"type",params:{type: "object"},message:"must be object"};
+if(vErrors === null){
+vErrors = [err70];
+}
+else {
+vErrors.push(err70);
+}
+errors++;
+}
+}
+}
+else {
+const err71 = {instancePath:instancePath+"/inspectables/" + i2+"/sources",schemaPath:"#/properties/inspectables/items/properties/sources/type",keyword:"type",params:{type: "array"},message:"must be array"};
+if(vErrors === null){
+vErrors = [err71];
+}
+else {
+vErrors.push(err71);
+}
+errors++;
+}
+}
+}
+else {
+const err72 = {instancePath:instancePath+"/inspectables/" + i2,schemaPath:"#/properties/inspectables/items/type",keyword:"type",params:{type: "object"},message:"must be object"};
+if(vErrors === null){
+vErrors = [err72];
+}
+else {
+vErrors.push(err72);
+}
+errors++;
+}
+}
+}
+else {
+const err73 = {instancePath:instancePath+"/inspectables",schemaPath:"#/properties/inspectables/type",keyword:"type",params:{type: "array"},message:"must be array"};
+if(vErrors === null){
+vErrors = [err73];
+}
+else {
+vErrors.push(err73);
+}
+errors++;
+}
+}
+if(data.entities !== undefined){
+let data27 = data.entities;
+if(Array.isArray(data27)){
+const len5 = data27.length;
+for(let i5=0; i5<len5; i5++){
+let data28 = data27[i5];
+if(data28 && typeof data28 == "object" && !Array.isArray(data28)){
+if(data28.id === undefined){
+const err74 = {instancePath:instancePath+"/entities/" + i5,schemaPath:"#/properties/entities/items/required",keyword:"required",params:{missingProperty: "id"},message:"must have required property '"+"id"+"'"};
+if(vErrors === null){
+vErrors = [err74];
+}
+else {
+vErrors.push(err74);
+}
+errors++;
+}
+if(data28.type === undefined){
+const err75 = {instancePath:instancePath+"/entities/" + i5,schemaPath:"#/properties/entities/items/required",keyword:"required",params:{missingProperty: "type"},message:"must have required property '"+"type"+"'"};
+if(vErrors === null){
+vErrors = [err75];
+}
+else {
+vErrors.push(err75);
+}
+errors++;
+}
+if(data28.label === undefined){
+const err76 = {instancePath:instancePath+"/entities/" + i5,schemaPath:"#/properties/entities/items/required",keyword:"required",params:{missingProperty: "label"},message:"must have required property '"+"label"+"'"};
+if(vErrors === null){
+vErrors = [err76];
+}
+else {
+vErrors.push(err76);
+}
+errors++;
+}
+if(data28.renderer === undefined){
+const err77 = {instancePath:instancePath+"/entities/" + i5,schemaPath:"#/properties/entities/items/required",keyword:"required",params:{missingProperty: "renderer"},message:"must have required property '"+"renderer"+"'"};
+if(vErrors === null){
+vErrors = [err77];
+}
+else {
+vErrors.push(err77);
+}
+errors++;
+}
+if(data28.hemisphereMode === undefined){
+const err78 = {instancePath:instancePath+"/entities/" + i5,schemaPath:"#/properties/entities/items/required",keyword:"required",params:{missingProperty: "hemisphereMode"},message:"must have required property '"+"hemisphereMode"+"'"};
+if(vErrors === null){
+vErrors = [err78];
+}
+else {
+vErrors.push(err78);
+}
+errors++;
+}
+if(data28.fidelity === undefined){
+const err79 = {instancePath:instancePath+"/entities/" + i5,schemaPath:"#/properties/entities/items/required",keyword:"required",params:{missingProperty: "fidelity"},message:"must have required property '"+"fidelity"+"'"};
+if(vErrors === null){
+vErrors = [err79];
+}
+else {
+vErrors.push(err79);
+}
+errors++;
+}
+for(const key7 in data28){
+if(!((((((key7 === "id") || (key7 === "type")) || (key7 === "label")) || (key7 === "renderer")) || (key7 === "hemisphereMode")) || (key7 === "fidelity"))){
+const err80 = {instancePath:instancePath+"/entities/" + i5,schemaPath:"#/properties/entities/items/additionalProperties",keyword:"additionalProperties",params:{additionalProperty: key7},message:"must NOT have additional properties"};
+if(vErrors === null){
+vErrors = [err80];
+}
+else {
+vErrors.push(err80);
+}
+errors++;
+}
+}
+if(data28.id !== undefined){
+let data29 = data28.id;
+if(typeof data29 === "string"){
+if(func2(data29) < 1){
+const err81 = {instancePath:instancePath+"/entities/" + i5+"/id",schemaPath:"#/properties/entities/items/properties/id/minLength",keyword:"minLength",params:{limit: 1},message:"must NOT have fewer than 1 characters"};
+if(vErrors === null){
+vErrors = [err81];
+}
+else {
+vErrors.push(err81);
+}
+errors++;
+}
+if(!pattern0.test(data29)){
+const err82 = {instancePath:instancePath+"/entities/" + i5+"/id",schemaPath:"#/properties/entities/items/properties/id/pattern",keyword:"pattern",params:{pattern: "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"},message:"must match pattern \""+"^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"+"\""};
+if(vErrors === null){
+vErrors = [err82];
+}
+else {
+vErrors.push(err82);
+}
+errors++;
+}
+}
+else {
+const err83 = {instancePath:instancePath+"/entities/" + i5+"/id",schemaPath:"#/properties/entities/items/properties/id/type",keyword:"type",params:{type: "string"},message:"must be string"};
+if(vErrors === null){
+vErrors = [err83];
+}
+else {
+vErrors.push(err83);
+}
+errors++;
+}
+}
+if(data28.type !== undefined){
+let data30 = data28.type;
+if(!((((data30 === "layer") || (data30 === "pathway")) || (data30 === "region")) || (data30 === "tract"))){
+const err84 = {instancePath:instancePath+"/entities/" + i5+"/type",schemaPath:"#/properties/entities/items/properties/type/enum",keyword:"enum",params:{allowedValues: schema13.properties.entities.items.properties.type.enum},message:"must be equal to one of the allowed values"};
+if(vErrors === null){
+vErrors = [err84];
+}
+else {
+vErrors.push(err84);
+}
+errors++;
+}
+}
+if(data28.label !== undefined){
+let data31 = data28.label;
+if(typeof data31 === "string"){
+if(func2(data31) < 1){
+const err85 = {instancePath:instancePath+"/entities/" + i5+"/label",schemaPath:"#/properties/entities/items/properties/label/minLength",keyword:"minLength",params:{limit: 1},message:"must NOT have fewer than 1 characters"};
+if(vErrors === null){
+vErrors = [err85];
+}
+else {
+vErrors.push(err85);
+}
+errors++;
+}
+}
+else {
+const err86 = {instancePath:instancePath+"/entities/" + i5+"/label",schemaPath:"#/properties/entities/items/properties/label/type",keyword:"type",params:{type: "string"},message:"must be string"};
+if(vErrors === null){
+vErrors = [err86];
+}
+else {
+vErrors.push(err86);
+}
+errors++;
+}
+}
+if(data28.renderer !== undefined){
+let data32 = data28.renderer;
+if(data32 && typeof data32 == "object" && !Array.isArray(data32)){
+if(data32.kind === undefined){
+const err87 = {instancePath:instancePath+"/entities/" + i5+"/renderer",schemaPath:"#/properties/entities/items/properties/renderer/required",keyword:"required",params:{missingProperty: "kind"},message:"must have required property '"+"kind"+"'"};
+if(vErrors === null){
+vErrors = [err87];
+}
+else {
+vErrors.push(err87);
+}
+errors++;
+}
+if(data32.id === undefined){
+const err88 = {instancePath:instancePath+"/entities/" + i5+"/renderer",schemaPath:"#/properties/entities/items/properties/renderer/required",keyword:"required",params:{missingProperty: "id"},message:"must have required property '"+"id"+"'"};
+if(vErrors === null){
+vErrors = [err88];
+}
+else {
+vErrors.push(err88);
+}
+errors++;
+}
+for(const key8 in data32){
+if(!((key8 === "kind") || (key8 === "id"))){
+const err89 = {instancePath:instancePath+"/entities/" + i5+"/renderer",schemaPath:"#/properties/entities/items/properties/renderer/additionalProperties",keyword:"additionalProperties",params:{additionalProperty: key8},message:"must NOT have additional properties"};
+if(vErrors === null){
+vErrors = [err89];
+}
+else {
+vErrors.push(err89);
+}
+errors++;
+}
+}
+if(data32.kind !== undefined){
+let data33 = data32.kind;
+if(!(((data33 === "layer") || (data33 === "region")) || (data33 === "tract"))){
+const err90 = {instancePath:instancePath+"/entities/" + i5+"/renderer/kind",schemaPath:"#/properties/entities/items/properties/renderer/properties/kind/enum",keyword:"enum",params:{allowedValues: schema13.properties.entities.items.properties.renderer.properties.kind.enum},message:"must be equal to one of the allowed values"};
+if(vErrors === null){
+vErrors = [err90];
+}
+else {
+vErrors.push(err90);
+}
+errors++;
+}
+}
+if(data32.id !== undefined){
+let data34 = data32.id;
+if(typeof data34 === "string"){
+if(func2(data34) < 1){
+const err91 = {instancePath:instancePath+"/entities/" + i5+"/renderer/id",schemaPath:"#/properties/entities/items/properties/renderer/properties/id/minLength",keyword:"minLength",params:{limit: 1},message:"must NOT have fewer than 1 characters"};
+if(vErrors === null){
+vErrors = [err91];
+}
+else {
+vErrors.push(err91);
+}
+errors++;
+}
+}
+else {
+const err92 = {instancePath:instancePath+"/entities/" + i5+"/renderer/id",schemaPath:"#/properties/entities/items/properties/renderer/properties/id/type",keyword:"type",params:{type: "string"},message:"must be string"};
+if(vErrors === null){
+vErrors = [err92];
+}
+else {
+vErrors.push(err92);
+}
+errors++;
+}
+}
+}
+else {
+const err93 = {instancePath:instancePath+"/entities/" + i5+"/renderer",schemaPath:"#/properties/entities/items/properties/renderer/type",keyword:"type",params:{type: "object"},message:"must be object"};
+if(vErrors === null){
+vErrors = [err93];
+}
+else {
+vErrors.push(err93);
+}
+errors++;
+}
+}
+if(data28.hemisphereMode !== undefined){
+let data35 = data28.hemisphereMode;
+if(!(((data35 === "none") || (data35 === "global")) || (data35 === "bilateral"))){
+const err94 = {instancePath:instancePath+"/entities/" + i5+"/hemisphereMode",schemaPath:"#/properties/entities/items/properties/hemisphereMode/enum",keyword:"enum",params:{allowedValues: schema13.properties.entities.items.properties.hemisphereMode.enum},message:"must be equal to one of the allowed values"};
+if(vErrors === null){
+vErrors = [err94];
+}
+else {
+vErrors.push(err94);
+}
+errors++;
+}
+}
+if(data28.fidelity !== undefined){
+let data36 = data28.fidelity;
+if(typeof data36 === "string"){
+if(func2(data36) < 1){
+const err95 = {instancePath:instancePath+"/entities/" + i5+"/fidelity",schemaPath:"#/properties/entities/items/properties/fidelity/minLength",keyword:"minLength",params:{limit: 1},message:"must NOT have fewer than 1 characters"};
+if(vErrors === null){
+vErrors = [err95];
+}
+else {
+vErrors.push(err95);
+}
+errors++;
+}
+if(!pattern0.test(data36)){
+const err96 = {instancePath:instancePath+"/entities/" + i5+"/fidelity",schemaPath:"#/properties/entities/items/properties/fidelity/pattern",keyword:"pattern",params:{pattern: "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"},message:"must match pattern \""+"^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"+"\""};
+if(vErrors === null){
+vErrors = [err96];
+}
+else {
+vErrors.push(err96);
+}
+errors++;
+}
+}
+else {
+const err97 = {instancePath:instancePath+"/entities/" + i5+"/fidelity",schemaPath:"#/properties/entities/items/properties/fidelity/type",keyword:"type",params:{type: "string"},message:"must be string"};
+if(vErrors === null){
+vErrors = [err97];
+}
+else {
+vErrors.push(err97);
+}
+errors++;
+}
+}
+}
+else {
+const err98 = {instancePath:instancePath+"/entities/" + i5,schemaPath:"#/properties/entities/items/type",keyword:"type",params:{type: "object"},message:"must be object"};
+if(vErrors === null){
+vErrors = [err98];
+}
+else {
+vErrors.push(err98);
+}
+errors++;
+}
+}
+}
+else {
+const err99 = {instancePath:instancePath+"/entities",schemaPath:"#/properties/entities/type",keyword:"type",params:{type: "array"},message:"must be array"};
+if(vErrors === null){
+vErrors = [err99];
+}
+else {
+vErrors.push(err99);
+}
+errors++;
+}
+}
+}
+else {
+const err100 = {instancePath,schemaPath:"#/type",keyword:"type",params:{type: "object"},message:"must be object"};
+if(vErrors === null){
+vErrors = [err100];
+}
+else {
+vErrors.push(err100);
 }
 errors++;
 }
@@ -2336,7 +2991,7 @@ return errors === 0;
 export const fidelityCatalog = validate13;
 const schema14 = {"type":"object","additionalProperties":false,"required":["schemaVersion","records"],"properties":{"schemaVersion":{"const":1},"records":{"type":"array","items":{"type":"object","additionalProperties":false,"required":["id","geometry","activity","supports","assumptions","uncertainties","limitations","sources","licenses","reviewed"],"properties":{"id":{"type":"string","minLength":1,"pattern":"^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"},"geometry":{"type":"object","additionalProperties":false,"required":["statuses","summary"],"properties":{"statuses":{"type":"array","minItems":1,"uniqueItems":true,"items":{"enum":["data-derived","derived","mirrored","modeled","schematic","illustrative","display-only","none"]}},"summary":{"type":"string","minLength":1}}},"activity":{"type":"object","additionalProperties":false,"required":["statuses","summary","direction"],"properties":{"statuses":{"type":"array","minItems":1,"uniqueItems":true,"items":{"enum":["data-derived","derived","mirrored","modeled","schematic","illustrative","display-only","none"]}},"summary":{"type":"string","minLength":1},"direction":{"enum":["directed","undirected","modeled","none","unknown"]}}},"supports":{"type":"array","items":{"type":"string","minLength":1}},"assumptions":{"type":"array","items":{"type":"string","minLength":1}},"uncertainties":{"type":"array","items":{"type":"string","minLength":1}},"limitations":{"type":"array","items":{"type":"object","additionalProperties":false,"required":["summary","material"],"properties":{"summary":{"type":"string","minLength":1},"material":{"type":"boolean"}}}},"sources":{"type":"array","items":{"type":"object","additionalProperties":false,"required":["label","url"],"properties":{"label":{"type":"string","minLength":1},"url":{"type":"string","format":"https-url"}}}},"licenses":{"type":"array","items":{"type":"object","additionalProperties":false,"required":["label","url"],"properties":{"label":{"type":"string","minLength":1},"url":{"type":"string","format":"https-url"}}}},"reviewed":{"type":"string","pattern":"^\\d{4}-\\d{2}-\\d{2}$"}}}}},"$id":"brain-atlas:fidelityCatalog"};
 const func0 = equalRuntime.default;
-const pattern13 = new RegExp("^\\d{4}-\\d{2}-\\d{2}$", "u");
+const pattern16 = new RegExp("^\\d{4}-\\d{2}-\\d{2}$", "u");
 
 function validate13(data, {instancePath="", parentData, parentDataProperty, rootData=data}={}){
 /*# sourceURL="brain-atlas:fidelityCatalog" */;
@@ -3278,7 +3933,7 @@ errors++;
 if(data2.reviewed !== undefined){
 let data31 = data2.reviewed;
 if(typeof data31 === "string"){
-if(!pattern13.test(data31)){
+if(!pattern16.test(data31)){
 const err75 = {instancePath:instancePath+"/records/" + i0+"/reviewed",schemaPath:"#/properties/records/items/properties/reviewed/pattern",keyword:"pattern",params:{pattern: "^\\d{4}-\\d{2}-\\d{2}$"},message:"must match pattern \""+"^\\d{4}-\\d{2}-\\d{2}$"+"\""};
 if(vErrors === null){
 vErrors = [err75];

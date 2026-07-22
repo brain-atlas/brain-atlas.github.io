@@ -129,6 +129,27 @@ fidelity of any displayed geometry or activity model.
 | Dorsal-stream motion, spatial, and visuomotor framework | [Born & Bradley 2005](https://doi.org/10.1146/annurev.neuro.26.041002.131052) reviews motion and disparity processing in primate MT. [Kravitz et al. 2011](https://doi.org/10.1038/nrn3008) reviews the dorsal stream as multiple visuospatial pathways rather than one “where” chain. The current scene groups territories but does not display route connectivity or functional responses. |
 | Perception/action distinction and stream interaction | [Goodale & Milner 1992](https://doi.org/10.1016/0166-2236(92)90344-8) proposed a ventral perception/dorsal action distinction from neuropsychological, behavioral, and physiological evidence. The lesson treats this as a useful functional bias within interacting networks, not an absolute behavioral or anatomical dissociation. |
 
+## Runtime anatomy-inspector projection
+
+`public/data/entities.json` now carries a strict six-record `inspectables` projection.
+These records do not replace this inventory or `public/data/fidelity.json`: anatomy copy
+and topic citations come from the verified lesson evidence below, while displayed
+geometry/activity status, processing, limitations, dataset sources, licenses, and review
+dates are composed at runtime from each record's canonical owner fidelity. Selection-only
+landmarks inherit `fidelity.anterior-pathway` through `pathway.anterior` and do not become
+canonical lesson visibility entities.
+
+| Inspectable IDs | Concise explanation evidence | Displayed-representation authority |
+|---|---|---|
+| `region.lgn` | Sherman & Koch 1986 supports regulated retinogeniculate transmission and the non-passive relay description. | Jülich-Brain region shell plus `fidelity.julich-regions`. |
+| `region.v1` | Hubel & Wiesel 1962 supports classic receptive-field/functional-architecture claims; Benson et al. 2012 supports human V1 retinotopy and individual variation. | Jülich-Brain region shell plus `fidelity.julich-regions`; never an individual functional map. |
+| `pathway.optic-radiation` | Maciag et al. 2024 supports the LGN→V1 visual-pathway anatomy and clinical localization scope. | HCP-1065/DSI-derived left contours, mirrored right side, and illustrative directed events under `fidelity.optic-radiation`. |
+| `landmark.eye-left`, `landmark.eye-right`, `landmark.optic-chiasm` | Mason & Erskine 2001 supports nasal-crossing/temporal-uncrossed optic-chiasm organization, not marker coordinates. | Hand-authored marker/curve geometry and incomplete crossing-only display under `fidelity.anterior-pathway`. |
+
+The only seeded relationships are the established or explicitly schematic early visual
+pathway among these records. No named association-tract endpoint or region relationship
+is added; `brain-atlas-zmq.10` remains the owner of that research and mapping.
+
 ## Open gaps and owners
 
 | Gap | Impact | Owner |
