@@ -7,12 +7,17 @@ smooth with tens of thousands of vertices — unlike the Canvas-2D prototype it
 replaces.
 
 **Everything posterior to the chiasm uses real atlas/template data in one runtime
-MNI/ICBM RAS-millimetre frame.** The cortical surface and LGN/V1 shells identify
-MNI152NLin2009cAsym; upstream HCP fibre sources identify ICBM 2009a or generic
-ICBM152, and their exact release/conversion provenance is under audit. The app
-performs no per-dataset fitting and applies one runtime transform. Only the
-anterior eye → chiasm → LGN segment is schematic. See “What's real vs
-schematic” and the scientific traceability inventory below.
+MNI/ICBM RAS-millimetre frame.** The cortical surface and LGN/V1 shells are
+MNI152NLin2009cAsym. Association tracts are verified ICBM 2009a Nonlinear
+Asymmetric. The optic-radiation and SWM source is the exact HCP-1065 nonlinear
+ICBM152 2009a FIB; its asymmetric variant is indicated by the release-companion
+T1, but a direct FIB build binding was not retained. Fibre JSON keeps the decoded
+source RAS+ world frame through resampling rather than claiming authorship on the
+2009c voxel grid. The official releases describe the same anatomy with different
+sampling. The app performs no per-dataset
+fitting and applies one runtime transform. Only the anterior eye → chiasm → LGN
+segment is schematic. See “What's real vs schematic” and the scientific
+traceability inventory below.
 
 ## Run it
 
@@ -65,10 +70,12 @@ published `dist/` directory.
 ## Coordinate handling
 
 There is exactly one runtime coordinate transform in the app. The cortical and
-region assets are MNI152NLin2009cAsym RAS millimetres; fibre assets are consumed
-as MNI/ICBM RAS millimetres while their exact 2009a/2009c derivation is audited
-under `brain-atlas-yum.5`. `src/main.js` parents every layer to one `mniGroup`
-whose matrix maps that runtime frame into the scene:
+region assets are MNI152NLin2009cAsym RAS millimetres. Association tracts are
+verified ICBM-2009a Nonlinear Asymmetric; OR/SWM use the exact nonlinear ICBM152
+2009a HCP FIB with the variant limitation above. All fibre assets remain in their
+decoded source RAS+ world frame through resampling, with no 2009a→2009c template
+warp. `src/main.js` parents every layer to one `mniGroup` whose matrix maps that
+shared stereotaxic world frame into the scene:
 
 - scene `+x` = right, `+y` = up (MNI superior), `+z` = posterior (MNI −anterior);
 - that is a proper −90° rotation about the R axis (determinant +1), so left/right
@@ -81,11 +88,14 @@ integer client dimensions, so fractional and zoomed layouts do not stretch one s
 axis. The WebGL drawing buffer may round to whole pixels, but projection remains matched
 to the displayed box.
 
-No dataset receives runtime fitting. If the provenance audit identifies a source-
-space mismatch, the asset must be converted or regenerated offline rather than
-adding another scene transform. The cortical surface and Jülich regions do share
-the declared 2009c grid; their checked-in generation pipeline is tracked by
-`brain-atlas-yum.6`.
+No dataset receives runtime fitting. The source releases use different voxel grids,
+so the project never copies 2009a voxel indices into 2009c. Established parsers decode TrackVis voxel-mm vertices through voxel size,
+half-voxel offset, orientation, and voxel-to-RAS metadata into RAS+ world
+millimetres; adding a second
+scene transform would be incorrect. The cortical surface and Jülich regions share
+the declared 2009c grid. Complete checked-in generation pipelines remain tracked by
+`brain-atlas-yum.6`; detailed fibre hashes, affines, derivations, and numeric checks
+are in [`docs/TRACT_SPACE_PROVENANCE.md`](docs/TRACT_SPACE_PROVENANCE.md).
 
 ## Layout
 
@@ -295,11 +305,18 @@ Principal sources:
 - Cortical surface (`public/models/brain_mni.glb`): marching-cubes shell of the
   **MNI152NLin2009cAsym** 1 mm brain mask, distributed through
   [TemplateFlow](https://www.templateflow.org/) and decimated for the web.
-- Optic radiation (`public/data/or_fibres.json`): re-tracked with **DSI Studio**
-  on the **HCP-1065 population template**, seeding from Jülich-Brain V1 and
-  terminating in LGN, then pruned and resampled.
-- Association tracts (`public/data/tracts.json`): selected and resampled from
-  the **HCP-1065 Population-Averaged Tractography Atlas** (Yeh 2022).
+- Optic radiation (`public/data/or_fibres.json`): left streamlines re-tracked with
+  **DSI Studio** on the official **HCP-1065 1 mm nonlinear ICBM152-2009a FIB**,
+  using 2009c Jülich V1/LGN masks with matched qform/sform world matrices, then
+  resampled; three streamlines were removed by the project's >18 mm V1-centroid
+  rule.
+- Association tracts (`public/data/tracts.json`): selected and resampled from the
+  **HCP-1065 Population-Averaged Tractography Atlas** (Yeh 2022), in ICBM 2009a
+  Nonlinear Asymmetric RAS+ world millimetres.
+- Superficial white matter (`public/data/swm_fibres.json`): short bilateral
+  contours re-tracked on the same HCP-1065 FIB from a 2009c TemplateFlow-derived
+  superficial-WM seed with matched qform/sform world matrices, filtered by
+  cortical-ribbon endpoints, deterministically sampled, and resampled.
 - Region shells (`public/data/regions/*.obj`): adapted from the
   **Jülich-Brain v3.0.3** maximum probability map by extracting regions and
   converting volumetric labels to simplified surface meshes.
@@ -309,7 +326,9 @@ See [`DATA_LICENSES.md`](DATA_LICENSES.md) for source links, citations, license
 terms, modification disclosures, and the required WU-Minn HCP acknowledgment.
 See [`docs/SCIENTIFIC_TRACEABILITY.md`](docs/SCIENTIFIC_TRACEABILITY.md) for the
 layer-by-layer separation of anatomical data, derivation, modeled activity,
-display choices, assumptions, and known fidelity gaps.
+display choices, assumptions, and known fidelity gaps, and
+[`docs/TRACT_SPACE_PROVENANCE.md`](docs/TRACT_SPACE_PROVENANCE.md) for fibre source
+hashes, affines, recovered processing, and numeric co-registration checks.
 See [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) for software and model
 notices.
 

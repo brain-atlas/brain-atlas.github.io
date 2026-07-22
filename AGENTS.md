@@ -10,17 +10,23 @@ eye→chiasm→LGN segment is schematic. `src/bootstrap.js` owns the lesson shel
 
 ### 1. One coordinate frame, one runtime transform
 The cortical surface and region shells are authored in
-**MNI152NLin2009cAsym RAS millimetres**. Fibre assets are also loaded as MNI/ICBM
-RAS millimetres, but their upstream HCP sources identify ICBM 2009a or generic
-ICBM152; the exact release/conversion history is an open provenance gate
-(`brain-atlas-yum.5`). Every layer is parented to one `mniGroup` whose matrix
-(`sceneFromMni`) is the ONLY runtime transform: a proper −90° rotation about the
-R axis (determinant +1, so left/right and chirality are preserved), uniform mm
-scale, and recentering translation.
+**MNI152NLin2009cAsym RAS millimetres**. Association tracts are verified **ICBM
+2009a Nonlinear Asymmetric**; the OR/SWM FIB source is verified **nonlinear
+ICBM152 2009a**, with its asymmetric variant indicated by the release-companion
+T1 but not directly bound by a retained FIB build record. All fibre JSON retains
+the decoded source RAS+ world frame through resampling; no 2009a→2009c template
+warp was applied, and do not claim the fibres were authored on the 2009c grid.
+Every layer is parented to one `mniGroup` whose matrix (`sceneFromMni`) is the
+ONLY runtime transform: a proper −90° rotation about the R axis (determinant +1,
+so left/right and chirality are preserved), uniform mm scale, and recentering
+translation. See `docs/TRACT_SPACE_PROVENANCE.md` for source hashes, affines,
+recovered derivations, correspondence checks, numeric methods, and residual
+unknowns.
 
 - Do not add a second runtime transform, per-dataset fitting, or marker-based
-  alignment. If the provenance audit finds a mismatch, convert or regenerate the
-  asset offline, record the derivation, and keep the single runtime transform.
+  alignment. If later source evidence establishes a geometric mismatch, convert or
+  regenerate the asset offline, record the derivation, and keep the single runtime
+  transform.
 - Jülich MPM right label = left label + 1000. Render real bilateral region meshes;
   do not introduce new mirroring. The optic-radiation dataset remains the one
   documented legacy exception until real right-side streamlines replace it.
@@ -45,11 +51,19 @@ This is the project's defining constraint.
 
 ## Data provenance
 - Surface/region space: MNI152NLin2009cAsym (TemplateFlow), 1 mm grid.
-- Fibre source-space identity/conversion: unresolved audit `brain-atlas-yum.5`;
-  do not strengthen the claim beyond the asset metadata and traceability record.
+- Fibre space: association tracts are verified ICBM 2009a Nonlinear Asymmetric;
+  OR/SWM use the exact HCP-1065 nonlinear ICBM152 2009a FIB, whose asymmetric
+  variant is strongly indicated but lacks a retained direct build binding.
+  All outputs use decoded RAS+ world millimetres with no template warp. Keep the
+  mixed-release, common-world, and variant-evidence distinctions explicit.
 - Regions: Jülich-Brain v3.0.3 Maximum Probability Map (winner-take-all).
-- Optic radiation / association tracts / superficial WM: HCP-1065 population
-  template, tracked with DSI Studio on the ICBM152-2009a FIB.
+- Association tracts: selected and resampled bilateral streamlines from the
+  HCP-1065 population-averaged tractography atlas.
+- Optic radiation and superficial WM: tracked with DSI Studio on the official
+  HCP-1065 `ICBM152_adult.1mm.fz`. A recovered OR trial reports header-srow
+  alignment for the differing 2009c ROI grid; final OR masks and the SWM seed have
+  identical qform/sform code 4 matrices. The exact DSI runs were not replayed, and
+  this must never be described as voxel-index equivalence.
 - Parse structured/binary data (NIfTI, `.trk` streamlines, JSON, OBJ/GLB) with
   established parsers (nibabel, the three.js loaders) — never ad-hoc byte or text
   matching. DSI Studio writes **gzipped** `.trk` under a plain `.trk` name; detect

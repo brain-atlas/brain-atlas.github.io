@@ -43,7 +43,7 @@
           "url": "https://github.com/templateflow/tpl-MNI152NLin2009cAsym/blob/master/LICENSE"
         }
       ],
-      "reviewed": "2026-07-21"
+      "reviewed": "2026-07-22"
     },
     {
       "id": "fidelity.julich-regions",
@@ -123,7 +123,7 @@
       "id": "fidelity.optic-radiation",
       "geometry": {
         "statuses": ["data-derived", "derived", "mirrored"],
-        "summary": "Left LGN-to-V1 streamlines tracked on the HCP-1065 template; the displayed right side is mirrored at runtime."
+        "summary": "Left LGN-to-V1 streamlines tracked on the HCP-1065 nonlinear ICBM152-2009a FIB in decoded RAS+ millimetres; the displayed right side is mirrored at runtime."
       },
       "activity": {
         "statuses": ["modeled", "illustrative"],
@@ -137,7 +137,8 @@
         "Runtime endpoint orientation uses the current data's validated higher-MNI-y LGN endpoint heuristic."
       ],
       "uncertainties": [
-        "The exact fibre template release and any 2009a-to-2009c conversion remain unverified."
+        "The release-companion T1 indicates the FIB's asymmetric variant, but no retained FIB build record binds it directly.",
+        "Post-processing is reproducible from the recovered intermediate; the DSI tracking run and complete tool manifest have not been replayed."
       ],
       "limitations": [
         {
@@ -165,13 +166,13 @@
           "url": "https://www.humanconnectome.org/study/hcp-young-adult/document/wu-minn-hcp-consortium-open-access-data-use-terms"
         }
       ],
-      "reviewed": "2026-07-21"
+      "reviewed": "2026-07-22"
     },
     {
       "id": "fidelity.association-tracts",
       "geometry": {
         "statuses": ["data-derived", "derived"],
-        "summary": "Selected and resampled bilateral streamlines from the HCP-1065 population tractography atlas."
+        "summary": "Selected and resampled bilateral ICBM-2009a RAS+ streamlines from the HCP-1065 population tractography atlas."
       },
       "activity": {
         "statuses": ["modeled", "illustrative"],
@@ -193,7 +194,7 @@
           "material": true
         },
         {
-          "summary": "The exact tractography template release and any 2009a-to-2009c conversion remain unverified.",
+          "summary": "Tractography does not establish precise cortical endpoints; the complete checked-in generator and tool manifest remains future reproducibility work.",
           "material": true
         }
       ],
@@ -221,13 +222,13 @@
           "url": "https://www.humanconnectome.org/study/hcp-young-adult/document/wu-minn-hcp-consortium-open-access-data-use-terms"
         }
       ],
-      "reviewed": "2026-07-21"
+      "reviewed": "2026-07-22"
     },
     {
       "id": "fidelity.superficial-white-matter",
       "geometry": {
         "statuses": ["data-derived", "derived"],
-        "summary": "Real bilateral short superficial-white-matter contours tracked on the HCP-1065 fibre template."
+        "summary": "Real bilateral short contours tracked on the HCP-1065 nonlinear ICBM152-2009a FIB and filtered with an exact TemplateFlow-derived 2009c cortical ribbon in decoded RAS+ millimetres."
       },
       "activity": {
         "statuses": ["modeled", "illustrative"],
@@ -241,7 +242,8 @@
         "Frequency, phase, scale factor, margins, and amplitude bounds are display choices."
       ],
       "uncertainties": [
-        "The exact template release, tracking generator, and local-neighbourhood calculation are not checked in."
+        "The release-companion T1 indicates the FIB's asymmetric variant, but no retained FIB build record binds it directly.",
+        "Post-processing is reproducible from the recovered intermediate; the DSI tracking run and complete tool manifest have not been replayed."
       ],
       "limitations": [
         {
@@ -265,7 +267,7 @@
           "url": "https://www.humanconnectome.org/study/hcp-young-adult/document/wu-minn-hcp-consortium-open-access-data-use-terms"
         }
       ],
-      "reviewed": "2026-07-21"
+      "reviewed": "2026-07-22"
     },
     {
       "id": "fidelity.display-labels",

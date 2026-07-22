@@ -1,9 +1,9 @@
-// Visual-pathway landmarks, in MNI152NLin2009cAsym RAS millimetres.
+// Visual-pathway landmarks, authored in MNI152NLin2009cAsym RAS millimetres.
 //   +x = right, +y = anterior, +z = superior   (standard MNI/RAS)
-// Everything in the app lives in this space; src/main.js applies ONE transform
-// (a proper rotation) to bring it into the right-handed scene frame. The
-// posterior pathway (LGN -> V1) is REAL optic-radiation streamline data; only
-// the anterior segment below (retina -> chiasm -> LGN) is schematic.
+// The 2009c landmarks and decoded HCP-1065 2009a fibre world points share the
+// runtime RAS-mm frame; src/main.js applies ONE proper transform to that frame.
+// The posterior pathway (LGN -> V1) is real FIB-derived optic-radiation streamline
+// data; only the anterior segment below (retina -> chiasm -> LGN) is schematic.
 
 // Region centroids (Julich-Brain, measured from the meshes) + illustrative
 // anterior landmarks (eyes, chiasm, optic-nerve midpoints).

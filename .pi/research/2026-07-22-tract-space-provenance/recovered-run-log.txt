@@ -1,0 +1,59 @@
+Recovered run evidence (compact non-secret extract)
+Date extracted: 2026-07-22
+Source: local Claude session b3ebabc7-a0fc-428f-8f4c-f8e4f4358f3b
+Source transcript SHA-256: 9c02f5783b72c7647b9bb6aa8d74fd64834b4aeff567aa8050ca5a043761c8d8
+Source transcript bytes: 68323931
+Source transcript disposition: local only; not redistributed because it contains a full unrelated session
+
+OPTIC-RADIATION PARENT FILES (source transcript JSONL line 2861)
+- v1_hOc1_L.nii.gz downloaded from:
+  https://raw.githubusercontent.com/canlab/Neuroimaging_Pattern_Masks/master/Atlases_and_parcellations/2020_JulichBrain_v3.0.3/probabilistic_maps_pmaps_157areas/Area-hOc1/Area-hOc1_pmap_l_N10_nlin2ICBM152asym2009c_4.2_public_258e8c1d846f92be76922b20287344ae.nii.gz
+- lgn_CGL_L.nii.gz downloaded from:
+  https://raw.githubusercontent.com/canlab/Neuroimaging_Pattern_Masks/master/Atlases_and_parcellations/2020_JulichBrain_v3.0.3/probabilistic_maps_pmaps_157areas/CGL/CGL_pmap_l_N10_nlin2ICBM152asym2009c_10.0_public_5958c3f5255df1271eaa5a8672e39510.nii.gz
+
+FINAL OPTIC-RADIATION MASKS AND COMMAND (source transcript JSONL lines 3529-3530)
+- lgn_L_mni.nii.gz = lgn_CGL_L values >= 0.10 * source maximum; 1,224 voxels.
+- v1_L_mni.nii.gz = v1_hOc1_L values >= 0.25 * source maximum; 15,613 voxels.
+- Both masks copied the source affine to qform and sform with code 4.
+
+  /Applications/dsi_studio.app/Contents/MacOS/dsi_studio --action=trk \
+    --source=ICBM152_adult.1mm.fz \
+    --seed=v1_L_mni.nii.gz --end=lgn_L_mni.nii.gz \
+    --seed_count=300000 --turning_angle=65 --step_size=0.5 --smoothing=0.2 \
+    --min_length=40 --max_length=170 --thread_count=6 \
+    --output=or_retrack_L.trk
+
+Retained output lines:
+  An ending region was placed at lgn_L_mni.nii.gz (119,120,68).
+  A seeding region was placed at v1_L_mni.nii.gz (106,179,80).
+  223 tracts are generated using 300006 seeds.
+
+HEADER-ALIGNMENT MESSAGE FROM IMMEDIATELY PRECEDING TRIAL ON SAME FIB/GRID
+(source transcript JSONL lines 3525-3526)
+For each 193x229x193 ROI versus the 160x200x160 FIB, DSI Studio printed:
+  has a different dimension from the FIB file. need transformation or warping.
+  assume [ROI] is in the mni space (likely wrong. need to check).
+  applying [ROI]'s header srow matrix to align.
+This message was not retained in the final command's grep-filtered output. Final masks have equal qform/sform code 4 matrices, and endpoint checks agree with their world coordinates; a versioned DSI replay remains future work.
+
+OPTIC-RADIATION POST-PROCESSING (source transcript JSONL lines 3682, 3858)
+- Arc-length resample 223 streamlines to 64 points; round to 0.01 mm.
+- Project filter: remove a streamline when its lower-y endpoint is farther than 18 mm from [-12.3,-92.7,1.1].
+- Three removed; 220 retained. The transcript called these 'aberrant'; current records use the neutral rule description because centroid distance does not prove anatomical abnormality.
+
+SWM TEMPLATEFLOW PARENTS AND SEED (source transcript JSONL line 5022)
+- mni_wm.nii.gz downloaded from:
+  https://templateflow.s3.amazonaws.com/tpl-MNI152NLin2009cAsym/tpl-MNI152NLin2009cAsym_res-01_label-WM_probseg.nii.gz
+- mni_gm.nii.gz downloaded from:
+  https://templateflow.s3.amazonaws.com/tpl-MNI152NLin2009cAsym/tpl-MNI152NLin2009cAsym_res-01_label-GM_probseg.nii.gz
+- swm_shell_mni = (WM > 0.5) AND binary_dilation(GM > 0.5, iterations=4).
+- Seed has 534,090 voxels and copied the WM affine to qform/sform code 4.
+
+FINAL SWM COMMAND (source transcript user handoff, reflected at JSONL lines 5378 and later summary)
+  /Applications/dsi_studio.app/Contents/MacOS/dsi_studio --action=trk \
+    --source=ICBM152_adult.1mm.fz --seed=swm_shell_mni.nii.gz \
+    --tract_count=200000 --min_length=8 --max_length=80 \
+    --turning_angle=50 --step_size=0.5 --thread_count=8 \
+    --output=swm_fibres3.trk
+
+The resulting gzip-under-.trk intermediate and its gunzipped TrackVis payload survive with hashes in artifacts.tsv. The DSI run was not replayed. filter_bake_swm.py reproduces the former JSON byte-for-byte from the recovered intermediate.

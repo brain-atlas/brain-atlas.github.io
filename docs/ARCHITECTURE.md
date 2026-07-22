@@ -18,7 +18,7 @@ Every anatomical layer is a child of `mniGroup`:
 6. `tractGroup`
 7. `swmGroup`
 
-`sceneFromMni`, assigned to `mniGroup`, is the only runtime coordinate transform. Cortical and region assets identify MNI152NLin2009cAsym; fibre assets are interpreted as MNI/ICBM RAS millimetres while `brain-atlas-yum.5` audits their exact 2009a/2009c provenance. Do not add dataset-specific runtime transforms or fitting: correct mismatches in the offline asset pipeline.
+`sceneFromMni`, assigned to `mniGroup`, is the only runtime coordinate transform. Cortical and region assets are MNI152NLin2009cAsym. Association tracts are verified ICBM 2009a Nonlinear Asymmetric; OR/SWM use the exact nonlinear ICBM152 2009a HCP FIB, with its asymmetric variant indicated by the release-companion T1 but not directly bound by a retained FIB build record. Nibabel decodes TrackVis voxel-mm vertices through voxel size, half-voxel offset, orientation, and voxel-to-RAS metadata into RAS+ world millimetres. Resampling retains that frame; no offline 2009a→2009c template warp exists. Do not add dataset-specific runtime transforms or fitting: any future geometric correction belongs in the offline asset pipeline. `TRACT_SPACE_PROVENANCE.md` records source hashes, effective affine semantics, recovered processing, correspondence, numeric methods, and residual unknowns.
 
 `sceneState.visible` stores leaf-layer visibility. `hemiState` combines with per-region and per-tract hemisphere state. The render loop updates three distinct activity models:
 
@@ -66,7 +66,7 @@ The checked-in `src/lessons/retina-to-v1.md` exercises that contract through one
 
 ## Data loading and build
 
-After the WebGL gate, the renderer loads the cortical GLB, JSON fibre datasets, association-activity metadata, a region manifest, and region OBJ meshes in parallel. Renderer readiness resolves after region and tract manifests bind; a manifest or renderer failure returns the page to readable lesson fallback. Offline tools must produce web-sized, co-registered assets; runtime fitting and heavy data processing do not belong in the viewer. `SCIENTIFIC_TRACEABILITY.md` records each asset's geometry and model provenance, including unresolved source-space and generator gaps.
+After the WebGL gate, the renderer loads the cortical GLB, JSON fibre datasets, association-activity metadata, a region manifest, and region OBJ meshes in parallel. Renderer readiness resolves after region and tract manifests bind; a manifest or renderer failure returns the page to readable lesson fallback. Offline tools must produce web-sized, co-registered assets; runtime fitting and heavy data processing do not belong in the viewer. `SCIENTIFIC_TRACEABILITY.md` records each asset's geometry and model provenance. `TRACT_SPACE_PROVENANCE.md` resolves fibre source space and conversion history; the remaining gap is the broader checked-in generator/tool manifest owned by `brain-atlas-yum.6`.
 
 Ajv schemas compile offline through `npm run generate:lesson-validators`; the checked-in `src/lesson/generated-validators.js` is imported at runtime. This preserves the script/connect CSP without `unsafe-eval`, `new Function`, arbitrary fetches, or third-party code. The image policy intentionally permits HTTPS sources only for validated declared lesson images; external hosts are disclosed before activation and requests use no referrer.
 

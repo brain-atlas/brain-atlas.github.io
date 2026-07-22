@@ -1,0 +1,32 @@
+category	metric	value	interpretation
+source correspondence	association original output SHA-256	3e6dc53d97367435fa806435970cd78cc17f81ec51c4ace40f71b3ea5e98abef	Fresh upstream-archive generator run matched the pre-correction file byte-for-byte
+source correspondence	optic-radiation original output SHA-256	3516ddc59881ab1303b0da4e795a94dd47940181cbdf2d6e1e59e999577004c6	Fresh post-processing of hashed recovered 223-streamline intermediate matched pre-correction file; DSI run not replayed
+source correspondence	SWM original output SHA-256	e367886be8905e4036a9159cb1c6b6b9b32f5a78fde7b4e926cd6876792e8372	Fresh post-processing of hashed recovered 200,000-streamline intermediate matched pre-correction file; DSI run not replayed
+FIB identity	recovered versus stable-release compressed FIB	byte-identical; 3e74089f3e423405ce37a4de08e0e291355ba89463fe39c683cd1c0099a43df7	Exact HCP-1065 hcp1065 release input
+FIB target evidence	HCP-tag T1 versus official 2009a asymmetric T1	correlation 0.9999915; linear-fit RMSE 0.2887; max residual 0.5011	Strongly indicates asymmetric variant but is not a direct FIB build binding
+FIB target control	HCP-tag T1 versus official 2009a symmetric T1	correlation 0.9929894; linear-fit RMSE 8.2668	Control comparison is materially poorer than asymmetric target
+world alignment	official 2009a asymmetric T1 to 2009c asymmetric T1	identity-world correlation 0.9970073; support Dice 0.9746288	Linear resampling into target affine; support threshold >1; corroborates same-anatomy/different-sampling statement
+TrackVis decoding	recovered OR/SWM effective voxel-mm to RAS+ affine	[[-1,0,0,80],[0,-1,0,82],[0,0,1,-72.5],[0,0,0,1]]	Nibabel 5.4.2 includes voxel-size, half-voxel, orientation, and voxel-to-RAS operations
+association structure	fibres and points	2880 fibres; 40 points each	180 fibres per 8 tracts per 2 hemispheres
+association convention	hemisphere mean-x	1440/1440 left negative; 1440/1440 right positive	RAS left/right convention preserved
+association bounds	decoded RAS+ millimetres	[-66.7,-103.6,-44.0] to [70.1,75.3,79.8]	Continuous world-coordinate range after resampling/rounding
+OR final masks	NIfTI forms	193x229x193; qform code 4 = sform code 4; matrices identical	No qform/sform conflict; origin [-96,-132,-78]
+optic-radiation structure	fibres and points	223 tracked intermediate; 220 retained; 64 points each	3 removed under project >18 mm V1-centroid rule
+optic-radiation orientation	higher-y endpoint classified as LGN	220/220	Validates file-specific runtime heuristic independently of array polarity
+optic-radiation LGN distance	nearest final binary-mask voxel center	median 0.488 mm; p95 0.794 mm; max 0.991 mm	Numeric endpoint alignment with final thresholded LGN mask
+optic-radiation V1 distance	nearest final binary-mask voxel center	median 0.550 mm; p95 0.841 mm; max 1.357 mm	Numeric endpoint alignment with final thresholded V1 mask
+optic-radiation assignment	best versus swapped endpoint-mask assignment	220/220 best; minimum margin 71.71 mm	No ambiguous LGN/V1 assignment in retained file
+SWM tracking	streamlines and cortical filtering	200000 recovered; 50766 both unrounded endpoints in dilated ribbon	Recovered intermediate/filter behavior; DSI run not replayed
+SWM sampling	eligible/output	25563 eligible at 8-55 mm; deterministic 15000 output	Recovered post-processing RNG seed 0
+SWM structure	length metrics	len 8.0-55.0 mm mean 33.12; lloc 8.0-54.5 mm mean 33.61	len is original arc length; lloc is 7 mm-neighbour mean
+SWM convention	hemisphere mean-x	7220 left; 7780 right	Real bilateral RAS convention; no mirroring
+SWM bounds	decoded RAS+ millimetres	[-64.8,-101.9,-68.8] to [65.9,69.8,79.4]	Continuous world-coordinate range after resampling/rounding
+SWM rounding	maximum coordinate displacement	0.0854 mm	Difference between selected unrounded sample and checked JSON rounded point
+SWM rounded endpoints	world-coordinate distance from actual rounded points to undilated GM>0.40 voxel centers	median 0.600 mm; p95 1.315 mm; max 1.631 mm	Every unrounded endpoint passed the one-voxel-dilated ribbon; cKDTree uses exact endpoint coordinates
+runtime transform	sceneFromMni determinant and scale	+1 determinant; uniform scale 1	One proper runtime transform; no dataset fitting
+metadata preservation	current association asset SHA-256	568d8848a6dfe4cb859d9c7ec8e572a90cf0d71d0b7c741c4a1e1e2e4471b213	Complete current file asserted by verify.py
+metadata preservation	current optic-radiation asset SHA-256	1ca89796c621963388f635bd31ab0bd9a28eec7917de6c12ef8b68d469da4144	Complete current file asserted by verify.py
+metadata preservation	current SWM asset SHA-256	81529a410c9053731416124e346dce21e85d96c85fb8b3bad151735a4b1f81fb	Complete current file asserted by verify.py
+metadata preservation	association geometry payload SHA-256	e2c1486875de14e39f4b1a047db9841e4253b334fecf80c1ef55c255df940c70	Frozen by test/fibre-provenance.test.js
+metadata preservation	optic-radiation geometry payload SHA-256	b89152176bd9a96796a02e449a4a34151572512def61014d04833336b6695b6e	Frozen by test/fibre-provenance.test.js
+metadata preservation	SWM geometry/length payload SHA-256	9dfc14d565c8f7ccb4c57ba0d2eee1bd9dca0549e3c7d07f70d6fe47f07f4331	Frozen by test/fibre-provenance.test.js

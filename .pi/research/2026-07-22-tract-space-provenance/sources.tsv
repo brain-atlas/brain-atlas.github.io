@@ -1,0 +1,20 @@
+record	status	verified_utc	url	supports
+HCP-1065 fibre template	verified-direct	2026-07-22	https://brain.labsolver.org/hcp_template.html	HCP-1065 registration uses nonlinear ICBM152 2009a; 1 mm FIB; HCP terms
+HCP-1065 tractography atlas	verified-direct	2026-07-22	https://brain.labsolver.org/hcp_trk_atlas.html	Association source identity; ICBM 2009a Nonlinear Asymmetric
+HCP-1065 population-averaged TrackVis release	verified-download	2026-07-22	https://github.com/data-others/atlas/releases/download/hcp1065/hcp1065_avg_tracts_trk.zip	Exact upstream archive for public/data/tracts.json
+HCP-1065 1 mm FIB release	verified-download	2026-07-22	https://github.com/data-others/atlas/releases/download/hcp1065/ICBM152_adult.1mm.fz	Exact upstream FIB for optic-radiation and SWM retracking
+HCP-1065 release metadata	verified-direct	2026-07-22	https://api.github.com/repos/frankyeh/DSI-Studio-atlas/releases	Release tag, asset names, sizes, stable downloads, and template record
+HCP-1065 tagged ICBM152 reference tree	verified-direct	2026-07-22	https://github.com/data-others/atlas/tree/0682f8f454d701c100d4953034870764c1adc012/ICBM152_adult	Release-companion T1 indicates asymmetric variant; no direct FIB build binding
+Yeh 2022	verified-crossref	2026-07-22	https://doi.org/10.1038/s41467-022-32595-4	HCP-1065 population atlas method and citation
+DSI Studio method	verified-crossref	2026-07-22	https://doi.org/10.1038/s41592-025-02762-8	Tractography software method citation
+MNI ICBM152 nonlinear 2009 releases	verified-direct	2026-07-22	http://www.bic.mni.mcgill.ca/ServicesAtlases/ICBM152NLin2009	2009a/2009c release identity; same anatomy with different sampling
+Official 2009a asymmetric NIfTI archive	verified-download	2026-07-22	http://www.bic.mni.mcgill.ca/~vfonov/icbm/2009/mni_icbm152_nlin_asym_09a_nifti.zip	Official 2009a asymmetric RAS+ grid and identity-world comparison
+Official 2009a symmetric NIfTI archive	verified-download	2026-07-22	http://www.bic.mni.mcgill.ca/~vfonov/icbm/2009/mni_icbm152_nlin_sym_09a_nifti.zip	Control for release-companion T1 variant comparison
+Official 2009c asymmetric NIfTI archive	verified-download	2026-07-22	http://www.bic.mni.mcgill.ca/~vfonov/icbm/2009/mni_icbm152_nlin_asym_09c_nifti.zip	Official 2009c RAS+ grid and identity-world comparison
+Jülich-Brain v3.0.3 dataset	verified-direct	2026-07-22	https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8	OR mask parent identity, version, and CC BY-NC-SA 4.0 terms
+Exact left hOc1/V1 probability file	verified-download	2026-07-22	https://raw.githubusercontent.com/canlab/Neuroimaging_Pattern_Masks/master/Atlases_and_parcellations/2020_JulichBrain_v3.0.3/probabilistic_maps_pmaps_157areas/Area-hOc1/Area-hOc1_pmap_l_N10_nlin2ICBM152asym2009c_4.2_public_258e8c1d846f92be76922b20287344ae.nii.gz	Exact parent and hash for final V1 tracking mask
+Exact left CGL/LGN probability file	verified-download	2026-07-22	https://raw.githubusercontent.com/canlab/Neuroimaging_Pattern_Masks/master/Atlases_and_parcellations/2020_JulichBrain_v3.0.3/probabilistic_maps_pmaps_157areas/CGL/CGL_pmap_l_N10_nlin2ICBM152asym2009c_10.0_public_5958c3f5255df1271eaa5a8672e39510.nii.gz	Exact parent and hash for final LGN tracking mask
+Exact TemplateFlow 2009c GM probability map	verified-download	2026-07-22	https://templateflow.s3.amazonaws.com/tpl-MNI152NLin2009cAsym/tpl-MNI152NLin2009cAsym_res-01_label-GM_probseg.nii.gz	Exact SWM seed/ribbon GM parent and hash
+Exact TemplateFlow 2009c WM probability map	verified-download	2026-07-22	https://templateflow.s3.amazonaws.com/tpl-MNI152NLin2009cAsym/tpl-MNI152NLin2009cAsym_res-01_label-WM_probseg.nii.gz	Exact SWM seed WM parent and hash
+WU-Minn HCP terms	verified-direct	2026-07-22	https://www.humanconnectome.org/study/hcp-young-adult/document/wu-minn-hcp-consortium-open-access-data-use-terms	Use, redistribution, acknowledgment, and subject-identification restrictions
+WU-Minn HCP citation guidance	verified-direct	2026-07-22	https://www.humanconnectome.org/study/hcp-young-adult/document/hcp-citations	Required HCP acknowledgment and method citations

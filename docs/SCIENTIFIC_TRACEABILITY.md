@@ -1,7 +1,8 @@
 # Scientific traceability inventory
 
-Status: current-state audit for `brain-atlas-yum.1` (2026-07-21). This document
-separates anatomical geometry from the viewer's activity and display models.
+Status: current-state inventory initiated by `brain-atlas-yum.1` and updated after
+the fibre-space audit `brain-atlas-yum.5` (2026-07-22). This document separates
+anatomical geometry from the viewer's activity and display models.
 `DATA_LICENSES.md` remains the authority for redistribution terms and full source
 citations. `public/data/fidelity.json` is the concise runtime/lesson disclosure
 projection of this inventory; update both atomically, and treat this document as the
@@ -18,26 +19,34 @@ current-state authority if they conflict.
   presentation without changing anatomical coordinates.
 - **Unknown:** the repository does not contain enough evidence to make the claim.
 
-## Coordinate contract and unresolved template identity
+## Coordinate contract and verified mixed-template lineage
 
 All runtime geometry is interpreted as RAS millimetres and parented to `mniGroup`.
 `sceneFromMni` in `src/main.js` applies the only runtime transform: uniform scale 1,
 a proper -90° rotation about the R axis, and a translation by the cortical-shell
 bounding-box centre. This preserves handedness and does not fit datasets to markers.
 
-The cortical shell and Jülich manifest identify
-`MNI152NLin2009cAsym`. The HCP-1065 source pages identify the tractography atlas as
-ICBM 2009a Nonlinear Asymmetric and the fibre template more generally as ICBM152.
-The MNI source describes 2009a and 2009c as the same anatomy with different sampling.
-The checked-in tract generators or an explicit 2009a→2009c derivation record are not
-available, so the stronger claim that every fibre asset was *authored in the 2009c
-grid* is **not yet traceable**. The optic-radiation endpoints visibly and numerically
-match the selected LGN/V1 shells, but that is validation evidence, not a replacement
-for source-space metadata. Parsing `brain_mni.glb` with Three.js found identity
-scene/mesh transforms and a geometry bounding box of approximately
-`[-72.50,-108.49,-72.50]` to `[72.43,73.50,82.48]` mm; its rounded centre matches
-`MNI_CENTER`. All association fibres also remain on their declared hemisphere by
-mean x, and SWM contains 7,220 left and 7,780 right fibres under the same rule.
+The cortical shell and Jülich manifest are MNI152NLin2009cAsym. Association tracts
+are verified ICBM 2009a Nonlinear Asymmetric. OR/SWM use the exact HCP-1065 FIB
+whose direct source record identifies nonlinear ICBM152 2009a; a release-companion
+T1 indicates the asymmetric variant, but no retained FIB build record binds that
+variant directly. Nibabel decodes TrackVis voxel-mm vertices through voxel size,
+half-voxel offset, orientation, and voxel-to-RAS metadata into RAS+ world
+millimetres. Resampling and rounding retain that frame but not every original sample
+point. No offline 2009a→2009c template warp occurred, and the fibres must not be
+described as authored on the 2009c voxel grid. The MNI source describes 2009a and
+2009c as the same anatomy with different sampling. Official NIfTI affines,
+identity-world comparison, source/output correspondence, ROI distances, ribbon
+filtering, and hemisphere checks support the overlay without another transform.
+Full hashes, effective affine semantics, recovered commands, numeric methods, and
+residual unknowns are in
+[`TRACT_SPACE_PROVENANCE.md`](TRACT_SPACE_PROVENANCE.md).
+
+Parsing `brain_mni.glb` with Three.js found identity scene/mesh transforms and a
+geometry bounding box of approximately `[-72.50,-108.49,-72.50]` to
+`[72.43,73.50,82.48]` mm; its rounded centre matches `MNI_CENTER`. All 1,440 left
+and 1,440 right association fibres remain on their declared hemisphere by mean x;
+SWM contains 7,220 left and 7,780 right fibres under the same rule.
 
 ## Anatomical layer matrix
 
@@ -46,9 +55,9 @@ mean x, and SWM contains 7,220 left and 7,780 right fibres under the same rule.
 | Cortical surface | **Data-derived/derived.** Marching-cubes shell of the 1 mm MNI152NLin2009cAsym brain mask from TemplateFlow; converted to glTF and decimated. | One bilateral shell; no runtime mirroring. | Translucent tissue context, not a cortical parcellation or subject anatomy. | Generator, exact mask filename/version, marching-cubes settings, conversion, and decimation settings are not checked in. Surface is a population template. | `public/models/brain_mni.glb`; `src/main.js` `loadBrain`; `README.md`; `DATA_LICENSES.md` |
 | Jülich region shells, including LGN and V1 | **Data-derived/derived.** Forty-five selected region pairs from Jülich-Brain v3.0.3 maximum-probability map (winner-take-all), meshed and simplified. | Real L/R labels and meshes; all 45 manifest entries contain both hemispheres. Jülich right-label = left-label + 1000 is an offline extraction rule. | Shell boundaries locate atlas regions; fresnel styling emphasizes silhouettes. | Maximum-probability surfaces suppress the underlying probabilistic uncertainty and are population-atlas boundaries, not individual functional borders. Extraction/meshing scripts and label audit are not checked in. Parent/stream grouping and colors are viewer metadata. | `public/data/regions.json`; `public/data/regions/*.obj`; `src/main.js` `loadRegions`; Jülich source in `DATA_LICENSES.md` |
 | Anterior retina/eye → chiasm → LGN segment | **Schematic.** Hand-authored MNI-like landmark/control points and Catmull-Rom tubes. Eyes and chiasm are illustrative positions; LGN labels use atlas-centroid-like coordinates. | Two manually authored crossing paths, one from each eye's nasal retina to contralateral LGN. | Teaches nasal-fibre decussation and provides directed display flow. | Curvature, thickness, positions, speed, and dot spacing are illustrative. The current geometry omits uncrossed temporal-retinal paths, so it is not a complete depiction of both hemifield projections. The checked-in early-vision lesson discloses this omission wherever the crossing is taught. | `src/pathways.js`; `src/main.js` `ANT_PATHS` setup and `updateAnteriorFlow`; `src/lessons/retina-to-v1.md`; `public/data/fidelity.json` |
-| Optic radiation | **Data-derived/derived.** 220 left streamlines tracked with DSI Studio on the HCP-1065 population template between Jülich hOc1/V1 and CGL/LGN, pruned, resampled to 64 source points, then smoothed to 129 display points. | **Mirrored exception:** the runtime reflects left x-coordinates to construct the right side. | Static amber density plus directed LGN→V1 code-like tracers. Streamlines are population tractography, not measured axons. | `or_fibres.json` has source text but no explicit `space` field. Generator/command and pruning script are absent. All 220 checked-in fibres have the higher-MNI-y endpoint nearest LGN and the other nearest V1; the runtime orientation heuristic matches that dataset, but right anatomy remains synthetic. | `public/data/or_fibres.json`; `src/main.js` `loadFibres`; `DATA_LICENSES.md` |
-| Named long association tracts | **Data-derived/derived.** Eight HCP-1065 population-averaged atlas bundles: ILF, IFOF, SLF I–III, VOF, arcuate, and MdLF. Each hemisphere contains 180 sampled fibres with 40 points. | Real bilateral atlas streamlines; no runtime mirroring. | Static coloured bundle density plus seeded inhibited code-like impulses in both modeled population directions. | Tractography contour order is not axonal polarity. Every event samples an explicit evidence-absent 50/50 A→B/B→A assumption; endpoint A/B uses an endpoint-only geometric heuristic, not measured terminations. Source selection/range extraction and resampling generator are absent. `tracts.json` claims 2009c while the upstream atlas page describes ICBM 2009a; derivation is unknown. Region names containing tract arrows remain hypotheses pending `brain-atlas-zmq.10`. | `public/data/tracts.json`; `public/data/tract_activity.json`; `src/activity/association-impulses.js`; `src/main.js` `loadTracts`/`updateTractImpulses`; `.pi/plans/brain-atlas-yum.2-association-impulse-model.md` |
-| Superficial white matter / short U-fibres | **Data-derived/derived.** 15,000 short fibres re-tracked from the HCP-1065 FIB with endpoints in the cortical ribbon, sampled to eight points; own and local-mean length arrays are supplied. | Real bilateral tracking; assigned L/R by the sign of mean MNI x; no mirroring. | Static tangent grain plus analytically zero-mean along-contour vibration. This remains the approved U-fibre representation. | `space` is only `ICBM152/MNI152`, not an exact template identifier. Generator, cortical-ribbon definition, tracking command, sampling method, and local-neighbourhood calculation for `lloc` are absent. Vibration is illustrative and does not claim firing rate or individual-axon bidirectionality. | `public/data/swm_fibres.json`; `src/activity/swm-vibration.js`; `src/main.js` `loadSwm`/`updateSwm`; decision `brain-atlas-cs0` |
+| Optic radiation | **Data-derived/derived.** 220 left streamlines tracked with DSI Studio on the exact HCP-1065 1 mm nonlinear ICBM152-2009a FIB using thresholded 2009c Jülich hOc1/V1 and CGL/LGN masks with identical qform/sform code 4 matrices; resampled to 64 source points, then smoothed to 129 display points. | **Mirrored exception:** the runtime reflects left x-coordinates to construct the right side. | Static amber density plus directed LGN→V1 code-like tracers. Streamlines are population tractography, not measured axons. | The release-companion T1 indicates the FIB's asymmetric variant, but no retained FIB build record binds it directly. Exact FIB and ROI hashes, the final command, 223-fibre intermediate, 220-fibre post-processing, and RAS-mm output correspondence are recovered; the DSI run itself was not replayed. All 220 fibres have the higher-y endpoint nearest LGN; maximum voxel-center distance is 0.991 mm to the binary LGN mask and 1.357 mm to V1. Three streamlines were removed by the project's >18 mm V1-centroid rule. Complete checked-in pipeline/tool manifests remain pending `brain-atlas-yum.6`, and right anatomy remains synthetic. | `public/data/or_fibres.json`; `src/main.js` `loadFibres`; `DATA_LICENSES.md`; `docs/TRACT_SPACE_PROVENANCE.md` |
+| Named long association tracts | **Data-derived/derived.** Eight HCP-1065 population-averaged ICBM-2009a atlas bundles: ILF, IFOF, SLF I–III, VOF, arcuate, and MdLF. Each hemisphere contains 180 sampled fibres with 40 RAS-mm points. | Real bilateral atlas streamlines; no runtime mirroring. | Static coloured bundle density plus seeded inhibited code-like impulses in both modeled population directions. | The recovered generator reproduces the original geometry byte-for-byte from the stable release and proves the former 2009c label was unsupported metadata. Tractography contour order is not axonal polarity. Every event samples an explicit evidence-absent 50/50 A→B/B→A assumption; endpoint A/B uses an endpoint-only geometric heuristic, not measured terminations. Region names containing tract arrows remain hypotheses pending `brain-atlas-zmq.10`; checked-in complete generators remain pending `brain-atlas-yum.6`. | `public/data/tracts.json`; `public/data/tract_activity.json`; `src/activity/association-impulses.js`; `src/main.js` `loadTracts`/`updateTractImpulses`; `docs/TRACT_SPACE_PROVENANCE.md`; `.pi/plans/brain-atlas-yum.2-association-impulse-model.md` |
+| Superficial white matter / short U-fibres | **Data-derived/derived.** 15,000 short fibres re-tracked from the exact HCP-1065 1 mm nonlinear ICBM152-2009a FIB using a 2009c seed derived from exact TemplateFlow GM/WM maps with identical qform/sform code 4 matrices; unrounded endpoints were filtered through a dilated cortical ribbon and contours were sampled to eight RAS-mm points. | Real bilateral tracking; assigned L/R by the sign of mean MNI x; no mirroring. | Static tangent grain plus analytically zero-mean along-contour vibration. This remains the approved U-fibre representation. | The release-companion T1 indicates the FIB's asymmetric variant without a retained direct build binding. The 200,000-fibre command, source/intermediate hashes, shell and ribbon rules, deterministic sample, resampling, original arc-length `len`, and 7 mm-neighbour mean `lloc` calculation are recovered; post-processing reproduces the file byte-for-byte, but the DSI run itself was not replayed. Complete checked-in generators/tool manifests remain pending `brain-atlas-yum.6`. Vibration is illustrative and does not claim firing rate, histological U-fibre identity, named-region endpoints, or individual-axon bidirectionality. | `public/data/swm_fibres.json`; `src/activity/swm-vibration.js`; `src/main.js` `loadSwm`/`updateSwm`; `docs/TRACT_SPACE_PROVENANCE.md`; decision `brain-atlas-cs0` |
 
 ## Activity and display model matrix
 
@@ -81,20 +90,21 @@ mean x, and SWM contains 7,220 left and 7,780 right fibres under the same rule.
 
 ## Source records verified for this audit
 
-The following records were fetched successfully on 2026-07-21 before being relied on.
-Compact verification registries live under `.pi/research/`; raw third-party page
-content is not redistributed in this repository.
+The following records were fetched successfully on 2026-07-21 and fibre-space
+records were reverified or downloaded on 2026-07-22 before being relied on. Compact
+verification registries live under `.pi/research/`; raw third-party page content is
+not redistributed in this repository.
 
 | Source record | Supports |
 |---|---|
 | [TemplateFlow method](https://doi.org/10.1038/s41592-022-01681-2) and [MNI152NLin2009cAsym archive](https://github.com/templateflow/tpl-MNI152NLin2009cAsym) | Template distribution and metadata |
 | [Jülich-Brain paper](https://doi.org/10.1126/science.abb4588) and [v3.0.3 EBRAINS record](https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8) | Cytoarchitectonic probability maps and dataset identity |
-| [HCP-1065 tract atlas](https://brain.labsolver.org/hcp_trk_atlas.html) and [Yeh 2022](https://doi.org/10.1038/s41467-022-32595-4) | Population atlas, ICBM 2009a space, atlas license, and method |
+| [HCP-1065 tract atlas](https://brain.labsolver.org/hcp_trk_atlas.html), [exact population-averaged TrackVis release](https://github.com/data-others/atlas/releases/download/hcp1065/hcp1065_avg_tracts_trk.zip), and [Yeh 2022](https://doi.org/10.1038/s41467-022-32595-4) | Population atlas, exact association source archive, ICBM 2009a space, atlas license, and method |
 | [Tractography polarity limits](https://doi.org/10.1089/brain.2011.0033), [human DiI review](https://doi.org/10.3390/biom14050536), and tract-specific sources in `tract_activity.json` | Why streamline order cannot provide direction, why 50/50 remains an explicit fallback, and the endpoint-anatomy evidence reviewed for each bundle |
 | [Ogata 1981](https://doi.org/10.1109/TIT.1981.1056305) | Superposition/thinning event-generation method; not validation of illustrative parameter values |
-| [HCP-1065 fibre template](https://brain.labsolver.org/hcp_template.html) and [DSI Studio method](https://doi.org/10.1038/s41592-025-02762-8) | Population FIB source and tractography tool |
+| [HCP-1065 fibre template](https://brain.labsolver.org/hcp_template.html), [exact 1 mm FIB release](https://github.com/data-others/atlas/releases/download/hcp1065/ICBM152_adult.1mm.fz), and [DSI Studio method](https://doi.org/10.1038/s41592-025-02762-8) | Population FIB source, verified release artifact, ICBM 2009a registration, and tractography tool |
 | [WU-Minn HCP terms](https://www.humanconnectome.org/study/hcp-young-adult/document/wu-minn-hcp-consortium-open-access-data-use-terms) and [citation guidance](https://www.humanconnectome.org/study/hcp-young-adult/document/hcp-citations) | Redistribution, acknowledgment, and citation obligations |
-| [MNI ICBM152 nonlinear 2009 releases](http://www.bic.mni.mcgill.ca/ServicesAtlases/ICBM152NLin2009) | 2009a/2009c are separate releases of the same anatomy with different sampling |
+| [MNI ICBM152 nonlinear 2009 releases](http://www.bic.mni.mcgill.ca/ServicesAtlases/ICBM152NLin2009) and exact asymmetric 2009a/2009c NIfTI archives recorded in `TRACT_SPACE_PROVENANCE.md` | 2009a/2009c are separate releases of the same anatomy with different sampling; official RAS+ grids support identity-world validation |
 
 A successful record fetch verifies identity and accessible terms/method text; it does
 not retroactively prove undocumented local processing steps.
@@ -123,7 +133,6 @@ fidelity of any displayed geometry or activity model.
 
 | Gap | Impact | Owner |
 |---|---|---|
-| Exact 2009a/2009c identity and any conversion for all tractography assets is undocumented. | Threatens the strongest one-space/co-registration claim. | `brain-atlas-yum.5`. |
 | Offline generation commands/scripts and complete parameter manifests are not checked in. | Assets cannot be independently regenerated or audited. | `brain-atlas-yum.6`. |
 | Right optic radiation is mirrored. | Bilateral asymmetry and right Meyer's-loop geometry are not observed data. | `brain-atlas-yum.7`. |
 | LGN→V1 stochastic parameters remain uncited and partly arbitrary. | Optic-radiation animation may look more physiologically specific than evidence supports; association parameters are now explicitly disclosed as display assumptions. | `brain-atlas-zmq.9` model/source and acceptance disclosure. |

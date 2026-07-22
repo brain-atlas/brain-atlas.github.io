@@ -74,9 +74,12 @@ const fill = new THREE.DirectionalLight(0x88aaff, 0.5); fill.position.set(-1.2, 
 
 // ---------------------------------------------------------------------------
 // MNI/ICBM RAS -> scene transform. This is the ONLY runtime coordinate transform.
-// Cortical and region assets identify MNI152NLin2009cAsym; fibre assets are
-// consumed as RAS millimetres while brain-atlas-yum.5 audits their exact
-// 2009a/2009c source-space derivation. The scene frame is RIGHT-HANDED:
+// Cortical and region assets are MNI152NLin2009cAsym. Association tracts are
+// verified ICBM-2009a Nonlinear Asymmetric; OR/SWM use the exact nonlinear
+// ICBM152-2009a HCP FIB, with its asymmetric variant indicated but not directly
+// build-bound. Decoded RAS+ world frames survive resampling; no 2009a->2009c
+// template warp exists. See docs/TRACT_SPACE_PROVENANCE.md.
+// The scene frame is RIGHT-HANDED:
 //   +x = right,  +y = up (MNI superior),  +z = posterior (MNI -anterior).
 // The proper -90 deg R-axis rotation (determinant +1) preserves left/right and
 // chirality. Never fit a dataset here: any correction belongs in the documented

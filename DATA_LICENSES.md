@@ -90,12 +90,15 @@ No endorsement by the atlas authors or EBRAINS is implied.
 ## HCP-1065 tractography atlas
 
 `public/data/tracts.json` contains selected, range-extracted, and resampled
-streamlines from the **HCP-1065 Population-Averaged Tractography Atlas**. These
+streamlines from the **HCP-1065 Population-Averaged Tractography Atlas** release
+`hcp1065`. The source and retained world coordinates are ICBM 2009a Nonlinear
+Asymmetric, RAS+ millimetres; no 2009a→2009c point conversion was applied. These
 files are modified data, not the original atlas distribution.
 
 Source and citation:
 
-- Dataset: <https://brain.labsolver.org/hcp_trk_atlas.html>
+- Dataset record: <https://brain.labsolver.org/hcp_trk_atlas.html>
+- Exact source release: <https://github.com/data-others/atlas/releases/download/hcp1065/hcp1065_avg_tracts_trk.zip>
 - Yeh F-C. Population-based tract-to-region connectome of the human brain and
   its hierarchical topology. *Nature Communications*. 2022;13:4933.
   <https://doi.org/10.1038/s41467-022-32595-4>
@@ -117,22 +120,38 @@ HCP-derived assets; those assets remain governed by their source terms above.
 
 ## HCP-1065-template-derived fibres
 
-`public/data/or_fibres.json` was generated with DSI Studio from the HCP-1065
-population template by tracking between Jülich-Brain V1 and LGN regions,
-pruning three aberrant V1 terminations, and arc-length resampling each fibre.
-The viewer mirrors the resulting left-hemisphere fibres at runtime to depict
-the right optic radiation.
+`public/data/or_fibres.json` was generated with DSI Studio from the exact official
+HCP-1065 1 mm `ICBM152_adult.1mm.fz`, whose source record identifies nonlinear
+ICBM152 2009a. The release-companion T1 indicates the asymmetric variant, but a
+direct FIB build binding was not retained. Tracking used thresholded
+Jülich-Brain V1 and LGN ROI NIfTIs from the 2009c grid with identical qform/sform
+code 4 world matrices. The project arc-length resampled each fibre and removed
+three streamlines under its >18 mm V1-centroid rule. The viewer mirrors the
+resulting left-hemisphere fibres at runtime to depict the right optic radiation.
 
-`public/data/swm_fibres.json` was generated from the same population template
-by tracking short superficial-white-matter fibres with both endpoints in the
-cortical ribbon. The project sampled fibres, resampled their contours, and
-stored fibre-length measures used by the activity texture. These are real
-bilateral data and are not mirrored.
+`public/data/swm_fibres.json` was generated from the same FIB using a 2009c
+superficial-WM seed derived from TemplateFlow GM/WM probability maps with matched
+qform/sform world matrices. The project retained short streamlines with both
+unrounded endpoints in a dilated cortical ribbon, deterministically sampled and
+resampled contours, and stored original and local-neighbour mean length measures
+used by the activity texture. These are real bilateral data and are not mirrored.
+Neither FIB-derived asset underwent a 2009a→2009c template warp; its decoded
+RAS+ coordinate frame was retained through resampling.
 
 Source and methods citations:
 
 - HCP-1065 Young Adult Fiber Templates:
   <https://brain.labsolver.org/hcp_template.html>
+- Exact 1 mm FIB release:
+  <https://github.com/data-others/atlas/releases/download/hcp1065/ICBM152_adult.1mm.fz>
+- Exact Jülich-Brain v3.0.3 left [hOc1/V1](https://raw.githubusercontent.com/canlab/Neuroimaging_Pattern_Masks/master/Atlases_and_parcellations/2020_JulichBrain_v3.0.3/probabilistic_maps_pmaps_157areas/Area-hOc1/Area-hOc1_pmap_l_N10_nlin2ICBM152asym2009c_4.2_public_258e8c1d846f92be76922b20287344ae.nii.gz)
+  and [CGL/LGN](https://raw.githubusercontent.com/canlab/Neuroimaging_Pattern_Masks/master/Atlases_and_parcellations/2020_JulichBrain_v3.0.3/probabilistic_maps_pmaps_157areas/CGL/CGL_pmap_l_N10_nlin2ICBM152asym2009c_10.0_public_5958c3f5255df1271eaa5a8672e39510.nii.gz)
+  probability-map files used to derive the OR masks. Their Jülich terms remain
+  CC BY-NC-SA 4.0 as stated above.
+- Exact TemplateFlow 2009c [GM](https://templateflow.s3.amazonaws.com/tpl-MNI152NLin2009cAsym/tpl-MNI152NLin2009cAsym_res-01_label-GM_probseg.nii.gz)
+  and [WM](https://templateflow.s3.amazonaws.com/tpl-MNI152NLin2009cAsym/tpl-MNI152NLin2009cAsym_res-01_label-WM_probseg.nii.gz)
+  probability maps used to derive the SWM seed and endpoint ribbon. Their MNI
+  terms are reproduced above.
 - Yeh F-C. Population-based tract-to-region connectome of the human brain and
   its hierarchical topology. *Nature Communications*. 2022;13:4933.
   <https://doi.org/10.1038/s41467-022-32595-4>
@@ -154,7 +173,10 @@ Recipients must:
   the data; and
 - cite the relevant HCP acquisition and processing publications.
 
-Consult the linked terms for the complete conditions.
+Consult the linked terms for the complete conditions. Exact source hashes,
+affines, recovered tracking commands, output correspondence, and numeric
+co-registration checks are recorded in
+[`docs/TRACT_SPACE_PROVENANCE.md`](docs/TRACT_SPACE_PROVENANCE.md).
 
 ## Required HCP acknowledgment and citations
 
