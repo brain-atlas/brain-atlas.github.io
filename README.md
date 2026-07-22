@@ -145,13 +145,14 @@ geometry and activity status
 remain separate in `public/data/fidelity.json`. See
 [`src/lesson/SPEC.md`](src/lesson/SPEC.md) for the contract.
 
-The shipped reference lesson lives at `src/lessons/retina-to-v1.md` and remains
+The shipped early-vision reference lesson lives at `src/lessons/retina-to-v1.md` and remains
 **[DRAFT]** pending the dedicated scientific and pedagogical content review in
 `brain-atlas-zmq.25`. `src/bootstrap.js` parses it through this same contract and
 renders the lifecycle label in the document title, lesson header, and introduction,
 including no-WebGL mode, without HTML-string injection. An unnumbered topic entry view
-filters the atlas to the complete relevant
-pathway before scrolling activates four instructional scenes; fixed-position
+filters the atlas to the relevant visual-system structures before scrolling activates
+eight instructional scenes spanning retinal processing through interacting ventral and
+dorsal cortical streams; fixed-position
 Previous/Next actions traverse the same sequence and can return to that entry view. One
 3D stage is shared throughout. The browser root remains fixed; the named, keyboard-
 focusable `#page-scroll` region is the sole vertical lesson surface and retains the
@@ -166,7 +167,7 @@ geometry/activity status and provenance surface; the canvas and stage do not dup
 those records. Close restores focus and the exact lesson-surface position.
 
 Three.js is dynamically imported only after a WebGL2 probe. If WebGL is unavailable or
-renderer initialization fails, the topic entry view plus four-scene text lesson,
+renderer initialization fails, the topic entry view plus eight-scene text lesson,
 navigation, and fidelity records remain usable without downloading the renderer. Local
 paste/import remains deferred to `brain-atlas-zmq.6`.
 
