@@ -37,7 +37,7 @@ id: orientation
 title: Organize the early visual system
 visual: atlas
 camera:
-  position: [210, 75, -195]
+  position: [147, 53, -137]
   target: [0, 0, 0]
   transition: { kind: ease, durationMs: 900 }
 show:
@@ -78,8 +78,8 @@ id: nasal-crossing
 title: The retina recodes light; the chiasm regroups space
 visual: atlas
 camera:
-  position: [0, 30, -350]
-  target: [0, 0, 0]
+  position: [0, -20, -155]
+  target: [0, -35, 0]
   transition: { kind: ease, durationMs: 900 }
 show: [pathway.anterior, region.lgn]
 fidelity: [fidelity.anterior-pathway, fidelity.julich-regions]
@@ -138,8 +138,8 @@ id: lgn-relay
 title: The LGN preserves maps while regulating transmission
 visual: atlas
 camera:
-  position: [130, 280, -180]
-  target: [0, 0, 0]
+  position: [105, 175, -145]
+  target: [0, -5, 0]
   transition: { kind: ease, durationMs: 900 }
 show: [layer.cortex, pathway.anterior, region.lgn]
 fidelity: [fidelity.anterior-pathway, fidelity.julich-regions]
@@ -191,7 +191,7 @@ id: optic-radiation
 title: The optic radiation carries a topographic map
 visual: atlas
 camera:
-  position: [300, 15, 0]
+  position: [190, 18, -90]
   target: [0, 0, 0]
   transition: { kind: ease, durationMs: 900 }
 show: [layer.cortex, pathway.optic-radiation, region.lgn, region.v1]
@@ -245,7 +245,7 @@ id: v1-arrival
 title: V1 builds a cortical map of local visual structure
 visual: atlas
 camera:
-  position: [0, 30, 350]
+  position: [60, 25, 235]
   target: [0, 0, 0]
   transition: { kind: ease, durationMs: 900 }
 show: [layer.cortex, pathway.optic-radiation, region.v1]
@@ -313,7 +313,7 @@ id: extrastriate-branching
 title: Extrastriate cortex expands the computation
 visual: atlas
 camera:
-  position: [250, 95, 200]
+  position: [160, 72, 155]
   target: [0, 0, 0]
   transition: { kind: ease, durationMs: 900 }
 show:
@@ -370,7 +370,7 @@ id: ventral-stream
 title: The ventral stream builds object quality and identity
 visual: atlas
 camera:
-  position: [300, -70, 70]
+  position: [185, -58, 105]
   target: [0, -20, 0]
   transition: { kind: ease, durationMs: 900 }
 show:
@@ -435,7 +435,7 @@ id: dorsal-stream
 title: The dorsal stream transforms vision for space and action
 visual: atlas
 camera:
-  position: [300, 120, 30]
+  position: [185, 92, -95]
   target: [0, 20, 0]
   transition: { kind: ease, durationMs: 900 }
 show:
@@ -507,7 +507,7 @@ id: streams-integrate
 title: Perception and action depend on interacting streams
 visual: atlas
 camera:
-  position: [260, 75, 180]
+  position: [170, 58, 140]
   target: [0, 0, 0]
   transition: { kind: ease, durationMs: 900 }
 show:
