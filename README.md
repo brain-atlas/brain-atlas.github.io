@@ -150,10 +150,15 @@ The app opens in the complete exploratory Atlas, not inside a lesson. The retain
 controls provide orbit, zoom, pan, hemispheres, layers, cutaway, tissue, and activity over
 the one canonical global-atlas snapshot. **Lessons** opens a responsive drawer with the
 checked Draft lesson and local Markdown entry. Starting a lesson preserves the actual Atlas
-camera and filters. **Back to atlas** restores that workspace and exposes **Return to
-lesson · title · position**; Return restores the lesson source, scene, selected visual,
+camera and filters. From a lesson, **Back to atlas**, the brand link, browser Back, and
+**Explore this scene** all open Atlas from the lesson’s current rendered camera and complete
+filters. Compact **Return to lesson** and **Exit lesson** actions distinguish temporary
+inspection from closing the session. Return restores source, scene, selected visual,
 rendered camera, canonical filters/playback request, exact `#page-scroll` position, and
-focus. Individual stochastic particles are not serialized. A compact Atlas moves the
+focus. Exit removes the resume state and resets the complete default Atlas; an unsaved local
+lesson asks for confirmation first. On the narrowest session header, lesson-entry actions
+hide until Return or Exit so the two active-session choices remain readable and do not
+overlap. Individual stochastic particles are not serialized. A compact Atlas moves the
 camera uniformly away from the same target to keep the complete brain framed; anatomy,
 canvas scale, and the MNI transform remain uniform.
 
@@ -186,12 +191,12 @@ identity and progress. The persistent **Model & sources** control opens the sole
 geometry/activity status and provenance surface; the canvas and stage do not duplicate
 those records. Close restores focus and the exact lesson-surface position.
 
-Within a lesson, **Explore this scene** enters the same top-level Atlas surface with the
-active lesson filters and exact rendered camera. This temporary scene branch grants full
+Within a lesson, every Atlas entry uses the same top-level surface and temporary
+lesson-derived branch with the active filters and exact rendered camera. It grants full
 controls without overwriting the persistent global Atlas. **Return to lesson** restores
-the stable lesson token; **Back to atlas** instead restores the learner's persistent global
-camera and filters. No second renderer, canvas, WebGL context, filter path, or coordinate
-transform is created.
+the stable token and discards temporary edits. **Exit lesson** clears that token and resets
+Atlas Home to the authored complete default. No second renderer, canvas, WebGL context,
+filter path, or coordinate transform is created.
 
 The checked lesson has a static-safe `?lesson=retina-to-v1` route. Atlas uses the base URL.
 Browser Back/Forward uses the same workspace transition path as visible controls. Local
@@ -225,8 +230,8 @@ because its scenes do not yet define replay timelines; **Skip transition** appea
 stage only while camera motion is active, jumps to the authored destination camera, and
 settles activity without accelerating model time.
 Pointer drag rotates only when the scene control policy permits it. In normal Lesson
-mode, touch swipes scroll `#page-scroll` without rotating the camera. Atlas Home and
-explicit scene inspection grant full orbit, wheel/pinch zoom, right-drag/two-finger pan,
+mode, touch swipes scroll `#page-scroll` without rotating the camera. Atlas Home and the
+lesson-derived Atlas view grant full orbit, wheel/pinch zoom, right-drag/two-finger pan,
 and canonical viewer-filter editing. Reduced-motion preference makes authored camera
 changes instant, settles activity, disables Play, and removes the Skip action.
 

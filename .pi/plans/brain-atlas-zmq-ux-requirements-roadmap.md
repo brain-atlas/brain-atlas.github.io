@@ -456,18 +456,28 @@ renderer invariants remain operative. See
 `.pi/plans/brain-atlas-zmq.7-shared-explore-surface-plan.md` for the original delivery
 record and `.pi/plans/brain-atlas-zmq.24-atlas-home-entry-shell-plan.md` for integration.
 
-### Atlas Home and lesson entry (`brain-atlas-zmq.24`) — Implemented
+### Atlas Home and lesson entry (`brain-atlas-zmq.24`) — Implemented; handoff amended by `.28`
 
 The base URL opens the complete exploratory Atlas. A modal responsive **Lessons** drawer
 lists the checked Draft lesson, Start/Resume/Start-over actions, local Markdown entry, and
 shared project links. Atlas and Lesson reparent one stage, panel, disclosure, canvas, and
-context. **Back to atlas** restores persistent global camera/filters; **Explore this
-scene** uses a temporary branch; **Return to lesson** restores source, scene, selected
-visual, canonical state, rendered camera, requested playback, exact lesson scroll, and
-focus. `/` and `?lesson=retina-to-v1` are stable static routes. `?lesson=local` is only a
-nonsecret memory-session marker; reload normalizes to Atlas with an announcement. Firefox
-and Chromium checks cover history, compact/wide layouts, touch, reduced motion, fallback,
-local import, exact Return, camera aspect, and one-canvas ownership.
+context. `.24` established persistent global Atlas state, exact lesson tokens, static
+routes, memory-only local recovery, responsive camera fitting, and one-canvas ownership.
+Its original rule that **Back to atlas** restore persistent global state was superseded by
+the approved `.28` handoff below.
+
+### Lesson-derived Atlas handoff and Exit (`brain-atlas-zmq.28`) — Implemented
+
+From an active lesson, **Back to atlas**, the brand link, browser Back, and **Explore this
+scene** all open one temporary Atlas branch from the actual rendered camera and complete
+canonical lesson filters. Compact **Return to lesson** exactly restores the stable token;
+**Exit lesson** clears resume/session state and resets the complete default Atlas. Local
+unsaved lessons require a focused Keep/Exit confirmation. The persistent global snapshot
+remains separate from temporary edits until deliberate Exit replaces it with the default.
+`/` and `?lesson=retina-to-v1` remain stable; `?lesson=local` remains only a nonsecret
+memory-session marker. Firefox and Chromium checks cover history, focus, compact/wide and
+short-wide layouts, checked/local loss semantics, reduced motion, no-WebGL/renderer
+failure, exact Return, camera aspect, and one-canvas ownership.
 
 ### Inspector (`brain-atlas-zmq.8`)
 

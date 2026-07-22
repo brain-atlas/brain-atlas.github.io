@@ -27,8 +27,14 @@ test('production Atlas and checked Lesson share one canvas without debug hooks',
   await expect(page.locator('#lesson-title')).toBeVisible();
   await page.locator('#back-to-atlas').click();
   await expect(page.locator('#return-to-lesson')).toBeVisible();
+  await expect(page.locator('#return-to-lesson')).toHaveText('Return to lesson');
   await page.locator('#return-to-lesson').click();
   await expect(page.locator('#lesson-title')).toBeVisible();
+  await page.locator('#back-to-atlas').click();
+  await page.locator('#exit-lesson').click();
+  await expect(page.locator('#lesson-session-actions')).toBeHidden();
+  await page.locator('#lessons-trigger').click();
+  await expect(page.locator('[data-start-lesson="retina-to-v1"]')).toHaveText('Start lesson');
   expect(await page.locator('canvas').count()).toBe(1);
   expect(errors).toEqual([]);
 });

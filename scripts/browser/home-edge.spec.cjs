@@ -49,6 +49,53 @@ test('compact Atlas and lesson drawer preserve focus, touch targets, and contain
   expect(errors).toEqual([]);
 });
 
+test('compact lesson session controls are restrained, accessible, and contained', async ({ page }) => { // Tests INV-30, INV-34
+  const errors = monitor(page);
+  for (const viewport of [{ width: 390, height: 844 }, { width: 320, height: 568 }]) {
+    await open(page, { viewport });
+    await page.locator('#lessons-trigger').click();
+    await page.locator('[data-start-lesson="retina-to-v1"]').click();
+    await page.locator('#back-to-atlas').click();
+
+    const returning = page.locator('#return-to-lesson');
+    const exiting = page.locator('#exit-lesson');
+    await expect(returning).toHaveText('Return to lesson');
+    await expect(returning).toHaveAccessibleName(/^Return to Early vision.*Topic overview$/i);
+    await expect(exiting).toHaveText('Exit lesson');
+    const controls = await page.locator('#lesson-session-actions').evaluate(element => {
+      const returnButton = document.getElementById('return-to-lesson');
+      const exitButton = document.getElementById('exit-lesson');
+      return {
+        hidden: element.hidden,
+        returnHeight: returnButton.getBoundingClientRect().height,
+        exitHeight: exitButton.getBoundingClientRect().height,
+        returnBackground: getComputedStyle(returnButton).backgroundColor,
+        importVisible: document.getElementById('lesson-import-trigger').getClientRects().length > 0,
+        brandTitleClipped: document.getElementById('lesson-brand-title').getClientRects().length > 0
+          && document.getElementById('lesson-brand-title').scrollWidth > document.getElementById('lesson-brand-title').clientWidth,
+        kickerWrapped: document.querySelector('.brand-kicker').getClientRects().length > 0
+          && document.querySelector('.brand-kicker').getBoundingClientRect().height > 18,
+        headerOverlap: Math.max(0,
+          (document.getElementById('lesson-brand-title').getClientRects().length > 0
+            ? document.getElementById('lesson-brand-title')
+            : document.querySelector('.brand-kicker')).getBoundingClientRect().right
+              - element.getBoundingClientRect().left),
+        overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      };
+    });
+    expect(controls.hidden).toBe(false);
+    expect(controls.returnHeight).toBeGreaterThanOrEqual(44);
+    expect(controls.exitHeight).toBeGreaterThanOrEqual(44);
+    expect(controls.returnBackground).not.toBe('rgb(67, 220, 203)');
+    expect(controls.importVisible).toBe(false);
+    expect(controls.brandTitleClipped).toBe(false);
+    expect(controls.kickerWrapped).toBe(false);
+    expect(controls.headerOverlap).toBe(0);
+    expect(controls.overflow).toBe(0);
+  }
+  expect(errors).toEqual([]);
+});
+
 test('no-WebGL Atlas retains lessons, sources, import, and semantic return without Three.js', async ({ page }) => { // Tests INV-31
   const errors = monitor(page);
   const resources = [];
@@ -71,6 +118,11 @@ test('no-WebGL Atlas retains lessons, sources, import, and semantic return witho
   await expect(page.locator('#return-to-lesson')).toBeVisible();
   await page.locator('#return-to-lesson').click();
   await expect(page.locator('#lesson-title')).toBeVisible();
+  await page.locator('#back-to-atlas').click();
+  await page.locator('#exit-lesson').click();
+  await expect(page.locator('#lesson-session-actions')).toBeHidden();
+  await expect(page.locator('#stage-fallback')).toBeFocused();
+  expect(await page.evaluate(() => window.__lesson.workspaceState.lessonToken)).toBeNull();
   expect(await page.locator('canvas').count()).toBe(0);
   expect(errors).toEqual([]);
 });
@@ -87,6 +139,11 @@ test('renderer import failure leaves Atlas navigation and readable lessons avail
   await page.locator('#lessons-trigger').click();
   await page.locator('[data-start-lesson="retina-to-v1"]').click();
   await expect(page.locator('#lesson-reader')).toBeVisible();
+  await page.locator('#back-to-atlas').click();
+  await expect(page.locator('#lesson-session-actions')).toBeVisible();
+  await page.locator('#exit-lesson').click();
+  await expect(page.locator('#lesson-session-actions')).toBeHidden();
+  await expect(page.locator('#stage-fallback')).toBeFocused();
   expect(await page.locator('canvas').count()).toBe(0);
   expect(errors.every(error => typeof error === 'string')).toBe(true);
 });

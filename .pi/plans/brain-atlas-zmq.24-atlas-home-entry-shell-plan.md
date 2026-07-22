@@ -4,7 +4,16 @@
 **Design:** Approved decisions `brain-atlas-7da` and `brain-atlas-56i`; `.pi/plans/brain-atlas-zmq.15-lesson-ux-ui-spec.md`
 **Date:** 2026-07-22
 **Branch:** `feat/atlas-home-shell`
-**Status:** Implemented
+**Status:** Implemented; lesson-to-Atlas handoff and session chrome superseded by `brain-atlas-zmq.28`
+
+> **Supersession (2026-07-22):** Approval `brain-atlas-ai4` and
+> `.pi/plans/brain-atlas-zmq.28-lesson-atlas-handoff-plan.md` replace this plan’s
+> persistent-global **Back to atlas** behavior and long Return label. All lesson-origin
+> Atlas actions now use one actual-camera, lesson-derived temporary branch; compact
+> Return/Exit controls provide exact resume or explicit default-Atlas closeout. The
+> Atlas-as-Home, one-renderer, exact-token, static-history, and fallback foundations below
+> remain authoritative. Historical acceptance and implementation records are retained as
+> evidence of what `.24` originally delivered.
 
 **Goal:** Make the full exploratory atlas the product Home, launch checked and local lessons from one responsive drawer, and let learners switch between preserved Atlas and Lesson contexts without creating another renderer, canvas, runtime, or persistence layer.
 

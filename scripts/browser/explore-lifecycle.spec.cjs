@@ -116,25 +116,73 @@ test('scene Explore preserves rendered camera, commands do not snap it, and Retu
   expect(errors).toEqual([]);
 });
 
-test('Back to atlas restores the complete persistent Atlas and Return restores the lesson', async ({ page }) => {
+test('brand handoff preserves the rendered lesson camera in Atlas', async ({ page }) => { // Tests INV-34
+  const errors = monitor(page);
+  await ready(page);
+  if (await page.locator('#scene-skip').isVisible()) await page.locator('#scene-skip').click();
+  await page.evaluate(() => {
+    window.__view.camera.position.set(101, 31, -82);
+    window.__view.controls.target.set(4, -5, 16);
+    window.__view.controls.update();
+  });
+  await page.locator('.brand').click();
+  await expect(page.locator('#atlas-workspace')).toBeVisible();
+  expect(await page.evaluate(() => ({
+    kind: window.__lesson.exploreState.kind,
+    camera: {
+      ...window.__lesson.exploreState.snapshot.camera,
+      position: window.__lesson.exploreState.snapshot.camera.position.map(value => Math.round(value * 1000) / 1000),
+      target: window.__lesson.exploreState.snapshot.camera.target.map(value => Math.round(value * 1000) / 1000),
+    },
+  }))).toEqual({
+    kind: 'scene',
+    camera: {
+      position: [101, 31, -82],
+      target: [4, -5, 16],
+      transition: { kind: 'instant', durationMs: 0 },
+    },
+  });
+  expect(errors).toEqual([]);
+});
+
+test('Back to atlas preserves the rendered lesson view and Return restores the lesson', async ({ page }) => { // Tests INV-34
   const errors = monitor(page);
   await ready(page, { width: 390, height: 844 });
   await page.locator('#scene-next').click();
   await page.locator('#scene-skip').click();
+  await page.evaluate(() => {
+    window.__view.camera.position.set(117, 29, -93);
+    window.__view.controls.target.set(5, -7, 19);
+    window.__view.controls.update();
+  });
+  const lessonState = await page.evaluate(() => {
+    const index = window.__lesson.navigation.activeIndex;
+    const scene = index === -1
+      ? window.__lesson.presentation.entryScene
+      : window.__lesson.presentation.scenes[index];
+    return {
+      camera: window.__view.camera.position.toArray(),
+      target: window.__view.controls.target.toArray(),
+      visible: scene.snapshot.visibility.entities,
+    };
+  });
   await page.locator('#back-to-atlas').click();
   await expect(page.locator('#atlas-workspace')).toBeVisible();
   const state = await page.evaluate(() => ({
     kind: window.__lesson.exploreState.kind,
     visible: window.__lesson.exploreState.snapshot.visibility.entities,
-    all: window.__lesson.catalog.entityIds.filter(id => id !== 'layer.labels'),
     camera: window.__lesson.exploreState.snapshot.camera,
     overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
     root: [scrollX, scrollY],
     canvases: document.querySelectorAll('canvas').length,
   }));
-  expect(state.kind).toBe('global');
-  expect(state.visible).toEqual(state.all);
-  expect(state.camera).toEqual({ position: [210, 75, -195], target: [0, 0, 0], transition: { kind: 'instant', durationMs: 0 } });
+  expect(state.kind).toBe('scene');
+  expect(state.visible).toEqual(lessonState.visible);
+  expect(state.camera).toEqual({
+    position: lessonState.camera,
+    target: lessonState.target,
+    transition: { kind: 'instant', durationMs: 0 },
+  });
   expect(state.overflow).toBe(0);
   expect(state.root).toEqual([0, 0]);
   expect(state.canvases).toBe(1);

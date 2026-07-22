@@ -58,6 +58,7 @@ let selectedVisualId = 'atlas';
 let lessonSourceKind = 'reference';
 let lessonImportCandidate = null;
 let importCloseFocus = 'trigger';
+let exitDialogCloseFocus = 'exit';
 let referenceCandidate = null;
 let activeLessonKey = 'checked:retina-to-v1';
 let localLessonSerial = 0;
@@ -681,7 +682,7 @@ function bindNavigation() {
     if (event.button !== 0 || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
     event.preventDefault();
     if (workspace.mode === 'lesson') {
-      leaveLessonForAtlas('global', event.currentTarget);
+      leaveLessonForAtlas(event.currentTarget);
     } else {
       byId('atlas-heading').focus({ preventScroll: true });
     }
@@ -967,16 +968,18 @@ function bindLessonDrawer() {
 
 function setExploreAvailability(available) {
   const inLesson = workspace.mode === 'lesson';
+  const hasLessonSession = workspace.mode === 'atlas' && Boolean(workspace.lesson.token);
   byId('back-to-atlas').hidden = !inLesson;
   byId('explore-scene-trigger').hidden = !available || !inLesson;
   byId('lessons-trigger').hidden = inLesson;
   byId('lesson-import-trigger').hidden = false;
-  byId('return-to-lesson').hidden = workspace.mode !== 'atlas' || !workspace.lesson.token;
+  byId('lesson-session-actions').hidden = !hasLessonSession;
+  app.dataset.lessonSession = String(hasLessonSession);
 }
 
 function renderExploreFidelity(snapshot, includedFidelityIds) {
   const fidelityIds = exploreFidelityIds(snapshot, catalog, includedFidelityIds);
-  byId('fidelity-context').textContent = 'Visible in Explore';
+  byId('fidelity-context').textContent = 'Visible in Atlas';
   renderFidelityModel(createFidelityViewModel({
     fidelityIds,
     entityIds: snapshot.visibility.entities,
@@ -1019,7 +1022,7 @@ function applyExploreCommandBatch(commands) {
 }
 
 function prepareExploreChrome(kind, scene, canReturn) {
-  byId('scene-count').textContent = kind === 'global' ? 'Atlas home' : 'Explore this scene';
+  byId('scene-count').textContent = kind === 'global' ? 'Atlas home' : 'Lesson view in Atlas';
   byId('stage-heading').textContent = kind === 'global' ? 'Complete visual-system atlas' : scene.title;
   byId('explore-scene-trigger').hidden = true;
   byId('scene-skip').hidden = true;
@@ -1029,10 +1032,10 @@ function prepareExploreChrome(kind, scene, canReturn) {
   byId('viewer-controls-fieldset').disabled = false;
   byId('viewer-policy-note').textContent = kind === 'global'
     ? 'Atlas workspace: camera, layers, hemispheres, cutaway, tissue, and activity controls are available.'
-    : 'Scene inspection: changes are temporary and Return restores the lesson.';
+    : 'Lesson view in Atlas: changes are temporary. Return restores the lesson; Exit resets Atlas Home.';
   document.querySelector('.stage-hint').hidden = false;
   document.querySelector('.stage-hint').textContent = canReturn
-    ? 'Drag to orbit · wheel or pinch to zoom · right-drag or two fingers to pan · Return restores the lesson.'
+    ? 'Drag to orbit · wheel or pinch to zoom · right-drag or two fingers to pan · Return restores the lesson · Exit resets Atlas Home.'
     : 'Drag to orbit · wheel or pinch to zoom · right-drag or two fingers to pan.';
   showLessonVisual('atlas', 'dominant');
 }
@@ -1238,8 +1241,8 @@ function showPersistentAtlasState() {
   setExploreAvailability(!rendererUnavailable);
 }
 
-function restoreGlobalAtlasWithoutHistory() {
-  if (workspace.mode === 'lesson') leaveLessonForAtlas('global', null, { historyAction: 'none' });
+function restoreAtlasWithoutHistory() {
+  if (workspace.mode === 'lesson') leaveLessonForAtlas(null, { historyAction: 'none' });
   else showPersistentAtlasState();
 }
 
@@ -1254,11 +1257,25 @@ function restoreHistoryIntent(intent) {
   try {
     if (byId('lesson-drawer').open) byId('lesson-drawer').close();
     if (byId('lesson-import-dialog').open) byId('lesson-import-dialog').close();
+    if (byId('lesson-exit-dialog').open) {
+      exitDialogCloseFocus = 'none';
+      byId('lesson-exit-dialog').close();
+    }
     if (!byId('fidelity-panel').hidden) closeFidelity({ restoreFocus: false });
 
     if (intent.mode === 'atlas') {
-      restoreGlobalAtlasWithoutHistory();
-      focusHistoryDestination('atlas-heading', 'atlas');
+      const derivedFromLesson = workspace.mode === 'lesson';
+      restoreAtlasWithoutHistory();
+      if (intent.recovery) {
+        writeWorkspaceHistory('atlas', { replace: true, force: true });
+        byId('announcer').textContent = intent.recovery === 'session-unavailable'
+          ? 'The local session was not retained. Returned to Atlas.'
+          : 'That checked lesson is unavailable. Returned to Atlas.';
+      }
+      focusHistoryDestination(
+        derivedFromLesson && !intent.recovery ? 'return-to-lesson' : 'atlas-heading',
+        'atlas',
+      );
       return;
     }
     if (intent.mode === 'lesson') {
@@ -1275,7 +1292,7 @@ function restoreHistoryIntent(intent) {
         sourceKind = 'local';
       }
       if (!candidate) {
-        restoreGlobalAtlasWithoutHistory();
+        restoreAtlasWithoutHistory();
         writeWorkspaceHistory('atlas', { replace: true, force: true });
         byId('announcer').textContent = 'The local session was not retained. Returned to Atlas.';
         return;
@@ -1293,13 +1310,13 @@ function restoreHistoryIntent(intent) {
     }
     const branch = inspectionBranchesByKey.get(intent.sessionKey);
     if (!branch) {
-      restoreGlobalAtlasWithoutHistory();
+      restoreAtlasWithoutHistory();
       writeWorkspaceHistory('atlas', { replace: true, force: true });
       byId('announcer').textContent = 'That scene inspection session is unavailable. Returned to Atlas.';
       return;
     }
     if (workspace.mode === 'lesson') {
-      leaveLessonForAtlas('scene', null, { historyAction: 'none' });
+      leaveLessonForAtlas(null, { historyAction: 'none' });
     }
     if (exploreState && rendererAdapter) {
       exploreState.kind = 'scene';
@@ -1310,6 +1327,7 @@ function restoreHistoryIntent(intent) {
       rendererAdapter.beginExploreCamera(branch.snapshot.camera);
       rendererAdapter.syncExplorePanel(createExplorePanelModel(branch.snapshot, catalog));
       renderExploreFidelity(branch.snapshot, activePresentationScene(branch.lessonToken.activeIndex).fidelityIds);
+      focusHistoryDestination('return-to-lesson', 'atlas');
     }
   } finally {
     restoringHistory = false;
@@ -1320,9 +1338,91 @@ function bindWorkspaceHistory() {
   addEventListener('popstate', () => restoreHistoryIntent(workspaceLocationIntent()));
 }
 
+function exitLessonSession() {
+  if (workspace.mode !== 'atlas' || workspace.phase === 'switching'
+    || !workspace.lesson.token || !exploreState) return;
+  workspace.phase = 'switching';
+  workspace.epoch += 1;
+  if (!byId('fidelity-panel').hidden) closeFidelity({ restoreFocus: false });
+  if (byId('lesson-drawer').open) byId('lesson-drawer').close();
+  if (byId('lesson-import-dialog').open) {
+    importCloseFocus = 'none';
+    byId('lesson-import-dialog').close();
+  }
+  cancelSceneFocusSettlement();
+  if (scrollFrame) cancelAnimationFrame(scrollFrame);
+  scrollFrame = 0;
+
+  localCandidatesByKey.clear();
+  inspectionBranchesByKey.clear();
+  workspace.lesson = { key: null, sourceKind: null, candidate: null, token: null };
+  const snapshot = createAtlasExploreSnapshot(catalog);
+  const scene = activePresentationScene(navigation.activeIndex);
+  exploreState.kind = 'global';
+  exploreState.origin = 'home';
+  exploreState.trigger = null;
+  exploreState.includedFidelityIds = [];
+  exploreState.snapshot = snapshot;
+  workspace.atlas.kind = 'global';
+  workspace.atlas.activeSnapshot = snapshot;
+  workspace.atlas.persistentSnapshot = snapshot;
+
+  try {
+    if (rendererAdapter) {
+      rendererAdapter.resizeToStage();
+      rendererAdapter.apply(snapshot);
+      rendererAdapter.beginExploreCamera(snapshot.camera, { fitToStage: true });
+      rendererAdapter.syncExplorePanel(createExplorePanelModel(snapshot, catalog));
+    }
+    prepareExploreChrome('global', scene, false);
+    renderExploreFidelity(snapshot, []);
+    renderAtlasIdentity();
+    renderLessonDrawer();
+    writeWorkspaceHistory('atlas', { replace: true });
+    workspace.phase = rendererUnavailable ? 'fallback' : 'atlas';
+    byId('app-status').textContent = rendererUnavailable ? 'Atlas ready · 3D unavailable' : 'Atlas ready';
+    setExploreAvailability(!rendererUnavailable);
+    byId('announcer').textContent = 'Lesson closed. The complete Atlas is ready.';
+    focusHistoryDestination(rendererUnavailable ? 'stage-fallback' : 'atlas-heading', 'atlas');
+  } catch (error) {
+    console.error('Lesson exit failed:', error);
+    showRendererFallback('The lesson was closed, but the 3D Atlas could not reset. Atlas sources and lessons remain accessible.');
+    focusHistoryDestination('stage-fallback', 'atlas');
+  }
+}
+
+function requestLessonExit() {
+  if (workspace.lesson.sourceKind !== 'local') {
+    exitLessonSession();
+    return;
+  }
+  exitDialogCloseFocus = 'exit';
+  const dialog = byId('lesson-exit-dialog');
+  if (!dialog.open) dialog.showModal();
+  byId('lesson-exit-keep').focus();
+}
+
+function bindLessonExit() {
+  const dialog = byId('lesson-exit-dialog');
+  byId('exit-lesson').addEventListener('click', requestLessonExit);
+  byId('lesson-exit-keep').addEventListener('click', () => dialog.close());
+  byId('lesson-exit-confirm').addEventListener('click', () => {
+    exitDialogCloseFocus = 'none';
+    dialog.close();
+    exitLessonSession();
+  });
+  dialog.addEventListener('close', () => {
+    const destination = exitDialogCloseFocus;
+    exitDialogCloseFocus = 'exit';
+    if (destination === 'exit' && !byId('lesson-session-actions').hidden) {
+      requestAnimationFrame(() => byId('exit-lesson').focus({ preventScroll: true }));
+    }
+  });
+}
+
 function bindExplore() {
-  byId('back-to-atlas').addEventListener('click', (event) => leaveLessonForAtlas('global', event.currentTarget));
-  byId('explore-scene-trigger').addEventListener('click', (event) => leaveLessonForAtlas('scene', event.currentTarget));
+  byId('back-to-atlas').addEventListener('click', (event) => leaveLessonForAtlas(event.currentTarget));
+  byId('explore-scene-trigger').addEventListener('click', (event) => leaveLessonForAtlas(event.currentTarget));
   byId('return-to-lesson').addEventListener('click', returnToLesson);
 }
 
@@ -1545,7 +1645,7 @@ function openCheckedLesson(id, { resume = false } = {}) {
   });
 }
 
-function leaveLessonForAtlas(kind, trigger, { historyAction = 'push' } = {}) {
+function leaveLessonForAtlas(trigger, { historyAction = 'push' } = {}) {
   if (workspace.mode !== 'lesson' || workspace.phase === 'switching') return;
   workspace.lesson = {
     key: activeLessonKey,
@@ -1556,22 +1656,27 @@ function leaveLessonForAtlas(kind, trigger, { historyAction = 'push' } = {}) {
   const position = navigation.activeIndex === -1
     ? 'Topic overview'
     : `Scene ${navigation.activeIndex + 1}`;
-  byId('return-to-lesson').textContent = `Return to lesson · ${lesson.title} · ${position}`;
+  const returnAction = byId('return-to-lesson');
+  const returnLabel = `Return to ${lesson.title}, ${position}`;
+  returnAction.textContent = 'Return to lesson';
+  returnAction.setAttribute('aria-label', returnLabel);
+  returnAction.title = returnLabel;
+  const exitAction = byId('exit-lesson');
+  exitAction.title = lessonSourceKind === 'local'
+    ? 'Exit this unsaved local lesson and reset the Atlas'
+    : 'Exit this lesson and reset the Atlas';
+  exitAction.toggleAttribute('aria-haspopup', lessonSourceKind === 'local');
   renderLessonDrawer();
-  beginExplore(kind, trigger);
+  beginExplore('scene', trigger);
   if (workspace.mode === 'atlas' && historyAction !== 'none') {
-    if (kind === 'scene') {
-      const sessionKey = `inspect:${++localLessonSerial}`;
-      inspectionBranchesByKey.clear();
-      inspectionBranchesByKey.set(sessionKey, {
-        lessonKey: workspace.lesson.key,
-        snapshot: exploreState.snapshot,
-        lessonToken: workspace.lesson.token,
-      });
-      writeWorkspaceHistory('inspect', { sessionKey, replace: historyAction === 'replace' });
-    } else {
-      writeWorkspaceHistory('atlas', { replace: historyAction === 'replace' });
-    }
+    const sessionKey = `inspect:${++localLessonSerial}`;
+    inspectionBranchesByKey.clear();
+    inspectionBranchesByKey.set(sessionKey, {
+      lessonKey: workspace.lesson.key,
+      snapshot: exploreState.snapshot,
+      lessonToken: workspace.lesson.token,
+    });
+    writeWorkspaceHistory('inspect', { sessionKey, replace: historyAction === 'replace' });
   }
 }
 
@@ -1656,6 +1761,7 @@ async function start() {
     bindLessonDrawer();
     bindVisualPresentation();
     bindExplore();
+    bindLessonExit();
     bindWorkspaceHistory();
     document.body.classList.toggle('reduced-motion', reducedMotionQuery.matches);
     historySerial = Number.isInteger(history.state?.serial) ? history.state.serial : 0;

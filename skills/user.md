@@ -31,7 +31,7 @@ In development mode, `src/main.js` exposes `window.__view` with camera, controls
 - Page entry is Atlas Home: `window.__lesson.workspaceState.mode === 'atlas'`, the retained Viewer controls are enabled, and one canvas lives under `#atlas-workspace`. The compact global view may increase camera distance from the same target to keep the complete brain in frame. The layer panel is built after `regions.json` loads. After changing a draw range, wait two `requestAnimationFrame`s before reading it back.
 - Open **Lessons** (`#lessons-trigger`) and start or resume `retina-to-v1`; direct checked navigation is `?lesson=retina-to-v1`. Then poll for `window.__lesson?.controllerState?.status === 'ready'`. At lesson entry, `window.__lesson.navigation.activeIndex === -1`: the unnumbered topic view centers the complete brain with the lesson pathway visible. `#page-scroll` is the sole lesson scroller; root x/y remain zero. Scroll into the eight `.lesson-scene` sections or use `#scene-previous` / `#scene-next`; Previous from scene 1 restores entry. In non-Atlas policies, canvas `touch-action: pan-y` keeps vertical swipes on the lesson while mouse/trackpad drag may orbit in `look`. `#scene-skip` appears only during a transition; the reference lesson exposes no ineffective Restart action.
 - `#model-sources-trigger` opens the sole geometry/activity status, provenance, limitation, and source surface; there is no duplicate canvas badge, stage status row, or global progress strip. In Lesson, `#fidelity-close` restores trigger focus and exact `#page-scroll`; in Atlas, records follow visible entities without changing workspace history.
-- Lesson `#back-to-atlas` restores the persistent global Atlas camera/filters. `#return-to-lesson` restores the saved lesson title/scene, selected visual, canonical state, rendered camera, exact lesson-surface position, and focus. Stage `#explore-scene-trigger` enters a temporary scene-derived Atlas branch and leaves the persistent global snapshot unchanged. `window.__lesson.exploreState` reports `{ phase, kind, snapshot }`; `window.__lesson.workspaceState` exposes development-only mode/token diagnostics. There must still be exactly one canvas.
+- Lesson `#back-to-atlas`, the brand link, browser Back, and stage `#explore-scene-trigger` all enter the same temporary Atlas branch from the actual lesson camera and complete canonical filters; the persistent global snapshot remains unchanged. `#return-to-lesson` restores the saved source, scene, selected visual, canonical state, rendered camera, exact lesson-surface position, and focus. `#exit-lesson` instead clears resume/session state and resets the complete default Atlas; a local lesson first opens `#lesson-exit-dialog`. `window.__lesson.exploreState` reports `{ phase, kind, snapshot }`; `window.__lesson.workspaceState` exposes development-only mode/token diagnostics. There must still be exactly one canvas.
 - To check display aspect, compare `window.__view.camera.aspect` with `document.querySelector('#stage canvas').getBoundingClientRect().width / height`. They should match to floating-point precision; the MNI group (`matrixAutoUpdate === false`) must retain equal basis lengths and positive determinant.
 - To distinguish stopped activity from sparse, occluded, clipped, or dimmed activity, inspect `window.__view.activity.state`, `.anterior.phase`, `.opticRadiation.modelTime`, `.opticRadiation.activeCount`, named point geometries, `window.__view.association`, and `window.__view.swm`. Run `scripts/browser/animation-continuity.spec.cjs` in Firefox and Chromium; it waits for every authored camera to settle, then checks model clocks, point checksums/draw ranges, in-frame events, optic-radiation endpoint proximity and cap visibility, selected tract groups, stable camera pose, and the distinct Skip/Pause/Play/reduced-motion semantics.
 - Force the readable renderer-free path with `?no-webgl=1`; verify that no `main`/Three.js resource loads. Imported supplementary images remain available as semantic figures in this path.
@@ -64,9 +64,9 @@ lesson is scientifically reviewed merely because it passes the structural contra
 
 - Atlas is Home. It starts from the project default: complete base atlas except labels,
   home camera, bilateral hemispheres, no cutaway/selection, and requested activity.
-- **Back to atlas** preserves a stable lesson token and restores the persistent global
-  Atlas. **Explore this scene** instead keeps effective lesson filters/playback, replaces
-  only the requested camera with the exact rendered pose, and creates a temporary branch.
+- **Back to atlas** and **Explore this scene** both preserve a stable lesson token, keep
+  effective lesson filters/playback, replace only the requested camera with the exact
+  rendered pose, and create the same temporary Atlas branch.
 - The top-level workspace reparents the existing stage, canvas, Viewer controls, Model &
   sources, and project links. Check canvas identity/count after repeated cycles; do not
   expect a second renderer or context.
@@ -74,9 +74,13 @@ lesson is scientifically reviewed merely because it passes the structural contra
   commands. Move the camera, then change a filter and verify the pose does not snap.
   `[data-explore-camera]` buttons provide keyboard Zoom/Pan; Reset returns to the entry
   pose. Auto-rotate remains hidden and off.
-- **Return to lesson** discards scene-inspection edits but preserves global Atlas state.
-  Verify controller scene/index, resume snapshot, `#page-scroll.scrollTop`, reciprocal
-  focus, touch policy, and camera aspect after restoration. Use the checked-in
+- **Return to lesson** discards lesson-derived Atlas edits and preserves global Atlas
+  state. **Exit lesson** removes Return/Exit and resets the authored complete Atlas. At
+  350 px and below, Lessons/Open yield to these active-session actions and reappear after
+  Return or Exit. Checked lessons then offer Start, while local exit requires Keep/Exit confirmation and
+  stale local history announces that it was not retained. Verify controller scene/index,
+  resume snapshot, `#page-scroll.scrollTop`, reciprocal focus, touch policy, camera aspect,
+  Exit focus/history, and one-canvas ownership with the checked-in
   `scripts/browser/{home,explore}-*.spec.cjs` matrix.
 
 ## Layers and how to toggle them

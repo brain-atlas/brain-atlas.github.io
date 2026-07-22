@@ -21,7 +21,10 @@
       <div class="topbar-actions">
         <span id="app-status" class="app-status">Loading atlas data…</span>
         <button id="back-to-atlas" class="topbar-action" type="button" hidden>Back to atlas</button>
-        <button id="return-to-lesson" class="topbar-action return-to-lesson" type="button" hidden>Return to lesson</button>
+        <div id="lesson-session-actions" class="lesson-session-actions" hidden>
+          <button id="return-to-lesson" class="topbar-action return-to-lesson" type="button">Return to lesson</button>
+          <button id="exit-lesson" class="topbar-action exit-lesson" type="button">Exit lesson</button>
+        </div>
         <button id="lessons-trigger" class="topbar-action" type="button" aria-haspopup="dialog">Lessons</button>
         <button id="lesson-import-trigger" class="topbar-action" type="button" aria-haspopup="dialog">Open lesson</button>
       </div>
@@ -194,6 +197,18 @@
       <button id="lesson-import-validate" type="button">Validate lesson</button>
       <button id="lesson-import-open" type="button" disabled>Open lesson</button>
     </footer>
+  </dialog>
+
+  <dialog id="lesson-exit-dialog" class="lesson-exit-dialog" aria-labelledby="lesson-exit-title" aria-describedby="lesson-exit-description">
+    <div class="lesson-exit-body">
+      <p class="stage-kicker">Local lesson</p>
+      <h2 id="lesson-exit-title">Exit local lesson?</h2>
+      <p id="lesson-exit-description">This lesson and your place are not saved.</p>
+    </div>
+    <div class="lesson-exit-actions">
+      <button id="lesson-exit-keep" type="button">Keep lesson</button>
+      <button id="lesson-exit-confirm" type="button">Exit lesson</button>
+    </div>
   </dialog>
 
   <aside id="fidelity-panel" class="fidelity-panel" hidden aria-labelledby="fidelity-title">

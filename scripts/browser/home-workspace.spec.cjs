@@ -57,8 +57,30 @@ test('checked lesson routes and browser history restore Atlas and Lesson', async
 
   await page.goForward();
   await expect(page.locator('#atlas-workspace')).toBeVisible();
-  await expect(page.locator('#atlas-heading')).toBeFocused();
+  await expect(page.locator('#return-to-lesson')).toBeFocused();
   expect(await page.locator('canvas').count()).toBe(1);
+  expect(errors).toEqual([]);
+});
+
+test('browser Back from Lesson preserves the rendered lesson view in Atlas', async ({ page }) => { // Tests INV-29, INV-34
+  const errors = monitor(page);
+  await ready(page);
+  await page.locator('#lessons-trigger').click();
+  await page.locator('[data-start-lesson="retina-to-v1"]').click();
+  if (await page.locator('#scene-skip').isVisible()) await page.locator('#scene-skip').click();
+  await page.evaluate(() => {
+    window.__view.camera.position.set(109, 27, -87);
+    window.__view.controls.target.set(6, -4, 18);
+    window.__view.controls.update();
+  });
+  await page.goBack();
+  await expect(page.locator('#atlas-workspace')).toBeVisible();
+  expect(await page.evaluate(() => ({
+    kind: window.__lesson.exploreState.kind,
+    position: window.__lesson.exploreState.snapshot.camera.position.map(value => Math.round(value * 1000) / 1000),
+    target: window.__lesson.exploreState.snapshot.camera.target.map(value => Math.round(value * 1000) / 1000),
+  }))).toEqual({ kind: 'scene', position: [109, 27, -87], target: [6, -4, 18] });
+  await expect(page.locator('#return-to-lesson')).toBeFocused();
   expect(errors).toEqual([]);
 });
 
@@ -108,8 +130,49 @@ test('scene inspection uses a temporary Atlas branch and preserves the global At
     .toEqual(lessonPose.target.map(value => Math.round(value * 1000) / 1000));
 
   await page.locator('#back-to-atlas').click();
-  expect(await page.evaluate(() => window.__lesson.workspaceState.atlasKind)).toBe('global');
-  expect(await page.evaluate(() => window.__lesson.exploreState.snapshot.cutaway.position)).toBe(27);
+  expect(await page.evaluate(() => ({
+    kind: window.__lesson.workspaceState.atlasKind,
+    temporaryCutaway: window.__lesson.exploreState.snapshot.cutaway.position,
+    persistentCutaway: window.__lesson.workspaceState.persistentAtlasSnapshot.cutaway.position,
+  }))).toEqual({ kind: 'scene', temporaryCutaway: 0, persistentCutaway: 27 });
+  expect(errors).toEqual([]);
+});
+
+test('checked Exit lesson clears resume state and resets the complete default Atlas', async ({ page }) => { // Tests INV-34, FAIL-32
+  const errors = monitor(page);
+  await ready(page);
+  const defaultSnapshot = await page.evaluate(() => window.__lesson.exploreState.snapshot);
+  await page.locator('#clip').evaluate(input => {
+    input.value = '27';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+  await page.locator('#lessons-trigger').click();
+  await page.locator('[data-start-lesson="retina-to-v1"]').click();
+  await page.locator('#scene-next').click();
+  await page.locator('#scene-skip').click();
+  await page.locator('#back-to-atlas').click();
+  await page.locator('#exit-lesson').click();
+
+  await expect(page.locator('#lesson-session-actions')).toBeHidden();
+  await expect(page.locator('#atlas-heading')).toBeFocused();
+  expect(await page.evaluate(() => ({
+    mode: window.__lesson.workspaceState.mode,
+    kind: window.__lesson.workspaceState.atlasKind,
+    token: window.__lesson.workspaceState.lessonToken,
+    snapshot: window.__lesson.exploreState.snapshot,
+    historyMode: history.state.mode,
+    canvases: document.querySelectorAll('canvas').length,
+  }))).toEqual({
+    mode: 'atlas',
+    kind: 'global',
+    token: null,
+    snapshot: defaultSnapshot,
+    historyMode: 'atlas',
+    canvases: 1,
+  });
+  await page.locator('#lessons-trigger').click();
+  await expect(page.locator('[data-start-lesson="retina-to-v1"]')).toHaveText('Start lesson');
+  await expect(page.locator('[data-restart-lesson="retina-to-v1"]')).toHaveCount(0);
   expect(errors).toEqual([]);
 });
 
@@ -136,7 +199,8 @@ test('local lessons open from the drawer, remain resumable, and disappear on rel
   expect(await page.evaluate(() => window.__lesson.sourceKind)).toBe('local');
 
   await page.locator('#back-to-atlas').click();
-  await expect(page.locator('#return-to-lesson')).toContainText('How visual fields cross');
+  await expect(page.locator('#return-to-lesson')).toHaveText('Return to lesson');
+  await expect(page.locator('#return-to-lesson')).toHaveAccessibleName(/^Return to How visual fields cross.*Scene 1$/i);
   await page.locator('#return-to-lesson').click();
   expect(await page.evaluate(() => window.__lesson.sourceKind)).toBe('local');
   const localHistory = await page.evaluate(() => history.state);
@@ -149,6 +213,52 @@ test('local lessons open from the drawer, remain resumable, and disappear on rel
   expect(await page.evaluate(() => history.state.mode)).toBe('atlas');
   await expect(page.locator('#announcer')).toContainText('not retained');
   expect(await page.evaluate(() => window.__lesson.workspaceState.mode)).toBe('atlas');
+  expect(await page.locator('canvas').count()).toBe(1);
+  expect(errors).toEqual([]);
+});
+
+test('local Exit requires confirmation and stale local history recovers to Atlas', async ({ page }) => { // Tests INV-34, FAIL-32
+  const errors = monitor(page);
+  const source = fs.readFileSync(path.join(__dirname, '../../test/fixtures/lessons/visual-field-crossing.md'), 'utf8');
+  await ready(page);
+  await page.locator('#lessons-trigger').click();
+  await page.locator('#lesson-drawer-open-local').click();
+  await page.locator('#lesson-import-source').fill(source);
+  await page.locator('#lesson-import-validate').click();
+  await page.locator('#lesson-import-open').click();
+  await page.locator('#back-to-atlas').click();
+
+  await page.locator('#exit-lesson').click();
+  const dialog = page.locator('#lesson-exit-dialog');
+  await expect(dialog).toBeVisible();
+  await expect(dialog).toHaveAccessibleName('Exit local lesson?');
+  await expect(dialog).toContainText('This lesson and your place are not saved.');
+  await expect(page.locator('#lesson-exit-keep')).toBeFocused();
+  await page.keyboard.press('Escape');
+  await expect(dialog).toBeHidden();
+  await expect(page.locator('#exit-lesson')).toBeFocused();
+  expect(await page.evaluate(() => Boolean(window.__lesson.workspaceState.lessonToken))).toBe(true);
+
+  await page.locator('#exit-lesson').click();
+  await page.locator('#lesson-exit-keep').click();
+  await expect(page.locator('#exit-lesson')).toBeFocused();
+  expect(await page.evaluate(() => Boolean(window.__lesson.workspaceState.lessonToken))).toBe(true);
+
+  await page.locator('#exit-lesson').click();
+  await page.goBack();
+  await expect(dialog).toBeHidden();
+  await expect(page.locator('#page-scroll')).toBeVisible();
+  await page.goForward();
+  await expect(page.locator('#return-to-lesson')).toBeFocused();
+
+  await page.locator('#exit-lesson').click();
+  await page.locator('#lesson-exit-confirm').click();
+  await expect(page.locator('#lesson-session-actions')).toBeHidden();
+  expect(await page.evaluate(() => window.__lesson.workspaceState.lessonToken)).toBeNull();
+  await page.goBack();
+  await expect(page.locator('#atlas-workspace')).toBeVisible();
+  await expect(page.locator('#announcer')).toContainText('not retained');
+  expect(new URL(page.url()).searchParams.has('lesson')).toBe(false);
   expect(await page.locator('canvas').count()).toBe(1);
   expect(errors).toEqual([]);
 });
@@ -187,8 +297,8 @@ test('the lesson drawer starts and exactly resumes the checked lesson from Atlas
 
   await page.locator('#back-to-atlas').click();
   await expect(page.locator('#atlas-workspace')).toBeVisible();
-  await expect(page.locator('#return-to-lesson')).toBeVisible();
-  await expect(page.locator('#return-to-lesson')).toContainText('Early vision');
+  await expect(page.locator('#return-to-lesson')).toHaveText('Return to lesson');
+  await expect(page.locator('#return-to-lesson')).toHaveAccessibleName(/^Return to Early vision.*Scene 1$/i);
   expect(await page.evaluate(() => window.__lesson.workspaceState.mode)).toBe('atlas');
 
   await page.locator('#return-to-lesson').click();

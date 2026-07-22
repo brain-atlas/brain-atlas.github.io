@@ -41,9 +41,10 @@ model clocks, draw ranges/checksums, in-frame motion, V1-proximal optic events a
 selected association groups, and distinct Skip/Pause/Play/reduced-motion semantics.
 The broader matrix covers Atlas-as-Home, the responsive Lessons drawer, checked and
 local activation, direct/static routes, Back/Forward and
-reload recovery, persistent global state, temporary scene inspection, actual-camera
-preservation, every canonical viewer axis, semantic and pointer camera controls,
-exact Atlas/Lesson Return, repeated one-canvas cycles, stage aspect, compact and
-short-wide layouts, live reduced motion, no-WebGL, and renderer-import failure. The
+reload recovery, persistent global state, lesson-derived Atlas handoff from the actual
+camera and filters, compact Return/Exit controls, checked/local closeout and default reset,
+every canonical viewer axis, semantic and pointer camera controls, exact Return, repeated
+one-canvas cycles, stage aspect, compact and short-wide layouts, live reduced motion,
+no-WebGL, and renderer-import failure. The
 Chromium run also injects real touch input to verify Lesson scrolling versus Atlas
 camera capture.

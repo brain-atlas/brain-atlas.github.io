@@ -8,7 +8,7 @@
 
 **Status:** Approved implementation-facing UX/UI baseline
 
-**Approval:** `brain-atlas-6nn`; Atlas/Home amendment `brain-atlas-56i`
+**Approval:** `brain-atlas-6nn`; Atlas/Home amendment `brain-atlas-56i`; lesson-derived handoff/Exit amendment `brain-atlas-ai4`
 
 **Fidelity disclosure:** `.pi/plans/brain-atlas-yum.3-model-fidelity-disclosure.md`
 
@@ -133,7 +133,7 @@ These are structural requirements, not fixed breakpoints. The layout should resp
 ```
 
 - The stage may be compact-sticky only while enough viewport remains for readable prose and browser controls; otherwise it participates in normal flow.
-- Atlas is the full-screen product Home; scene inspection uses that same surface with an obvious Return to lesson action.
+- Atlas is the full-screen product Home. Every lesson-origin Atlas action uses that same surface from the actual lesson view, with compact **Return to lesson** and **Exit lesson** actions. On the narrowest header, general lesson-entry actions yield until Return/Exit so active-session controls never overlap.
 - Entity details use a bottom sheet or full-screen inspector with focus containment and restoration.
 - No horizontal page scrolling, scroll trapping, overlapping fixed panels, or canvas gesture capture while the learner scrolls the lesson.
 
@@ -172,7 +172,7 @@ These are structural requirements, not fixed breakpoints. The layout should resp
 | Transitioning | Controls remain predictable; repeated navigation resolves to one deterministic target. |
 | Paused | The pause state is labelled; scene navigation and inspection remain available. |
 | Reduced motion | Settled camera/activity state appears without an intermediate animation. |
-| Atlas / scene inspection | Atlas identity and Return to lesson are persistent and unambiguous when a resumable lesson exists. |
+| Atlas / lesson-derived view | Atlas identity plus compact Return/Exit are persistent and unambiguous while a resumable lesson exists. Return is exact; Exit resets default Home. |
 | Validation error | Source text and current lesson are preserved; errors identify line/field and correction. |
 | External image failure | Reserved layout remains stable; alt text, caption, credit, and source link remain usable. |
 | WebGL unavailable | Prose, scene summaries, media alternatives, sources, and lesson navigation remain usable. |
@@ -216,6 +216,21 @@ And the learner activates "Return to lesson"
 Then the complete authored "chiasm" snapshot is restored
 And focus returns to "Explore this scene"
 ```
+
+### Scenario: End a lesson without ambiguous resume state
+
+```gherkin
+Given a checked lesson has a resumable token
+And Atlas is showing that lesson's actual camera and filters
+When the learner activates "Exit lesson"
+Then Return and Exit are removed
+And the checked lesson no longer offers Resume
+And the authored complete default Atlas is applied
+And focus moves to the Atlas destination
+```
+
+For a memory-only local lesson, insert an explicit Keep/Exit confirmation before the
+state changes; Escape and Keep preserve the token and return focus to Exit.
 
 ### Scenario: Reject an invalid import without data loss
 
