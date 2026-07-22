@@ -1,0 +1,1370 @@
+{
+  "schemaVersion": 1,
+  "environment": {
+    "byteExactPlatform": {
+      "os": "macOS",
+      "osVersion": "26.5.1",
+      "build": "25F80",
+      "kernel": "Darwin 25.5.0",
+      "architecture": "arm64"
+    },
+    "uv": {
+      "version": "0.9.30",
+      "bytes": 49354272,
+      "sha256": "63a2114be36011a3e5a43d75a3f95d7126d1709ed17bde86727a06ad3cbb48a0"
+    },
+    "python": {
+      "implementation": "CPython",
+      "version": "3.13.1",
+      "compiler": "Clang 18.1.8",
+      "architecture": "arm64",
+      "baseExecutableBytes": 49968,
+      "baseExecutableSha256": "513a2743ee8807003d3e2cc463c010f0b6615b2fb575300ce34a9a41439b095c",
+      "runtimeTreeSha256": "980e31a414dd30d75494465c41f401339b1449b2e408f2ac9d9b202c17661e2b"
+    },
+    "lock": {
+      "path": "tools/assets/requirements.lock",
+      "bytes": 21976,
+      "sha256": "be44aec52de037588721a5600e56900a981ec32e07e7fbf63232e30ca19209d2",
+      "hashEnforced": true,
+      "offlineRequiredAfterPreparation": true
+    },
+    "directPackages": [
+      {
+        "name": "nibabel",
+        "version": "5.4.2"
+      },
+      {
+        "name": "numpy",
+        "version": "2.5.1"
+      },
+      {
+        "name": "scipy",
+        "version": "1.18.0"
+      },
+      {
+        "name": "scikit-image",
+        "version": "0.26.0"
+      },
+      {
+        "name": "fast-simplification",
+        "version": "0.1.13"
+      },
+      {
+        "name": "trimesh",
+        "version": "4.12.2"
+      }
+    ],
+    "transitivePackages": [
+      {
+        "name": "imageio",
+        "version": "2.37.4"
+      },
+      {
+        "name": "lazy-loader",
+        "version": "0.5"
+      },
+      {
+        "name": "networkx",
+        "version": "3.6.1"
+      },
+      {
+        "name": "packaging",
+        "version": "26.2"
+      },
+      {
+        "name": "pillow",
+        "version": "12.3.0"
+      },
+      {
+        "name": "tifffile",
+        "version": "2026.7.14"
+      }
+    ],
+    "distributionTreeSha256": {
+      "fast-simplification": "8f631f86fc3376e39cfaea6ea5f948715835c8ddf3415d30dc6d6627293381a9",
+      "imageio": "a57948dda68a34d9248ff912d84344f087fed190aea19002e8f510f41a1fe15c",
+      "lazy-loader": "2ddafd1e8f4ac4ccc9709135b69340a6a21a1823862c69f7e78a31d7fd4a9396",
+      "networkx": "415c3086a1db5c0502f73a8b956e5bbe3405a046ccfe855c55f60a426bb3de10",
+      "nibabel": "7d70746d14f2d769e1875416d783311c3f42f9b8c7fc1b7e781e63ab7ed0ffa3",
+      "numpy": "30b568ee4992f7037b04902478583b1ace0d7f1e8360fa100128abeab811636a",
+      "packaging": "bbd0b775601ed8b10d20ecafc2780cfcace1c97cabbfad4c690b24a2f3fa0826",
+      "pillow": "6ec3b8a04c8eb743a3d443487a4e300b0432a56d0ae90409ed265baa4d6e207d",
+      "scikit-image": "2bf2d4564ad96eff06ab95c6524a30fdbd8b031127dcaca091ceee3cc7f6f1bc",
+      "scipy": "ca8a0fc390caf08a2c7adbcce41b1e566584f170d3771c4fe6f9e25563022e92",
+      "tifffile": "23e13e19f5f74160e092e8aca09a9e9a7fbda4ef4b4f140ed93f17cbe05fade5",
+      "trimesh": "6bce924fb5cf15fe9731b76e055479c46caf06f6c6127e873a5e88c56fb62430"
+    },
+    "preflightStatus": "verified byte-exact on recorded environment"
+  },
+  "coordinateFrames": {
+    "anatomy": {
+      "template": "MNI152NLin2009cAsym",
+      "sampling": "1 mm 193x229x193",
+      "coordinateConvention": "RAS+",
+      "units": "mm"
+    },
+    "association": {
+      "template": "ICBM 2009a Nonlinear Asymmetric",
+      "coordinateConvention": "RAS+",
+      "units": "mm",
+      "templateWarp": "none"
+    },
+    "orSwm": {
+      "template": "ICBM152 nonlinear 2009a",
+      "templateVariantEvidence": "asymmetric indicated by release-companion T1; exact FIB build binding unavailable",
+      "coordinateConvention": "RAS+",
+      "units": "mm",
+      "templateWarp": "none",
+      "overlay": "2009c ROI/seed world matrices presented to 2009a FIB; numeric no-warp overlay, not voxel-grid equivalence or claimed anatomical coregistration"
+    },
+    "runtime": {
+      "transformCount": 1,
+      "transform": "proper -90 degree R-axis rotation, uniform millimetre scale, recentering translation",
+      "determinant": 1
+    }
+  },
+  "sources": [
+    {
+      "id": "templateflow-brain-mask",
+      "filename": "tpl-MNI152NLin2009cAsym_res-01_desc-brain_mask.nii.gz",
+      "url": "https://templateflow.s3.amazonaws.com/tpl-MNI152NLin2009cAsym/tpl-MNI152NLin2009cAsym_res-01_desc-brain_mask.nii.gz",
+      "bytes": 159538,
+      "sha256": "e40bb1816736504d4c25abc243c1c8503df1d308f64c048318aa4b829e09a7ae",
+      "dataset": "TemplateFlow MNI152NLin2009cAsym",
+      "version": "TemplateFlow 2009c res-01",
+      "terms": {
+        "id": "MNI notice",
+        "url": "https://github.com/templateflow/tpl-MNI152NLin2009cAsym"
+      },
+      "verifiedOn": "2026-07-22",
+      "acceptanceRequired": false,
+      "redistribution": "raw input not redistributed; derived shell retains MNI notice",
+      "coordinateFrame": "anatomy"
+    },
+    {
+      "id": "julich-mpm",
+      "filename": "JulichBrainAtlas_3.0_areas_MPM_b_N10_nlin2ICBM152asym2009c_public_11035603b4744231e17e87fd8ebcaf1a.nii.gz",
+      "url": "https://data-proxy.ebrains.eu/api/v1/public/buckets/d-d69b70e2-3002-4eaf-9c61-9c56f019bbc8/maximum_probability_maps_MPMs_157areas/JulichBrainAtlas_3.0_areas_MPM_b_N10_nlin2ICBM152asym2009c_public_11035603b4744231e17e87fd8ebcaf1a.nii.gz",
+      "bytes": 335280,
+      "sha256": "3af71c8d467db42d8561115164e0f365b942dfaa3568740ce62846fa3a201aff",
+      "dataset": "Jülich-Brain cytoarchitectonic maps",
+      "version": "3.0.3",
+      "terms": {
+        "id": "CC BY-NC-SA 4.0",
+        "url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+      },
+      "verifiedOn": "2026-07-22",
+      "acceptanceRequired": false,
+      "redistribution": "raw input not redistributed; adapted meshes are noncommercial ShareAlike",
+      "coordinateFrame": "anatomy"
+    },
+    {
+      "id": "julich-v1-left",
+      "filename": "Area-hOc1_pmap_l_N10_nlin2ICBM152asym2009c_4.2_public_258e8c1d846f92be76922b20287344ae.nii.gz",
+      "url": "https://raw.githubusercontent.com/canlab/Neuroimaging_Pattern_Masks/master/Atlases_and_parcellations/2020_JulichBrain_v3.0.3/probabilistic_maps_pmaps_157areas/Area-hOc1/Area-hOc1_pmap_l_N10_nlin2ICBM152asym2009c_4.2_public_258e8c1d846f92be76922b20287344ae.nii.gz",
+      "bytes": 295803,
+      "sha256": "950344acd8428aeacaabc300cfbf48ddcadf843c179dabc6c6a7777f69110a16",
+      "dataset": "Jülich-Brain hOc1/V1 probability map",
+      "version": "3.0.3",
+      "terms": {
+        "id": "CC BY-NC-SA 4.0",
+        "url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+      },
+      "verifiedOn": "2026-07-22",
+      "acceptanceRequired": false,
+      "redistribution": "raw input not redistributed; ROI-derived output obligations retained",
+      "coordinateFrame": "anatomy"
+    },
+    {
+      "id": "julich-lgn-left",
+      "filename": "CGL_pmap_l_N10_nlin2ICBM152asym2009c_10.0_public_5958c3f5255df1271eaa5a8672e39510.nii.gz",
+      "url": "https://raw.githubusercontent.com/canlab/Neuroimaging_Pattern_Masks/master/Atlases_and_parcellations/2020_JulichBrain_v3.0.3/probabilistic_maps_pmaps_157areas/CGL/CGL_pmap_l_N10_nlin2ICBM152asym2009c_10.0_public_5958c3f5255df1271eaa5a8672e39510.nii.gz",
+      "bytes": 59864,
+      "sha256": "50e64d27c70cd4242a9e3042eee1e28abf437dbe7cccbd08f1946ded72ef9a2a",
+      "dataset": "Jülich-Brain CGL/LGN probability map",
+      "version": "3.0.3",
+      "terms": {
+        "id": "CC BY-NC-SA 4.0",
+        "url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+      },
+      "verifiedOn": "2026-07-22",
+      "acceptanceRequired": false,
+      "redistribution": "raw input not redistributed; ROI-derived output obligations retained",
+      "coordinateFrame": "anatomy"
+    },
+    {
+      "id": "templateflow-gm",
+      "filename": "tpl-MNI152NLin2009cAsym_res-01_label-GM_probseg.nii.gz",
+      "url": "https://templateflow.s3.amazonaws.com/tpl-MNI152NLin2009cAsym/tpl-MNI152NLin2009cAsym_res-01_label-GM_probseg.nii.gz",
+      "bytes": 7566494,
+      "sha256": "662b18e83dddc554b19c621d9750af3454b54d4e103df03633eacced3884805a",
+      "dataset": "TemplateFlow MNI152NLin2009cAsym GM probability map",
+      "version": "TemplateFlow 2009c res-01",
+      "terms": {
+        "id": "MNI notice",
+        "url": "https://github.com/templateflow/tpl-MNI152NLin2009cAsym"
+      },
+      "verifiedOn": "2026-07-22",
+      "acceptanceRequired": false,
+      "redistribution": "raw input not redistributed; notice retained",
+      "coordinateFrame": "anatomy"
+    },
+    {
+      "id": "templateflow-wm",
+      "filename": "tpl-MNI152NLin2009cAsym_res-01_label-WM_probseg.nii.gz",
+      "url": "https://templateflow.s3.amazonaws.com/tpl-MNI152NLin2009cAsym/tpl-MNI152NLin2009cAsym_res-01_label-WM_probseg.nii.gz",
+      "bytes": 6911720,
+      "sha256": "b2f80e29f5a1ef55325215d1716ef611f5b1a3cd97b4a49ef4e9564e9564e945",
+      "dataset": "TemplateFlow MNI152NLin2009cAsym WM probability map",
+      "version": "TemplateFlow 2009c res-01",
+      "terms": {
+        "id": "MNI notice",
+        "url": "https://github.com/templateflow/tpl-MNI152NLin2009cAsym"
+      },
+      "verifiedOn": "2026-07-22",
+      "acceptanceRequired": false,
+      "redistribution": "raw input not redistributed; notice retained",
+      "coordinateFrame": "anatomy"
+    },
+    {
+      "id": "hcp1065-tract-archive",
+      "filename": "hcp1065_avg_tracts_trk.zip",
+      "url": "https://github.com/data-others/atlas/releases/download/hcp1065/hcp1065_avg_tracts_trk.zip",
+      "bytes": 587869457,
+      "sha256": "344aad4394f18b8926ed5e1bda911ad56e328c6cf75faa45e1302512ad779c67",
+      "dataset": "HCP-1065 Population-Averaged Tractography Atlas",
+      "version": "hcp1065",
+      "terms": {
+        "ids": [
+          "CC BY-SA 4.0",
+          "WU-Minn HCP Open Access Data Use Terms"
+        ],
+        "urls": [
+          "https://creativecommons.org/licenses/by-sa/4.0/",
+          "https://www.humanconnectome.org/study/hcp-young-adult/document/wu-minn-hcp-consortium-open-access-data-use-terms"
+        ]
+      },
+      "verifiedOn": "2026-07-22",
+      "acceptanceRequired": true,
+      "redistribution": "raw archive not redistributed; adapted output retains CC BY-SA and HCP terms",
+      "coordinateFrame": "association"
+    },
+    {
+      "id": "hcp1065-fib",
+      "filename": "ICBM152_adult.1mm.fz",
+      "url": "https://github.com/data-others/atlas/releases/download/hcp1065/ICBM152_adult.1mm.fz",
+      "bytes": 8181706,
+      "sha256": "3e74089f3e423405ce37a4de08e0e291355ba89463fe39c683cd1c0099a43df7",
+      "dataset": "HCP-1065 Young Adult Fiber Template",
+      "version": "hcp1065 1 mm FIB; exact DSI build version unknown",
+      "terms": {
+        "id": "WU-Minn HCP Open Access Data Use Terms",
+        "url": "https://www.humanconnectome.org/study/hcp-young-adult/document/wu-minn-hcp-consortium-open-access-data-use-terms"
+      },
+      "verifiedOn": "2026-07-22",
+      "acceptanceRequired": true,
+      "redistribution": "FIB not redistributed; derived fibres remain under HCP terms",
+      "coordinateFrame": "orSwm"
+    }
+  ],
+  "intermediates": [
+    {
+      "id": "or-v1-mask",
+      "filename": "v1_L_mni.nii.gz",
+      "bytes": 43153,
+      "sha256": "029100d76aaf6421c0949aecd378a102f8befc96f23b0b9817935619e62b7ba6",
+      "acquisitionEvidence": "derived exactly from julich-v1-left at >= 25% parent maximum",
+      "redistribution": "not redistributed",
+      "coordinateFrame": "anatomy",
+      "voxelCount": 15613
+    },
+    {
+      "id": "or-lgn-mask",
+      "filename": "lgn_L_mni.nii.gz",
+      "bytes": 37975,
+      "sha256": "b40368a68f5dd060ff0e62c5eabbd85bcda1b88fddaf1e40b2074e281a3982ac",
+      "acquisitionEvidence": "derived exactly from julich-lgn-left at >= 10% parent maximum",
+      "redistribution": "not redistributed",
+      "coordinateFrame": "anatomy",
+      "voxelCount": 1224
+    },
+    {
+      "id": "swm-seed",
+      "filename": "swm_shell_mni.nii.gz",
+      "bytes": 299004,
+      "sha256": "6589abdcecef64fb7b32e79f6ffe199b0a16fb011a10eb7f14d77c49548fce12",
+      "acquisitionEvidence": "derived exactly as WM > 0.5 AND four-iteration connectivity-one dilation of GM > 0.5",
+      "redistribution": "not redistributed",
+      "coordinateFrame": "anatomy",
+      "voxelCount": 534090
+    },
+    {
+      "id": "or-recovered-trk",
+      "filename": "or_retrack_L.trk",
+      "bytes": 505868,
+      "sha256": "60799f23977e938411ffc127083d5220e503c4a112b28f4ea14d46d3c01041d0",
+      "acquisitionEvidence": "compact recovered-run log and hashed provenance registry from brain-atlas-yum.5",
+      "redistribution": "not redistributed",
+      "coordinateFrame": "orSwm",
+      "streamlines": 223,
+      "decodedOrderSha256": "5ba9f9401cfa3f255d0b961f55ab089036a33b37d6bb4a8dff8423228b256367",
+      "decodedMultisetSha256": "c139a2bfdba4c47025c698e2275643b68943ded2bb958662aa27f19017eb59e6"
+    },
+    {
+      "id": "swm-recovered-trk-gzip",
+      "filename": "swm_fibres3.trk",
+      "bytes": 232887173,
+      "sha256": "0fd9cab05b61982191b372d77e83842aa51bef939fdcb17857188d90e278a631",
+      "acquisitionEvidence": "compact recovered-run log and hashed provenance registry from brain-atlas-yum.5",
+      "redistribution": "not redistributed",
+      "coordinateFrame": "orSwm",
+      "compression": "gzip under .trk filename"
+    },
+    {
+      "id": "swm-recovered-trk-plain",
+      "filename": "swm_fibres3_plain.trk",
+      "bytes": 271717032,
+      "sha256": "4c79821a3295a66ba07f4f70c1a27191818715f42edcc30dfc632c36a81a4a3f",
+      "acquisitionEvidence": "exact decompression of swm-recovered-trk-gzip",
+      "redistribution": "not redistributed",
+      "coordinateFrame": "orSwm",
+      "streamlines": 200000,
+      "decodedOrderSha256": "908676c1fd0f04ffbf79acb2474c511aa0a5c9037f04398ec4c1bc7c7852eb87",
+      "decodedMultisetSha256": "e3cb46a4c7badd66216a0382ef79bc9b56971b1e966627f18ac1c9eb89291a88"
+    }
+  ],
+  "tools": [
+    {
+      "id": "dsi-studio",
+      "version": "unknown",
+      "filename": "dsi_studio",
+      "bytes": 8762312,
+      "sha256": "1e7aaf6be7ebebd0a69fa428eb9b670400642885137ae1d5710a1c1e3303cf56",
+      "architecture": "arm64 Mach-O",
+      "replayStatus": "manual legacy replays complete: OR class 4, SWM class 3; no replacement authorized",
+      "redistribution": "not redistributed",
+      "methodCitation": "https://doi.org/10.1038/s41592-025-02762-8"
+    },
+    {
+      "id": "uv",
+      "version": "0.9.30",
+      "bytes": 49354272,
+      "sha256": "63a2114be36011a3e5a43d75a3f95d7126d1709ed17bde86727a06ad3cbb48a0"
+    },
+    {
+      "id": "cpython",
+      "version": "3.13.1",
+      "compiler": "Clang 18.1.8",
+      "baseExecutableBytes": 49968,
+      "baseExecutableSha256": "513a2743ee8807003d3e2cc463c010f0b6615b2fb575300ce34a9a41439b095c"
+    }
+  ],
+  "pipelines": [
+    {
+      "id": "cortex",
+      "sourceIds": [
+        "templateflow-brain-mask"
+      ],
+      "parameters": {
+        "inputDtype": "float32 C-contiguous",
+        "gaussianSigma": 1.2,
+        "isoLevel": 0.5,
+        "maxFaces": 80000,
+        "simplifierAgg": 7.0,
+        "outputCoordinateFrame": "anatomy"
+      }
+    },
+    {
+      "id": "regions",
+      "sourceIds": [
+        "julich-mpm"
+      ],
+      "parameters": {
+        "pad": 2,
+        "gaussianSigma": 0.6,
+        "isoLevel": 0.5,
+        "maxFaces": 6000,
+        "simplifierAgg": 7.0,
+        "rightLabelOffset": 1000,
+        "streamOrder": [
+          "subcortical",
+          "early",
+          "ventral",
+          "dorsal",
+          "temporal",
+          "parietal",
+          "frontal",
+          "gap"
+        ],
+        "regions": [
+          {
+            "id": "lgn",
+            "name": "LGN",
+            "area": "CGL",
+            "stream": "subcortical",
+            "parent": "metathalamus",
+            "color": "#b785e0",
+            "opacity": 0.24,
+            "leftLabel": 143,
+            "rightLabel": 1143
+          },
+          {
+            "id": "v1",
+            "name": "V1",
+            "area": "hOc1",
+            "stream": "early",
+            "parent": "occipital cortex",
+            "color": "#85e0c0",
+            "opacity": 0.15,
+            "leftLabel": 8,
+            "rightLabel": 1008
+          },
+          {
+            "id": "v2",
+            "name": "V2",
+            "area": "hOc2",
+            "stream": "early",
+            "parent": "occipital cortex",
+            "color": "#6cdac4",
+            "opacity": 0.15,
+            "leftLabel": 7,
+            "rightLabel": 1007
+          },
+          {
+            "id": "v3v",
+            "name": "V3v",
+            "area": "hOc3v",
+            "stream": "early",
+            "parent": "occipital cortex",
+            "color": "#54d4cc",
+            "opacity": 0.15,
+            "leftLabel": 10,
+            "rightLabel": 1010
+          },
+          {
+            "id": "v3d",
+            "name": "V3d",
+            "area": "hOc3d",
+            "stream": "early",
+            "parent": "occipital cortex",
+            "color": "#3bc2ce",
+            "opacity": 0.15,
+            "leftLabel": 47,
+            "rightLabel": 1047
+          },
+          {
+            "id": "v4v",
+            "name": "V4v",
+            "area": "hOc4v",
+            "stream": "ventral",
+            "parent": "occipital cortex",
+            "color": "#e09285",
+            "opacity": 0.14,
+            "leftLabel": 9,
+            "rightLabel": 1009
+          },
+          {
+            "id": "loa",
+            "name": "LOC-a",
+            "area": "hOc4la",
+            "stream": "ventral",
+            "parent": "occipital cortex",
+            "color": "#dd8f78",
+            "opacity": 0.14,
+            "leftLabel": 45,
+            "rightLabel": 1045
+          },
+          {
+            "id": "lop",
+            "name": "LOC-p",
+            "area": "hOc4lp",
+            "stream": "ventral",
+            "parent": "occipital cortex",
+            "color": "#da8d6c",
+            "opacity": 0.14,
+            "leftLabel": 44,
+            "rightLabel": 1044
+          },
+          {
+            "id": "fg1",
+            "name": "FG1",
+            "area": "FG1",
+            "stream": "ventral",
+            "parent": "fusiform gyrus",
+            "color": "#d78c60",
+            "opacity": 0.14,
+            "leftLabel": 34,
+            "rightLabel": 1034
+          },
+          {
+            "id": "fg2",
+            "name": "FG2",
+            "area": "FG2",
+            "stream": "ventral",
+            "parent": "fusiform gyrus",
+            "color": "#d48c54",
+            "opacity": 0.14,
+            "leftLabel": 33,
+            "rightLabel": 1033
+          },
+          {
+            "id": "fg3",
+            "name": "FG3",
+            "area": "FG3",
+            "stream": "ventral",
+            "parent": "fusiform gyrus",
+            "color": "#d18e47",
+            "opacity": 0.14,
+            "leftLabel": 79,
+            "rightLabel": 1079
+          },
+          {
+            "id": "fg4",
+            "name": "FG4",
+            "area": "FG4",
+            "stream": "ventral",
+            "parent": "fusiform gyrus",
+            "color": "#ce913b",
+            "opacity": 0.14,
+            "leftLabel": 78,
+            "rightLabel": 1078
+          },
+          {
+            "id": "v3a",
+            "name": "V3A",
+            "area": "hOc4d",
+            "stream": "dorsal",
+            "parent": "occipital cortex",
+            "color": "#85c9e0",
+            "opacity": 0.13,
+            "leftLabel": 46,
+            "rightLabel": 1046
+          },
+          {
+            "id": "v6",
+            "name": "V6",
+            "area": "hOc6",
+            "stream": "dorsal",
+            "parent": "occipital cortex",
+            "color": "#7fc4df",
+            "opacity": 0.13,
+            "leftLabel": 102,
+            "rightLabel": 1102
+          },
+          {
+            "id": "mt",
+            "name": "MT/V5",
+            "area": "hOc5",
+            "stream": "dorsal",
+            "parent": "occipital cortex",
+            "color": "#7abfde",
+            "opacity": 0.13,
+            "leftLabel": 6,
+            "rightLabel": 1006
+          },
+          {
+            "id": "hip1",
+            "name": "hIP1",
+            "area": "hIP1",
+            "stream": "dorsal",
+            "parent": "intraparietal sulcus",
+            "color": "#75b9dc",
+            "opacity": 0.13,
+            "leftLabel": 53,
+            "rightLabel": 1053
+          },
+          {
+            "id": "hip2",
+            "name": "hIP2",
+            "area": "hIP2",
+            "stream": "dorsal",
+            "parent": "intraparietal sulcus",
+            "color": "#70b3db",
+            "opacity": 0.13,
+            "leftLabel": 54,
+            "rightLabel": 1054
+          },
+          {
+            "id": "hip3",
+            "name": "hIP3",
+            "area": "hIP3",
+            "stream": "dorsal",
+            "parent": "intraparietal sulcus",
+            "color": "#6aadda",
+            "opacity": 0.13,
+            "leftLabel": 58,
+            "rightLabel": 1058
+          },
+          {
+            "id": "hip4",
+            "name": "hIP4",
+            "area": "hIP4",
+            "stream": "dorsal",
+            "parent": "intraparietal sulcus",
+            "color": "#65a6d9",
+            "opacity": 0.13,
+            "leftLabel": 105,
+            "rightLabel": 1105
+          },
+          {
+            "id": "hip5",
+            "name": "hIP5",
+            "area": "hIP5",
+            "stream": "dorsal",
+            "parent": "intraparietal sulcus",
+            "color": "#60a0d7",
+            "opacity": 0.13,
+            "leftLabel": 106,
+            "rightLabel": 1106
+          },
+          {
+            "id": "hip6",
+            "name": "hIP6",
+            "area": "hIP6",
+            "stream": "dorsal",
+            "parent": "intraparietal sulcus",
+            "color": "#5b99d6",
+            "opacity": 0.13,
+            "leftLabel": 103,
+            "rightLabel": 1103
+          },
+          {
+            "id": "hip7",
+            "name": "hIP7",
+            "area": "hIP7",
+            "stream": "dorsal",
+            "parent": "intraparietal sulcus",
+            "color": "#5591d5",
+            "opacity": 0.13,
+            "leftLabel": 107,
+            "rightLabel": 1107
+          },
+          {
+            "id": "hip8",
+            "name": "hIP8",
+            "area": "hIP8",
+            "stream": "dorsal",
+            "parent": "intraparietal sulcus",
+            "color": "#508ad3",
+            "opacity": 0.13,
+            "leftLabel": 104,
+            "rightLabel": 1104
+          },
+          {
+            "id": "spl7a",
+            "name": "7A",
+            "area": "7A",
+            "stream": "dorsal",
+            "parent": "superior parietal lobule",
+            "color": "#4b82d2",
+            "opacity": 0.13,
+            "leftLabel": 59,
+            "rightLabel": 1059
+          },
+          {
+            "id": "spl7p",
+            "name": "7P",
+            "area": "7P",
+            "stream": "dorsal",
+            "parent": "superior parietal lobule",
+            "color": "#467ad1",
+            "opacity": 0.13,
+            "leftLabel": 69,
+            "rightLabel": 1069
+          },
+          {
+            "id": "spl5l",
+            "name": "5L",
+            "area": "5L",
+            "stream": "dorsal",
+            "parent": "superior parietal lobule",
+            "color": "#4072cf",
+            "opacity": 0.13,
+            "leftLabel": 55,
+            "rightLabel": 1055
+          },
+          {
+            "id": "spl5m",
+            "name": "5M",
+            "area": "5M",
+            "stream": "dorsal",
+            "parent": "superior parietal lobule",
+            "color": "#3b6ace",
+            "opacity": 0.13,
+            "leftLabel": 56,
+            "rightLabel": 1056
+          },
+          {
+            "id": "sts2",
+            "name": "STS2 (ILF→)",
+            "area": "STS2",
+            "stream": "temporal",
+            "parent": "superior temporal sulcus",
+            "color": "#e0b685",
+            "opacity": 0.15,
+            "leftLabel": 94,
+            "rightLabel": 1094
+          },
+          {
+            "id": "pf",
+            "name": "PF",
+            "area": "PF",
+            "stream": "parietal",
+            "parent": "inferior parietal",
+            "color": "#88dd92",
+            "opacity": 0.13,
+            "leftLabel": 68,
+            "rightLabel": 1068
+          },
+          {
+            "id": "pft",
+            "name": "PFt",
+            "area": "PFt",
+            "stream": "parietal",
+            "parent": "inferior parietal",
+            "color": "#77d78c",
+            "opacity": 0.13,
+            "leftLabel": 36,
+            "rightLabel": 1036
+          },
+          {
+            "id": "pfm",
+            "name": "PFm",
+            "area": "PFm",
+            "stream": "parietal",
+            "parent": "inferior parietal",
+            "color": "#65d289",
+            "opacity": 0.13,
+            "leftLabel": 39,
+            "rightLabel": 1039
+          },
+          {
+            "id": "pga",
+            "name": "PGa",
+            "area": "PGa",
+            "stream": "parietal",
+            "parent": "inferior parietal",
+            "color": "#53cd89",
+            "opacity": 0.13,
+            "leftLabel": 37,
+            "rightLabel": 1037
+          },
+          {
+            "id": "hpo1",
+            "name": "hPO1",
+            "area": "hPO1",
+            "stream": "parietal",
+            "parent": "parieto-occipital sulcus",
+            "color": "#41c88b",
+            "opacity": 0.13,
+            "leftLabel": 108,
+            "rightLabel": 1108
+          },
+          {
+            "id": "ofc",
+            "name": "OFC (IFOF→)",
+            "area": "Fo4",
+            "stream": "frontal",
+            "parent": "orbitofrontal cortex",
+            "color": "#d98cc3",
+            "opacity": 0.13,
+            "leftLabel": 114,
+            "rightLabel": 1114
+          },
+          {
+            "id": "presma",
+            "name": "preSMA (SLF I→)",
+            "area": "6ma",
+            "stream": "frontal",
+            "parent": "medial superior frontal",
+            "color": "#d582b9",
+            "opacity": 0.13,
+            "leftLabel": 110,
+            "rightLabel": 1110
+          },
+          {
+            "id": "dlpfc",
+            "name": "DLPFC (SLF II→)",
+            "area": "IFS3",
+            "stream": "frontal",
+            "parent": "inferior frontal sulcus",
+            "color": "#d279ae",
+            "opacity": 0.13,
+            "leftLabel": 86,
+            "rightLabel": 1086
+          },
+          {
+            "id": "broca",
+            "name": "Broca 44 (SLF III→)",
+            "area": "44",
+            "stream": "frontal",
+            "parent": "inferior frontal gyrus",
+            "color": "#cf6fa2",
+            "opacity": 0.13,
+            "leftLabel": 2,
+            "rightLabel": 1002
+          },
+          {
+            "id": "fp1",
+            "name": "Fp1 (pole)",
+            "area": "Fp1",
+            "stream": "frontal",
+            "parent": "frontal pole",
+            "color": "#cc6595",
+            "opacity": 0.13,
+            "leftLabel": 71,
+            "rightLabel": 1071
+          },
+          {
+            "id": "sfg8",
+            "name": "8d1 (SFG)",
+            "area": "8d1",
+            "stream": "frontal",
+            "parent": "superior frontal",
+            "color": "#c85b88",
+            "opacity": 0.13,
+            "leftLabel": 118,
+            "rightLabel": 1118
+          },
+          {
+            "id": "op6",
+            "name": "Op6 (operc.)",
+            "area": "Op6",
+            "stream": "frontal",
+            "parent": "frontal operculum",
+            "color": "#c55179",
+            "opacity": 0.13,
+            "leftLabel": 132,
+            "rightLabel": 1132
+          },
+          {
+            "id": "pcg6",
+            "name": "6d1 (premotor)",
+            "area": "6d1",
+            "stream": "frontal",
+            "parent": "precentral",
+            "color": "#c2476a",
+            "opacity": 0.13,
+            "leftLabel": 98,
+            "rightLabel": 1098
+          },
+          {
+            "id": "gap_fi",
+            "name": "Frontal (unparc.)",
+            "area": "Frontal-I",
+            "stream": "gap",
+            "parent": "GapMap",
+            "color": "#a6b6bf",
+            "opacity": 0.07,
+            "leftLabel": 152,
+            "rightLabel": 1152
+          },
+          {
+            "id": "gap_fii",
+            "name": "Frontal-II (unparc.)",
+            "area": "Frontal-II",
+            "stream": "gap",
+            "parent": "GapMap",
+            "color": "#95a3b2",
+            "opacity": 0.07,
+            "leftLabel": 153,
+            "rightLabel": 1153
+          },
+          {
+            "id": "gap_fo",
+            "name": "Fronto-occipital (unparc.)",
+            "area": "Frontal-to-Occipital",
+            "stream": "gap",
+            "parent": "GapMap",
+            "color": "#838fa5",
+            "opacity": 0.07,
+            "leftLabel": 155,
+            "rightLabel": 1155
+          },
+          {
+            "id": "gap_tp",
+            "name": "Temporo-parietal (unparc.)",
+            "area": "Temporal-to-Parietal",
+            "stream": "gap",
+            "parent": "GapMap",
+            "color": "#717998",
+            "opacity": 0.07,
+            "leftLabel": 154,
+            "rightLabel": 1154
+          }
+        ],
+        "streams": {
+          "subcortical": {
+            "hue": 286
+          },
+          "early": {
+            "hue": 172
+          },
+          "ventral": {
+            "hue": 22
+          },
+          "dorsal": {
+            "hue": 208
+          },
+          "temporal": {
+            "hue": 45
+          },
+          "parietal": {
+            "hue": 140
+          },
+          "frontal": {
+            "hue": 330
+          },
+          "gap": {
+            "hue": 215
+          }
+        }
+      }
+    },
+    {
+      "id": "association",
+      "sourceIds": [
+        "hcp1065-tract-archive"
+      ],
+      "parameters": {
+        "tractOrder": [
+          "ilf",
+          "ifof",
+          "slf1",
+          "slf2",
+          "slf3",
+          "vof",
+          "af",
+          "mdlf"
+        ],
+        "hemisphereOrder": [
+          "L",
+          "R"
+        ],
+        "rng": "numpy default_rng",
+        "seed": 0,
+        "fibresPerTractHemisphere": 180,
+        "pointsPerFibre": 40,
+        "coordinateRoundingDecimals": 1,
+        "storageOrder": "reverse after resampling only when first endpoint y > last endpoint y; storage convention is not biological direction",
+        "tracts": [
+          {
+            "id": "ilf",
+            "name": "ILF",
+            "stream": "ventral",
+            "color": "#ff9d5c",
+            "archiveMembers": {
+              "L": "association/ILF_L.trk.gz",
+              "R": "association/ILF_R.trk.gz"
+            }
+          },
+          {
+            "id": "ifof",
+            "name": "IFOF",
+            "stream": "ventral",
+            "color": "#ff7a45",
+            "archiveMembers": {
+              "L": "association/IFOF_L.trk.gz",
+              "R": "association/IFOF_R.trk.gz"
+            }
+          },
+          {
+            "id": "slf1",
+            "name": "SLF I",
+            "stream": "dorsal",
+            "color": "#5ec8e0",
+            "archiveMembers": {
+              "L": "association/SLF1_L.trk.gz",
+              "R": "association/SLF1_R.trk.gz"
+            }
+          },
+          {
+            "id": "slf2",
+            "name": "SLF II",
+            "stream": "dorsal",
+            "color": "#4aa8ff",
+            "archiveMembers": {
+              "L": "association/SLF2_L.trk.gz",
+              "R": "association/SLF2_R.trk.gz"
+            }
+          },
+          {
+            "id": "slf3",
+            "name": "SLF III",
+            "stream": "dorsal",
+            "color": "#6e9cff",
+            "archiveMembers": {
+              "L": "association/SLF3_L.trk.gz",
+              "R": "association/SLF3_R.trk.gz"
+            }
+          },
+          {
+            "id": "vof",
+            "name": "VOF",
+            "stream": "dorsal",
+            "color": "#59d0c0",
+            "archiveMembers": {
+              "L": "association/VOF_L.trk.gz",
+              "R": "association/VOF_R.trk.gz"
+            }
+          },
+          {
+            "id": "af",
+            "name": "Arcuate",
+            "stream": "dorsal",
+            "color": "#9d8bff",
+            "archiveMembers": {
+              "L": "association/AF_L.trk.gz",
+              "R": "association/AF_R.trk.gz"
+            }
+          },
+          {
+            "id": "mdlf",
+            "name": "MdLF",
+            "stream": "dorsal",
+            "color": "#3fd0b0",
+            "archiveMembers": {
+              "L": "association/MdLF_L.trk.gz",
+              "R": "association/MdLF_R.trk.gz"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "optic-radiation",
+      "sourceIds": [
+        "hcp1065-fib",
+        "julich-v1-left",
+        "julich-lgn-left"
+      ],
+      "intermediateIds": [
+        "or-v1-mask",
+        "or-lgn-mask",
+        "or-recovered-trk"
+      ],
+      "parameters": {
+        "v1Threshold": ">= 0.25 * finite parent maximum",
+        "lgnThreshold": ">= 0.10 * finite parent maximum",
+        "dsiArgv": [
+          "--action=trk",
+          "--source=<FIB>",
+          "--seed=<V1_MASK>",
+          "--end=<LGN_MASK>",
+          "--seed_count=300000",
+          "--turning_angle=65",
+          "--step_size=0.5",
+          "--smoothing=0.2",
+          "--min_length=40",
+          "--max_length=170",
+          "--thread_count=6",
+          "--output=<OUTPUT>"
+        ],
+        "randomSeed": "observed executable default 0; no argv flag",
+        "pointsPerFibre": 64,
+        "coordinateRoundingDecimals": 2,
+        "v1Endpoint": "lower-y rounded endpoint; exact tie selects first stored endpoint",
+        "v1Centroid": [
+          -12.3,
+          -92.7,
+          1.1
+        ],
+        "retainCentroidDistance": "<= 18.0 mm",
+        "expectedInputFibres": 223,
+        "expectedOutputFibres": 220
+      },
+      "preparationSourceIds": [
+        "julich-v1-left",
+        "julich-lgn-left"
+      ]
+    },
+    {
+      "id": "swm",
+      "sourceIds": [
+        "hcp1065-fib",
+        "templateflow-gm",
+        "templateflow-wm"
+      ],
+      "intermediateIds": [
+        "swm-seed",
+        "swm-recovered-trk-gzip",
+        "swm-recovered-trk-plain"
+      ],
+      "parameters": {
+        "seedRule": "(WM > 0.5) AND binary_dilation(GM > 0.5, connectivity-one, iterations=4, border_value=0)",
+        "dsiArgv": [
+          "--action=trk",
+          "--source=<FIB>",
+          "--seed=<SWM_SEED>",
+          "--tract_count=200000",
+          "--min_length=8",
+          "--max_length=80",
+          "--turning_angle=50",
+          "--step_size=0.5",
+          "--thread_count=8",
+          "--output=<OUTPUT>"
+        ],
+        "randomSeed": "observed executable default 0; no argv flag",
+        "endpointRibbon": "binary_dilation(GM > 0.40, connectivity-one, iterations=1, border_value=0)",
+        "endpointVoxelIndex": "inverse affine then CPython nearest-even round per component",
+        "retainedLengthMm": "inclusive 8.0 through 55.0",
+        "neighbourRadiusMm": 7.0,
+        "neighbourReduction": "ascending retained index, float64 mean",
+        "rng": "numpy default_rng",
+        "seed": 0,
+        "sampleCount": 15000,
+        "pointsPerFibre": 8,
+        "coordinateAndLengthRoundingDecimals": 1
+      },
+      "preparationSourceIds": [
+        "templateflow-wm",
+        "templateflow-gm"
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "id": "cortical-shell",
+      "path": "public/models/brain_mni.glb",
+      "bytes": 1440820,
+      "sha256": "e8c640c72b929b877220f842a53c280f59583606450acacb0efd58f74f454bed",
+      "pipelineId": "cortex",
+      "autoReplacePublicAsset": false
+    },
+    {
+      "id": "region-manifest",
+      "path": "public/data/regions.json",
+      "bytes": 21406,
+      "sha256": "1d7d6891e8abe33c78093ab2e99407f6f1095e57cb25951085d11f4a506d988c",
+      "pipelineId": "regions",
+      "autoReplacePublicAsset": false,
+      "keyOrder": [
+        "space",
+        "source",
+        "streams",
+        "regions"
+      ]
+    },
+    {
+      "id": "region-mesh-tree",
+      "path": "public/data/regions",
+      "bytes": 11648359,
+      "fileCount": 90,
+      "sha256": "c3aadb2f71f7c0b94065cf70656f34894b380c908a3008245e7d948486c97dc7",
+      "pipelineId": "regions",
+      "autoReplacePublicAsset": false
+    },
+    {
+      "id": "association-tracts",
+      "path": "public/data/tracts.json",
+      "bytes": 2425216,
+      "sha256": "568d8848a6dfe4cb859d9c7ec8e572a90cf0d71d0b7c741c4a1e1e2e4471b213",
+      "pipelineId": "association",
+      "geometrySha256": "e2c1486875de14e39f4b1a047db9841e4253b334fecf80c1ef55c255df940c70",
+      "autoReplacePublicAsset": false,
+      "keyOrder": [
+        "space",
+        "source",
+        "tracts"
+      ]
+    },
+    {
+      "id": "optic-radiation",
+      "path": "public/data/or_fibres.json",
+      "bytes": 341060,
+      "sha256": "1ca89796c621963388f635bd31ab0bd9a28eec7917de6c12ef8b68d469da4144",
+      "pipelineId": "optic-radiation",
+      "geometrySha256": "b89152176bd9a96796a02e449a4a34151572512def61014d04833336b6695b6e",
+      "autoReplacePublicAsset": false,
+      "runtimeRightGeometry": "x -> -x mirror of left geometry; fibre and point order retained",
+      "keyOrder": [
+        "n",
+        "np",
+        "space",
+        "fibres",
+        "source"
+      ]
+    },
+    {
+      "id": "swm",
+      "path": "public/data/swm_fibres.json",
+      "bytes": 2758578,
+      "sha256": "81529a410c9053731416124e346dce21e85d96c85fb8b3bad151735a4b1f81fb",
+      "pipelineId": "swm",
+      "geometrySha256": "9dfc14d565c8f7ccb4c57ba0d2eee1bd9dca0549e3c7d07f70d6fe47f07f4331",
+      "autoReplacePublicAsset": false,
+      "keyOrder": [
+        "n",
+        "np",
+        "space",
+        "source",
+        "len",
+        "lloc",
+        "fibres"
+      ]
+    }
+  ],
+  "rights": [
+    {
+      "outputId": "cortical-shell",
+      "sourceIds": [
+        "templateflow-brain-mask"
+      ],
+      "determination": "distribution permitted with MNI notice",
+      "blocking": false,
+      "obligations": [
+        "retain MNI copyright and permission notice",
+        "identify surface conversion and decimation"
+      ],
+      "evidence": [
+        "DATA_LICENSES.md#MNI152NLin2009cAsym-cortical-surface"
+      ],
+      "reviewer": "Brain Atlas provenance audit",
+      "reviewedOn": "2026-07-22",
+      "notLegalAdvice": true
+    },
+    {
+      "outputId": "region-manifest",
+      "sourceIds": [
+        "julich-mpm"
+      ],
+      "determination": "adapted data permitted for noncommercial use under CC BY-NC-SA 4.0",
+      "blocking": false,
+      "obligations": [
+        "attribution",
+        "identify modifications",
+        "noncommercial use",
+        "ShareAlike"
+      ],
+      "evidence": [
+        "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8",
+        "DATA_LICENSES.md#Jülich-Brain-region-surfaces"
+      ],
+      "reviewer": "Brain Atlas provenance audit",
+      "reviewedOn": "2026-07-22",
+      "notLegalAdvice": true
+    },
+    {
+      "outputId": "region-mesh-tree",
+      "sourceIds": [
+        "julich-mpm"
+      ],
+      "determination": "adapted data permitted for noncommercial use under CC BY-NC-SA 4.0",
+      "blocking": false,
+      "obligations": [
+        "attribution",
+        "identify modifications",
+        "noncommercial use",
+        "ShareAlike"
+      ],
+      "evidence": [
+        "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8",
+        "DATA_LICENSES.md#Jülich-Brain-region-surfaces"
+      ],
+      "reviewer": "Brain Atlas provenance audit",
+      "reviewedOn": "2026-07-22",
+      "notLegalAdvice": true
+    },
+    {
+      "outputId": "association-tracts",
+      "sourceIds": [
+        "hcp1065-tract-archive"
+      ],
+      "determination": "adapted data permitted under CC BY-SA 4.0 and WU-Minn HCP terms",
+      "blocking": false,
+      "obligations": [
+        "attribution",
+        "ShareAlike",
+        "HCP acknowledgment and citations",
+        "retain HCP use and redistribution restrictions"
+      ],
+      "evidence": [
+        "https://brain.labsolver.org/hcp_trk_atlas.html",
+        "https://www.humanconnectome.org/study/hcp-young-adult/document/wu-minn-hcp-consortium-open-access-data-use-terms",
+        "DATA_LICENSES.md#HCP-1065-tractography-atlas"
+      ],
+      "reviewer": "Brain Atlas provenance audit",
+      "reviewedOn": "2026-07-22",
+      "notLegalAdvice": true
+    },
+    {
+      "outputId": "optic-radiation",
+      "sourceIds": [
+        "hcp1065-fib",
+        "julich-v1-left",
+        "julich-lgn-left"
+      ],
+      "determination": "conservative combined distribution under WU-Minn HCP terms and Jülich CC BY-NC-SA 4.0 obligations",
+      "blocking": false,
+      "obligations": [
+        "HCP acknowledgment and citations",
+        "retain HCP use and redistribution restrictions",
+        "Jülich attribution",
+        "identify ROI-guided modifications",
+        "noncommercial use",
+        "ShareAlike"
+      ],
+      "evidence": [
+        "DATA_LICENSES.md#HCP-1065-template-derived-fibres",
+        "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
+      ],
+      "reviewer": "Brain Atlas provenance audit",
+      "reviewedOn": "2026-07-22",
+      "notLegalAdvice": true
+    },
+    {
+      "outputId": "swm",
+      "sourceIds": [
+        "hcp1065-fib",
+        "templateflow-gm",
+        "templateflow-wm"
+      ],
+      "determination": "distribution permitted under WU-Minn HCP terms with MNI notice retained",
+      "blocking": false,
+      "obligations": [
+        "HCP acknowledgment and citations",
+        "retain HCP use and redistribution restrictions",
+        "retain MNI notice",
+        "identify seed/ribbon derivation"
+      ],
+      "evidence": [
+        "DATA_LICENSES.md#HCP-1065-template-derived-fibres",
+        "https://github.com/templateflow/tpl-MNI152NLin2009cAsym"
+      ],
+      "reviewer": "Brain Atlas provenance audit",
+      "reviewedOn": "2026-07-22",
+      "notLegalAdvice": true
+    }
+  ],
+  "limitations": {
+    "opticRadiation": {
+      "rightGeometry": "runtime x -> -x mirror of left geometry",
+      "replacementOwner": "brain-atlas-yum.7",
+      "dsiVersion": "unknown",
+      "trackingReplay": "manual replay class 4: canonical 216 raw/215 retained and clean repeat 234/233 versus recovered 223/220; current JSON remains tied to recovered intermediate"
+    },
+    "orSwmFibVariant": "asymmetric variant indicated by release-companion T1; no retained direct FIB build binding",
+    "mixedTemplateOverlay": "numeric no-warp common-world overlay; not a claim of shared voxel grid or proven anatomical coregistration",
+    "associationStorageOrder": "posterior-first storage convention is not biological polarity",
+    "publicReplacement": "never automatic; observed OR class 4 and SWM class 3 replays are not replacement candidates; any future candidate requires a separate approval",
+    "dsiReplayEvidence": {
+      "opticRadiation": {
+        "class": "4 materially-different",
+        "canonicalReplay": "216 raw / 215 retained",
+        "cleanRepeat": "234 raw / 233 retained",
+        "recoveredReference": "223 raw / 220 retained"
+      },
+      "swm": {
+        "class": "3 metric-only",
+        "replay": "200000 raw / 15000 sampled with different decoded geometry and output bytes"
+      },
+      "exactSourceBuildBinding": "unresolved",
+      "varyingInternalStage": "unresolved",
+      "currentJsonBoundary": "byte-exact only from registered recovered TrackVis intermediates through deterministic post-processing",
+      "replacementAuthorized": false,
+      "legacyCloseoutDecision": "brain-atlas-3ct",
+      "deterministicRetrackingOwner": "brain-atlas-yum.13"
+    }
+  }
+}

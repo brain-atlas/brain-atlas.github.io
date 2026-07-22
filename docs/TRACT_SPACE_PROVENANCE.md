@@ -1,7 +1,8 @@
 # Fibre template-space provenance
 
-Status: current public traceability record for `brain-atlas-yum.5` (2026-07-22).
-This record covers the coordinate lineage of the three runtime fibre assets. See
+Status: current public traceability record for `brain-atlas-yum.5` and the
+checked `brain-atlas-yum.6` pipeline evidence (2026-07-22). This record covers the
+coordinate lineage and reproducibility boundary of the three runtime fibre assets. See
 [`SCIENTIFIC_TRACEABILITY.md`](SCIENTIFIC_TRACEABILITY.md) for the full anatomy and
 activity inventory and [`DATA_LICENSES.md`](../DATA_LICENSES.md) for redistribution
 terms.
@@ -68,9 +69,10 @@ is not itself a streamline RAS/LPS coordinate label. With nibabel 5.4.2,
 4. the header `voxel_to_rasmm` transform.
 
 The loaded tractograms used by the recovered processing therefore expose RAS+ world
-millimetres. The recovered generator package versions are not known; fresh
-post-processing verification used nibabel 5.4.2, NumPy 2.5.1, and SciPy 1.18.0 and
-reproduced every pre-correction output byte.
+millimetres. The recovered generator package versions are not known. The checked
+`tools/assets` pipeline freezes nibabel 5.4.2, NumPy 2.5.1, SciPy 1.18.0, and the
+asset-specific writers; it reproduces current outputs exactly under its registered
+environment and inputs.
 
 ### Verified grids and header matrices
 
@@ -96,11 +98,18 @@ the coordinate evidence used here.
 
 The checked research script
 `.pi/research/2026-07-22-tract-space-provenance/verify.py` pins nibabel 5.4.2,
-NumPy 2.5.1, and SciPy 1.18.0 and records these operations. It requires explicit
-paths to non-redistributed sources and never launches DSI Studio. It fails unless
-all 15 consumed external/recovered artifacts and all three complete current JSON
-assets match registered SHA-256 values. It also enforces exact binary mask/seed
+NumPy 2.5.1, and SciPy 1.18.0 and records the original provenance audit. It requires
+explicit paths to non-redistributed sources and never launches DSI Studio. It fails
+unless all 15 consumed external/recovered artifacts and all three complete current
+JSON assets match registered SHA-256 values. It also enforces exact binary mask/seed
 derivations, form codes, nonconflicting matrices, and parent-to-derived grids.
+
+The normative generator contract is now [`tools/assets/SPEC.md`](../tools/assets/SPEC.md).
+Its schema-validated manifest, pinned Python 3.13.1 environment, hash-before-parse
+inputs, safe empty output roots, frozen numerical/writer contracts, printer-only DSI
+boundary, and exact output checks cover cortex, regions, association tracts, optic
+radiation, and SWM. It never downloads implicitly, writes into `public/`, or treats
+contour order as biological direction.
 
 ### FIB companion-T1 comparison
 
@@ -145,13 +154,14 @@ tests unrounded endpoints in `binary_dilation(GM>0.40, iterations=1)`.
 587,869,457 bytes). The selected bilateral bundles are ILF, IFOF, SLF I–III,
 VOF, arcuate, and MdLF.
 
-**Recovered derivation.** The project generator parsed each gzipped TRK with
-nibabel, used NumPy RNG seed 0, sampled 180 fibres per tract/hemisphere, resampled
-by cumulative arc length to 40 points, rounded to 0.1 mm, and reversed storage
-order when needed so lower y came first. That last step was an old animation/storage
-convention, not biological polarity; current activity ignores contour order.
+**Checked derivation.** `tools/assets/association.py` parses each gzipped TRK with
+nibabel, uses one NumPy RNG seed 0 across the manifest's tract/hemisphere order,
+samples 180 fibres per group, resamples by cumulative arc length to 40 points,
+rounds to 0.1 mm, and reverses storage order when needed so lower y comes first.
+That last step preserves an old animation/storage convention, not biological
+polarity; current activity ignores contour order.
 
-A fresh run against the upstream archive reproduced the complete former file
+A fresh pinned run against the upstream archive reproduced the complete former file
 byte-for-byte: SHA-256
 `3e6dc53d97367435fa806435970cd78cc17f81ec51c4ace40f71b3ea5e98abef`.
 This proves that its former `MNI152NLin2009cAsym` string was unsupported generator
@@ -201,11 +211,22 @@ DSI versioned run.
 Project code resampled contours by cumulative arc length to 64 points, rounded to
 0.01 mm, and removed three streamlines under its rule `distance(V1-side endpoint,
 [-12.3,-92.7,1.1]) > 18 mm`. This centroid rule is a project filter, not proof
-that those streamlines were anatomically aberrant or outside V1. Post-processing
-the recovered intermediate reproduced the former JSON byte-for-byte: SHA-256
-`3516ddc59881ab1303b0da4e795a94dd47940181cbdf2d6e1e59e999577004c6`.
-The DSI tracking run itself was not reproduced. The frozen parsed geometry hash is
+that those streamlines were anatomically aberrant or outside V1. Post-processing the recovered intermediate reproduced the former JSON byte-for-byte:
+SHA-256 `3516ddc59881ab1303b0da4e795a94dd47940181cbdf2d6e1e59e999577004c6`;
+the current metadata-corrected file is SHA-256
+`1ca89796c621963388f635bd31ab0bd9a28eec7917de6c12ef8b68d469da4144`.
+The frozen parsed geometry hash is
 `b89152176bd9a96796a02e449a4a34151572512def61014d04833336b6695b6e`.
+
+**Manual replay boundary.** The registered six-thread replay used the exact surviving
+executable, FIB, and prepared masks but generated 216 raw fibres; fixed
+post-processing retained 215, so the result is class 4 `materially-different`. One
+clean repeat generated 234/233 with a different decoded multiset. The two accepted
+contemporary runs establish end-to-end non-repeatability without identifying the
+varying internal stage. Neither recreates the recovered 223/220 asset, and neither
+may replace it. Decision `brain-atlas-3ct` accepts this exact legacy boundary only
+for pipeline closeout; source/build-bound deterministic retracking belongs to
+`brain-atlas-yum.13`.
 
 For all 220 final contours, the higher-y endpoint is the LGN side selected by
 nearest-mask assignment. LGN voxel-center distance: median 0.488 mm, 95th percentile
@@ -259,9 +280,18 @@ replayed and its exact user-facing version string was not retained.
 
 Running this post-processing against the recovered 200,000-streamline intermediate
 reproduced the former JSON byte-for-byte: SHA-256
-`e367886be8905e4036a9159cb1c6b6b9b32f5a78fde7b4e926cd6876792e8372`.
-The DSI tracking run itself was not reproduced. The frozen parsed geometry/length
-hash is `9dfc14d565c8f7ccb4c57ba0d2eee1bd9dca0549e3c7d07f70d6fe47f07f4331`.
+`e367886be8905e4036a9159cb1c6b6b9b32f5a78fde7b4e926cd6876792e8372`;
+the current metadata-corrected file is SHA-256
+`81529a410c9053731416124e346dce21e85d96c85fb8b3bad151735a4b1f81fb`.
+The frozen parsed geometry/length hash is
+`9dfc14d565c8f7ccb4c57ba0d2eee1bd9dca0549e3c7d07f70d6fe47f07f4331`.
+
+**Manual replay boundary.** The registered eight-thread replay generated 200,000
+tracts. Fixed post-processing produced the required 15,000-fibre shape, but decoded
+geometry and output bytes differed from the recovered reference; the result remains
+class 3 `metric-only`. Decision `brain-atlas-3ct` authorizes no class promotion or
+replacement. Current SWM JSON remains tied to the exact recovered TrackVis
+intermediate through deterministic post-processing.
 
 Final bounds are `[-64.8,-101.9,-68.8]` to `[65.9,69.8,79.4]` mm. Mean-x
 assignment gives 7,220 left and 7,780 right fibres. `len` spans 8.0–55.0 mm
@@ -291,13 +321,16 @@ frame, with the FIB variant evidence limit disclosed**.
 
 ## Remaining limitations and work owners
 
-- OR and SWM have exact source FIB/intermediate hashes and recovered commands, but
-  their DSI tracking runs were not replayed. The executable hash is
-  `1e7aaf6be7ebebd0a69fa428eb9b670400642885137ae1d5710a1c1e3303cf56`;
-  the user-facing version string and direct FIB-to-companion-T1 build binding were
-  not retained.
-- Full checked-in generators, pinned tool versions, parameter manifests, and DSI
-  handoff/replay belong to `brain-atlas-yum.6`.
+- The checked pipelines reproduce cortex, regions, association tracts, OR/SWM
+  preparation, and current OR/SWM JSON from recovered intermediates. Manual DSI
+  replays did not recreate the OR/SWM intermediates: OR remains class 4 and SWM
+  class 3. The exact source/build binding and varying internal stage remain
+  unresolved. `brain-atlas-yum.13` owns deterministic retracking; any candidate
+  replacement requires separate approval.
+- The surviving executable hash is
+  `1e7aaf6be7ebebd0a69fa428eb9b670400642885137ae1d5710a1c1e3303cf56`.
+  Its emitted Hou/Jul 9 2026 identity does not bind it to exact source, and the
+  direct FIB-to-companion-T1 build binding remains unavailable.
 - Right optic-radiation mirroring remains a material limitation owned by
   `brain-atlas-yum.7`.
 - Association endpoint-region meaning remains limited by tractography and naming.

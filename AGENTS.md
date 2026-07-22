@@ -62,8 +62,12 @@ This is the project's defining constraint.
 - Optic radiation and superficial WM: tracked with DSI Studio on the official
   HCP-1065 `ICBM152_adult.1mm.fz`. A recovered OR trial reports header-srow
   alignment for the differing 2009c ROI grid; final OR masks and the SWM seed have
-  identical qform/sform code 4 matrices. The exact DSI runs were not replayed, and
-  this must never be described as voxel-index equivalence.
+  identical qform/sform code 4 matrices. Manual legacy replays did not recreate the
+  recovered intermediates: OR is frozen class 4 and SWM class 3 under decision
+  `brain-atlas-3ct`. Current JSON is byte-reproducible only from the registered
+  recovered TrackVis files and deterministic post-processing. Never describe this
+  as full upstream regeneration or voxel-index equivalence, and never replace a
+  public asset with replay output without separate approval.
 - Parse structured/binary data (NIfTI, `.trk` streamlines, JSON, OBJ/GLB) with
   established parsers (nibabel, the three.js loaders) — never ad-hoc byte or text
   matching. DSI Studio writes **gzipped** `.trk` under a plain `.trk` name; detect
@@ -135,13 +139,16 @@ evidence; do not duplicate those inventories in `AGENTS.md`.
 
 ## Offline data pipeline (heavy generation is NOT in the app)
 Meshing and tractography run offline and emit small JSON/OBJ/GLB into
-`public/data` and `public/models`.
+`public/data` and `public/models`. `tools/assets/SPEC.md` is the normative contract:
+inputs are explicit and hash-checked, output roots are new and empty, and tooling
+never writes into or replaces `public/` assets.
 
-- Run Python with `uv run --with nibabel --with numpy --with scipy python …`
-  (there is no project venv carrying these).
+- Invoke checked asset tools with `uv run --python 3.13.1 --offline
+  --with-requirements tools/assets/requirements.lock python -m tools.assets …`.
 - The **DSI Studio binary cannot be launched from an agent shell** — the harness
-  blocks it. Hand the user the exact `dsi_studio --action=trk …` command and have
-  them run it via `!`, then take over parsing the output.
+  blocks it. `dsi-command` may print a hash-checking wrapper for the user to run via
+  `!`; agent code may only validate retained output. A user-run replay is evidence,
+  not automatic replacement authority.
 - Author outputs in MNI mm, resample fibres to a fixed point count, round
   coordinates, and keep files web-light (decimate meshes, sample fibres). GPU
   memory is the binding constraint, not disk.

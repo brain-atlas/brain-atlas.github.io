@@ -1,0 +1,6 @@
+nibabel==5.4.2
+numpy==2.5.1
+scipy==1.18.0
+scikit-image==0.26.0
+fast-simplification==0.1.13
+trimesh==4.12.2

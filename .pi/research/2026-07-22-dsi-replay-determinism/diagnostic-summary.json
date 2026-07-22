@@ -1,0 +1,1255 @@
+{
+  "schemaVersion": 2,
+  "date": "2026-07-22",
+  "bead": "brain-atlas-yum.6.1",
+  "controlledRunApproval": "brain-atlas-47w",
+  "legacyExceptionApproval": "brain-atlas-3ct",
+  "scope": "Compact ledger for the exact registered legacy OR/SWM replay evidence; raw outputs and complete logs remain outside Git.",
+  "hashAlgorithms": {
+    "file": "SHA-256 over exact bytes",
+    "argv": "SHA-256 of brain-atlas/dsi-argv/v1 NUL prefix, big-endian token count, and big-endian length-framed UTF-8 tokens",
+    "decoded": "tools/assets/SPEC.md TrackVis v1 framing"
+  },
+  "environment": {
+    "platform": "macOS 26.5.1 arm64",
+    "dsiEmittedIdentity": "DSI Studio Hou version (Jul 9 2026)",
+    "exactSourceBuildBinding": "unresolved"
+  },
+  "commonInputs": {
+    "dsiExecutable": {
+      "externalPathAtVerification": "/Applications/dsi_studio.app/Contents/MacOS/dsi_studio",
+      "bytes": 8762312,
+      "sha256": "1e7aaf6be7ebebd0a69fa428eb9b670400642885137ae1d5710a1c1e3303cf56"
+    },
+    "dsiHumanQaResource": {
+      "externalPathAtVerification": "/Applications/dsi_studio.app/Contents/MacOS/atlas/human/human_QA.nii.gz",
+      "bytes": 9091708,
+      "sha256": "2d9b9344f10403a86ebf7cd374500c381e55a66a2d62dc5920194435d706bee8",
+      "role": "implicitly loaded during observed bias correction"
+    },
+    "hcp1065Fib": {
+      "externalPathAtVerification": "/tmp/brain-atlas-yum6-dsi-replay/input/ICBM152_adult.1mm.fz",
+      "bytes": 8181706,
+      "sha256": "3e74089f3e423405ce37a4de08e0e291355ba89463fe39c683cd1c0099a43df7"
+    },
+    "v1Mask": {
+      "externalPathAtVerification": "/tmp/brain-atlas-yum6-phase4-prepare.6FhYw2/or-output/v1_L_mni.nii.gz",
+      "bytes": 43153,
+      "sha256": "029100d76aaf6421c0949aecd378a102f8befc96f23b0b9817935619e62b7ba6"
+    },
+    "lgnMask": {
+      "externalPathAtVerification": "/tmp/brain-atlas-yum6-phase4-prepare.6FhYw2/or-output/lgn_L_mni.nii.gz",
+      "bytes": 37975,
+      "sha256": "b40368a68f5dd060ff0e62c5eabbd85bcda1b88fddaf1e40b2074e281a3982ac"
+    },
+    "swmSeed": {
+      "externalPathAtVerification": "/tmp/brain-atlas-yum6-phase4-prepare.6FhYw2/swm-output/swm_shell_mni.nii.gz",
+      "bytes": 299004,
+      "sha256": "6589abdcecef64fb7b32e79f6ffe199b0a16fb011a10eb7f14d77c49548fce12"
+    }
+  },
+  "frozenRecoveredReferences": {
+    "opticRadiation": {
+      "trackvis": {
+        "registeredExternalArtifact": "recovered-external/or_retrack_L.trk",
+        "bytes": 505868,
+        "sha256": "60799f23977e938411ffc127083d5220e503c4a112b28f4ea14d46d3c01041d0"
+      },
+      "publicOutput": {
+        "path": "public/data/or_fibres.json",
+        "bytes": 341060,
+        "sha256": "1ca89796c621963388f635bd31ab0bd9a28eec7917de6c12ef8b68d469da4144",
+        "geometryPayloadSha256": "b89152176bd9a96796a02e449a4a34151572512def61014d04833336b6695b6e"
+      }
+    },
+    "swm": {
+      "trackvisGzip": {
+        "registeredExternalArtifact": "recovered-external/swm_fibres3.trk",
+        "bytes": 232887173,
+        "sha256": "0fd9cab05b61982191b372d77e83842aa51bef939fdcb17857188d90e278a631"
+      },
+      "trackvisPlain": {
+        "registeredExternalArtifact": "recovered-external/swm_fibres3_plain.trk",
+        "bytes": 271717032,
+        "sha256": "4c79821a3295a66ba07f4f70c1a27191818715f42edcc30dfc632c36a81a4a3f"
+      },
+      "publicOutput": {
+        "path": "public/data/swm_fibres.json",
+        "bytes": 2758578,
+        "sha256": "81529a410c9053731416124e346dce21e85d96c85fb8b3bad151735a4b1f81fb",
+        "geometryPayloadSha256": "9dfc14d565c8f7ccb4c57ba0d2eee1bd9dca0549e3c7d07f70d6fe47f07f4331"
+      },
+      "streamlines": 200000,
+      "decodedOrderSha256": "908676c1fd0f04ffbf79acb2474c511aa0a5c9037f04398ec4c1bc7c7852eb87",
+      "decodedMultisetSha256": "e3cb46a4c7badd66216a0382ef79bc9b56971b1e966627f18ac1c9eb89291a88"
+    }
+  },
+  "runs": [
+    {
+      "id": "or-recovered-historical-reference",
+      "asset": "optic-radiation",
+      "category": "historical-reference",
+      "includedInCleanReplayCount": false,
+      "comparableGroup": "reference-only",
+      "classification": {
+        "status": "unavailable",
+        "reason": "historical output predates the replay classification gate"
+      },
+      "invocation": {
+        "argv": [
+          "/Applications/dsi_studio.app/Contents/MacOS/dsi_studio",
+          "--action=trk",
+          "--source=ICBM152_adult.1mm.fz",
+          "--seed=v1_L_mni.nii.gz",
+          "--end=lgn_L_mni.nii.gz",
+          "--seed_count=300000",
+          "--turning_angle=65",
+          "--step_size=0.5",
+          "--smoothing=0.2",
+          "--min_length=40",
+          "--max_length=170",
+          "--thread_count=6",
+          "--output=or_retrack_L.trk"
+        ],
+        "argvSha256": "3fee4d8e2bc88139766cdc821d0989e34e95eaffecd73a9140066a797447438b",
+        "script": {
+          "status": "unavailable",
+          "reason": "no historical wrapper survives"
+        },
+        "inputIds": [
+          "dsiExecutable",
+          "dsiHumanQaResource",
+          "hcp1065Fib",
+          "v1Mask",
+          "lgnMask"
+        ],
+        "executionTimeInputHashesVerified": false
+      },
+      "parameters": {
+        "threads": {
+          "explicit": true,
+          "requested": 6,
+          "effective": 6
+        },
+        "randomSeed": {
+          "explicit": false,
+          "requested": null,
+          "effective": 0,
+          "basis": "historical argv omits random_seed; effective default 0 is documented by retained provenance, but exact historical source/build binding is unresolved"
+        }
+      },
+      "execution": {
+        "evidenceSchemaVersion": 0,
+        "wrapperReceipt": {
+          "status": "unavailable",
+          "reason": "historical run predates replay wrappers"
+        },
+        "allOptionsRecognized": {
+          "status": "unavailable",
+          "reason": "complete original log does not survive"
+        },
+        "log": {
+          "status": "unavailable",
+          "reason": "complete original log does not survive"
+        },
+        "compactSourceRecord": {
+          "repositoryPath": ".pi/research/2026-07-22-tract-space-provenance/recovered-run-log.txt",
+          "bytes": 4062,
+          "sha256": "0a98d63c054229f7c2b8fa20d2ff2d5b85c517008a33dd6b1daa6b4a088f2108"
+        },
+        "generatedTracts": 223,
+        "usedSeeds": 300006
+      },
+      "trackvis": {
+        "artifact": {
+          "registeredExternalArtifact": "recovered-external/or_retrack_L.trk",
+          "bytes": 505868,
+          "sha256": "60799f23977e938411ffc127083d5220e503c4a112b28f4ea14d46d3c01041d0"
+        },
+        "streamlines": 223,
+        "decodedOrderSha256": "5ba9f9401cfa3f255d0b961f55ab089036a33b37d6bb4a8dff8423228b256367",
+        "decodedMultisetSha256": "c139a2bfdba4c47025c698e2275643b68943ded2bb958662aa27f19017eb59e6",
+        "effectiveAffine": [
+          [
+            -1.0,
+            0.0,
+            0.0,
+            80.0
+          ],
+          [
+            0.0,
+            -1.0,
+            0.0,
+            82.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            -72.5
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      "postprocess": {
+        "artifact": {
+          "checkedRepositoryPath": "public/data/or_fibres.json",
+          "bytes": 341060,
+          "sha256": "1ca89796c621963388f635bd31ab0bd9a28eec7917de6c12ef8b68d469da4144"
+        },
+        "details": {
+          "inputFibres": 223,
+          "retained": 220,
+          "removed": 3
+        },
+        "requiredShape": "220x64x3",
+        "requiredShapeSatisfied": true
+      },
+      "interpretation": "Lineage reference only; missing execution-time hashes, wrapper, and complete log prevent treating it as a compliant replay."
+    },
+    {
+      "id": "swm-recovered-historical-reference",
+      "asset": "swm",
+      "category": "historical-reference",
+      "includedInCleanReplayCount": false,
+      "comparableGroup": "reference-only",
+      "classification": {
+        "status": "unavailable",
+        "reason": "historical output predates the replay classification gate"
+      },
+      "invocation": {
+        "argv": [
+          "/Applications/dsi_studio.app/Contents/MacOS/dsi_studio",
+          "--action=trk",
+          "--source=ICBM152_adult.1mm.fz",
+          "--seed=swm_shell_mni.nii.gz",
+          "--tract_count=200000",
+          "--min_length=8",
+          "--max_length=80",
+          "--turning_angle=50",
+          "--step_size=0.5",
+          "--thread_count=8",
+          "--output=swm_fibres3.trk"
+        ],
+        "argvSha256": "2d1d6ad4202fd343a137c25236028a74d737a88589b98a87ba70b98189fbc7e0",
+        "script": {
+          "status": "unavailable",
+          "reason": "no historical wrapper survives"
+        },
+        "inputIds": [
+          "dsiExecutable",
+          "dsiHumanQaResource",
+          "hcp1065Fib",
+          "swmSeed"
+        ],
+        "executionTimeInputHashesVerified": false
+      },
+      "parameters": {
+        "threads": {
+          "explicit": true,
+          "requested": 8,
+          "effective": 8
+        },
+        "randomSeed": {
+          "explicit": false,
+          "requested": null,
+          "effective": 0,
+          "basis": "historical argv omits random_seed; effective default 0 is documented by retained provenance, but exact historical source/build binding is unresolved"
+        }
+      },
+      "execution": {
+        "evidenceSchemaVersion": 0,
+        "wrapperReceipt": {
+          "status": "unavailable",
+          "reason": "historical run predates replay wrappers"
+        },
+        "allOptionsRecognized": {
+          "status": "unavailable",
+          "reason": "complete original log does not survive"
+        },
+        "log": {
+          "status": "unavailable",
+          "reason": "complete original log does not survive"
+        },
+        "compactSourceRecord": {
+          "repositoryPath": ".pi/research/2026-07-22-tract-space-provenance/recovered-run-log.txt",
+          "bytes": 4062,
+          "sha256": "0a98d63c054229f7c2b8fa20d2ff2d5b85c517008a33dd6b1daa6b4a088f2108"
+        },
+        "generatedTracts": 200000,
+        "usedSeeds": {
+          "status": "unavailable",
+          "reason": "complete original log does not survive"
+        }
+      },
+      "trackvis": {
+        "artifactGzip": {
+          "registeredExternalArtifact": "recovered-external/swm_fibres3.trk",
+          "bytes": 232887173,
+          "sha256": "0fd9cab05b61982191b372d77e83842aa51bef939fdcb17857188d90e278a631"
+        },
+        "artifactPlain": {
+          "registeredExternalArtifact": "recovered-external/swm_fibres3_plain.trk",
+          "bytes": 271717032,
+          "sha256": "4c79821a3295a66ba07f4f70c1a27191818715f42edcc30dfc632c36a81a4a3f"
+        },
+        "streamlines": 200000,
+        "decodedOrderSha256": "908676c1fd0f04ffbf79acb2474c511aa0a5c9037f04398ec4c1bc7c7852eb87",
+        "decodedMultisetSha256": "e3cb46a4c7badd66216a0382ef79bc9b56971b1e966627f18ac1c9eb89291a88",
+        "effectiveAffine": [
+          [
+            -1.0,
+            0.0,
+            0.0,
+            80.0
+          ],
+          [
+            0.0,
+            -1.0,
+            0.0,
+            82.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            -72.5
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      "postprocess": {
+        "artifact": {
+          "checkedRepositoryPath": "public/data/swm_fibres.json",
+          "bytes": 2758578,
+          "sha256": "81529a410c9053731416124e346dce21e85d96c85fb8b3bad151735a4b1f81fb"
+        },
+        "details": {
+          "inputFibres": 200000,
+          "endpointEligible": 50766,
+          "lengthEligible": 25563,
+          "retainedPopulation": 25563,
+          "sampled": 15000
+        },
+        "requiredShape": "15000x8x3 with 15000 len and lloc",
+        "requiredShapeSatisfied": true
+      },
+      "interpretation": "Lineage reference only; missing execution-time hashes, wrapper, and complete log prevent treating it as a compliant replay."
+    },
+    {
+      "id": "or-initial-approved-replay",
+      "asset": "optic-radiation",
+      "category": "accepted-v1-clean-replay",
+      "includedInCleanReplayCount": true,
+      "comparableGroup": "or-six-thread-v1",
+      "classification": {
+        "id": 4,
+        "name": "materially-different",
+        "closeout": "blocked"
+      },
+      "invocation": {
+        "argv": [
+          "/Applications/dsi_studio.app/Contents/MacOS/dsi_studio",
+          "--action=trk",
+          "--source=/tmp/brain-atlas-yum6-dsi-replay/input/ICBM152_adult.1mm.fz",
+          "--seed=/tmp/brain-atlas-yum6-phase4-prepare.6FhYw2/or-output/v1_L_mni.nii.gz",
+          "--end=/tmp/brain-atlas-yum6-phase4-prepare.6FhYw2/or-output/lgn_L_mni.nii.gz",
+          "--seed_count=300000",
+          "--turning_angle=65",
+          "--step_size=0.5",
+          "--smoothing=0.2",
+          "--min_length=40",
+          "--max_length=170",
+          "--thread_count=6",
+          "--output=/tmp/brain-atlas-yum6-dsi-replay/or/or_replay_L.trk"
+        ],
+        "argvSha256": "16924c23aa180cf1b1e221969d99246e7dbbd9c10ff124033ab8c348c670263c",
+        "script": {
+          "externalPathAtVerification": "/tmp/brain-atlas-yum6-dsi-replay/scripts/or-replay.sh",
+          "bytes": 1590,
+          "sha256": "75248aaede8bf1b9a80191616ca4d23b168c6ba6ddb1a41bf7e0bce76934b48b"
+        },
+        "inputIds": [
+          "dsiExecutable",
+          "dsiHumanQaResource",
+          "hcp1065Fib",
+          "v1Mask",
+          "lgnMask"
+        ],
+        "executionTimeInputHashesVerified": true
+      },
+      "parameters": {
+        "threads": {
+          "explicit": true,
+          "requested": 6,
+          "effective": 6
+        },
+        "randomSeed": {
+          "explicit": false,
+          "requested": null,
+          "effective": 0,
+          "basis": "retained DSI log"
+        }
+      },
+      "execution": {
+        "evidenceSchemaVersion": 1,
+        "wrapperReceipt": {
+          "status": "unavailable",
+          "reason": "v1 wrapper predates receipt capture"
+        },
+        "allOptionsRecognized": true,
+        "log": {
+          "externalPathAtVerification": "/tmp/brain-atlas-yum6-dsi-replay/or/or_replay.log",
+          "bytes": 5123,
+          "sha256": "d318a562efec64a040128e6948ba86555dba6fbbde66c952a19bd5ad3e0bc8a8"
+        },
+        "generatedTracts": 216,
+        "usedSeeds": 300006
+      },
+      "trackvis": {
+        "artifact": {
+          "externalPathAtVerification": "/tmp/brain-atlas-yum6-dsi-replay/or/or_replay_L.trk",
+          "bytes": 419896,
+          "sha256": "6e4343e821d79de56025a540ffc48116f145f42667f5b557252c38233c07325a"
+        },
+        "streamlines": 216,
+        "decodedOrderSha256": "db5d812016bedd7fad0c04fd27b64c16c94cc90f9377d7815a441aea1bc7c621",
+        "decodedMultisetSha256": "56de27f7f53d3074649e17bed38328ecf1a8fdc98bd75f7e46a7500bcd291dff",
+        "effectiveAffine": [
+          [
+            -1.0,
+            0.0,
+            0.0,
+            80.0
+          ],
+          [
+            0.0,
+            -1.0,
+            0.0,
+            82.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            -72.5
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      "postprocess": {
+        "artifact": {
+          "externalPathAtVerification": "/tmp/brain-atlas-yum6-dsi-replay/or/or_replay_L.postprocessed.json",
+          "bytes": 333147,
+          "sha256": "719600284d8190a428f0768da1b6e2c5f8d83210d72c9d79aa10f6abe91bf705"
+        },
+        "details": {
+          "inputFibres": 216,
+          "retained": 215,
+          "removed": 1
+        },
+        "requiredShape": "220x64x3",
+        "requiredShapeSatisfied": false
+      },
+      "interpretation": "Canonical class-4 replay; no public replacement."
+    },
+    {
+      "id": "or-exact-repeat",
+      "asset": "optic-radiation",
+      "category": "accepted-v1-clean-replay",
+      "includedInCleanReplayCount": true,
+      "comparableGroup": "or-six-thread-v1",
+      "classification": {
+        "id": 4,
+        "name": "materially-different",
+        "closeout": "blocked"
+      },
+      "invocation": {
+        "argv": [
+          "/Applications/dsi_studio.app/Contents/MacOS/dsi_studio",
+          "--action=trk",
+          "--source=/tmp/brain-atlas-yum6-dsi-replay/input/ICBM152_adult.1mm.fz",
+          "--seed=/tmp/brain-atlas-yum6-phase4-prepare.6FhYw2/or-output/v1_L_mni.nii.gz",
+          "--end=/tmp/brain-atlas-yum6-phase4-prepare.6FhYw2/or-output/lgn_L_mni.nii.gz",
+          "--seed_count=300000",
+          "--turning_angle=65",
+          "--step_size=0.5",
+          "--smoothing=0.2",
+          "--min_length=40",
+          "--max_length=170",
+          "--thread_count=6",
+          "--output=/tmp/brain-atlas-yum6-dsi-diagnostic/exact-repeat/or.trk"
+        ],
+        "argvSha256": "059c88390dbe0f39050073d242e7797542f3d7c3e060e7e80490f220be5b284b",
+        "script": {
+          "externalPathAtVerification": "/tmp/brain-atlas-yum6-dsi-diagnostic/scripts/exact-repeat.sh",
+          "bytes": 1614,
+          "sha256": "48c600478799584456754729bec693d21f997c0880c09d93207419845313cf7f"
+        },
+        "inputIds": [
+          "dsiExecutable",
+          "dsiHumanQaResource",
+          "hcp1065Fib",
+          "v1Mask",
+          "lgnMask"
+        ],
+        "executionTimeInputHashesVerified": true
+      },
+      "parameters": {
+        "threads": {
+          "explicit": true,
+          "requested": 6,
+          "effective": 6
+        },
+        "randomSeed": {
+          "explicit": false,
+          "requested": null,
+          "effective": 0,
+          "basis": "retained DSI log; argv omits random_seed"
+        }
+      },
+      "execution": {
+        "evidenceSchemaVersion": 1,
+        "wrapperReceipt": {
+          "status": "unavailable",
+          "reason": "v1 diagnostic wrapper predates receipt capture"
+        },
+        "allOptionsRecognized": true,
+        "log": {
+          "externalPathAtVerification": "/tmp/brain-atlas-yum6-dsi-diagnostic/exact-repeat/or.log",
+          "bytes": 5138,
+          "sha256": "c7ed6d75c1d6e04d36925646fab31e1c807be82769e7d01a54e6293ed887947a"
+        },
+        "generatedTracts": 234,
+        "usedSeeds": 300006
+      },
+      "trackvis": {
+        "artifact": {
+          "externalPathAtVerification": "/tmp/brain-atlas-yum6-dsi-diagnostic/exact-repeat/or.trk",
+          "bytes": 455130,
+          "sha256": "5814a6bf2da2f80a15dadc318e72547b5c518f3481952190b7f54ff6ac160764"
+        },
+        "streamlines": 234,
+        "decodedOrderSha256": "3fd797d760acc1377a43f10abe8d4d902ad2252289d9418dfce21f20bc461ed2",
+        "decodedMultisetSha256": "338da8aaeab0be035abf2552fde49b4827582adaf836936e2101f5588e91243b",
+        "effectiveAffine": [
+          [
+            -1.0,
+            0.0,
+            0.0,
+            80.0
+          ],
+          [
+            0.0,
+            -1.0,
+            0.0,
+            82.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            -72.5
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      "postprocess": {
+        "artifact": {
+          "externalPathAtVerification": "/tmp/brain-atlas-yum6-dsi-diagnostic/exact-repeat/or.postprocessed.json",
+          "bytes": 361125,
+          "sha256": "0ef38368bdcc37440040d6fc2bc1b403421162b34761b9cd43ff46063cba228f"
+        },
+        "details": {
+          "inputFibres": 234,
+          "retained": 233,
+          "removed": 1
+        },
+        "requiredShape": "220x64x3",
+        "requiredShapeSatisfied": false
+      },
+      "interpretation": "Clean repeat differs from the initial replay in count and decoded multiset; the varying internal stage is unresolved."
+    },
+    {
+      "id": "or-single-a",
+      "asset": "optic-radiation",
+      "category": "exploratory-noncomparable",
+      "includedInCleanReplayCount": false,
+      "comparableGroup": "or-one-thread-exploratory",
+      "classification": {
+        "id": 4,
+        "name": "materially-different",
+        "closeout": "blocked"
+      },
+      "invocation": {
+        "argv": [
+          "/Applications/dsi_studio.app/Contents/MacOS/dsi_studio",
+          "--action=trk",
+          "--source=/tmp/brain-atlas-yum6-dsi-replay/input/ICBM152_adult.1mm.fz",
+          "--seed=/tmp/brain-atlas-yum6-phase4-prepare.6FhYw2/or-output/v1_L_mni.nii.gz",
+          "--end=/tmp/brain-atlas-yum6-phase4-prepare.6FhYw2/or-output/lgn_L_mni.nii.gz",
+          "--seed_count=300000",
+          "--turning_angle=65",
+          "--step_size=0.5",
+          "--smoothing=0.2",
+          "--min_length=40",
+          "--max_length=170",
+          "--thread_count=1",
+          "--random_seed=0",
+          "--output=/tmp/brain-atlas-yum6-dsi-diagnostic/single-a/or.trk"
+        ],
+        "argvSha256": "0d3fa9c9a8d2bdd4cdfd6f831ca36ee07a715accbddcf9e2bfc4a3a903843900",
+        "script": {
+          "externalPathAtVerification": "/tmp/brain-atlas-yum6-dsi-diagnostic/scripts/single-a.sh",
+          "bytes": 1614,
+          "sha256": "8c85d72835b6eac676680f9b82cd5644f327da3c932b3a09f14033d3ae339d0d"
+        },
+        "inputIds": [
+          "dsiExecutable",
+          "dsiHumanQaResource",
+          "hcp1065Fib",
+          "v1Mask",
+          "lgnMask"
+        ],
+        "executionTimeInputHashesVerified": true
+      },
+      "parameters": {
+        "threads": {
+          "explicit": true,
+          "requested": 1,
+          "effective": 1
+        },
+        "randomSeed": {
+          "explicit": true,
+          "requested": 0,
+          "effective": 0,
+          "basis": "explicit argv and retained DSI log"
+        }
+      },
+      "execution": {
+        "evidenceSchemaVersion": 1,
+        "wrapperReceipt": {
+          "status": "unavailable",
+          "reason": "v1 diagnostic wrapper predates receipt capture"
+        },
+        "allOptionsRecognized": true,
+        "log": {
+          "externalPathAtVerification": "/tmp/brain-atlas-yum6-dsi-diagnostic/single-a/or.log",
+          "bytes": 5123,
+          "sha256": "ede1f6c7a1f62612febeb4f3425d3b7fa39930115ebd223dfd7fb571d0ab56c9"
+        },
+        "generatedTracts": 254,
+        "usedSeeds": 300001
+      },
+      "trackvis": {
+        "artifact": {
+          "externalPathAtVerification": "/tmp/brain-atlas-yum6-dsi-diagnostic/single-a/or.trk",
+          "bytes": 491884,
+          "sha256": "80c04838f11a6c8f3d2856ee7cb27906f61e4ef11dc79dd5b5bc0671b1a6ec1f"
+        },
+        "streamlines": 254,
+        "decodedOrderSha256": "c85159cee31e0206d0bc281a771cb077d07f86f00d2869650493a31b9f69a230",
+        "decodedMultisetSha256": "1724584849d22ff3beb035fd3dd0807199f777636f0c6a92f82db4dd9533f364",
+        "effectiveAffine": [
+          [
+            -1.0,
+            0.0,
+            0.0,
+            80.0
+          ],
+          [
+            0.0,
+            -1.0,
+            0.0,
+            82.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            -72.5
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      "postprocess": {
+        "artifact": {
+          "externalPathAtVerification": "/tmp/brain-atlas-yum6-dsi-diagnostic/single-a/or.postprocessed.json",
+          "bytes": 390429,
+          "sha256": "7ce05a5c01404b6f8506666fe0aefcc3b2e5b587c05f1b2d7d02d62d6fd3eecd"
+        },
+        "details": {
+          "inputFibres": 254,
+          "retained": 252,
+          "removed": 2
+        },
+        "requiredShape": "220x64x3",
+        "requiredShapeSatisfied": false
+      },
+      "interpretation": "One of two byte-identical one-thread observations; not comparable to the six-thread historical command and does not recreate the public shape."
+    },
+    {
+      "id": "or-single-b",
+      "asset": "optic-radiation",
+      "category": "exploratory-noncomparable",
+      "includedInCleanReplayCount": false,
+      "comparableGroup": "or-one-thread-exploratory",
+      "classification": {
+        "id": 4,
+        "name": "materially-different",
+        "closeout": "blocked"
+      },
+      "invocation": {
+        "argv": [
+          "/Applications/dsi_studio.app/Contents/MacOS/dsi_studio",
+          "--action=trk",
+          "--source=/tmp/brain-atlas-yum6-dsi-replay/input/ICBM152_adult.1mm.fz",
+          "--seed=/tmp/brain-atlas-yum6-phase4-prepare.6FhYw2/or-output/v1_L_mni.nii.gz",
+          "--end=/tmp/brain-atlas-yum6-phase4-prepare.6FhYw2/or-output/lgn_L_mni.nii.gz",
+          "--seed_count=300000",
+          "--turning_angle=65",
+          "--step_size=0.5",
+          "--smoothing=0.2",
+          "--min_length=40",
+          "--max_length=170",
+          "--thread_count=1",
+          "--random_seed=0",
+          "--output=/tmp/brain-atlas-yum6-dsi-diagnostic/single-b/or.trk"
+        ],
+        "argvSha256": "9207d11f4bda483f15737229434cdd6f9f09c2842c267a795ef28eadf745c37b",
+        "script": {
+          "externalPathAtVerification": "/tmp/brain-atlas-yum6-dsi-diagnostic/scripts/single-b.sh",
+          "bytes": 1614,
+          "sha256": "91a04b05a03c5ce5cbb11fbab3478098b3c82e2a80153281e0749261922c8644"
+        },
+        "inputIds": [
+          "dsiExecutable",
+          "dsiHumanQaResource",
+          "hcp1065Fib",
+          "v1Mask",
+          "lgnMask"
+        ],
+        "executionTimeInputHashesVerified": true
+      },
+      "parameters": {
+        "threads": {
+          "explicit": true,
+          "requested": 1,
+          "effective": 1
+        },
+        "randomSeed": {
+          "explicit": true,
+          "requested": 0,
+          "effective": 0,
+          "basis": "explicit argv and retained DSI log"
+        }
+      },
+      "execution": {
+        "evidenceSchemaVersion": 1,
+        "wrapperReceipt": {
+          "status": "unavailable",
+          "reason": "v1 diagnostic wrapper predates receipt capture"
+        },
+        "allOptionsRecognized": true,
+        "log": {
+          "externalPathAtVerification": "/tmp/brain-atlas-yum6-dsi-diagnostic/single-b/or.log",
+          "bytes": 5123,
+          "sha256": "4563936823b4aed8a864d1468d3396072a13faf492e5c2cb22d5e0811190c1b9"
+        },
+        "generatedTracts": 254,
+        "usedSeeds": 300001
+      },
+      "trackvis": {
+        "artifact": {
+          "externalPathAtVerification": "/tmp/brain-atlas-yum6-dsi-diagnostic/single-b/or.trk",
+          "bytes": 491884,
+          "sha256": "80c04838f11a6c8f3d2856ee7cb27906f61e4ef11dc79dd5b5bc0671b1a6ec1f"
+        },
+        "streamlines": 254,
+        "decodedOrderSha256": "c85159cee31e0206d0bc281a771cb077d07f86f00d2869650493a31b9f69a230",
+        "decodedMultisetSha256": "1724584849d22ff3beb035fd3dd0807199f777636f0c6a92f82db4dd9533f364",
+        "effectiveAffine": [
+          [
+            -1.0,
+            0.0,
+            0.0,
+            80.0
+          ],
+          [
+            0.0,
+            -1.0,
+            0.0,
+            82.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            -72.5
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      "postprocess": {
+        "artifact": {
+          "externalPathAtVerification": "/tmp/brain-atlas-yum6-dsi-diagnostic/single-b/or.postprocessed.json",
+          "bytes": 390429,
+          "sha256": "7ce05a5c01404b6f8506666fe0aefcc3b2e5b587c05f1b2d7d02d62d6fd3eecd"
+        },
+        "details": {
+          "inputFibres": 254,
+          "retained": 252,
+          "removed": 2
+        },
+        "requiredShape": "220x64x3",
+        "requiredShapeSatisfied": false
+      },
+      "interpretation": "One of two byte-identical one-thread observations; two trials do not establish general repeatability and do not recreate the public shape."
+    },
+    {
+      "id": "or-biasoff-a",
+      "asset": "optic-radiation",
+      "category": "rejected-unused-option",
+      "includedInCleanReplayCount": false,
+      "comparableGroup": "rejected",
+      "classification": {
+        "id": 4,
+        "name": "materially-different",
+        "closeout": "blocked"
+      },
+      "invocation": {
+        "argv": [
+          "/Applications/dsi_studio.app/Contents/MacOS/dsi_studio",
+          "--action=trk",
+          "--source=/tmp/brain-atlas-yum6-dsi-replay/input/ICBM152_adult.1mm.fz",
+          "--seed=/tmp/brain-atlas-yum6-phase4-prepare.6FhYw2/or-output/v1_L_mni.nii.gz",
+          "--end=/tmp/brain-atlas-yum6-phase4-prepare.6FhYw2/or-output/lgn_L_mni.nii.gz",
+          "--seed_count=300000",
+          "--turning_angle=65",
+          "--step_size=0.5",
+          "--smoothing=0.2",
+          "--min_length=40",
+          "--max_length=170",
+          "--thread_count=6",
+          "--random_seed=0",
+          "--bias_field_correction=0",
+          "--output=/tmp/brain-atlas-yum6-dsi-diagnostic/biasoff-a/or.trk"
+        ],
+        "argvSha256": "0b06e6fb2b35298cecaf6aa17045d2ab900d5790cf5622597f1d43ab2d9a0bf0",
+        "script": {
+          "externalPathAtVerification": "/tmp/brain-atlas-yum6-dsi-diagnostic/scripts/biasoff-a.sh",
+          "bytes": 1644,
+          "sha256": "a2f2118f9587f1109758c6584448cdb3cf19e70b7f20795aaf6e05d6b7a1fa7d"
+        },
+        "inputIds": [
+          "dsiExecutable",
+          "dsiHumanQaResource",
+          "hcp1065Fib",
+          "v1Mask",
+          "lgnMask"
+        ],
+        "executionTimeInputHashesVerified": true
+      },
+      "parameters": {
+        "threads": {
+          "explicit": true,
+          "requested": 6,
+          "effective": 6
+        },
+        "randomSeed": {
+          "explicit": true,
+          "requested": 0,
+          "effective": 0,
+          "basis": "explicit argv and retained DSI log"
+        }
+      },
+      "execution": {
+        "evidenceSchemaVersion": 1,
+        "wrapperReceipt": {
+          "status": "unavailable",
+          "reason": "v1 diagnostic wrapper predates receipt capture"
+        },
+        "allOptionsRecognized": false,
+        "log": {
+          "externalPathAtVerification": "/tmp/brain-atlas-yum6-dsi-diagnostic/biasoff-a/or.log",
+          "bytes": 5192,
+          "sha256": "83314a2c98a17b63a29718c051f092bd6713cd96008a097851b652a7136e0afe"
+        },
+        "generatedTracts": 205,
+        "usedSeeds": 300006
+      },
+      "trackvis": {
+        "artifact": {
+          "externalPathAtVerification": "/tmp/brain-atlas-yum6-dsi-diagnostic/biasoff-a/or.trk",
+          "bytes": 401363,
+          "sha256": "102620f77ea6430ad3bd89f8594e0f3e4a51d3c5c26889358bd455d5214ccf21"
+        },
+        "streamlines": 205,
+        "decodedOrderSha256": "ad797b7e4a1d32319ce9acc4e57b48e7bf1eb10dafa3038524f8e22f8f6b514e",
+        "decodedMultisetSha256": "2eb4f839a7f7f1e57b1b1f3c40f4d3dac15b172b17fed4b03d5de5d7e94b66d8",
+        "effectiveAffine": [
+          [
+            -1.0,
+            0.0,
+            0.0,
+            80.0
+          ],
+          [
+            0.0,
+            -1.0,
+            0.0,
+            82.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            -72.5
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      "postprocess": {
+        "artifact": {
+          "externalPathAtVerification": "/tmp/brain-atlas-yum6-dsi-diagnostic/biasoff-a/or.postprocessed.json",
+          "bytes": 315891,
+          "sha256": "7aa940da779e52a1a357f29e124bda0c93a467f28ec19c8f60fd0142dd017ba7"
+        },
+        "details": {
+          "inputFibres": 205,
+          "retained": 204,
+          "removed": 1
+        },
+        "requiredShape": "220x64x3",
+        "requiredShapeSatisfied": false
+      },
+      "interpretation": "Rejected because --bias_field_correction was unused/unrecognized; excluded from compliant replay counts."
+    },
+    {
+      "id": "or-biasoff-b",
+      "asset": "optic-radiation",
+      "category": "rejected-unused-option",
+      "includedInCleanReplayCount": false,
+      "comparableGroup": "rejected",
+      "classification": {
+        "id": 4,
+        "name": "materially-different",
+        "closeout": "blocked"
+      },
+      "invocation": {
+        "argv": [
+          "/Applications/dsi_studio.app/Contents/MacOS/dsi_studio",
+          "--action=trk",
+          "--source=/tmp/brain-atlas-yum6-dsi-replay/input/ICBM152_adult.1mm.fz",
+          "--seed=/tmp/brain-atlas-yum6-phase4-prepare.6FhYw2/or-output/v1_L_mni.nii.gz",
+          "--end=/tmp/brain-atlas-yum6-phase4-prepare.6FhYw2/or-output/lgn_L_mni.nii.gz",
+          "--seed_count=300000",
+          "--turning_angle=65",
+          "--step_size=0.5",
+          "--smoothing=0.2",
+          "--min_length=40",
+          "--max_length=170",
+          "--thread_count=6",
+          "--random_seed=0",
+          "--bias_field_correction=0",
+          "--output=/tmp/brain-atlas-yum6-dsi-diagnostic/biasoff-b/or.trk"
+        ],
+        "argvSha256": "e13d0a1399abe02e17cc175bcc805d2f564b8a6a82cbdc7eb1ff217ca6fcee39",
+        "script": {
+          "externalPathAtVerification": "/tmp/brain-atlas-yum6-dsi-diagnostic/scripts/biasoff-b.sh",
+          "bytes": 1644,
+          "sha256": "568c0f085be9c3634d4df8458fa030b0069a06704cbfeb28269111e9e2033ddc"
+        },
+        "inputIds": [
+          "dsiExecutable",
+          "dsiHumanQaResource",
+          "hcp1065Fib",
+          "v1Mask",
+          "lgnMask"
+        ],
+        "executionTimeInputHashesVerified": true
+      },
+      "parameters": {
+        "threads": {
+          "explicit": true,
+          "requested": 6,
+          "effective": 6
+        },
+        "randomSeed": {
+          "explicit": true,
+          "requested": 0,
+          "effective": 0,
+          "basis": "explicit argv and retained DSI log"
+        }
+      },
+      "execution": {
+        "evidenceSchemaVersion": 1,
+        "wrapperReceipt": {
+          "status": "unavailable",
+          "reason": "v1 diagnostic wrapper predates receipt capture"
+        },
+        "allOptionsRecognized": false,
+        "log": {
+          "externalPathAtVerification": "/tmp/brain-atlas-yum6-dsi-diagnostic/biasoff-b/or.log",
+          "bytes": 5192,
+          "sha256": "7c0a8971085ebde30e08daed498692c761ee8a6deedb8930de2209cc0ec3b643"
+        },
+        "generatedTracts": 211,
+        "usedSeeds": 300006
+      },
+      "trackvis": {
+        "artifact": {
+          "externalPathAtVerification": "/tmp/brain-atlas-yum6-dsi-diagnostic/biasoff-b/or.trk",
+          "bytes": 414051,
+          "sha256": "b09bc20745eccabe965596fa04446cf4a43cfc1534b053e1e543c2a22f3bcf3f"
+        },
+        "streamlines": 211,
+        "decodedOrderSha256": "7f1506ffdac908ec6ee42c6802a5df15eee3434988754ee5f2997052b5a6d167",
+        "decodedMultisetSha256": "0938adfb3b37e5635c0ae73d8b9bc1e5fb5818010a8b977a3c7ee7ca3abfea93",
+        "effectiveAffine": [
+          [
+            -1.0,
+            0.0,
+            0.0,
+            80.0
+          ],
+          [
+            0.0,
+            -1.0,
+            0.0,
+            82.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            -72.5
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      "postprocess": {
+        "artifact": {
+          "externalPathAtVerification": "/tmp/brain-atlas-yum6-dsi-diagnostic/biasoff-b/or.postprocessed.json",
+          "bytes": 326669,
+          "sha256": "d727adf9e6ddc4cd5b3493d6a59026347f61533145a59a61c514de43ad07d38a"
+        },
+        "details": {
+          "inputFibres": 211,
+          "retained": 211,
+          "removed": 0
+        },
+        "requiredShape": "220x64x3",
+        "requiredShapeSatisfied": false
+      },
+      "interpretation": "Rejected because --bias_field_correction was unused/unrecognized; excluded from compliant replay counts."
+    },
+    {
+      "id": "swm-initial-approved-replay",
+      "asset": "swm",
+      "category": "accepted-v1-clean-replay",
+      "includedInCleanReplayCount": true,
+      "comparableGroup": "swm-eight-thread-v1",
+      "classification": {
+        "id": 3,
+        "name": "metric-only",
+        "closeout": "human-decision-required"
+      },
+      "invocation": {
+        "argv": [
+          "/Applications/dsi_studio.app/Contents/MacOS/dsi_studio",
+          "--action=trk",
+          "--source=/tmp/brain-atlas-yum6-dsi-replay/input/ICBM152_adult.1mm.fz",
+          "--seed=/tmp/brain-atlas-yum6-phase4-prepare.6FhYw2/swm-output/swm_shell_mni.nii.gz",
+          "--tract_count=200000",
+          "--min_length=8",
+          "--max_length=80",
+          "--turning_angle=50",
+          "--step_size=0.5",
+          "--thread_count=8",
+          "--output=/tmp/brain-atlas-yum6-dsi-replay/swm/swm_replay.trk"
+        ],
+        "argvSha256": "50e4097ea7af3f67ca360d82f4e5f7fbaefa23ac9955ccbf02280121af7e883d",
+        "script": {
+          "externalPathAtVerification": "/tmp/brain-atlas-yum6-dsi-replay/scripts/swm-replay.sh",
+          "bytes": 1366,
+          "sha256": "b1962dbef78b0817cc3b4bfd4928f0a7a0a7a2902ab593f6dcaab3f50d6d96e6"
+        },
+        "inputIds": [
+          "dsiExecutable",
+          "dsiHumanQaResource",
+          "hcp1065Fib",
+          "swmSeed"
+        ],
+        "executionTimeInputHashesVerified": true
+      },
+      "parameters": {
+        "threads": {
+          "explicit": true,
+          "requested": 8,
+          "effective": 8
+        },
+        "randomSeed": {
+          "explicit": false,
+          "requested": null,
+          "effective": 0,
+          "basis": "retained DSI log"
+        }
+      },
+      "execution": {
+        "evidenceSchemaVersion": 1,
+        "wrapperReceipt": {
+          "status": "unavailable",
+          "reason": "v1 wrapper predates receipt capture"
+        },
+        "allOptionsRecognized": true,
+        "log": {
+          "externalPathAtVerification": "/tmp/brain-atlas-yum6-dsi-replay/swm/swm_replay.log",
+          "bytes": 4076,
+          "sha256": "5ed17d95e59d8a79d8247c0ee14d8500b61c2b23da909acd3feddfb90987ce5e"
+        },
+        "generatedTracts": 200000,
+        "usedSeeds": 276347
+      },
+      "trackvis": {
+        "artifact": {
+          "externalPathAtVerification": "/tmp/brain-atlas-yum6-dsi-replay/swm/swm_replay.trk",
+          "bytes": 233213909,
+          "sha256": "e4f7fb87018c054202d41641db5b9bd0b04e70eb156ae6e9a395bf687a27eb16"
+        },
+        "streamlines": 200000,
+        "decodedOrderSha256": "6603a6fe96a5d0ddf2c593b889ed7e75a50f4acc93b33c29d30aad53981f99bd",
+        "decodedMultisetSha256": "93a7426b3aea24a34cc38c17a7ef0c439ca5910f56f3e5ffd9129e083f3054ef",
+        "effectiveAffine": [
+          [
+            -1.0,
+            0.0,
+            0.0,
+            80.0
+          ],
+          [
+            0.0,
+            -1.0,
+            0.0,
+            82.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            -72.5
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      "postprocess": {
+        "artifact": {
+          "externalPathAtVerification": "/tmp/brain-atlas-yum6-dsi-replay/swm/swm_replay.postprocessed.json",
+          "bytes": 2757930,
+          "sha256": "810b4618adc1ce97984409d294876ea4ad9d7ae5731543d2182b5037c2957bfc"
+        },
+        "details": {
+          "inputFibres": 200000,
+          "endpointEligible": 50975,
+          "lengthEligible": 25507,
+          "retainedPopulation": 25507,
+          "sampled": 15000
+        },
+        "requiredShape": "15000x8x3 with 15000 len and lloc",
+        "requiredShapeSatisfied": true
+      },
+      "interpretation": "Frozen class-3 metric-only result: required structural/post-processing shape passed, decoded geometry and public bytes differ, and no replacement is authorized."
+    }
+  ],
+  "counts": {
+    "historicalReferences": 2,
+    "acceptedV1CleanReplays": 3,
+    "acceptedOrSixThreadCleanReplays": 2,
+    "exploratoryOneThreadObservations": 2,
+    "rejectedUnusedOptionObservations": 2
+  },
+  "conclusions": {
+    "currentOpticRadiationRecreated": false,
+    "opticRadiationCleanSixThreadEndToEndRepeatable": false,
+    "opticRadiationCleanSixThreadEvidence": "The two accepted contemporary six-thread executions use the same registered executable and scientific inputs but have different raw counts and decoded multisets (216/215 versus 234/233).",
+    "varyingInternalStage": "unresolved",
+    "nearbyPublicSourceMechanism": "possible and unverified; no exact source/build binding exists",
+    "oneThreadPair": "byte-identical in two exploratory trials, insufficient to establish general repeatability, and not the historical six-thread pipeline",
+    "biasDisableArms": "rejected and excluded from compliant counts because the option was unused/unrecognized",
+    "opticRadiationClass": "4 materially-different",
+    "swmClass": "3 metric-only",
+    "currentJsonReproducibility": "OR and SWM checked JSON remain byte-reproducible only from the exact hash-registered recovered TrackVis intermediates through deterministic post-processing.",
+    "publicAssetReplacementAuthorized": false
+  },
+  "retention": {
+    "temporaryRoots": [
+      "/tmp/brain-atlas-yum6-dsi-replay",
+      "/tmp/brain-atlas-yum6-dsi-diagnostic"
+    ],
+    "durableArchive": {
+      "destination": "~/.local/share/brain-atlas/replay-evidence/brain-atlas-yum.6-2026-07-22/",
+      "status": "verified",
+      "custodian": "Steve Hay, repository owner",
+      "access": "owner-only; directories 0700 and files 0600; extended ACL entries removed",
+      "manifest": {
+        "relativePath": "MANIFEST.tsv",
+        "bytes": 8881,
+        "sha256": "b059c722b90cd2ae68d4540f220bfe78c12c4d1611f251264a529ae815005ed5",
+        "selfIncluded": false
+      },
+      "manifestedFiles": 49,
+      "archiveFilesIncludingManifest": 50,
+      "manifestedBytes": 780598830,
+      "sourceToCopyRehash": "passed for all 49 manifested files",
+      "retrievalRehash": "passed for all 49 manifested files",
+      "compactSnapshotNote": "The archived compact files are the pre-archive snapshot. This repository record adds the manifest result afterward to avoid a self-referential manifest hash."
+    },
+    "originalsMustRemain": true,
+    "retentionPolicy": "Retain until brain-atlas-yum.13 closes; deletion requires separate owner approval."
+  }
+}

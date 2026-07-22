@@ -92,10 +92,13 @@ No dataset receives runtime fitting. The source releases use different voxel gri
 so the project never copies 2009a voxel indices into 2009c. Established parsers decode TrackVis voxel-mm vertices through voxel size,
 half-voxel offset, orientation, and voxel-to-RAS metadata into RAS+ world
 millimetres; adding a second
-scene transform would be incorrect. The cortical surface and Jülich regions share
-the declared 2009c grid. Complete checked-in generation pipelines remain tracked by
-`brain-atlas-yum.6`; detailed fibre hashes, affines, derivations, and numeric checks
-are in [`docs/TRACT_SPACE_PROVENANCE.md`](docs/TRACT_SPACE_PROVENANCE.md).
+scene transform would be incorrect. The cortical surface and Jülich regions share the declared 2009c grid. Checked
+offline pipelines under [`tools/assets/`](tools/assets/) reproduce the cortical,
+region, and association assets from exact upstream sources and reproduce current OR
+and SWM JSON from registered recovered TrackVis intermediates. Manual OR/SWM DSI
+replays diverged and are retained as evidence, not replacement candidates. Detailed
+fibre hashes, affines, derivations, replay classes, and numeric checks are in
+[`docs/TRACT_SPACE_PROVENANCE.md`](docs/TRACT_SPACE_PROVENANCE.md).
 
 ## Layout
 
@@ -113,6 +116,7 @@ src/pathways.js      schematic anterior-pathway control points
 src/style.css        responsive editorial scientific-instrument UI
 test/                 focused Node tests for extracted pure behavior
 scripts/browser/      replayable Firefox/Chromium Atlas, Lesson, history, and input checks
+tools/assets/         offline hash-bound anatomical generators, replay printer, and verifier
 public/models/       licensed runtime GLB assets, including brain_mni.glb
 public/data/entities.json / fidelity.json   stable scene/inspectable IDs and disclosure records
 .workbench/           ignored, non-deployed local asset experiments
@@ -336,6 +340,15 @@ Principal sources:
   **Jülich-Brain v3.0.3** maximum probability map by extracting regions and
   converting volumetric labels to simplified surface meshes.
 - Rendering: [three.js](https://threejs.org/) (MIT).
+
+The checked offline tooling never downloads sources implicitly or overwrites
+`public/`. Cortex, region, and association outputs regenerate byte-for-byte from
+hash-registered upstream files. OR and SWM preparation and post-processing are also
+byte-exact, but the surviving DSI Studio execution is not replay-deterministic for
+the registered legacy runs: OR remained class 4 (`216→215`, with a clean repeat of
+`234→233`, versus recovered `223→220`), and SWM remained class 3 despite producing
+the required `200,000→15,000` shape. Current OR/SWM assets therefore remain tied to
+their exact recovered TrackVis intermediates. No replay output replaced public data.
 
 See [`DATA_LICENSES.md`](DATA_LICENSES.md) for source links, citations, license
 terms, modification disclosures, and the required WU-Minn HCP acknowledgment.

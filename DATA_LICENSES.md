@@ -138,6 +138,18 @@ used by the activity texture. These are real bilateral data and are not mirrored
 Neither FIB-derived asset underwent a 2009a→2009c template warp; its decoded
 RAS+ coordinate frame was retained through resampling.
 
+Checked offline preparation and post-processing now reproduce the current OR and
+SWM files byte-for-byte from exact, non-redistributed recovered TrackVis
+intermediates. User-run DSI replays with the registered private executable did not
+recreate those intermediates: OR remained class 4 (`216` raw/`215` retained, with
+a clean repeat of `234`/`233`, versus recovered `223`/`220`), and SWM remained
+class 3 after producing `200,000` raw tracts and the required `15,000`-fibre output
+shape with different geometry and bytes. Decision `brain-atlas-3ct` preserves these
+classes and authorizes no replacement. The DSI executable, HCP FIB, recovered
+intermediates, replay outputs, and full logs remain private, access-controlled, and
+outside the distributed repository. These reproducibility records do not alter the
+source terms, attribution, or redistribution obligations below.
+
 Source and methods citations:
 
 - HCP-1065 Young Adult Fiber Templates:

@@ -1,0 +1,178 @@
+{
+  "schemaVersion": 2,
+  "asset": "optic-radiation",
+  "classification": {
+    "id": 4,
+    "name": "materially-different",
+    "closeout": "blocked"
+  },
+  "environment": {
+    "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+    "machine": "arm64",
+    "python": "3.13.1",
+    "verifierGitHead": "127e7331c75643997168d0bee86b37b670fabea8",
+    "execution": {
+      "workingDirectory": "/evidence",
+      "osVersion": "26.5.1",
+      "kernel": "Darwin 25.5.0",
+      "machine": "arm64",
+      "bashVersion": "3.2.57(1)-release",
+      "threadEnvironment": {
+        "OMP_NUM_THREADS": "<unset>",
+        "OPENBLAS_NUM_THREADS": "1",
+        "VECLIB_MAXIMUM_THREADS": "<unset>",
+        "MKL_NUM_THREADS": "<unset>",
+        "NUMEXPR_NUM_THREADS": "<unset>"
+      }
+    }
+  },
+  "invocation": {
+    "wrapperVersion": 2,
+    "argv": [
+      "/evidence/dsi_studio",
+      "--action=trk",
+      "--source=/evidence/ICBM152_adult.1mm.fz",
+      "--seed=/evidence/v1_L_mni.nii.gz",
+      "--end=/evidence/lgn_L_mni.nii.gz",
+      "--seed_count=300000",
+      "--turning_angle=65",
+      "--step_size=0.5",
+      "--smoothing=0.2",
+      "--min_length=40",
+      "--max_length=170",
+      "--thread_count=6",
+      "--output=/evidence/or.trk"
+    ],
+    "argvSha256": "442adfa44783789cc9b4a071cdfe28732010a7266d87ef8710ddecbd37549e77",
+    "executable": {
+      "path": "/evidence/dsi_studio",
+      "bytes": 8762312,
+      "sha256": "1e7aaf6be7ebebd0a69fa428eb9b670400642885137ae1d5710a1c1e3303cf56"
+    },
+    "explicitParameters": {
+      "randomSeed": {
+        "passed": false,
+        "value": null
+      },
+      "threadCount": {
+        "passed": true,
+        "value": "6"
+      }
+    },
+    "scriptPath": "/evidence/or-replay-v2.sh",
+    "scriptBytes": 2701,
+    "scriptSha256": "38b28d6e43dffb2f00b01b36e50af7a10e981ec2330b6866666ef577e554badb",
+    "inputChecks": [
+      {
+        "path": "/evidence/dsi_studio",
+        "bytes": 8762312,
+        "expectedSha256": "1e7aaf6be7ebebd0a69fa428eb9b670400642885137ae1d5710a1c1e3303cf56",
+        "executionSha256": "1e7aaf6be7ebebd0a69fa428eb9b670400642885137ae1d5710a1c1e3303cf56"
+      },
+      {
+        "path": "/evidence/ICBM152_adult.1mm.fz",
+        "bytes": 8181706,
+        "expectedSha256": "3e74089f3e423405ce37a4de08e0e291355ba89463fe39c683cd1c0099a43df7",
+        "executionSha256": "3e74089f3e423405ce37a4de08e0e291355ba89463fe39c683cd1c0099a43df7"
+      },
+      {
+        "path": "/evidence/v1_L_mni.nii.gz",
+        "bytes": 43153,
+        "expectedSha256": "029100d76aaf6421c0949aecd378a102f8befc96f23b0b9817935619e62b7ba6",
+        "executionSha256": "029100d76aaf6421c0949aecd378a102f8befc96f23b0b9817935619e62b7ba6"
+      },
+      {
+        "path": "/evidence/lgn_L_mni.nii.gz",
+        "bytes": 37975,
+        "expectedSha256": "b40368a68f5dd060ff0e62c5eabbd85bcda1b88fddaf1e40b2074e281a3982ac",
+        "executionSha256": "b40368a68f5dd060ff0e62c5eabbd85bcda1b88fddaf1e40b2074e281a3982ac"
+      }
+    ]
+  },
+  "execution": {
+    "receiptVersion": 2,
+    "humanReportedOutcome": "completed",
+    "startedUtc": "2026-07-22T21:00:00Z",
+    "endedUtc": "2026-07-22T21:00:03Z",
+    "exitStatus": 0,
+    "unusedOrUnrecognizedOptions": false,
+    "logPath": "/evidence/or.log",
+    "logBytes": 6000,
+    "logSha256": "d318a562efec64a040128e6948ba86555dba6fbbde66c952a19bd5ad3e0bc8a8",
+    "outputMtimeNs": 1,
+    "logMtimeNs": 2,
+    "effectiveParameters": {
+      "thread_count": "6",
+      "source": "/evidence/ICBM152_adult.1mm.fz",
+      "random_seed": "0",
+      "output": "/evidence/or.trk",
+      "generatedTracts": 216,
+      "usedSeeds": 300006,
+      "emittedIdentity": "DSI Studio Hou version"
+    },
+    "warnings": []
+  },
+  "trackvis": {
+    "path": "/evidence/or.trk",
+    "bytes": 419896,
+    "sha256": "6e4343e821d79de56025a540ffc48116f145f42667f5b557252c38233c07325a",
+    "gzip": true,
+    "streamlines": 216,
+    "decodedOrderSha256": "db5d812016bedd7fad0c04fd27b64c16c94cc90f9377d7815a441aea1bc7c621",
+    "decodedMultisetSha256": "56de27f7f53d3074649e17bed38328ecf1a8fdc98bd75f7e46a7500bcd291dff",
+    "effectiveAffine": [
+      [
+        -1,
+        0,
+        0,
+        80
+      ],
+      [
+        0,
+        -1,
+        0,
+        82
+      ],
+      [
+        0,
+        0,
+        1,
+        -72.5
+      ],
+      [
+        0,
+        0,
+        0,
+        1
+      ]
+    ],
+    "reference": {
+      "acceptedByteSha256": [
+        "60799f23977e938411ffc127083d5220e503c4a112b28f4ea14d46d3c01041d0"
+      ],
+      "streamlines": 223,
+      "decodedOrderSha256": "5ba9f9401cfa3f255d0b961f55ab089036a33b37d6bb4a8dff8423228b256367",
+      "decodedMultisetSha256": "c139a2bfdba4c47025c698e2275643b68943ded2bb958662aa27f19017eb59e6"
+    }
+  },
+  "postprocess": {
+    "generatedPath": "/evidence/or.json",
+    "bytes": 333147,
+    "sha256": "719600284d8190a428f0768da1b6e2c5f8d83210d72c9d79aa10f6abe91bf705",
+    "details": {
+      "inputFibres": 216,
+      "retained": 215,
+      "removed": 1
+    },
+    "requiredShape": "220x64x3",
+    "requiredShapeSatisfied": false,
+    "checkedOutputSha256": "1ca89796c621963388f635bd31ab0bd9a28eec7917de6c12ef8b68d469da4144",
+    "checkedOutputByteExact": false
+  },
+  "retention": {
+    "rawOutput": "/evidence/or.trk",
+    "log": "/evidence/or.log",
+    "evidence": "/evidence/or.evidence-v2.json",
+    "replacementAuthorized": false
+  }
+}

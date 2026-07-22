@@ -112,7 +112,7 @@ test('no-WebGL Atlas retains lessons, sources, import, and semantic return witho
   await page.locator('#lessons-trigger').click();
   await expect(page.locator('#atlas-project-links a')).toHaveCount(4);
   await page.locator('[data-start-lesson="retina-to-v1"]').click();
-  await expect(page.locator('#lesson-title')).toContainText('Early vision');
+  await expect(page.locator('#lesson-title')).toHaveText('Early Vision: Retina to the Cortical Streams');
   await expect(page.locator('#back-to-atlas')).toBeVisible();
   await page.locator('#back-to-atlas').click();
   await expect(page.locator('#return-to-lesson')).toBeVisible();

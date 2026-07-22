@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://brain-atlas.github.io/schemas/asset-pipeline-manifest-v1.json",
+  "title": "Brain Atlas offline anatomical asset pipeline manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "environment",
+    "coordinateFrames",
+    "sources",
+    "intermediates",
+    "tools",
+    "pipelines",
+    "outputs",
+    "rights",
+    "limitations"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "environment": { "type": "object" },
+    "coordinateFrames": { "type": "object" },
+    "sources": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/source" },
+      "minItems": 1
+    },
+    "intermediates": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/intermediate" },
+      "minItems": 1
+    },
+    "tools": { "type": "array", "items": { "type": "object" }, "minItems": 1 },
+    "pipelines": { "type": "array", "items": { "type": "object" }, "minItems": 5 },
+    "outputs": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/output" },
+      "minItems": 6
+    },
+    "rights": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/rights" },
+      "minItems": 6
+    },
+    "limitations": { "type": "object" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "source": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "id", "filename", "url", "bytes", "sha256", "dataset", "version",
+        "terms", "verifiedOn", "acceptanceRequired", "redistribution", "coordinateFrame"
+      ],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "filename": { "type": "string", "minLength": 1 },
+        "url": { "type": "string", "pattern": "^https://" },
+        "bytes": { "type": "integer", "minimum": 1 },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "dataset": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 },
+        "terms": { "type": "object" },
+        "verifiedOn": { "type": "string", "format": "date" },
+        "acceptanceRequired": { "type": "boolean" },
+        "redistribution": { "type": "string", "minLength": 1 },
+        "coordinateFrame": { "type": "string", "minLength": 1 }
+      }
+    },
+    "intermediate": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "id", "filename", "bytes", "sha256", "acquisitionEvidence",
+        "redistribution", "coordinateFrame"
+      ],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "filename": { "type": "string", "minLength": 1 },
+        "bytes": { "type": "integer", "minimum": 1 },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "acquisitionEvidence": { "type": "string", "minLength": 1 },
+        "redistribution": { "const": "not redistributed" },
+        "coordinateFrame": { "type": "string", "minLength": 1 }
+      }
+    },
+    "output": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["id", "path", "sha256", "pipelineId", "autoReplacePublicAsset"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "path": { "type": "string", "pattern": "^public/" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "pipelineId": { "type": "string", "minLength": 1 },
+        "autoReplacePublicAsset": { "const": false }
+      }
+    },
+    "rights": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "outputId", "sourceIds", "determination", "blocking", "obligations",
+        "evidence", "reviewer", "reviewedOn", "notLegalAdvice"
+      ],
+      "properties": {
+        "outputId": { "type": "string", "minLength": 1 },
+        "sourceIds": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+        "determination": { "type": "string", "minLength": 1 },
+        "blocking": { "type": "boolean" },
+        "obligations": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+        "evidence": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+        "reviewer": { "type": "string", "minLength": 1 },
+        "reviewedOn": { "type": "string", "format": "date" },
+        "notLegalAdvice": { "const": true }
+      }
+    }
+  }
+}

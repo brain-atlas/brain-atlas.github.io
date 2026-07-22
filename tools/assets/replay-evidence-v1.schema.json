@@ -1,0 +1,150 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://brain-atlas.local/schema/asset-replay-evidence-v1.json",
+  "title": "Brain Atlas manual DSI replay evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "asset",
+    "classification",
+    "environment",
+    "invocation",
+    "execution",
+    "trackvis",
+    "postprocess",
+    "retention"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "asset": { "enum": ["optic-radiation", "swm"] },
+    "classification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "closeout"],
+      "properties": {
+        "id": { "type": "integer", "minimum": 1, "maximum": 4 },
+        "name": { "enum": ["byte-exact", "decoded-exact-order-drift", "metric-only", "materially-different"] },
+        "closeout": { "enum": ["allowed-without-new-decision", "human-decision-required", "blocked"] }
+      }
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["platform", "machine", "python", "verifierGitHead"],
+      "properties": {
+        "platform": { "type": "string", "minLength": 1 },
+        "machine": { "type": "string", "minLength": 1 },
+        "python": { "type": "string", "minLength": 1 },
+        "verifierGitHead": { "type": "string", "pattern": "^[0-9a-f]{40}$" }
+      }
+    },
+    "invocation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["argv", "argvSha256", "scriptPath", "scriptBytes", "scriptSha256", "inputChecks"],
+      "properties": {
+        "argv": { "type": "array", "minItems": 2, "items": { "type": "string" } },
+        "argvSha256": { "$ref": "#/$defs/sha256" },
+        "scriptPath": { "type": "string", "minLength": 1 },
+        "scriptBytes": { "type": "integer", "minimum": 1 },
+        "scriptSha256": { "$ref": "#/$defs/sha256" },
+        "inputChecks": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["path", "bytes", "sha256"],
+            "properties": {
+              "path": { "type": "string", "minLength": 1 },
+              "bytes": { "type": "integer", "minimum": 1 },
+              "sha256": { "$ref": "#/$defs/sha256" }
+            }
+          }
+        }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["humanReportedOutcome", "logPath", "logBytes", "logSha256", "outputMtimeNs", "logMtimeNs", "effectiveParameters", "warnings"],
+      "properties": {
+        "humanReportedOutcome": { "enum": ["completed", "failed"] },
+        "logPath": { "type": "string", "minLength": 1 },
+        "logBytes": { "type": "integer", "minimum": 0 },
+        "logSha256": { "$ref": "#/$defs/sha256" },
+        "outputMtimeNs": { "type": "integer", "minimum": 0 },
+        "logMtimeNs": { "type": "integer", "minimum": 0 },
+        "effectiveParameters": { "type": "object" },
+        "warnings": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "trackvis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "bytes", "sha256", "gzip", "streamlines", "decodedOrderSha256", "decodedMultisetSha256", "effectiveAffine", "reference"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "bytes": { "type": "integer", "minimum": 1 },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "gzip": { "type": "boolean" },
+        "streamlines": { "type": "integer", "minimum": 0 },
+        "decodedOrderSha256": { "$ref": "#/$defs/sha256" },
+        "decodedMultisetSha256": { "$ref": "#/$defs/sha256" },
+        "effectiveAffine": { "$ref": "#/$defs/matrix4" },
+        "reference": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["acceptedByteSha256", "streamlines", "decodedOrderSha256", "decodedMultisetSha256"],
+          "properties": {
+            "acceptedByteSha256": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/sha256" } },
+            "streamlines": { "type": "integer", "minimum": 0 },
+            "decodedOrderSha256": { "$ref": "#/$defs/sha256" },
+            "decodedMultisetSha256": { "$ref": "#/$defs/sha256" }
+          }
+        }
+      }
+    },
+    "postprocess": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["generatedPath", "bytes", "sha256", "details", "requiredShape", "requiredShapeSatisfied", "checkedOutputSha256", "checkedOutputByteExact"],
+      "properties": {
+        "generatedPath": { "type": "string", "minLength": 1 },
+        "bytes": { "type": "integer", "minimum": 1 },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "details": { "type": "object" },
+        "requiredShape": { "type": "string", "minLength": 1 },
+        "requiredShapeSatisfied": { "type": "boolean" },
+        "checkedOutputSha256": { "$ref": "#/$defs/sha256" },
+        "checkedOutputByteExact": { "type": "boolean" }
+      }
+    },
+    "retention": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rawOutput", "log", "evidence", "replacementAuthorized"],
+      "properties": {
+        "rawOutput": { "type": "string", "minLength": 1 },
+        "log": { "type": "string", "minLength": 1 },
+        "evidence": { "type": "string", "minLength": 1 },
+        "replacementAuthorized": { "const": false }
+      }
+    }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "matrix4": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": {
+        "type": "array",
+        "minItems": 4,
+        "maxItems": 4,
+        "items": { "type": "number" }
+      }
+    }
+  }
+}
