@@ -689,9 +689,31 @@ function animate(timestamp) {
 // UI
 const $ = (id) => document.getElementById(id);
 const setFill = (el) => el.style.setProperty('--fill', ((el.value - el.min) / (el.max - el.min) * 100) + '%');
+let exploreCommandHandler = null;
+let explorePanelModel = null;
+let exploreResetCamera = null;
+let rendererEntityIds = new Map();
+function dispatchExploreCommands(commands) {
+  if (!exploreCommandHandler) return false;
+  exploreCommandHandler(commands);
+  return true;
+}
+function entityIdForRenderer(kind, id) {
+  return rendererEntityIds.get(`${kind}:${id}`) ?? null;
+}
 
 $('play').addEventListener('click', () => {
   if (reduce) return;
+  if (explorePanelModel) {
+    const playback = explorePanelModel.playback;
+    dispatchExploreCommands([{
+      type: 'playback.set',
+      playing: !playback.playing || playback.settled,
+      speed: playback.speed,
+      settled: false,
+    }]);
+    return;
+  }
   st.flow = !st.flow;
   if (st.flow) st.settled = false;
   $('play').classList.toggle('on', st.flow);
@@ -704,10 +726,37 @@ if (reduce) {
   $('playGlyph').textContent = '▶';
   $('playTxt').textContent = 'Activity paused — reduced motion';
 }
-$('speed').addEventListener('input', (e) => { st.speed = +e.target.value; $('speedV').textContent = st.speed; setFill(e.target); });
-$('clip').addEventListener('input', (e) => { clipPlane.constant = 80 - (e.target.value / 100) * 160; $('clipV').textContent = e.target.value + '%'; setFill(e.target); });
-$('tissue').addEventListener('input', (e) => { brainMat.opacity = e.target.value / 100; $('tissueV').textContent = e.target.value; setFill(e.target); });
-$('spin').addEventListener('click', () => { controls.autoRotate = !controls.autoRotate; $('spin').classList.toggle('on', controls.autoRotate); });
+$('speed').addEventListener('input', (event) => {
+  const speed = +event.target.value;
+  if (explorePanelModel) {
+    dispatchExploreCommands([{
+      type: 'playback.set',
+      playing: explorePanelModel.playback.playing,
+      speed,
+      settled: explorePanelModel.playback.settled,
+    }]);
+    return;
+  }
+  st.speed = speed; $('speedV').textContent = st.speed; setFill(event.target);
+});
+$('clip').addEventListener('input', (event) => {
+  if (explorePanelModel) {
+    dispatchExploreCommands([{ type: 'cutaway.set', position: +event.target.value }]);
+    return;
+  }
+  clipPlane.constant = 80 - (event.target.value / 100) * 160; $('clipV').textContent = event.target.value + '%'; setFill(event.target);
+});
+$('tissue').addEventListener('input', (event) => {
+  if (explorePanelModel) {
+    dispatchExploreCommands([{ type: 'material.set', tissueOpacity: +event.target.value / 100 }]);
+    return;
+  }
+  brainMat.opacity = event.target.value / 100; $('tissueV').textContent = event.target.value; setFill(event.target);
+});
+$('spin').addEventListener('click', () => {
+  if (exploreCommandHandler) return;
+  controls.autoRotate = !controls.autoRotate; $('spin').classList.toggle('on', controls.autoRotate);
+});
 
 // ---- Scene-state + layer toggle panel (built once the region manifest loads) --
 // sceneState.visible is the serializable source of truth (the substrate for
@@ -724,11 +773,16 @@ function syncStreamParent(cb, syncers, hemiMap) {
 const STREAM_ORDER = [['subcortical', 'Subcortical'], ['early', 'Early / shared'], ['ventral', 'Ventral — “what”'], ['dorsal', 'Dorsal — “where / how”'],
   ['temporal', 'Temporal targets'], ['parietal', 'Inferior parietal'], ['frontal', 'Frontal targets'], ['gap', 'Unparcellated (GapMap)']];
 const DEFAULT_OFF = ['labels'];   // layers that start hidden
-function buildPanel(regions, tracts) {
+let panelInitialized = false;
+function buildPanel(regions, tracts, { initialize = !panelInitialized } = {}) {
   Object.assign(layerObjs, { brain: brainGroup, or: fibreGroup, anterior: anteriorGroup, labels: labelGroup, swm: swmGroup });
   for (const reg of regions) layerObjs[reg.id] = regionsById[reg.id];
-  Object.keys(layerObjs).forEach((id) => sceneState.visible.add(id));
-  for (const id of DEFAULT_OFF) { sceneState.visible.delete(id); if (layerObjs[id]) layerObjs[id].visible = false; }
+  if (initialize) {
+    sceneState.visible.clear();
+    Object.keys(layerObjs).forEach((id) => sceneState.visible.add(id));
+    for (const id of DEFAULT_OFF) { sceneState.visible.delete(id); if (layerObjs[id]) layerObjs[id].visible = false; }
+    panelInitialized = true;
+  }
   const root = $('layers'); if (!root) return; root.innerHTML = '';
   const sec = (title) => { const h = document.createElement('div'); h.className = 'lyr-sec'; h.textContent = title; root.appendChild(h); };
   const leafRow = (id, label, o = {}) => {
@@ -739,7 +793,7 @@ function buildPanel(regions, tracts) {
     row.append(cb, sw, t); return { row, cb };
   };
   // One collapsible stream group of L/R-pill rows — used for both regions and tracts.
-  const streamBlock = (label, items, hemiMap, applyFn) => {
+  const streamBlock = (label, items, hemiMap, applyFn, rendererKind) => {
     const wrap = document.createElement('div'); wrap.className = 'lyr-grpwrap collapsed';
     const head = document.createElement('div'); head.className = 'lyr lyr-group';
     const caret = document.createElement('span'); caret.className = 'caret'; caret.textContent = '▸';
@@ -755,26 +809,53 @@ function buildPanel(regions, tracts) {
       const nm = document.createElement('span'); nm.className = 'lyr-t'; nm.textContent = it.name;
       const pills = document.createElement('span'); pills.className = 'hemi-pills';
       const pill = {};
+      const entityId = entityIdForRenderer(rendererKind, it.id);
+      row.dataset.rendererId = it.id;
+      if (entityId) row.dataset.entityId = entityId;
+      const applyEntityState = () => {
+        const state = hemiMap[it.id];
+        const commands = entityId ? [
+          { type: 'visibility.set', entity: entityId, visible: state.L || state.R },
+          { type: 'hemispheres.set-entity', entity: entityId, L: state.L, R: state.R },
+        ] : [];
+        if (!dispatchExploreCommands(commands)) applyFn(it.id);
+        syncStreamParent(cb, syncers, hemiMap);
+      };
       for (const h of ['L', 'R']) {
         const p = document.createElement('button'); p.type = 'button'; p.className = 'pill'; p.textContent = h;
         p.classList.toggle('on', hemiMap[it.id][h]);
-        p.addEventListener('click', () => { hemiMap[it.id][h] = !hemiMap[it.id][h]; p.classList.toggle('on', hemiMap[it.id][h]); applyFn(it.id); syncStreamParent(cb, syncers, hemiMap); });
+        p.addEventListener('click', () => { hemiMap[it.id][h] = !hemiMap[it.id][h]; p.classList.toggle('on', hemiMap[it.id][h]); applyEntityState(); });
         pills.append(p); pill[h] = p;
       }
-      nm.addEventListener('click', () => { const on = !(hemiMap[it.id].L || hemiMap[it.id].R); hemiMap[it.id].L = hemiMap[it.id].R = on; pill.L.classList.toggle('on', on); pill.R.classList.toggle('on', on); applyFn(it.id); syncStreamParent(cb, syncers, hemiMap); });
+      nm.addEventListener('click', () => { const on = !(hemiMap[it.id].L || hemiMap[it.id].R); hemiMap[it.id].L = hemiMap[it.id].R = on; pill.L.classList.toggle('on', on); pill.R.classList.toggle('on', on); applyEntityState(); });
       row.append(sw, nm, pills); kids.appendChild(row);
       syncers.push({ id: it.id, pill });
     }
-    cb.addEventListener('change', () => { const on = cb.checked; for (const s of syncers) { hemiMap[s.id].L = hemiMap[s.id].R = on; s.pill.L.classList.toggle('on', on); s.pill.R.classList.toggle('on', on); applyFn(s.id); } cb.indeterminate = false; });
+    cb.addEventListener('change', () => {
+      const on = cb.checked;
+      const commands = [];
+      for (const s of syncers) {
+        hemiMap[s.id].L = hemiMap[s.id].R = on;
+        s.pill.L.classList.toggle('on', on); s.pill.R.classList.toggle('on', on);
+        const entityId = entityIdForRenderer(rendererKind, s.id);
+        if (entityId) commands.push(
+          { type: 'visibility.set', entity: entityId, visible: on },
+          { type: 'hemispheres.set-entity', entity: entityId, L: on, R: on },
+        );
+        else applyFn(s.id);
+      }
+      dispatchExploreCommands(commands);
+      cb.indeterminate = false;
+    });
     const toggle = () => { wrap.classList.toggle('collapsed'); caret.textContent = wrap.classList.contains('collapsed') ? '▸' : '▾'; };
     caret.addEventListener('click', toggle); t.addEventListener('click', toggle);
     syncStreamParent(cb, syncers, hemiMap);
     wrap.append(head, kids); return wrap;
   };
   const byStreamOf = (arr) => { const m = {}; for (const x of arr) (m[x.stream] ||= []).push(x); return m; };
-  const streamSection = (title, arr, hemiMap, applyFn) => {
+  const streamSection = (title, arr, hemiMap, applyFn, rendererKind) => {
     const bs = byStreamOf(arr); sec(title);
-    for (const [stream, label] of STREAM_ORDER) if (bs[stream]) root.appendChild(streamBlock(label, bs[stream], hemiMap, applyFn));
+    for (const [stream, label] of STREAM_ORDER) if (bs[stream]) root.appendChild(streamBlock(label, bs[stream], hemiMap, applyFn, rendererKind));
   };
 
   sec('Hemisphere');
@@ -782,19 +863,64 @@ function buildPanel(regions, tracts) {
   for (const h of ['L', 'R']) {
     const chip = document.createElement('label'); chip.className = 'hemi-chip';
     const cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = hemiState[h];
-    cb.addEventListener('change', () => { hemiState[h] = cb.checked; applyHemi(); });
+    cb.addEventListener('change', () => {
+      hemiState[h] = cb.checked;
+      if (explorePanelModel) {
+        dispatchExploreCommands([{
+          type: 'hemispheres.set-global',
+          L: h === 'L' ? cb.checked : hemiState.L,
+          R: h === 'R' ? cb.checked : hemiState.R,
+        }]);
+      } else applyHemi();
+    });
     const t = document.createElement('span'); t.textContent = h === 'L' ? 'Left' : 'Right';
     chip.append(cb, t); hrow.appendChild(chip);
   }
   root.appendChild(hrow);
 
-  streamSection('Structures', regions, regionHemi, applyRegionMesh);
-  if (tracts && tracts.length) streamSection('White-matter tracts', tracts, tractHemi, applyTractMesh);
+  streamSection('Structures', regions, regionHemi, applyRegionMesh, 'region');
+  if (tracts && tracts.length) streamSection('White-matter tracts', tracts, tractHemi, applyTractMesh, 'tract');
 
-  const leafSec = (title, leaves) => { sec(title); for (const lf of leaves) { const lr = leafRow(lf.id, lf.label, { color: lf.color, dim: lf.dim }); lr.cb.addEventListener('change', () => setLayer(lf.id, lr.cb.checked)); root.appendChild(lr.row); } };
+  const leafSec = (title, leaves) => { sec(title); for (const lf of leaves) { const lr = leafRow(lf.id, lf.label, { color: lf.color, dim: lf.dim }); lr.cb.addEventListener('change', () => {
+    const entityId = entityIdForRenderer('layer', lf.id);
+    if (!entityId || !dispatchExploreCommands([{ type: 'visibility.set', entity: entityId, visible: lr.cb.checked }])) setLayer(lf.id, lr.cb.checked);
+  }); root.appendChild(lr.row); } };
   leafSec('Pathways', [{ id: 'or', label: 'Optic radiation', color: '#ffb060' }, { id: 'swm', label: 'Superficial fibres', color: '#9a90c0', dim: true }, { id: 'anterior', label: 'Anterior pathway', dim: true }]);
   leafSec('Scene', [{ id: 'brain', label: 'Cortical surface' }, { id: 'labels', label: 'Labels' }]);
   applyHemi();
+}
+
+function projectExplorePanel(model) {
+  explorePanelModel = model;
+  Object.assign(hemiState, model.globalHemispheres);
+  sceneState.visible.clear();
+  for (const entity of Object.values(model.entities)) {
+    const { kind, id } = entity.renderer;
+    if (kind === 'layer') {
+      setLayer(id, entity.visible);
+    } else if (kind === 'region') {
+      regionHemi[id] = { L: entity.L, R: entity.R };
+    } else if (kind === 'tract') {
+      tractHemi[id] = { L: entity.L, R: entity.R };
+    }
+  }
+  $('clip').value = model.cutaway.position;
+  $('clipV').textContent = `${model.cutaway.position}%`;
+  setFill($('clip'));
+  $('tissue').value = Math.round(model.material.tissueOpacity * 100);
+  $('tissueV').textContent = $('tissue').value;
+  setFill($('tissue'));
+  requestedLessonPlayback = model.playback;
+  applyLessonPlaybackRequest();
+  if (_regions) buildPanel(_regions, tractsMeta, { initialize: false });
+}
+
+function clearExplorePanel() {
+  exploreCommandHandler = null;
+  explorePanelModel = null;
+  exploreResetCamera = null;
+  $('explore-camera-controls').hidden = true;
+  $('spin').hidden = false;
 }
 
 function layerGroup(id) {
@@ -1011,16 +1137,77 @@ export function createLessonRendererAdapter(catalog, { onTransitionStateChange =
     },
     capture() { return structuredClone(captured); },
   };
-  return createRendererAdapter(bindings, catalog);
+  const adapter = createRendererAdapter(bindings, catalog);
+  rendererEntityIds = new Map(Object.values(catalog.entitiesById).map((entity) => [
+    `${entity.renderer.kind}:${entity.renderer.id}`,
+    entity.id,
+  ]));
+  return Object.freeze({
+    apply: adapter.apply,
+    capture: adapter.capture,
+    captureRenderedCamera() {
+      return {
+        position: camera.position.toArray(),
+        target: controls.target.toArray(),
+      };
+    },
+    setExploreCommandHandler(handler) {
+      if (handler !== null && typeof handler !== 'function') throw new TypeError('Explore command handler must be a function or null');
+      exploreCommandHandler = handler;
+    },
+    syncExplorePanel(model) { projectExplorePanel(model); },
+    beginExploreCamera(resetCamera) {
+      exploreResetCamera = structuredClone(resetCamera);
+      controls.autoRotate = false;
+      $('spin').classList.remove('on');
+      $('spin').hidden = true;
+      $('explore-camera-controls').hidden = false;
+    },
+    endExplore() { clearExplorePanel(); },
+  });
 }
 
 const VIEWS = {
   lateral: [300, 15, 0], top: [0, 350, 0.01], post: [0, 30, 350], ant: [0, 30, -350],
 };
-document.querySelectorAll('[data-view]').forEach((b) => b.addEventListener('click', () => {
-  camera.position.set(...VIEWS[b.dataset.view]); controls.update();
+document.querySelectorAll('[data-view]').forEach((button) => button.addEventListener('click', () => {
+  camera.position.set(...VIEWS[button.dataset.view]); controls.update();
 }));
-$('reset').addEventListener('click', () => { camera.position.copy(HOME); controls.target.set(0, 0, 0); controls.update(); });
+function applyExploreCameraAction(action) {
+  if (!exploreCommandHandler) return;
+  const offset = camera.position.clone().sub(controls.target);
+  const distance = offset.length();
+  if (action === 'zoom-in' || action === 'zoom-out') {
+    const factor = action === 'zoom-in' ? 0.82 : 1.22;
+    offset.setLength(THREE.MathUtils.clamp(distance * factor, controls.minDistance, controls.maxDistance));
+    camera.position.copy(controls.target).add(offset);
+  } else {
+    camera.updateMatrixWorld();
+    const right = new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 0).normalize();
+    const up = new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 1).normalize();
+    const amount = Math.max(4, distance * 0.08);
+    const delta = action === 'pan-left' ? right.multiplyScalar(-amount)
+      : action === 'pan-right' ? right.multiplyScalar(amount)
+        : action === 'pan-up' ? up.multiplyScalar(amount)
+          : up.multiplyScalar(-amount);
+    camera.position.add(delta);
+    controls.target.add(delta);
+  }
+  controls.update();
+}
+document.querySelectorAll('[data-explore-camera]').forEach((button) => {
+  button.addEventListener('click', () => applyExploreCameraAction(button.dataset.exploreCamera));
+});
+$('reset').addEventListener('click', () => {
+  if (exploreResetCamera) {
+    camera.position.fromArray(exploreResetCamera.position);
+    controls.target.fromArray(exploreResetCamera.target);
+  } else {
+    camera.position.copy(HOME);
+    controls.target.set(0, 0, 0);
+  }
+  controls.update();
+});
 
 [$('speed'), $('clip'), $('tissue')].forEach(setFill);
 brainMat.opacity = $('tissue').value / 100;

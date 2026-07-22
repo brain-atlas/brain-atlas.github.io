@@ -30,7 +30,8 @@ In development mode, `src/main.js` exposes `window.__view = { camera, controls, 
 - The checked-in reference lesson is intentionally marked `[DRAFT]` until `brain-atlas-zmq.25` completes. In the rendered development path, verify `window.__lesson?.lesson?.status === 'draft'`; in every path, verify visible `#lesson-status`, a `.lesson-meta .lesson-status` badge, and `[DRAFT]` in `document.title`. The DOM checks must remain true under `?no-webgl=1`, where the renderer debug object is intentionally absent. Draft is curriculum lifecycle state, not geometry/activity fidelity.
 - Poll for `window.__lesson?.controllerState?.status === 'ready'` before inspecting the lesson. The layer panel is built only after `regions.json` loads and remains collapsed under **Viewer controls**; lesson policies normally disable it. After changing a draw range, wait two `requestAnimationFrame`s before reading it back.
 - At page entry, `window.__lesson.navigation.activeIndex === -1`: the unnumbered topic view centers the complete brain with the lesson pathway visible. `#page-scroll` is the sole lesson scroller; `window.scrollX` and `window.scrollY` must remain zero. Scroll it into the eight `.lesson-scene` sections or click the fixed-position `#scene-previous` / `#scene-next` actions; Previous from scene 1 restores the entry view. The global brand link returns `#page-scroll.scrollTop` to zero. In non-Explore policies, canvas `touch-action: pan-y` and disabled touch pan/zoom keep vertical swipes on this surface while mouse/trackpad drag may orbit in `look`. `#scene-skip` appears on the stage only during an active transition; the reference lesson intentionally exposes no ineffective Restart action.
-- `#model-sources-trigger` opens the sole scene-specific geometry/activity status, provenance, limitation, and source surface; there is no duplicate canvas badge, stage status row, or global progress strip. `#fidelity-close` restores trigger focus and the exact `#page-scroll` position.
+- `#model-sources-trigger` opens the sole geometry/activity status, provenance, limitation, and source surface; there is no duplicate canvas badge, stage status row, or global progress strip. In Lesson mode, `#fidelity-close` restores trigger focus and the exact `#page-scroll` position. In Explore, records follow visible entities and the disclosure remains inside the outer dialog's focus scope.
+- Renderer readiness reveals header `#explore-atlas-trigger` and stage `#explore-scene-trigger`. While either Explore entry is active, `window.__lesson.exploreState` reports `{ phase, kind, snapshot }`; there must still be exactly one canvas. `#explore-return` or Escape restores the authored scene, exact lesson-surface position, and invoking focus. If Model & sources is open, the first Escape closes it and the next returns.
 - To check display aspect, compare `window.__view.camera.aspect` with `document.querySelector('#stage canvas').getBoundingClientRect().width / height`. They should match to floating-point precision; the MNI group (`matrixAutoUpdate === false`) must retain equal basis lengths and positive determinant.
 - Force the readable renderer-free path with `?no-webgl=1`; verify that no `main`/Three.js resource loads. Imported supplementary images remain available as semantic figures in this path.
 
@@ -57,8 +58,26 @@ In development mode, `src/main.js` exposes `window.__view = { camera, controls, 
 Use a disposable imported fixture for browser checks. Do not assume a locally opened
 lesson is scientifically reviewed merely because it passes the structural contract.
 
+## Exploring the atlas
+
+- **Explore this scene** keeps the active lesson's effective filters and playback state,
+  replaces only its requested camera with the exact rendered pose, and grants temporary
+  orbit, zoom, pan, and viewer-filter control.
+- Header **Explore atlas** opens the project default: complete base atlas except labels,
+  home camera, bilateral hemispheres, no cutaway/selection, and requested activity.
+- The native full-viewport dialog reparents the existing stage, canvas, Viewer controls,
+  and Model & sources. Check canvas identity/count before and after repeated cycles; do
+  not expect a second renderer or context.
+- Viewer-panel edits update `window.__lesson.exploreState.snapshot` through canonical
+  commands. Move the camera, then change a filter and verify the pose does not snap.
+  `[data-explore-camera]` buttons provide keyboard Zoom/Pan; Reset returns to the entry
+  pose. Auto-rotate remains hidden and off.
+- Return/Escape discards all temporary edits. Verify controller scene/index, serialized
+  authored state, `#page-scroll.scrollTop`, invoking focus, touch policy, and camera
+  aspect after restoration. Use `scripts/browser/README.md` for the repeatable matrix.
+
 ## Layers and how to toggle them
-The retained panel lives in `#layers` inside `#viewer-console`. It is disabled while a lesson scene's canonical policy owns the display; do not bypass that state by synthesizing panel events. For direct free-viewer diagnostics, the three legacy control surfaces are:
+The retained panel lives in `#layers` inside `#viewer-console`. It is disabled while a lesson scene owns the display; do not bypass that state by synthesizing panel events. Explicit Explore enables the same panel as a projection/editor of its temporary canonical snapshot. Its three control surfaces are:
 - **Hemisphere** — `.hemi-chip` checkboxes (Left / Right), the global L/R master.
 - **Structures / White-matter tracts** — each row has **L / R pill buttons**
   (`.pill`); click a pill to toggle that side, click the name to toggle both.
@@ -86,7 +105,9 @@ swm.visible = true; swm.traverse(o => { o.visible = true; });
 ## Controls (DOM ids)
 Lesson: `#lesson-import-trigger`, `#lesson-import-dialog`, `#lesson-import-source`, `#lesson-import-file`, `#lesson-import-validate`, `#lesson-import-open`, `#visual-selector`, `#scene-previous`, `#scene-next`, transition-only `#scene-skip`, `#model-sources-trigger`, and `#fidelity-close`.
 
-Retained viewer panel: `#play` play/pause activity · `#speed` activity speed · `#clip` cutaway (near-hemisphere clip plane) · `#tissue` surface opacity · `[data-view]` camera presets (`lateral` / `top` / `post` / `ant`) · `#spin` auto-rotate · `#reset` home view.
+Explore: `#explore-atlas-trigger`, `#explore-scene-trigger`, `#explore-dialog`, persistent `#explore-return`, and `[data-explore-camera]` Zoom/Pan buttons.
+
+Retained viewer panel: `#play` play/pause activity · `#speed` activity speed · `#clip` cutaway (near-hemisphere clip plane) · `#tissue` surface opacity · `[data-view]` camera presets (`lateral` / `top` / `post` / `ant`) · `#spin` auto-rotate outside Explore · `#reset` home or Explore-entry view.
 
 ## What each layer honestly represents
 Describe layers by what the data supports (this mirrors the honesty rule in

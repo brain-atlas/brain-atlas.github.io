@@ -13,14 +13,14 @@
 
 **Acceptance Criteria:**
 - [x] A learner can paste or import a valid lesson and complete it without an account or backend.
-- [ ] The retina→chiasm→LGN→optic-radiation→V1 reference lesson works through vertical scrolling and explicit scene controls on desktop and mobile.
-- [ ] Every lesson can enter a prepared free-exploration state and return to the exact lesson scene.
+- [x] The retina→chiasm→LGN→optic-radiation→V1 reference lesson works through vertical scrolling and explicit scene controls on desktop and mobile.
+- [x] Every lesson can enter a prepared free-exploration state and return to the exact lesson scene.
 - [ ] Atlas entities can expose an unobtrusive highlight/short-label preview and explicit cited details through capability-equivalent pointer, keyboard, and touch interactions.
-- [ ] A lesson remains readable as ordinary Markdown while explicit, typed scene directives provide deterministic machine behavior.
-- [ ] Wide and compact UI structures, component states, focus behavior, and failure recovery are approved before runtime implementation.
-- [ ] Lesson scenes preserve the one-MNI-transform and honesty-of-representation invariants.
-- [ ] Reduced-motion and no-WebGL users receive useful settled/readable alternatives.
-- [ ] The static publication workflow remains viable; no planned requirement depends on WebAssembly or a service.
+- [x] A lesson remains readable as ordinary Markdown while explicit, typed scene directives provide deterministic machine behavior.
+- [x] Wide and compact UI structures, component states, focus behavior, and failure recovery are approved before runtime implementation.
+- [x] Lesson scenes preserve the one-MNI-transform and honesty-of-representation invariants.
+- [x] Reduced-motion and no-WebGL users receive useful settled/readable alternatives.
+- [x] The static publication workflow remains viable; no planned requirement depends on WebAssembly or a service.
 
 **Planned Verification Commands:**
 ```bash
@@ -445,9 +445,24 @@ failure, image retry, no-referrer loading, responsive stage aspect, invalid/mali
 source, repeated import, and production behavior were verified in Firefox and Chromium.
 See `.pi/plans/brain-atlas-zmq.6-local-lesson-import-plan.md` for implementation evidence.
 
-### Explore and inspector (`brain-atlas-zmq.7-.8`)
+### Explore (`brain-atlas-zmq.7`) — Implemented
 
-Use renderer commands and stable entity IDs rather than simulating clicks on the current layer panel. Selection/highlighting must not mutate anatomical geometry or introduce another coordinate transform.
+Header **Explore atlas** opens the project-authored complete-atlas default; stage
+**Explore this scene** starts from the active effective filters and exact rendered
+camera. One native full-viewport dialog reparents the existing stage, canvas, Viewer
+controls, and Model & sources. Its temporary complete canonical snapshot routes retained
+panel edits through allowlisted commands and the one renderer adapter. Full orbit, zoom,
+pan, filters, semantic camera buttons, and responsive wide/compact layouts remain
+temporary. Return/Escape reapplies the immutable authored scene and restores exact lesson
+scroll and invoking focus. No-WebGL and renderer failures hide Explore actions. See
+`.pi/plans/brain-atlas-zmq.7-shared-explore-surface-plan.md` and
+`scripts/browser/README.md` for design and replayable Firefox/Chromium checks.
+
+### Inspector (`brain-atlas-zmq.8`)
+
+Build selection and highlighting on the same renderer-command and stable-entity-ID
+boundaries. Do not simulate clicks, mutate anatomical geometry, or introduce another
+coordinate transform.
 
 ### Hardening (`brain-atlas-zmq.9`)
 

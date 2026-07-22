@@ -5,7 +5,7 @@
 `src/ui/` contains renderer-independent presentation and interaction models used by
 `src/bootstrap.js` to turn a validated lesson into a responsive reading experience.
 It owns semantic Markdown view data, scene-navigation hysteresis, fidelity aggregation,
-scene-controller state, camera-transition math, and pure lesson-scroll-surface math. It does not own the DOM, Three.js,
+scene-controller state, camera-transition math, pure lesson-scroll-surface math, and temporary Explore snapshots. It does not own the DOM, Three.js,
 scientific catalogs, authored lesson state, or anatomical coordinates.
 
 ## Core Mechanism
@@ -30,6 +30,7 @@ scientific catalogs, authored lesson state, or anatomical coordinates.
 7. `createVisibilityTransition` keeps the source/destination filter union logically eligible during the first half of a scene transition while cross-fading changed entities; at halfway, only the destination set remains. Interruption begins from current rendered opacity.
 8. Scroll-surface helpers translate viewport rectangles into the one explicit lesson surface's coordinate system and identify only those standard page-scroll keys that need bridging from the fixed shell. They do not read the DOM or schedule scrolling.
 9. `validateLessonImport` bounds untrusted local source, composes the same strict parser and presentation path used by checked-in content, and returns either frozen diagnostics or a frozen candidate plus a host-disclosing preview. It never activates a lesson or reads a file. `createLessonRuntimeCatalog` immutably extends only the base visual-ID allowlist so a validated imported snapshot can pass the same renderer-adapter boundary.
+10. Explore helpers derive either a scene snapshot with the actual rendered camera or the complete-atlas default, apply allowlisted command batches only after synchronizing that camera, project truthful panel state by stable entity ID, and resolve fidelity records from visible entities plus approved context records.
 
 **Key files:**
 
@@ -40,6 +41,7 @@ scientific catalogs, authored lesson state, or anatomical coordinates.
 - `visibility-transition.js` — deterministic filter-union and opacity cross-fade sampling.
 - `scroll-surface.js` — pure surface-relative coordinates and fixed-shell keyboard intent.
 - `lesson-import.js` — bounded all-or-nothing local-source validation, preview metadata, and lesson-scoped renderer catalog derivation.
+- `explore-session.js` — canonical scene/global Explore snapshots, camera-first command batching, panel projection, and fidelity aggregation.
 - `markdown-view-model.js` — allowlisted semantic Markdown plain data.
 - `fidelity-view-model.js` — scene fidelity status/detail projection.
 - `src/bootstrap.js` — DOM consumer, WebGL gate, focus, scrolling, responsive disclosure.
@@ -63,6 +65,11 @@ scientific catalogs, authored lesson state, or anatomical coordinates.
 | `pageScrollKeyAction(input)` | bootstrap/tests | Bridges standard page-scroll intent only from fixed-shell/page context; yields to native scroll contexts, controls, modifiers, and modals. |
 | `validateLessonImport(source, catalog)` | bootstrap/tests | Enforces the 512 KiB source limit, runs strict lesson and presentation validation, and returns frozen diagnostics or a frozen candidate summary with external image hosts; it performs no activation, file I/O, or network request. |
 | `createLessonRuntimeCatalog(catalog, lesson)` | bootstrap/tests | Returns a deeply frozen catalog view whose visual IDs are the sorted union of the base allowlist and already-validated lesson declarations; it does not mutate the shared catalog. |
+| `createSceneExploreSnapshot(snapshot, camera, catalog)` | bootstrap/tests | Returns a complete frozen scene-derived working snapshot with actual rendered camera and full Explore controls. |
+| `createAtlasExploreSnapshot(catalog)` | bootstrap/tests | Returns the versioned complete-atlas default: all base entities except labels, home camera, bilateral visibility, no cutaway/selection, requested activity, and full controls. |
+| `applyExploreCommands(snapshot, commands, camera, catalog)` | bootstrap/tests | Synchronizes actual camera first, then applies an allowlisted command batch without mutating the input. |
+| `createExplorePanelModel(snapshot, catalog)` | bootstrap/tests | Projects frozen layer/hemisphere/display/playback state keyed by stable entity ID and renderer binding. |
+| `exploreFidelityIds(snapshot, catalog, included?)` | bootstrap/tests | Returns the validated sorted union of visible-entity and context fidelity records. |
 | `markdownToViewModel(source)` | bootstrap/tests | Frozen allowlisted plain tree; rejects raw HTML and unsafe URLs defensively. |
 | `createFidelityViewModel(input, catalog)` | bootstrap/tests | Frozen scene records with separate ordered geometry/activity statuses; unknown records fail. |
 
@@ -89,6 +96,11 @@ scientific catalogs, authored lesson state, or anatomical coordinates.
 | INV-17 | Local import validation is bounded, pure, all-or-nothing, and uses the same parser/presentation path as checked-in lessons; a preview discloses lifecycle, scene/image counts, and external image hosts without activating content or making requests. A lesson-scoped catalog extends only validated visual IDs before the same renderer adapter applies a snapshot. | import-model tests + browser network/adapter checks | Untrusted source cannot mutate the active lesson during correction, bypass canonical adapter validation, or contact a remote host before explicit opening. |
 | INV-18 | Paste/file source and validated candidates remain memory-only. Source edits invalidate **Open lesson**; only explicit opening atomically replaces lesson/presentation/controller state, returns the lesson surface to its top, and never creates a second canvas. Reload restores the checked-in lesson. | import tests + repeated-import/reload browser checks | Local authoring stays account-free, backend-free, nonpersistent, and recoverable without partial session state. |
 | INV-19 | Declared HTTPS images are semantic DOM figures, never WebGL textures: alt, caption, credit, source, no-referrer lazy loading, reserved presentation space, accessible error/retry, and host disclosure travel together. Wide `split` may show atlas+image; compact shows one selected visual; manual selection does not mutate scene state. Stage resizing is observed and keeps camera aspect equal to the visible CSS stage. | parser/import tests + wide/compact/image-failure browser checks | Supplementary media cannot distort anatomy, leak referrers, silently fetch before consent, trap a failed state, or create a second renderer path. |
+| INV-20 | Explore owns one complete temporary canonical working snapshot. Scene entry substitutes the actual rendered camera into the active effective state; global entry uses one project-authored complete-atlas default. Both use the existing adapter, renderer, canvas, context, transform, and filter path. | Explore model tests + repeated-entry browser checks | Exploration cannot fork anatomical state or GPU ownership. |
+| INV-21 | Every noncamera Explore command first synchronizes the actual camera, then applies an allowlisted batch and reprojects the retained panel by stable entity ID. Auto-rotate remains off and outside canonical state. | Explore model tests + camera/filter browser checks | A filter edit cannot snap an orbiting camera or drift from the displayed control state. |
+| INV-22 | The native Explore dialog follows one guarded `closed → opening → active → closing` lifecycle. It reparents existing surfaces, owns an independent page lock, cancels pending lesson navigation/focus work, and returns the exact authored scene, scene identity, surface scroll, and invoking focus. Explore changes never persist. | lifecycle review + Return/Escape/repeated-cycle browser checks | Modal exit remains deterministic and cannot corrupt lesson navigation or release another surface's lock. |
+| INV-23 | Explore grants orbit, zoom, pan, full viewer filters, and at least 44 px semantic camera buttons on every authored scene; Lesson mode retains its authored policy and one-finger vertical scrolling. Reduced-motion changes synchronize back to the lesson controller on Return. | renderer policy review + compact/touch/reduced-motion browser checks | Permission elevation stays explicit, accessible, and temporary. |
+| INV-24 | Model & sources remains inside the outer Explore focus scope, follows visible entities, and stays nonmodal there. Escape closes it before closing Explore. Imported lessons use their runtime visual catalog; no-WebGL and renderer-failure paths expose no Explore actions. | fidelity/model tests + imported/fallback/browser checks | Disclosure, local content, and failure paths cannot create nested-modal, stale-catalog, or unusable-control states. |
 
 ## Failure Modes
 
@@ -114,6 +126,11 @@ scientific catalogs, authored lesson state, or anatomical coordinates.
 | FAIL-18 | Imported image scene sends the renderer to fallback with an unknown visual | Renderer adapter validates against the base catalog instead of a lesson-scoped visual allowlist | Derive the immutable runtime catalog from the already-validated lesson before rebuilding the controller/adapter; retain canonical snapshot validation. |
 | FAIL-19 | A split image crops, stretches anatomy, or leaves the camera at the old aspect | DOM visual changes stage width without renderer resize observation, or the image ignores its containing frame | Keep image media contained in the fixed visual surface and observe the actual stage rectangle; verify wide, compact, manual atlas return, and 200%-equivalent layouts. |
 | FAIL-20 | A failed external image becomes a dead end or loses its description | Error handling hides the image without semantic fallback/retry metadata | Preserve alt/caption/credit/source, announce the error, and retry only after an explicit learner action. |
+| FAIL-21 | Opening Explore creates another canvas/context or duplicates filters | Surface is reimplemented instead of reparented, or the panel mutates Three.js directly | Move the existing stage/panel/disclosure; derive one temporary canonical snapshot and apply it through the existing adapter. |
+| FAIL-22 | First filter edit snaps the Explore camera | Working state stores the requested lesson camera while OrbitControls changed the rendered pose | Capture and merge `camera.position`/`controls.target` before every command batch. |
+| FAIL-23 | Return lands on the wrong scene, scroll position, or focus target | Pending scroll/focus callbacks survive entry, or exit infers state from current DOM | Cancel pending work and restore the immutable lifecycle token through one idempotent exit path. |
+| FAIL-24 | Compact Model & sources closes or unlocks the outer Explore dialog | Disclosure applies nested `aria-modal` semantics or shares anonymous lock state | Keep it nonmodal inside Explore and release locks by owner; first Escape closes only disclosure. |
+| FAIL-25 | Imported/fallback Explore shows stale anatomy or dead controls | Runtime catalog was replaced without rebuilding the wrapper, or actions appear before readiness | Rebuild stable renderer mappings for active catalog and expose actions only in renderer-ready state. |
 
 ## Decision Framework
 
@@ -125,7 +142,7 @@ scientific catalogs, authored lesson state, or anatomical coordinates.
 | Add rendered Markdown syntax | Add a plain view-model node and safe DOM mapping together; never use `innerHTML`. | INV-2 |
 | Add disclosure data | Update scientific traceability and curated fidelity records; do not place citations in directives. | INV-7 |
 | Change lifecycle status | Use validated lesson metadata and the same identity surface in Lesson/Home/library views; do not infer status from title text or fidelity records. | INV-14 |
-| Add free exploration | Use a canonical cloned snapshot and explicit return; enable legacy controls only under `explore`. | INV-5 |
+| Add free exploration | Use the existing Explore lifecycle and canonical working snapshot; do not create another renderer/filter surface or persist temporary edits. | INV-20–INV-24 |
 
 ## Testing
 
@@ -133,7 +150,8 @@ scientific catalogs, authored lesson state, or anatomical coordinates.
 node --test test/scene-navigation.test.js test/lesson-scene-controller.test.js \
   test/camera-transition.test.js test/visibility-transition.test.js \
   test/markdown-view-model.test.js test/fidelity-view-model.test.js \
-  test/lesson-presentation.test.js test/reference-lesson.test.js
+  test/lesson-presentation.test.js test/reference-lesson.test.js \
+  test/explore-session.test.js
 ```
 
 | Spec item | Verification |
@@ -150,6 +168,7 @@ node --test test/scene-navigation.test.js test/lesson-scene-controller.test.js \
 | INV-14 | `test/lesson-presentation.test.js`, `test/reference-lesson.test.js`, and rendered/no-WebGL Draft identity checks |
 | INV-15, INV-16 | `test/scroll-surface.test.js` + Firefox/Chromium root/surface/keyboard checks |
 | INV-17, INV-18, INV-19, FAIL-16–FAIL-20 | `test/lesson-import.test.js` + paste/file/network/repeated-import/image-failure/responsive browser checks |
+| INV-20–INV-24, FAIL-21–FAIL-25 | `test/explore-session.test.js` + `scripts/browser/explore-*.spec.cjs` in Firefox and Chromium |
 
 Full repository verification remains `npm test && npm run build:publish` plus
 wide, compact, reduced-motion, no-WebGL, and production-hook browser checks.

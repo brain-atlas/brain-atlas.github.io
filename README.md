@@ -93,15 +93,16 @@ the declared 2009c grid; their checked-in generation pipeline is tracked by
 flake.nix            Nix devShell (Node 22 + git); blocks bare `nix develop`
 .envrc / .envrc.d/   direnv: `use flake`, then npm install on entry
 index.html           semantic lesson/stage shell and retained viewer controls
-src/bootstrap.js     lesson loading, safe presentation, navigation, fidelity, WebGL gate
-src/main.js          lazy Three.js scene, data loading, activity, and lesson bindings
+src/bootstrap.js     lesson shell, import, navigation, disclosure, and Explore lifecycle
+src/main.js          lazy Three.js scene, data loading, activity, adapter, and panel bridge
 src/activity/        renderer-independent seeded impulse, vibration, and timing math
 src/lesson/          versioned lesson parsing, catalogs, scene state, and adapter port
 src/lessons/         checked-in Obsidian-style lesson content
-src/ui/              renderer-independent presentation, navigation, scroll, and camera models
+src/ui/              renderer-independent presentation, Explore, scroll, and camera models
 src/pathways.js      schematic anterior-pathway control points
 src/style.css        responsive editorial scientific-instrument UI
 test/                 focused Node tests for extracted pure behavior
+scripts/browser/      replayable external-harness Firefox/Chromium Explore checks
 public/models/       licensed runtime GLB assets, including brain_mni.glb
 public/data/entities.json / fidelity.json   stable lesson bindings and disclosure records
 .workbench/           ignored, non-deployed local asset experiments
@@ -174,6 +175,14 @@ identity and progress. The persistent **Model & sources** control opens the sole
 geometry/activity status and provenance surface; the canvas and stage do not duplicate
 those records. Close restores focus and the exact lesson-surface position.
 
+After the renderer is ready, header **Explore atlas** opens the complete default atlas,
+while stage **Explore this scene** starts from the active lesson filters and the exact
+rendered camera. Both actions move the existing stage, canvas, viewer controls, and
+Model & sources into one full-viewport Explore surface. Explore changes are temporary:
+**Return to lesson** or Escape reapplies the immutable authored scene and restores its
+scene identity, lesson scroll position, and invoking focus target. No second renderer,
+canvas, WebGL context, filter path, or coordinate transform is created.
+
 Three.js is dynamically imported only after a WebGL2 probe. If WebGL is unavailable or
 renderer initialization fails, the topic entry view plus eight-scene text lesson,
 navigation, fidelity records, and supplementary images remain usable without downloading
@@ -199,16 +208,20 @@ because its scenes do not yet define replay timelines; **Skip transition** appea
 stage only while camera motion is active, jumps to the authored destination camera, and
 settles activity without accelerating model time.
 Pointer drag rotates only when the scene control policy permits it. In normal lesson
-mode, touch swipes scroll `#page-scroll` without rotating the camera; canvas touch gestures
-are reserved for the later explicit Explore mode. Reduced-motion preference makes
+mode, touch swipes scroll `#page-scroll` without rotating the camera. Explicit Explore
+raises permission to full orbit, wheel/pinch zoom, right-drag/two-finger pan, and temporary
+viewer-filter editing for every authored scene. Reduced-motion preference makes authored
 camera changes instant, settles activity, disables Play, and removes the Skip action.
 
 The collapsed **Viewer controls** section retains Play/Pause, activity speed,
 **Cutaway**, **Tissue**, Side/Top/Back/Front, hemisphere/layer filters, Auto-rotate,
-and Reset. Lesson scenes keep this fieldset disabled unless their canonical control
-policy is `explore`, so panel clicks cannot bypass lesson state. Legacy fixed-anchor 3D
-labels are hidden in the reference lesson pending the responsive placement work in
-`brain-atlas-zmq.20`; the free viewer label layer remains available.
+and Reset. Lesson mode keeps the fieldset disabled so panel clicks cannot bypass authored
+state. Explore projects its temporary canonical snapshot into the same panel; filter and
+display changes use the same renderer adapter, and keyboard-operable Zoom/Pan actions
+supplement pointer and touch camera input. Auto-rotate stays off and hidden in Explore.
+Legacy fixed-anchor 3D labels are hidden in the reference lesson pending the responsive
+placement work in `brain-atlas-zmq.20`; the free viewer label layer remains available in
+Explore.
 
 ## What's real vs schematic
 

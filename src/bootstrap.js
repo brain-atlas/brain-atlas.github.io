@@ -3,6 +3,13 @@ import './style.css';
 import { createLessonCatalog } from './lesson/index.js';
 import lessonSource from './lessons/retina-to-v1.md?raw';
 import { createFidelityViewModel } from './ui/fidelity-view-model.js';
+import {
+  applyExploreCommands,
+  createAtlasExploreSnapshot,
+  createExplorePanelModel,
+  createSceneExploreSnapshot,
+  exploreFidelityIds,
+} from './ui/explore-session.js';
 import { createLessonSceneController } from './ui/lesson-scene-controller.js';
 import {
   createLessonRuntimeCatalog,
@@ -29,6 +36,8 @@ const sceneContainer = byId('lesson-scenes');
 const reducedMotionQuery = matchMedia('(prefers-reduced-motion: reduce)');
 const compactDisclosureQuery = matchMedia('(max-width: 700px)');
 let disclosureScrollTop = null;
+const pageLockOwners = new Set();
+let pageLockScrollTop = null;
 let catalog;
 let lesson;
 let presentation;
@@ -43,6 +52,9 @@ let lessonImportCandidate = null;
 let importCloseFocus = 'trigger';
 let sceneCards = [];
 let scrollFrame = 0;
+let suppressLessonScroll = false;
+let cancelSceneFocusSettlement = () => {};
+let exploreState = null;
 
 function node(tag, className, text) {
   const element = document.createElement(tag);
@@ -360,12 +372,7 @@ function activePresentationScene(index) {
   return index === -1 ? presentation.entryScene : presentation.scenes[index];
 }
 
-function renderFidelity(index) {
-  const scene = activePresentationScene(index);
-  const model = createFidelityViewModel({
-    fidelityIds: scene.fidelityIds,
-    entityIds: scene.snapshot.visibility.entities,
-  }, catalog);
+function renderFidelityModel(model) {
   const content = byId('fidelity-content');
   const fragment = document.createDocumentFragment();
   const statuses = node('section', 'fidelity-statuses');
@@ -393,6 +400,15 @@ function renderFidelity(index) {
     fragment.append(details);
   }
   content.replaceChildren(fragment);
+}
+
+function renderFidelity(index) {
+  const scene = activePresentationScene(index);
+  byId('fidelity-context').textContent = 'Current scene';
+  renderFidelityModel(createFidelityViewModel({
+    fidelityIds: scene.fidelityIds,
+    entityIds: scene.snapshot.visibility.entities,
+  }, catalog));
 }
 
 function updateActivePresentation(index, reason = 'initial') {
@@ -425,18 +441,27 @@ function updateActivePresentation(index, reason = 'initial') {
 }
 
 function focusSceneAfterScroll(target) {
+  cancelSceneFocusSettlement();
   if (reducedMotionQuery.matches) {
     target.focus({ preventScroll: true });
     return;
   }
   let focused = false;
+  let timer = 0;
+  const cleanup = () => {
+    pageScroll.removeEventListener('scrollend', focus);
+    clearTimeout(timer);
+    if (cancelSceneFocusSettlement === cleanup) cancelSceneFocusSettlement = () => {};
+  };
   const focus = () => {
     if (focused) return;
     focused = true;
+    cleanup();
     target.focus({ preventScroll: true });
   };
+  cancelSceneFocusSettlement = cleanup;
   pageScroll.addEventListener('scrollend', focus, { once: true });
-  setTimeout(focus, 700);
+  timer = setTimeout(focus, 700);
 }
 
 function surfaceClearance() {
@@ -460,6 +485,7 @@ function scrollToSurfaceTarget(target) {
 }
 
 function moveExplicit(delta) {
+  if (exploreState) return;
   const next = moveScene(navigation, delta);
   if (next === navigation) return;
   navigation = next;
@@ -472,9 +498,10 @@ function moveExplicit(delta) {
 }
 
 function onScroll() {
-  if (scrollFrame) return;
+  if (exploreState || suppressLessonScroll || scrollFrame) return;
   scrollFrame = requestAnimationFrame(() => {
     scrollFrame = 0;
+    if (exploreState) return;
     const surfaceTop = pageScroll.getBoundingClientRect().top;
     const next = updateSceneFromScroll(navigation, {
       anchorTops: relativeAnchorTops(
@@ -511,7 +538,7 @@ function onPageScrollKey(event) {
     metaKey: event.metaKey,
     targetHasScrollContext: pageScroll.contains(target) || byId('fidelity-panel').contains(target),
     targetKind: keyboardTargetKind(target),
-    blocked: disclosureScrollTop !== null,
+    blocked: disclosureScrollTop !== null || Boolean(exploreState),
   });
   if (!action) return;
 
@@ -551,12 +578,30 @@ function isCompactDisclosure() {
   return compactDisclosureQuery.matches;
 }
 
+function acquirePageLock(owner) {
+  if (pageLockOwners.has(owner)) return;
+  if (pageLockOwners.size === 0) {
+    pageLockScrollTop = pageScroll.scrollTop;
+    pageScroll.style.overflowY = 'hidden';
+  }
+  pageLockOwners.add(owner);
+}
+
+function releasePageLock(owner) {
+  pageLockOwners.delete(owner);
+  if (pageLockOwners.size > 0 || pageLockScrollTop === null) return;
+  const restoreTop = pageLockScrollTop;
+  pageLockScrollTop = null;
+  pageScroll.style.removeProperty('overflow-y');
+  pageScroll.scrollTop = restoreTop;
+}
+
 function lockPageForDisclosure() {
-  if (disclosureScrollTop !== null) return;
+  if (disclosureScrollTop !== null || exploreState) return;
   disclosureScrollTop = pageScroll.scrollTop;
+  acquirePageLock('disclosure');
   app.inert = true;
   skipLink.inert = true;
-  pageScroll.style.overflowY = 'hidden';
 }
 
 function unlockPageForDisclosure() {
@@ -564,15 +609,14 @@ function unlockPageForDisclosure() {
   disclosureScrollTop = null;
   app.inert = false;
   skipLink.inert = false;
-  if (restoreTop === null) return;
-  pageScroll.style.removeProperty('overflow-y');
-  pageScroll.scrollTop = restoreTop;
+  releasePageLock('disclosure');
+  if (restoreTop !== null && !exploreState) pageScroll.scrollTop = restoreTop;
 }
 
 function syncFidelityMode() {
   const panel = byId('fidelity-panel');
   if (panel.hidden) return;
-  if (isCompactDisclosure()) {
+  if (isCompactDisclosure() && !exploreState) {
     panel.setAttribute('role', 'dialog');
     panel.setAttribute('aria-modal', 'true');
     lockPageForDisclosure();
@@ -584,7 +628,7 @@ function syncFidelityMode() {
   }
 }
 
-function closeFidelity() {
+function closeFidelity({ restoreFocus = true } = {}) {
   const panel = byId('fidelity-panel');
   if (panel.hidden) return;
   panel.hidden = true;
@@ -593,7 +637,7 @@ function closeFidelity() {
   unlockPageForDisclosure();
   const trigger = byId('model-sources-trigger');
   trigger.setAttribute('aria-expanded', 'false');
-  trigger.focus();
+  if (restoreFocus) trigger.focus();
 }
 
 function openFidelity() {
@@ -608,7 +652,7 @@ function bindFidelity() {
   byId('model-sources-trigger').addEventListener('click', () => {
     if (byId('fidelity-panel').hidden) openFidelity(); else closeFidelity();
   });
-  byId('fidelity-close').addEventListener('click', closeFidelity);
+  byId('fidelity-close').addEventListener('click', () => closeFidelity());
   compactDisclosureQuery.addEventListener('change', syncFidelityMode);
   document.addEventListener('keydown', (event) => {
     const panel = byId('fidelity-panel');
@@ -618,7 +662,7 @@ function bindFidelity() {
       closeFidelity();
       return;
     }
-    if (event.key !== 'Tab' || !isCompactDisclosure()) return;
+    if (event.key !== 'Tab' || !isCompactDisclosure() || exploreState) return;
     const focusable = [...panel.querySelectorAll('button, summary, a[href]')]
       .filter((element) => {
         if (element.disabled || element.getClientRects().length === 0) return false;
@@ -743,7 +787,7 @@ function validateImportSource() {
 }
 
 function openValidatedImport() {
-  if (!lessonImportCandidate) return;
+  if (!lessonImportCandidate || exploreState) return;
   const candidate = lessonImportCandidate;
   importCloseFocus = 'lesson';
   byId('lesson-import-dialog').close();
@@ -755,6 +799,7 @@ function bindLessonImport() {
   const dialog = byId('lesson-import-dialog');
   const trigger = byId('lesson-import-trigger');
   trigger.addEventListener('click', () => {
+    if (exploreState) return;
     if (!byId('fidelity-panel').hidden) closeFidelity();
     importCloseFocus = 'trigger';
     if (!dialog.open) dialog.showModal();
@@ -777,6 +822,183 @@ function bindLessonImport() {
   });
 }
 
+function setExploreAvailability(available) {
+  byId('explore-atlas-trigger').hidden = !available;
+  byId('explore-scene-trigger').hidden = !available || Boolean(exploreState);
+}
+
+function renderExploreFidelity(snapshot, includedFidelityIds) {
+  const fidelityIds = exploreFidelityIds(snapshot, catalog, includedFidelityIds);
+  byId('fidelity-context').textContent = 'Visible in Explore';
+  renderFidelityModel(createFidelityViewModel({
+    fidelityIds,
+    entityIds: snapshot.visibility.entities,
+  }, catalog));
+}
+
+function moveExploreNode(element, name) {
+  const rect = element.getBoundingClientRect();
+  const placeholder = node('div', `explore-placeholder explore-placeholder-${name}`);
+  placeholder.hidden = element.hidden;
+  if (!element.hidden) placeholder.style.height = `${rect.height}px`;
+  element.replaceWith(placeholder);
+  byId('explore-mount').append(element);
+  return { element, placeholder };
+}
+
+function restoreExploreNodes(homes) {
+  for (const { element, placeholder } of homes) placeholder.replaceWith(element);
+  byId('explore-mount').replaceChildren();
+}
+
+function applyExploreCommandBatch(commands) {
+  if (!exploreState || exploreState.phase !== 'active') return;
+  try {
+    const next = applyExploreCommands(
+      exploreState.snapshot,
+      commands,
+      rendererAdapter.captureRenderedCamera(),
+      catalog,
+    );
+    rendererAdapter.apply(next);
+    rendererAdapter.syncExplorePanel(createExplorePanelModel(next, catalog));
+    exploreState.snapshot = next;
+    renderExploreFidelity(next, exploreState.includedFidelityIds);
+  } catch (error) {
+    failExplore(error);
+  }
+}
+
+function prepareExploreChrome(kind, scene) {
+  byId('scene-count').textContent = 'Explore mode';
+  byId('stage-heading').textContent = kind === 'global' ? 'Complete atlas' : scene.title;
+  byId('explore-scene-trigger').hidden = true;
+  byId('explore-return').hidden = false;
+  byId('scene-skip').hidden = true;
+  byId('visual-selector').hidden = true;
+  byId('viewer-console').hidden = false;
+  byId('viewer-console').open = innerWidth > 980;
+  byId('viewer-controls-fieldset').disabled = false;
+  byId('viewer-policy-note').textContent = 'Explore mode: camera, layers, hemispheres, cutaway, tissue, and activity controls are temporary.';
+  document.querySelector('.stage-hint').textContent = 'Drag to orbit · wheel or pinch to zoom · right-drag or two fingers to pan · Return restores the lesson.';
+  showLessonVisual('atlas', 'dominant');
+}
+
+function beginExplore(kind, trigger) {
+  if (exploreState || rendererUnavailable || !rendererAdapter || app.dataset.state !== 'ready') return;
+  const scene = activePresentationScene(navigation.activeIndex);
+  const snapshot = kind === 'global'
+    ? createAtlasExploreSnapshot(catalog)
+    : createSceneExploreSnapshot(rendererAdapter.capture(), rendererAdapter.captureRenderedCamera(), catalog);
+  const savedScrollTop = pageScroll.scrollTop;
+  if (!byId('fidelity-panel').hidden) closeFidelity({ restoreFocus: false });
+  cancelSceneFocusSettlement();
+  if (scrollFrame) cancelAnimationFrame(scrollFrame);
+  scrollFrame = 0;
+  pageScroll.scrollTo({ top: savedScrollTop, behavior: 'auto' });
+
+  exploreState = {
+    phase: 'opening',
+    kind,
+    trigger,
+    activeIndex: navigation.activeIndex,
+    authoredSnapshot: scene.snapshot,
+    includedFidelityIds: kind === 'global' ? [] : scene.fidelityIds,
+    snapshot,
+    savedScrollTop,
+    viewerWasOpen: byId('viewer-console').open,
+    visualSelectorWasHidden: byId('visual-selector').hidden,
+    stageHint: document.querySelector('.stage-hint').textContent,
+    homes: [],
+  };
+  acquirePageLock('explore');
+
+  try {
+    exploreState.homes.push(moveExploreNode(document.querySelector('.stage-shell'), 'stage'));
+    exploreState.homes.push(moveExploreNode(byId('viewer-console'), 'controls'));
+    exploreState.homes.push(moveExploreNode(byId('fidelity-panel'), 'fidelity'));
+    prepareExploreChrome(kind, scene);
+    const dialog = byId('explore-dialog');
+    dialog.showModal();
+    rendererAdapter.apply(snapshot);
+    rendererAdapter.beginExploreCamera(snapshot.camera);
+    rendererAdapter.setExploreCommandHandler(applyExploreCommandBatch);
+    rendererAdapter.syncExplorePanel(createExplorePanelModel(snapshot, catalog));
+    renderExploreFidelity(snapshot, exploreState.includedFidelityIds);
+    exploreState.phase = 'active';
+    byId('explore-return').focus();
+    byId('announcer').textContent = kind === 'global'
+      ? 'Explore mode opened with the complete atlas.'
+      : `Explore mode opened from ${scene.title}.`;
+  } catch (error) {
+    failExplore(error);
+  }
+}
+
+function exitExplore({ restoreRenderer = true } = {}) {
+  if (!exploreState || exploreState.phase === 'closing') return;
+  const state = exploreState;
+  state.phase = 'closing';
+  let restoreError = null;
+  try {
+    if (!byId('fidelity-panel').hidden) closeFidelity({ restoreFocus: false });
+    rendererAdapter?.setExploreCommandHandler(null);
+    if (byId('explore-dialog').open) byId('explore-dialog').close();
+    restoreExploreNodes(state.homes);
+    byId('explore-return').hidden = true;
+    byId('visual-selector').hidden = state.visualSelectorWasHidden;
+    document.querySelector('.stage-hint').textContent = state.stageHint;
+    byId('viewer-console').open = state.viewerWasOpen;
+    if (restoreRenderer && controller) {
+      controller.setReducedMotion(reducedMotionQuery.matches);
+      controller.activate(state.activeIndex, { reason: 'explore-return', force: true });
+      rendererAdapter.syncExplorePanel(createExplorePanelModel(state.authoredSnapshot, catalog));
+    }
+    updateActivePresentation(state.activeIndex, 'explore-return');
+  } catch (error) {
+    restoreError = error;
+  } finally {
+    rendererAdapter?.endExplore();
+    suppressLessonScroll = true;
+    releasePageLock('explore');
+    exploreState = null;
+    pageScroll.scrollTo({ top: state.savedScrollTop, behavior: 'auto' });
+    setExploreAvailability(!rendererUnavailable);
+    requestAnimationFrame(() => {
+      pageScroll.scrollTo({ top: state.savedScrollTop, behavior: 'auto' });
+      suppressLessonScroll = false;
+      state.trigger.focus({ preventScroll: true });
+    });
+  }
+  if (restoreError) {
+    console.error('Explore return failed:', restoreError);
+    showRendererFallback('The 3D renderer could not restore the lesson after Explore. The readable lesson and Model & sources remain available.');
+  } else {
+    byId('announcer').textContent = 'Returned to the authored lesson scene.';
+  }
+}
+
+function failExplore(error) {
+  console.error('Explore mode failed:', error);
+  exitExplore({ restoreRenderer: false });
+  showRendererFallback('Explore mode could not display the requested 3D state. The readable lesson and Model & sources remain available.');
+}
+
+function bindExplore() {
+  byId('explore-atlas-trigger').addEventListener('click', (event) => beginExplore('global', event.currentTarget));
+  byId('explore-scene-trigger').addEventListener('click', (event) => beginExplore('scene', event.currentTarget));
+  byId('explore-return').addEventListener('click', () => exitExplore());
+  const dialog = byId('explore-dialog');
+  dialog.addEventListener('cancel', (event) => {
+    event.preventDefault();
+    if (!byId('fidelity-panel').hidden) closeFidelity();
+    else exitExplore();
+  });
+  dialog.addEventListener('close', () => {
+    if (exploreState?.phase === 'active') exitExplore();
+  });
+}
+
 function probeWebGL2() {
   if (new URLSearchParams(location.search).has('no-webgl')) return false;
   const canvas = document.createElement('canvas');
@@ -787,7 +1009,9 @@ function probeWebGL2() {
 }
 
 function showRendererFallback(message) {
+  if (exploreState) exitExplore({ restoreRenderer: false });
   rendererUnavailable = true;
+  setExploreAvailability(false);
   byId('stage').hidden = true;
   byId('stage-fallback').hidden = false;
   byId('fallback-message').textContent = message;
@@ -827,6 +1051,13 @@ function exposeLessonDebugState() {
     get catalog() { return catalog; },
     get navigation() { return navigation; },
     get controllerState() { return controller?.state ?? null; },
+    get exploreState() {
+      return exploreState ? {
+        phase: exploreState.phase,
+        kind: exploreState.kind,
+        snapshot: exploreState.snapshot,
+      } : null;
+    },
     get sourceKind() { return lessonSourceKind; },
   };
 }
@@ -904,6 +1135,7 @@ async function start() {
     bindFidelity();
     bindLessonImport();
     bindVisualPresentation();
+    bindExplore();
     document.body.classList.toggle('reduced-motion', reducedMotionQuery.matches);
 
     if (!probeWebGL2()) {
@@ -922,9 +1154,11 @@ async function start() {
       updateActivePresentation(navigation.activeIndex);
       byId('app-status').textContent = lessonSourceKind === 'local' ? 'Local lesson · not saved' : 'Lesson ready';
       app.dataset.state = 'ready';
+      setExploreAvailability(true);
 
       reducedMotionQuery.addEventListener('change', ({ matches }) => {
         document.body.classList.toggle('reduced-motion', matches);
+        if (exploreState) return;
         controller?.setReducedMotion(matches);
         updateActivePresentation(navigation.activeIndex);
       });
