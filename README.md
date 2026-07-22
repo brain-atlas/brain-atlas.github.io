@@ -92,17 +92,17 @@ the declared 2009c grid; their checked-in generation pipeline is tracked by
 ```
 flake.nix            Nix devShell (Node 22 + git); blocks bare `nix develop`
 .envrc / .envrc.d/   direnv: `use flake`, then npm install on entry
-index.html           semantic lesson/stage shell and retained viewer controls
-src/bootstrap.js     lesson shell, import, navigation, disclosure, and Explore lifecycle
+index.html           semantic Atlas/Lesson shell, drawer, shared stage, and viewer controls
+src/bootstrap.js     workspace/history, lesson/import, navigation, disclosure, and fallback
 src/main.js          lazy Three.js scene, data loading, activity, adapter, and panel bridge
 src/activity/        renderer-independent seeded impulse, vibration, and timing math
 src/lesson/          versioned lesson parsing, catalogs, scene state, and adapter port
 src/lessons/         checked-in Obsidian-style lesson content
-src/ui/              renderer-independent presentation, Explore, scroll, and camera models
+src/ui/              renderer-independent presentation, workspace, scroll, and camera models
 src/pathways.js      schematic anterior-pathway control points
 src/style.css        responsive editorial scientific-instrument UI
 test/                 focused Node tests for extracted pure behavior
-scripts/browser/      replayable external-harness Firefox/Chromium Explore checks
+scripts/browser/      replayable Firefox/Chromium Atlas, Lesson, history, and input checks
 public/models/       licensed runtime GLB assets, including brain_mni.glb
 public/data/entities.json / fidelity.json   stable lesson bindings and disclosure records
 .workbench/           ignored, non-deployed local asset experiments
@@ -146,6 +146,17 @@ geometry and activity status
 remain separate in `public/data/fidelity.json`. See
 [`src/lesson/SPEC.md`](src/lesson/SPEC.md) for the contract.
 
+The app opens in the complete exploratory Atlas, not inside a lesson. The retained Viewer
+controls provide orbit, zoom, pan, hemispheres, layers, cutaway, tissue, and activity over
+the one canonical global-atlas snapshot. **Lessons** opens a responsive drawer with the
+checked Draft lesson and local Markdown entry. Starting a lesson preserves the actual Atlas
+camera and filters. **Back to atlas** restores that workspace and exposes **Return to
+lesson · title · position**; Return restores the lesson source, scene, selected visual,
+rendered camera, canonical filters/playback request, exact `#page-scroll` position, and
+focus. Individual stochastic particles are not serialized. A compact Atlas moves the
+camera uniformly away from the same target to keep the complete brain framed; anatomy,
+canvas scale, and the MNI transform remain uniform.
+
 The shipped early-vision reference lesson lives at `src/lessons/retina-to-v1.md` and remains
 **[DRAFT]** pending the dedicated scientific and pedagogical content review in
 `brain-atlas-zmq.25`. `src/bootstrap.js` parses it through this same contract and
@@ -175,25 +186,30 @@ identity and progress. The persistent **Model & sources** control opens the sole
 geometry/activity status and provenance surface; the canvas and stage do not duplicate
 those records. Close restores focus and the exact lesson-surface position.
 
-After the renderer is ready, header **Explore atlas** opens the complete default atlas,
-while stage **Explore this scene** starts from the active lesson filters and the exact
-rendered camera. Both actions move the existing stage, canvas, viewer controls, and
-Model & sources into one full-viewport Explore surface. Explore changes are temporary:
-**Return to lesson** or Escape reapplies the immutable authored scene and restores its
-scene identity, lesson scroll position, and invoking focus target. No second renderer,
-canvas, WebGL context, filter path, or coordinate transform is created.
+Within a lesson, **Explore this scene** enters the same top-level Atlas surface with the
+active lesson filters and exact rendered camera. This temporary scene branch grants full
+controls without overwriting the persistent global Atlas. **Return to lesson** restores
+the stable lesson token; **Back to atlas** instead restores the learner's persistent global
+camera and filters. No second renderer, canvas, WebGL context, filter path, or coordinate
+transform is created.
+
+The checked lesson has a static-safe `?lesson=retina-to-v1` route. Atlas uses the base URL.
+Browser Back/Forward uses the same workspace transition path as visible controls. Local
+source stays memory-only; `?lesson=local` marks only a session that cannot survive reload.
+Reload removes that marker, returns to Atlas, and announces that local content was not
+retained.
 
 Three.js is dynamically imported only after a WebGL2 probe. If WebGL is unavailable or
-renderer initialization fails, the topic entry view plus eight-scene text lesson,
-navigation, fidelity records, and supplementary images remain usable without downloading
-the renderer.
+renderer initialization fails, Atlas orientation, sources, Lessons, and local import remain
+usable. Checked or local lessons retain prose, navigation, fidelity records, and
+supplementary images without downloading the renderer.
 
 **Open lesson** in the header accepts a local `.md` file or pasted source up to 512 KiB.
 Validation is non-destructive and uses the same strict contract as the checked-in lesson;
 the preview reports title, Draft state, scene/image counts, and external image hosts before
 **Open lesson** is enabled. Explicit opening replaces the current lesson in memory through
 the same controller and renderer adapter. It does not upload, save, or persist the source,
-and reload restores the checked-in lesson. Declared HTTPS supplementary images begin
+and reload returns to Atlas without restoring local source. Declared HTTPS supplementary images begin
 loading only after opening. They remain semantic DOM figures—not WebGL textures—with alt
 text, caption, credit, source link, no-referrer loading, and an accessible retry state.
 Scripts, styles, frames, raw HTML, unsafe URL schemes, arbitrary fetches, and undeclared
@@ -201,27 +217,28 @@ images remain forbidden.
 
 ## Controls
 
-Use **Open lesson** to stage local Markdown by paste or `.md` file, correct positioned
+Use **Lessons** to start/resume the checked Draft lesson or open the local workflow. Use
+**Open lesson** directly to stage local Markdown by paste or `.md` file, correct positioned
 validation errors without losing the active lesson, review the preview/privacy summary,
 and explicitly activate it. Scroll or use Previous/Next to activate a scene. The reference lesson omits Restart
 because its scenes do not yet define replay timelines; **Skip transition** appears on the
 stage only while camera motion is active, jumps to the authored destination camera, and
 settles activity without accelerating model time.
-Pointer drag rotates only when the scene control policy permits it. In normal lesson
-mode, touch swipes scroll `#page-scroll` without rotating the camera. Explicit Explore
-raises permission to full orbit, wheel/pinch zoom, right-drag/two-finger pan, and temporary
-viewer-filter editing for every authored scene. Reduced-motion preference makes authored
-camera changes instant, settles activity, disables Play, and removes the Skip action.
+Pointer drag rotates only when the scene control policy permits it. In normal Lesson
+mode, touch swipes scroll `#page-scroll` without rotating the camera. Atlas Home and
+explicit scene inspection grant full orbit, wheel/pinch zoom, right-drag/two-finger pan,
+and canonical viewer-filter editing. Reduced-motion preference makes authored camera
+changes instant, settles activity, disables Play, and removes the Skip action.
 
 The collapsed **Viewer controls** section retains Play/Pause, activity speed,
 **Cutaway**, **Tissue**, Side/Top/Back/Front, hemisphere/layer filters, Auto-rotate,
 and Reset. Lesson mode keeps the fieldset disabled so panel clicks cannot bypass authored
-state. Explore projects its temporary canonical snapshot into the same panel; filter and
+state. Atlas projects its active canonical snapshot into the same panel; filter and
 display changes use the same renderer adapter, and keyboard-operable Zoom/Pan actions
-supplement pointer and touch camera input. Auto-rotate stays off and hidden in Explore.
+supplement pointer and touch camera input. Auto-rotate stays off and hidden in Atlas.
 Legacy fixed-anchor 3D labels are hidden in the reference lesson pending the responsive
 placement work in `brain-atlas-zmq.20`; the free viewer label layer remains available in
-Explore.
+Atlas.
 
 ## What's real vs schematic
 

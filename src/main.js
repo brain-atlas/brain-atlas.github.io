@@ -1151,13 +1151,28 @@ export function createLessonRendererAdapter(catalog, { onTransitionStateChange =
         target: controls.target.toArray(),
       };
     },
+    resizeToStage() { resize(); },
     setExploreCommandHandler(handler) {
       if (handler !== null && typeof handler !== 'function') throw new TypeError('Explore command handler must be a function or null');
       exploreCommandHandler = handler;
     },
     syncExplorePanel(model) { projectExplorePanel(model); },
-    beginExploreCamera(resetCamera) {
-      exploreResetCamera = structuredClone(resetCamera);
+    beginExploreCamera(resetCamera, { fitToStage = false } = {}) {
+      const framed = structuredClone(resetCamera);
+      if (fitToStage) {
+        const rect = stage.getBoundingClientRect();
+        const aspect = rect.height > 0 ? rect.width / rect.height : 1;
+        const distanceFactor = THREE.MathUtils.clamp(0.78 / aspect, 1, 1.55);
+        if (distanceFactor > 1) {
+          const target = new THREE.Vector3().fromArray(framed.target);
+          const offset = new THREE.Vector3().fromArray(framed.position).sub(target);
+          framed.position = target.add(offset.multiplyScalar(distanceFactor)).toArray();
+          camera.position.fromArray(framed.position);
+          controls.target.fromArray(framed.target);
+          controls.update();
+        }
+      }
+      exploreResetCamera = framed;
       controls.autoRotate = false;
       $('spin').classList.remove('on');
       $('spin').hidden = true;

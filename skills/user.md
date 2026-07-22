@@ -5,7 +5,7 @@ description: How an agent drives and inspects the running brain-atlas viewer —
 
 # Using the brain-atlas viewer
 
-For an agent (or person) operating the running viewer — to verify a change, capture a view, or answer "what am I looking at". `src/bootstrap.js` presents one semantic lesson around the single `src/main.js` Three.js scene; there is no backend.
+For an agent (or person) operating the running viewer—to verify a change, capture a view, or answer “what am I looking at.” `src/bootstrap.js` opens the full Atlas workspace and launches semantic lessons around the single `src/main.js` Three.js scene; there is no backend.
 
 ## Start it
 ```bash
@@ -28,10 +28,10 @@ In development mode, `src/main.js` exposes `window.__view = { camera, controls, 
   repo than brain-atlas. Treat those images as throwaway; don't leave them in an
   unrelated project.
 - The checked-in reference lesson is intentionally marked `[DRAFT]` until `brain-atlas-zmq.25` completes. In the rendered development path, verify `window.__lesson?.lesson?.status === 'draft'`; in every path, verify visible `#lesson-status`, a `.lesson-meta .lesson-status` badge, and `[DRAFT]` in `document.title`. The DOM checks must remain true under `?no-webgl=1`, where the renderer debug object is intentionally absent. Draft is curriculum lifecycle state, not geometry/activity fidelity.
-- Poll for `window.__lesson?.controllerState?.status === 'ready'` before inspecting the lesson. The layer panel is built only after `regions.json` loads and remains collapsed under **Viewer controls**; lesson policies normally disable it. After changing a draw range, wait two `requestAnimationFrame`s before reading it back.
-- At page entry, `window.__lesson.navigation.activeIndex === -1`: the unnumbered topic view centers the complete brain with the lesson pathway visible. `#page-scroll` is the sole lesson scroller; `window.scrollX` and `window.scrollY` must remain zero. Scroll it into the eight `.lesson-scene` sections or click the fixed-position `#scene-previous` / `#scene-next` actions; Previous from scene 1 restores the entry view. The global brand link returns `#page-scroll.scrollTop` to zero. In non-Explore policies, canvas `touch-action: pan-y` and disabled touch pan/zoom keep vertical swipes on this surface while mouse/trackpad drag may orbit in `look`. `#scene-skip` appears on the stage only during an active transition; the reference lesson intentionally exposes no ineffective Restart action.
-- `#model-sources-trigger` opens the sole geometry/activity status, provenance, limitation, and source surface; there is no duplicate canvas badge, stage status row, or global progress strip. In Lesson mode, `#fidelity-close` restores trigger focus and the exact `#page-scroll` position. In Explore, records follow visible entities and the disclosure remains inside the outer dialog's focus scope.
-- Renderer readiness reveals header `#explore-atlas-trigger` and stage `#explore-scene-trigger`. While either Explore entry is active, `window.__lesson.exploreState` reports `{ phase, kind, snapshot }`; there must still be exactly one canvas. `#explore-return` or Escape restores the authored scene, exact lesson-surface position, and invoking focus. If Model & sources is open, the first Escape closes it and the next returns.
+- Page entry is Atlas Home: `window.__lesson.workspaceState.mode === 'atlas'`, the retained Viewer controls are enabled, and one canvas lives under `#atlas-workspace`. The compact global view may increase camera distance from the same target to keep the complete brain in frame. The layer panel is built after `regions.json` loads. After changing a draw range, wait two `requestAnimationFrame`s before reading it back.
+- Open **Lessons** (`#lessons-trigger`) and start or resume `retina-to-v1`; direct checked navigation is `?lesson=retina-to-v1`. Then poll for `window.__lesson?.controllerState?.status === 'ready'`. At lesson entry, `window.__lesson.navigation.activeIndex === -1`: the unnumbered topic view centers the complete brain with the lesson pathway visible. `#page-scroll` is the sole lesson scroller; root x/y remain zero. Scroll into the eight `.lesson-scene` sections or use `#scene-previous` / `#scene-next`; Previous from scene 1 restores entry. In non-Atlas policies, canvas `touch-action: pan-y` keeps vertical swipes on the lesson while mouse/trackpad drag may orbit in `look`. `#scene-skip` appears only during a transition; the reference lesson exposes no ineffective Restart action.
+- `#model-sources-trigger` opens the sole geometry/activity status, provenance, limitation, and source surface; there is no duplicate canvas badge, stage status row, or global progress strip. In Lesson, `#fidelity-close` restores trigger focus and exact `#page-scroll`; in Atlas, records follow visible entities without changing workspace history.
+- Lesson `#back-to-atlas` restores the persistent global Atlas camera/filters. `#return-to-lesson` restores the saved lesson title/scene, selected visual, canonical state, rendered camera, exact lesson-surface position, and focus. Stage `#explore-scene-trigger` enters a temporary scene-derived Atlas branch and leaves the persistent global snapshot unchanged. `window.__lesson.exploreState` reports `{ phase, kind, snapshot }`; `window.__lesson.workspaceState` exposes development-only mode/token diagnostics. There must still be exactly one canvas.
 - To check display aspect, compare `window.__view.camera.aspect` with `document.querySelector('#stage canvas').getBoundingClientRect().width / height`. They should match to floating-point precision; the MNI group (`matrixAutoUpdate === false`) must retain equal basis lengths and positive determinant.
 - Force the readable renderer-free path with `?no-webgl=1`; verify that no `main`/Three.js resource loads. Imported supplementary images remain available as semantic figures in this path.
 
@@ -47,8 +47,9 @@ In development mode, `src/main.js` exposes `window.__view = { camera, controls, 
    Validation alone must make no remote request.
 4. Activate **Open lesson** only after accepting the preview/privacy boundary.
    The lesson replaces the current session in memory through the same controller and
-   renderer; it is not uploaded, saved, or persisted, and reload restores the
-   checked-in lesson. `window.__lesson.lesson` updates in development mode.
+   renderer; it is not uploaded, saved, or persisted. The nonsecret
+   `?lesson=local` marker cannot restore source: reload removes it, returns to Atlas,
+   and announces the loss. `window.__lesson.lesson` updates in development mode.
 5. In image scenes, `#visual-selector` always offers **3D atlas** first. Wide
    `split` scenes may show atlas and image together; compact scenes show the selected
    visual. `#supplementary-image` uses lazy/no-referrer loading and complete
@@ -60,24 +61,25 @@ lesson is scientifically reviewed merely because it passes the structural contra
 
 ## Exploring the atlas
 
-- **Explore this scene** keeps the active lesson's effective filters and playback state,
-  replaces only its requested camera with the exact rendered pose, and grants temporary
-  orbit, zoom, pan, and viewer-filter control.
-- Header **Explore atlas** opens the project default: complete base atlas except labels,
+- Atlas is Home. It starts from the project default: complete base atlas except labels,
   home camera, bilateral hemispheres, no cutaway/selection, and requested activity.
-- The native full-viewport dialog reparents the existing stage, canvas, Viewer controls,
-  and Model & sources. Check canvas identity/count before and after repeated cycles; do
-  not expect a second renderer or context.
+- **Back to atlas** preserves a stable lesson token and restores the persistent global
+  Atlas. **Explore this scene** instead keeps effective lesson filters/playback, replaces
+  only the requested camera with the exact rendered pose, and creates a temporary branch.
+- The top-level workspace reparents the existing stage, canvas, Viewer controls, Model &
+  sources, and project links. Check canvas identity/count after repeated cycles; do not
+  expect a second renderer or context.
 - Viewer-panel edits update `window.__lesson.exploreState.snapshot` through canonical
   commands. Move the camera, then change a filter and verify the pose does not snap.
   `[data-explore-camera]` buttons provide keyboard Zoom/Pan; Reset returns to the entry
   pose. Auto-rotate remains hidden and off.
-- Return/Escape discards all temporary edits. Verify controller scene/index, serialized
-  authored state, `#page-scroll.scrollTop`, invoking focus, touch policy, and camera
-  aspect after restoration. Use `scripts/browser/README.md` for the repeatable matrix.
+- **Return to lesson** discards scene-inspection edits but preserves global Atlas state.
+  Verify controller scene/index, resume snapshot, `#page-scroll.scrollTop`, reciprocal
+  focus, touch policy, and camera aspect after restoration. Use the checked-in
+  `scripts/browser/{home,explore}-*.spec.cjs` matrix.
 
 ## Layers and how to toggle them
-The retained panel lives in `#layers` inside `#viewer-console`. It is disabled while a lesson scene owns the display; do not bypass that state by synthesizing panel events. Explicit Explore enables the same panel as a projection/editor of its temporary canonical snapshot. Its three control surfaces are:
+The retained panel lives in `#layers` inside `#viewer-console`. It is disabled while a lesson scene owns the display; do not bypass that state by synthesizing panel events. Atlas enables the same panel as a projection/editor of its active canonical snapshot. Its three control surfaces are:
 - **Hemisphere** — `.hemi-chip` checkboxes (Left / Right), the global L/R master.
 - **Structures / White-matter tracts** — each row has **L / R pill buttons**
   (`.pill`); click a pill to toggle that side, click the name to toggle both.
@@ -103,11 +105,13 @@ swm.visible = true; swm.traverse(o => { o.visible = true; });
 ```
 
 ## Controls (DOM ids)
-Lesson: `#lesson-import-trigger`, `#lesson-import-dialog`, `#lesson-import-source`, `#lesson-import-file`, `#lesson-import-validate`, `#lesson-import-open`, `#visual-selector`, `#scene-previous`, `#scene-next`, transition-only `#scene-skip`, `#model-sources-trigger`, and `#fidelity-close`.
+Workspace: `#lessons-trigger`, `#lesson-drawer`, `#back-to-atlas`, `#return-to-lesson`, `#atlas-workspace`, and `#explore-scene-trigger`.
 
-Explore: `#explore-atlas-trigger`, `#explore-scene-trigger`, `#explore-dialog`, persistent `#explore-return`, and `[data-explore-camera]` Zoom/Pan buttons.
+Lesson/import: `#lesson-import-trigger`, `#lesson-import-dialog`, `#lesson-import-source`, `#lesson-import-file`, `#lesson-import-validate`, `#lesson-import-open`, `#visual-selector`, `#scene-previous`, `#scene-next`, transition-only `#scene-skip`, `#model-sources-trigger`, and `#fidelity-close`.
 
-Retained viewer panel: `#play` play/pause activity · `#speed` activity speed · `#clip` cutaway (near-hemisphere clip plane) · `#tissue` surface opacity · `[data-view]` camera presets (`lateral` / `top` / `post` / `ant`) · `#spin` auto-rotate outside Explore · `#reset` home or Explore-entry view.
+Atlas camera: `[data-explore-camera]` Zoom/Pan buttons and `#reset`.
+
+Retained viewer panel: `#play` play/pause activity · `#speed` activity speed · `#clip` cutaway (near-hemisphere clip plane) · `#tissue` surface opacity · `[data-view]` camera presets (`lateral` / `top` / `post` / `ant`) · `#spin` auto-rotate outside canonical Atlas control · `#reset` Atlas or scene-inspection entry view.
 
 ## What each layer honestly represents
 Describe layers by what the data supports (this mirrors the honesty rule in

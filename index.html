@@ -11,19 +11,26 @@
   <title>Brain Atlas — From retina to V1</title>
 </head>
 <body>
-  <a class="skip-link" href="#lesson-reader">Skip to lesson</a>
+  <a class="skip-link" href="#stage">Skip to atlas</a>
   <div id="app" class="app-shell" data-state="loading">
     <header class="topbar">
-      <a class="brand" href="#lesson-intro" aria-label="Brain Atlas lesson home">
+      <a class="brand" href="./" aria-label="Brain Atlas home">
         <span class="brand-kicker">Brain Atlas</span>
         <span class="brand-title"><span id="lesson-brand-title">From retina to V1</span> <span id="lesson-status" class="lesson-status" aria-label="Lesson status: Draft" hidden>[DRAFT]</span></span>
       </a>
       <div class="topbar-actions">
-        <span id="app-status" class="app-status">Loading lesson data…</span>
-        <button id="explore-atlas-trigger" class="topbar-action" type="button" aria-haspopup="dialog" hidden>Explore atlas</button>
+        <span id="app-status" class="app-status">Loading atlas data…</span>
+        <button id="back-to-atlas" class="topbar-action" type="button" hidden>Back to atlas</button>
+        <button id="return-to-lesson" class="topbar-action return-to-lesson" type="button" hidden>Return to lesson</button>
+        <button id="lessons-trigger" class="topbar-action" type="button" aria-haspopup="dialog">Lessons</button>
         <button id="lesson-import-trigger" class="topbar-action" type="button" aria-haspopup="dialog">Open lesson</button>
       </div>
     </header>
+
+    <main id="atlas-workspace" class="atlas-workspace" aria-labelledby="atlas-heading" hidden>
+      <h1 id="atlas-heading" class="sr-only" tabindex="-1">Explore the human visual system</h1>
+      <div id="atlas-mount" class="explore-mount atlas-mount"></div>
+    </main>
 
     <div id="page-scroll" class="page-scroll" role="region" aria-label="Lesson content" tabindex="0">
     <main class="lesson-layout">
@@ -44,17 +51,16 @@
               aria-expanded="false" aria-controls="fidelity-panel">
               <span aria-hidden="true">◌</span> Model &amp; sources
             </button>
-            <button id="explore-return" class="explore-return" type="button" hidden>Return to lesson</button>
           </div>
         </header>
 
         <nav id="visual-selector" class="visual-selector" aria-label="Lesson visuals" hidden></nav>
         <div id="visual-surface" class="visual-surface" data-layout="dominant" data-visual="atlas">
           <div id="atlas-surface" class="atlas-surface">
-            <div id="stage" class="stage" aria-label="Interactive 3D visual-system atlas">
+            <div id="stage" class="stage" tabindex="-1" aria-label="Interactive 3D visual-system atlas">
               <button id="scene-skip" class="transition-skip" type="button" hidden>Skip transition</button>
             </div>
-            <section id="stage-fallback" class="stage-fallback" hidden aria-labelledby="fallback-title">
+            <section id="stage-fallback" class="stage-fallback" tabindex="-1" hidden aria-labelledby="fallback-title">
               <p class="stage-kicker">Readable lesson mode</p>
               <h3 id="fallback-title">The 3D stage is unavailable</h3>
               <p id="fallback-message">The lesson remains available. Scene summaries and model disclosures appear alongside the prose.</p>
@@ -137,6 +143,30 @@
     </div>
   </div>
 
+  <dialog id="lesson-drawer" class="lesson-drawer" aria-labelledby="lesson-drawer-title">
+    <header class="lesson-drawer-header">
+      <div>
+        <p class="stage-kicker">Guided learning</p>
+        <h2 id="lesson-drawer-title">Lessons</h2>
+      </div>
+      <button id="lesson-drawer-close" type="button" aria-label="Close Lessons">×</button>
+    </header>
+    <div class="lesson-drawer-body">
+      <section aria-labelledby="premade-lessons-title">
+        <p class="eyebrow">Premade</p>
+        <h3 id="premade-lessons-title">Learn with the atlas</h3>
+        <div id="premade-lessons" class="premade-lessons"></div>
+      </section>
+      <section class="local-lesson-entry" aria-labelledby="local-lesson-entry-title">
+        <p class="eyebrow">Your Markdown</p>
+        <h3 id="local-lesson-entry-title">Open a local lesson</h3>
+        <p>Paste or choose a validated Brain Atlas lesson. It stays in this browser tab and is not saved.</p>
+        <button id="lesson-drawer-open-local" type="button">Open lesson Markdown</button>
+      </section>
+      <div id="atlas-project-links" class="atlas-project-links"></div>
+    </div>
+  </dialog>
+
   <dialog id="lesson-import-dialog" class="lesson-import-dialog" aria-labelledby="lesson-import-title">
     <header class="import-header">
       <div>
@@ -164,10 +194,6 @@
       <button id="lesson-import-validate" type="button">Validate lesson</button>
       <button id="lesson-import-open" type="button" disabled>Open lesson</button>
     </footer>
-  </dialog>
-
-  <dialog id="explore-dialog" class="explore-dialog" aria-labelledby="stage-heading">
-    <div id="explore-mount" class="explore-mount"></div>
   </dialog>
 
   <aside id="fidelity-panel" class="fidelity-panel" hidden aria-labelledby="fidelity-title">

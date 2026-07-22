@@ -4,7 +4,9 @@
 **Design:** Approved decisions `brain-atlas-zmq.7.1`, `brain-atlas-79w`, and `brain-atlas-717`; `.pi/plans/brain-atlas-zmq.15-lesson-ux-ui-spec.md` §§3.3, 4, 5, and 7
 **Date:** 2026-07-22
 **Branch:** `feat/shared-explore-surface`
-**Status:** Implemented
+**Status:** Superseded in shell by `brain-atlas-zmq.24`; implementation record retained
+
+**Supersession:** `brain-atlas-zmq.24` made the full Explore surface the top-level Atlas Home and replaced the native outer dialog/temporary-global-entry shell. The canonical snapshot, one-renderer, actual-camera-first command, panel-projection, scene-inspection, and exact-return foundations below remain implemented. See `.pi/plans/brain-atlas-zmq.24-atlas-home-entry-shell-plan.md` for current navigation and workspace behavior.
 
 **Goal:** Provide one accessible full-viewport atlas exploration surface that starts either from the active lesson view or the complete default atlas and returns to the exact authored lesson state without creating another renderer, canvas, context, transform, or filter system.
 

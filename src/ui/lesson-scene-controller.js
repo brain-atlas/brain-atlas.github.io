@@ -43,6 +43,7 @@ export function createLessonSceneController({
     throw new RangeError('initial lesson scene index is out of bounds');
   }
 
+  let restoredSnapshot = null;
   let state = freezeDeep({
     status: 'loading',
     activeIndex: startingIndex,
@@ -52,6 +53,7 @@ export function createLessonSceneController({
     lastReason: 'initial',
     reducedMotion: Boolean(reducedMotion),
     manualSettled: false,
+    resumed: false,
     error: null,
   });
 
@@ -66,7 +68,7 @@ export function createLessonSceneController({
   }
 
   function effectiveSnapshot() {
-    const snapshot = currentScene().snapshot;
+    const snapshot = restoredSnapshot ?? currentScene().snapshot;
     if (state.reducedMotion) return settledSnapshot(snapshot, { instantCamera: true });
     if (state.manualSettled) return settledSnapshot(snapshot, { instantCamera: true });
     return snapshot;
@@ -96,24 +98,41 @@ export function createLessonSceneController({
         throw new RangeError('lesson scene index is out of bounds');
       }
       if (index === state.activeIndex && !force) return state;
+      restoredSnapshot = null;
       setState({
         activeIndex: index,
         activeSceneId: isEntry ? entryScene.id : scenes[index].id,
         activationCount: state.activationCount + 1,
         lastReason: reason,
         manualSettled: false,
+        resumed: false,
         error: null,
       });
       if (state.status === 'ready') applyCurrent();
       return state;
     },
+    restore(snapshot, { reason = 'workspace-resume' } = {}) {
+      if (state.status !== 'ready') throw new Error('lesson scene controller must be ready before restore');
+      if (!snapshot || typeof snapshot !== 'object') throw new TypeError('restored lesson snapshot is required');
+      restoredSnapshot = freezeDeep(structuredClone(snapshot));
+      setState({
+        lastReason: reason,
+        manualSettled: false,
+        resumed: true,
+        error: null,
+      });
+      applyCurrent();
+      return state;
+    },
     restart() {
       if (state.reducedMotion || state.status !== 'ready') return state;
+      restoredSnapshot = null;
       adapter.apply(settledSnapshot(currentScene().snapshot));
       setState({
         replayCount: state.replayCount + 1,
         lastReason: 'restart',
         manualSettled: false,
+        resumed: false,
       });
       applyCurrent();
       return state;

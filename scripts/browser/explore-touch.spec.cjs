@@ -26,7 +26,7 @@ async function gesture(client, from, to) {
 test('touch scrolls the lesson and controls the camera only in Explore', async ({ page, context, browserName }) => {
   test.skip(browserName !== 'chromium', 'CDP touch injection is Chromium-only');
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto(BASE_URL);
+  await page.goto(new URL('?lesson=retina-to-v1', BASE_URL).href);
   await page.waitForFunction(() => document.querySelector('#app')?.dataset.state === 'ready');
   await page.waitForTimeout(1100);
   const client = await context.newCDPSession(page);

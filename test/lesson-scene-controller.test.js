@@ -128,6 +128,55 @@ test('restart resets then reapplies authored activity, while skip settles in pla
   assert.equal(controller.state.lastReason, 'skip');
 });
 
+test('workspace resume becomes the transient base until authored navigation resumes', () => { // Tests INV-27
+  const fake = fakeAdapter();
+  const controller = createLessonSceneController({ scenes, adapter: fake.adapter });
+  controller.setReady();
+  const resumed = normalizeSceneSnapshot({
+    ...MINIMAL_SCENE,
+    id: 'resume-one',
+    visual: 'atlas',
+    camera: {
+      position: [7, 8, 9],
+      target: [1, 2, 3],
+      transition: { kind: 'instant', durationMs: 0 },
+    },
+    show: ['region.lgn'],
+    tissueOpacity: 0.42,
+    playback: { playing: true, speed: 55, settled: false },
+    controls: { mode: 'look' },
+  }, TEST_CATALOG);
+
+  assert.equal(typeof controller.restore, 'function');
+  controller.restore(resumed, { reason: 'workspace-resume' });
+  assert.equal(controller.state.resumed, true);
+  assert.equal(controller.state.lastReason, 'workspace-resume');
+  assert.deepEqual(fake.applied.at(-1), resumed);
+
+  controller.setReducedMotion(true);
+  assert.deepEqual(fake.applied.at(-1).camera, resumed.camera);
+  assert.deepEqual(fake.applied.at(-1).visibility, resumed.visibility);
+  assert.deepEqual(fake.applied.at(-1).material, resumed.material);
+  assert.deepEqual(fake.applied.at(-1).playback, { playing: false, speed: 55, settled: true });
+  controller.setReducedMotion(false);
+  assert.deepEqual(fake.applied.at(-1), resumed);
+
+  controller.activate(1, { reason: 'explicit-next' });
+  assert.equal(controller.state.resumed, false);
+  assert.deepEqual(fake.applied.at(-1), scenes[1].snapshot);
+});
+
+test('workspace resume validates readiness and restart returns to authored state', () => { // Tests FAIL-28
+  const fake = fakeAdapter();
+  const controller = createLessonSceneController({ scenes, adapter: fake.adapter });
+  assert.throws(() => controller.restore(scenes[0].snapshot), /ready/i);
+  controller.setReady();
+  controller.restore(scenes[1].snapshot);
+  controller.restart();
+  assert.equal(controller.state.resumed, false);
+  assert.deepEqual(fake.applied.at(-1), scenes[0].snapshot);
+});
+
 test('adapter failures become explicit controller error state and remain observable', () => {
   const controller = createLessonSceneController({
     scenes,

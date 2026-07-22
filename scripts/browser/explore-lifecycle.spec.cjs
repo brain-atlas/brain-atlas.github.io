@@ -11,7 +11,7 @@ function monitor(page) {
 
 async function ready(page, viewport = { width: 1440, height: 900 }) {
   await page.setViewportSize(viewport);
-  await page.goto(BASE_URL);
+  await page.goto(new URL('?lesson=retina-to-v1', BASE_URL).href);
   await page.waitForFunction(() => document.getElementById('app')?.dataset.state === 'ready');
 }
 
@@ -33,9 +33,9 @@ test('scene Explore preserves rendered camera, commands do not snap it, and Retu
     canvas: document.querySelector('canvas'),
   }));
   await page.locator('#explore-scene-trigger').click();
-  await expect(page.locator('#explore-dialog')).toBeVisible();
-  await expect(page.locator('#explore-dialog')).toHaveAccessibleName(await page.locator('#stage-heading').textContent());
-  await expect(page.locator('#explore-return')).toBeFocused();
+  await expect(page.locator('#atlas-workspace')).toBeVisible();
+  await expect(page.locator('#atlas-workspace')).toHaveAccessibleName('Explore the human visual system');
+  await expect(page.locator('#return-to-lesson')).toBeFocused();
   expect(await page.evaluate(() => ({
     kind: window.__lesson.exploreState.kind,
     camera: {
@@ -79,10 +79,10 @@ test('scene Explore preserves rendered camera, commands do not snap it, and Retu
   await expect(page.locator('#fidelity-panel')).toBeVisible();
   await page.keyboard.press('Escape');
   await expect(page.locator('#fidelity-panel')).toBeHidden();
-  await expect(page.locator('#explore-dialog')).toBeVisible();
-  await page.locator('#explore-return').click();
-  await expect(page.locator('#explore-dialog')).toBeHidden();
-  await expect(page.locator('#explore-scene-trigger')).toBeFocused();
+  await expect(page.locator('#atlas-workspace')).toBeVisible();
+  await page.locator('#return-to-lesson').click();
+  await expect(page.locator('#atlas-workspace')).toBeHidden();
+  await expect(page.locator('#back-to-atlas')).toBeFocused();
   expect(await page.evaluate(() => ({
     scene: window.__lesson.controllerState.activeSceneId,
     index: window.__lesson.controllerState.activeIndex,
@@ -112,17 +112,17 @@ test('scene Explore preserves rendered camera, commands do not snap it, and Retu
     pathway: authoredExplore.visibility.entities.includes('pathway.anterior'),
     tissue: authoredExplore.material.tissueOpacity,
   });
-  await page.locator('#explore-return').click();
+  await page.locator('#return-to-lesson').click();
   expect(errors).toEqual([]);
 });
 
-test('global Explore always opens the complete default atlas and Escape restores global trigger', async ({ page }) => {
+test('Back to atlas restores the complete persistent Atlas and Return restores the lesson', async ({ page }) => {
   const errors = monitor(page);
   await ready(page, { width: 390, height: 844 });
   await page.locator('#scene-next').click();
   await page.locator('#scene-skip').click();
-  await page.locator('#explore-atlas-trigger').click();
-  await expect(page.locator('#explore-dialog')).toBeVisible();
+  await page.locator('#back-to-atlas').click();
+  await expect(page.locator('#atlas-workspace')).toBeVisible();
   const state = await page.evaluate(() => ({
     kind: window.__lesson.exploreState.kind,
     visible: window.__lesson.exploreState.snapshot.visibility.entities,
@@ -138,8 +138,8 @@ test('global Explore always opens the complete default atlas and Escape restores
   expect(state.overflow).toBe(0);
   expect(state.root).toEqual([0, 0]);
   expect(state.canvases).toBe(1);
-  await page.keyboard.press('Escape');
-  await expect(page.locator('#explore-dialog')).toBeHidden();
-  await expect(page.locator('#explore-atlas-trigger')).toBeFocused();
+  await page.locator('#return-to-lesson').click();
+  await expect(page.locator('#atlas-workspace')).toBeHidden();
+  await expect(page.locator('#back-to-atlas')).toBeFocused();
   expect(errors).toEqual([]);
 });

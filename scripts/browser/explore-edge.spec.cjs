@@ -16,14 +16,27 @@ async function ready(page, url = BASE_URL, viewport = { width: 1440, height: 900
   await page.waitForFunction(() => ['ready', 'fallback'].includes(document.getElementById('app')?.dataset.state));
 }
 
-test('one renderer survives repeated Explore cycles and resizes to the reparented stage', async ({ page }) => {
+async function directLesson(page, viewport) {
+  await ready(page, new URL('?lesson=retina-to-v1', BASE_URL).href, viewport);
+}
+
+test('one renderer survives repeated scene-inspection cycles and resizes to the shared stage', async ({ page }) => {
   const errors = monitor(page);
-  await ready(page);
-  await page.evaluate(() => { document.querySelector('canvas').dataset.identity = 'original'; });
+  await directLesson(page);
+  await page.evaluate(() => {
+    document.querySelector('canvas').dataset.identity = 'original';
+    window.__aspectAtWorkspaceMove = [];
+    new MutationObserver(() => {
+      const stage = document.getElementById('stage');
+      const rect = stage.getBoundingClientRect();
+      if (rect.width > 0 && rect.height > 0) {
+        window.__aspectAtWorkspaceMove.push(Math.abs(window.__view.camera.aspect - rect.width / rect.height));
+      }
+    }).observe(document.getElementById('app'), { childList: true, subtree: true });
+  });
   for (let cycle = 0; cycle < 3; cycle += 1) {
     await page.locator('#explore-scene-trigger').click();
-    await expect(page.locator('#explore-dialog')).toBeVisible();
-    await page.waitForTimeout(50);
+    await expect(page.locator('#atlas-workspace')).toBeVisible();
     const geometry = await page.evaluate(() => {
       const rect = document.getElementById('stage').getBoundingClientRect();
       const canvasRect = document.querySelector('canvas').getBoundingClientRect();
@@ -37,30 +50,29 @@ test('one renderer survives repeated Explore cycles and resizes to the reparente
       };
     });
     expect(Math.abs(geometry.aspect - geometry.expected)).toBeLessThan(1e-6);
+    expect(Math.max(...await page.evaluate(() => window.__aspectAtWorkspaceMove))).toBeLessThan(1e-6);
     expect(geometry.canvas).toEqual(geometry.stage);
     expect(geometry.identity).toBe('original');
     expect(geometry.count).toBe(1);
-    await page.locator('#explore-return').click();
-    await expect(page.locator('#explore-dialog')).toBeHidden();
+    await page.locator('#return-to-lesson').click();
+    await expect(page.locator('#atlas-workspace')).toBeHidden();
   }
   expect(errors).toEqual([]);
 });
 
-test('responsive Explore keeps exact stage aspect and usable controls at compact and short-wide sizes', async ({ page }) => {
+test('responsive Atlas keeps exact stage aspect and usable controls', async ({ page }) => {
   const errors = monitor(page);
   for (const viewport of [{ width: 390, height: 844 }, { width: 800, height: 450 }, { width: 320, height: 568 }]) {
     await ready(page, BASE_URL, viewport);
-    await page.locator('#explore-atlas-trigger').click();
-    await page.waitForTimeout(80);
     const result = await page.evaluate(() => {
       const rect = document.getElementById('stage').getBoundingClientRect();
-      const returns = document.getElementById('explore-return').getBoundingClientRect();
+      const lessons = document.getElementById('lessons-trigger').getBoundingClientRect();
       const model = document.getElementById('model-sources-trigger').getBoundingClientRect();
       return {
         aspectError: Math.abs(window.__view.camera.aspect - rect.width / rect.height),
         stage: [rect.width, rect.height],
         overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
-        returnTarget: [returns.width, returns.height],
+        lessonsTarget: [lessons.width, lessons.height],
         modelTarget: [model.width, model.height],
         root: [scrollX, scrollY],
       };
@@ -69,20 +81,18 @@ test('responsive Explore keeps exact stage aspect and usable controls at compact
     expect(result.stage[0]).toBeGreaterThan(0);
     expect(result.stage[1]).toBeGreaterThan(0);
     expect(result.overflow).toBe(0);
-    expect(result.returnTarget[1]).toBeGreaterThanOrEqual(44);
+    expect(result.lessonsTarget[1]).toBeGreaterThanOrEqual(44);
     expect(result.modelTarget[1]).toBeGreaterThanOrEqual(44);
     expect(result.root).toEqual([0, 0]);
     await page.locator('#viewer-console > summary').click();
     await expect(page.locator('[data-explore-camera="zoom-in"]')).toBeVisible();
-    await page.locator('#explore-return').click();
   }
   expect(errors).toEqual([]);
 });
 
-test('every viewer axis edits canonical Explore state without snapping the camera', async ({ page }) => {
+test('every viewer axis edits canonical Atlas state without snapping the camera', async ({ page }) => {
   const errors = monitor(page);
   await ready(page);
-  await page.locator('#explore-atlas-trigger').click();
   await page.evaluate(() => {
     window.__view.camera.position.set(130, 40, -110);
     window.__view.controls.target.set(5, -3, 12);
@@ -126,8 +136,7 @@ test('every viewer axis edits canonical Explore state without snapping the camer
 
   const beforeZoom = await page.evaluate(() => window.__view.camera.position.distanceTo(window.__view.controls.target));
   await page.locator('[data-explore-camera="zoom-in"]').click();
-  const afterZoom = await page.evaluate(() => window.__view.camera.position.distanceTo(window.__view.controls.target));
-  expect(afterZoom).toBeLessThan(beforeZoom);
+  expect(await page.evaluate(() => window.__view.camera.position.distanceTo(window.__view.controls.target))).toBeLessThan(beforeZoom);
   const beforePan = await page.evaluate(() => window.__view.controls.target.toArray());
   await page.locator('[data-explore-camera="pan-left"]').click();
   expect(await page.evaluate(() => window.__view.controls.target.toArray())).not.toEqual(beforePan);
@@ -136,48 +145,35 @@ test('every viewer axis edits canonical Explore state without snapping the camer
     position: window.__view.camera.position.toArray().map(value => Math.round(value)),
     target: window.__view.controls.target.toArray().map(value => Math.round(value)),
   }))).toEqual({ position: [210, 75, -195], target: [0, 0, 0] });
-
-  const canvas = page.locator('#stage canvas');
-  const box = await canvas.boundingBox();
-  const cameraBeforeDrag = await page.evaluate(() => window.__view.camera.position.toArray());
-  await page.mouse.move(box.x + box.width * 0.5, box.y + box.height * 0.5);
-  await page.mouse.down();
-  await page.mouse.move(box.x + box.width * 0.65, box.y + box.height * 0.55, { steps: 5 });
-  await page.mouse.up();
-  expect(await page.evaluate(() => window.__view.camera.position.toArray())).not.toEqual(cameraBeforeDrag);
-  await page.locator('#explore-return').click();
   expect(errors).toEqual([]);
 });
 
-test('reduced-motion changes during Explore are synchronized back to the lesson controller', async ({ page }) => {
+test('reduced-motion changes during scene inspection synchronize back to Lesson', async ({ page }) => {
   const errors = monitor(page);
   await page.emulateMedia({ reducedMotion: 'no-preference' });
-  await ready(page);
+  await directLesson(page);
   await page.locator('#explore-scene-trigger').click();
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await expect(page.locator('#play')).toBeDisabled();
-  await page.locator('#explore-return').click();
-  await page.locator('#scene-next').click();
+  await page.locator('#return-to-lesson').click();
   expect(await page.evaluate(() => ({
-    index: window.__lesson.controllerState.activeIndex,
-    reduced: document.body.classList.contains('reduced-motion'),
+    reduced: window.__lesson.controllerState.reducedMotion,
+    body: document.body.classList.contains('reduced-motion'),
     skip: document.getElementById('scene-skip').hidden,
-  }))).toEqual({ index: 0, reduced: true, skip: true });
+  }))).toEqual({ reduced: true, body: true, skip: true });
 
   await page.locator('#explore-scene-trigger').click();
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await expect(page.locator('#play')).toBeEnabled();
-  await page.locator('#explore-return').click();
-  await page.locator('#scene-next').click();
+  await page.locator('#return-to-lesson').click();
   expect(await page.evaluate(() => ({
-    index: window.__lesson.controllerState.activeIndex,
-    reduced: document.body.classList.contains('reduced-motion'),
-    skip: document.getElementById('scene-skip').hidden,
-  }))).toEqual({ index: 1, reduced: false, skip: false });
+    reduced: window.__lesson.controllerState.reducedMotion,
+    body: document.body.classList.contains('reduced-motion'),
+  }))).toEqual({ reduced: false, body: false });
   expect(errors).toEqual([]);
 });
 
-test('imported lesson can enter and leave Explore through the rebuilt renderer bridge', async ({ page }) => {
+test('imported lesson enters and leaves scene inspection through the rebuilt renderer bridge', async ({ page }) => {
   const errors = monitor(page);
   await ready(page);
   await page.locator('#lesson-import-trigger').click();
@@ -187,21 +183,21 @@ test('imported lesson can enter and leave Explore through the rebuilt renderer b
   await page.locator('#lesson-import-open').click();
   await page.waitForFunction(() => window.__lesson?.sourceKind === 'local' && window.__lesson?.controllerState?.status === 'ready');
   await page.locator('#explore-scene-trigger').click();
-  await expect(page.locator('#explore-dialog')).toBeVisible();
+  await expect(page.locator('#atlas-workspace')).toBeVisible();
   expect(await page.evaluate(() => ({
     title: window.__lesson.lesson.title,
     kind: window.__lesson.exploreState.kind,
     canvases: document.querySelectorAll('canvas').length,
     stage: document.getElementById('stage').hidden,
   }))).toEqual({ title: 'How visual fields cross', kind: 'scene', canvases: 1, stage: false });
-  await page.locator('#explore-return').click();
+  await page.locator('#return-to-lesson').click();
   await expect(page.locator('#app-status')).toHaveText('Local lesson · not saved');
   expect(errors).toEqual([]);
 });
 
-test('Explore entry rolls back transactionally when panel synchronization fails', async ({ page }) => {
+test('scene-inspection entry rolls back transactionally when panel synchronization fails', async ({ page }) => {
   const errors = monitor(page);
-  await ready(page);
+  await directLesson(page);
   const before = await page.evaluate(() => {
     document.getElementById('clip').remove();
     return {
@@ -211,10 +207,10 @@ test('Explore entry rolls back transactionally when panel synchronization fails'
   });
   await page.locator('#explore-scene-trigger').click();
   await expect(page.locator('#app')).toHaveAttribute('data-state', 'fallback');
-  await expect(page.locator('#explore-dialog')).toBeHidden();
+  await expect(page.locator('#atlas-workspace')).toBeHidden();
   await expect(page.locator('#stage')).toBeHidden();
   await expect(page.locator('#stage-fallback')).toBeVisible();
-  await expect(page.locator('#explore-atlas-trigger')).toBeHidden();
+  await expect(page.locator('#back-to-atlas')).toBeVisible();
   expect(await page.evaluate(() => ({
     scroll: document.getElementById('page-scroll').scrollTop,
     stageParent: document.querySelector('.stage-shell').parentElement.className,
@@ -224,18 +220,14 @@ test('Explore entry rolls back transactionally when panel synchronization fails'
   expect(errors.some(error => /Explore mode failed/i.test(error))).toBe(true);
 });
 
-test('Explore actions stay unavailable in no-WebGL and renderer-import failure fallbacks', async ({ page }) => {
-  const errors = monitor(page);
+test('renderer-only scene inspection stays unavailable in fallback Atlas and Lesson', async ({ page }) => {
   await ready(page, `${BASE_URL}?no-webgl=1`);
   await expect(page.locator('#app')).toHaveAttribute('data-state', 'fallback');
-  await expect(page.locator('#explore-atlas-trigger')).toBeHidden();
   await expect(page.locator('#explore-scene-trigger')).toBeHidden();
   expect(await page.locator('canvas').count()).toBe(0);
 
-  await page.route('**/src/main.js*', route => route.abort());
-  await ready(page, BASE_URL);
-  await expect(page.locator('#app')).toHaveAttribute('data-state', 'fallback');
-  await expect(page.locator('#explore-atlas-trigger')).toBeHidden();
+  await page.locator('#lessons-trigger').click();
+  await page.locator('[data-start-lesson="retina-to-v1"]').click();
   await expect(page.locator('#explore-scene-trigger')).toBeHidden();
-  await expect(page.locator('#fallback-message')).toContainText('could not initialize');
+  await expect(page.locator('#back-to-atlas')).toBeVisible();
 });

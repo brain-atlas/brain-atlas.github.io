@@ -397,7 +397,8 @@ P0 bug `brain-atlas-zmq.2` removed the unlabelled array-order travel as an inter
 | 3 | `brain-atlas-zmq.4` | P1 | Define domain-neutral lesson/entity/scene contracts and tests. | `zmq.2`, `eoa`, `yum.3`, `.15` |
 | 4 | `brain-atlas-zmq.5` | P1 | Build the retina→V1 scrolling vertical slice from a checked-in contract-valid Markdown lesson. | `.4` |
 | 5 | `brain-atlas-zmq.6` | P1 | Add local Markdown paste/import, sanitization, validation, and linked images. | `.5` |
-| 6 | `brain-atlas-zmq.7` | P1 | Add scene-controlled free-exploration pop-out. | `.6` |
+| 6 | `brain-atlas-zmq.7` | P1 | Add scene-controlled free exploration on the shared renderer surface. | `.6` |
+| 6b | `brain-atlas-zmq.24` | P1 | Make Atlas the product Home and add one resumable lesson-entry shell. | `.5`, `.6`, `.7` |
 | 7 | `brain-atlas-zmq.8` | P2 | Add selection and cited inspector foundation with starter entities. | `.7` |
 | 8 | `brain-atlas-zmq.9` | P1 | Harden integrated mobile, accessibility, fallback, and performance behavior. | `.8` |
 | 9a | `brain-atlas-zmq.10` | P2 | Research/map defensible tract-region relationships. | `.8` |
@@ -445,18 +446,28 @@ failure, image retry, no-referrer loading, responsive stage aspect, invalid/mali
 source, repeated import, and production behavior were verified in Firefox and Chromium.
 See `.pi/plans/brain-atlas-zmq.6-local-lesson-import-plan.md` for implementation evidence.
 
-### Explore (`brain-atlas-zmq.7`) — Implemented
+### Explore (`brain-atlas-zmq.7`) — Implemented, then integrated by `.24`
 
-Header **Explore atlas** opens the project-authored complete-atlas default; stage
-**Explore this scene** starts from the active effective filters and exact rendered
-camera. One native full-viewport dialog reparents the existing stage, canvas, Viewer
-controls, and Model & sources. Its temporary complete canonical snapshot routes retained
-panel edits through allowlisted commands and the one renderer adapter. Full orbit, zoom,
-pan, filters, semantic camera buttons, and responsive wide/compact layouts remain
-temporary. Return/Escape reapplies the immutable authored scene and restores exact lesson
-scroll and invoking focus. No-WebGL and renderer failures hide Explore actions. See
-`.pi/plans/brain-atlas-zmq.7-shared-explore-surface-plan.md` and
-`scripts/browser/README.md` for design and replayable Firefox/Chromium checks.
+`src/ui/explore-session.js` remains the canonical boundary for complete global and
+scene-derived working snapshots, actual-camera-first commands, retained panel projection,
+and full orbit/zoom/pan/filter controls on the one renderer. The original modal shell was
+superseded when `.24` made that surface the top-level Atlas workspace; its state and
+renderer invariants remain operative. See
+`.pi/plans/brain-atlas-zmq.7-shared-explore-surface-plan.md` for the original delivery
+record and `.pi/plans/brain-atlas-zmq.24-atlas-home-entry-shell-plan.md` for integration.
+
+### Atlas Home and lesson entry (`brain-atlas-zmq.24`) — Implemented
+
+The base URL opens the complete exploratory Atlas. A modal responsive **Lessons** drawer
+lists the checked Draft lesson, Start/Resume/Start-over actions, local Markdown entry, and
+shared project links. Atlas and Lesson reparent one stage, panel, disclosure, canvas, and
+context. **Back to atlas** restores persistent global camera/filters; **Explore this
+scene** uses a temporary branch; **Return to lesson** restores source, scene, selected
+visual, canonical state, rendered camera, requested playback, exact lesson scroll, and
+focus. `/` and `?lesson=retina-to-v1` are stable static routes. `?lesson=local` is only a
+nonsecret memory-session marker; reload normalizes to Atlas with an announcement. Firefox
+and Chromium checks cover history, compact/wide layouts, touch, reduced motion, fallback,
+local import, exact Return, camera aspect, and one-canvas ownership.
 
 ### Inspector (`brain-atlas-zmq.8`)
 

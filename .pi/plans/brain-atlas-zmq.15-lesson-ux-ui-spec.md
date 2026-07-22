@@ -8,7 +8,7 @@
 
 **Status:** Approved implementation-facing UX/UI baseline
 
-**Approval:** `brain-atlas-6nn`
+**Approval:** `brain-atlas-6nn`; Atlas/Home amendment `brain-atlas-56i`
 
 **Fidelity disclosure:** `.pi/plans/brain-atlas-yum.3-model-fidelity-disclosure.md`
 
@@ -33,8 +33,8 @@ The interface should feel like an **editorial scientific instrument**: editorial
 
 ### 3.1 Complete the reference lesson
 
-1. Open the app and see the lesson title, purpose, estimated scope, and a clear start/continue action.
-2. Read a scene while the shared stage shows its authored spatial state.
+1. Open the app in the full exploratory Atlas and use **Lessons** to inspect available guided paths.
+2. Start or resume a lesson, then read a scene while the shared stage shows its authored spatial state.
 3. Move by vertical reading or explicit Previous/Next controls.
 4. Restart or skip only the active scene's optional animation; neither action changes the lesson position.
 5. Reach the lesson end with the option to revisit scenes or enter Explore.
@@ -49,7 +49,7 @@ The interface should feel like an **editorial scientific instrument**: editorial
 ### 3.3 Explore and return
 
 1. Activate **Explore this scene**.
-2. Enter a prepared scene state with the controls permitted by the scene's policy.
+2. Enter the top-level Atlas in a temporary scene-derived state with full controls.
 3. Change the camera, filters, or playback without mutating the authored lesson snapshot.
 4. Activate **Return to lesson**.
 5. Restore the exact authored scene and return focus to **Explore this scene**.
@@ -66,7 +66,7 @@ The interface should feel like an **editorial scientific instrument**: editorial
 
 | Surface | Requirement |
 |---|---|
-| App header | Identifies Lesson or Explore mode, lesson title, and a reachable import/open action without dominating the reading surface. |
+| App header | Identifies Atlas or Lesson, exposes Lessons/import, and provides reciprocal **Back to atlas** / **Return to lesson** navigation without dominating either surface. |
 | Lesson prose | Uses semantic headings and scene sections. The active scene is clear without fading inactive prose below readable contrast. |
 | Visual stage | Hosts the single shared WebGL canvas or its settled fallback. It exposes a concise scene title and never traps page scrolling. |
 | Visual selector | Shows the atlas first and declared supplementary visuals in authored order. Selection is explicit and keyboard/touch operable. |
@@ -133,7 +133,7 @@ These are structural requirements, not fixed breakpoints. The layout should resp
 ```
 
 - The stage may be compact-sticky only while enough viewport remains for readable prose and browser controls; otherwise it participates in normal flow.
-- Explore uses a full-screen surface with an obvious Return to lesson action.
+- Atlas is the full-screen product Home; scene inspection uses that same surface with an obvious Return to lesson action.
 - Entity details use a bottom sheet or full-screen inspector with focus containment and restoration.
 - No horizontal page scrolling, scroll trapping, overlapping fixed panels, or canvas gesture capture while the learner scrolls the lesson.
 
@@ -172,7 +172,7 @@ These are structural requirements, not fixed breakpoints. The layout should resp
 | Transitioning | Controls remain predictable; repeated navigation resolves to one deterministic target. |
 | Paused | The pause state is labelled; scene navigation and inspection remain available. |
 | Reduced motion | Settled camera/activity state appears without an intermediate animation. |
-| Explore | Mode change and Return to lesson are persistent and unambiguous. |
+| Atlas / scene inspection | Atlas identity and Return to lesson are persistent and unambiguous when a resumable lesson exists. |
 | Validation error | Source text and current lesson are preserved; errors identify line/field and correction. |
 | External image failure | Reserved layout remains stable; alt text, caption, credit, and source link remain usable. |
 | WebGL unavailable | Prose, scene summaries, media alternatives, sources, and lesson navigation remain usable. |
@@ -261,7 +261,9 @@ And the learner can switch back to the atlas
 ## 10. Approval and change control
 
 Human approval `brain-atlas-6nn` covers this specification's wide and compact
-structures and the integrated progressive fidelity-disclosure design.
+structures and the integrated progressive fidelity-disclosure design. Approval
+`brain-atlas-56i` amends the top-level shell: Atlas is Home, Lessons open from a
+responsive drawer, and one resumable Lesson context uses reciprocal Atlas navigation.
 
 - Child Beads cite the relevant journeys, surfaces, states, scenarios, and fidelity
   contract rather than inventing interaction behavior.

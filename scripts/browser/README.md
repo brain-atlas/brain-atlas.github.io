@@ -1,7 +1,7 @@
 # Browser verification
 
-The checked-in Explore tests exercise the development-only `window.__lesson` and
-`window.__view` inspection ports. They intentionally use an external Playwright
+The checked-in Atlas, Lesson, and workspace tests exercise the development-only
+`window.__lesson` and `window.__view` inspection ports. They intentionally use an external Playwright
 harness rather than adding a second browser-test dependency to the application.
 
 Start a clean development server:
@@ -31,10 +31,15 @@ npx playwright test \
   --config=/absolute/path/to/brain-atlas/scripts/browser/playwright.config.cjs
 ```
 
-Set `HEADED=1` for visual review. The matrix covers scene and global entry,
-actual-camera preservation, every canonical viewer axis, semantic and pointer
-camera controls, exact Return/Escape, nested Model & sources Escape precedence,
-repeated one-canvas cycles, reparented renderer aspect, 320 px compact and
-short-wide layouts, live reduced motion, imported lessons, no-WebGL, and
-renderer-import failure. The Chromium run also injects real touch input to verify
-lesson scrolling versus Explore camera capture.
+For `npm run build && npm run preview`, set `PRODUCTION_PREVIEW=1` and run
+`scripts/browser/home-production.spec.cjs`; those checks require production debug hooks
+to be absent.
+
+Set `HEADED=1` for visual review. The matrix covers Atlas-as-Home, the responsive
+Lessons drawer, checked and local activation, direct/static routes, Back/Forward and
+reload recovery, persistent global state, temporary scene inspection, actual-camera
+preservation, every canonical viewer axis, semantic and pointer camera controls,
+exact Atlas/Lesson Return, repeated one-canvas cycles, stage aspect, compact and
+short-wide layouts, live reduced motion, no-WebGL, and renderer-import failure. The
+Chromium run also injects real touch input to verify Lesson scrolling versus Atlas
+camera capture.

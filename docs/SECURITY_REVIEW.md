@@ -53,7 +53,10 @@ more than the reviewed `dist/` directory.
 - Local source is bounded to 512 KiB and validated all-or-nothing through the same
   strict parser/presentation path as checked-in content. Editing invalidates a valid
   preview; only explicit **Open lesson** activation can replace the in-memory session.
-  There is no upload, backend, storage, messaging, or credential handling.
+  History stores only a versioned mode, checked ID, or opaque tab-local key. The
+  `?lesson=local` marker contains no source and cannot recover it after reload; recovery
+  removes the marker and returns to Atlas. There is no upload, backend, storage,
+  messaging, or credential handling.
 - Anatomy/model requests remain same-origin and use established JSON, OBJ, and GLB
   parsers. Imported supplementary media may request only declared credential-free
   HTTPS image/source URLs after activation. Images use semantic DOM rather than
