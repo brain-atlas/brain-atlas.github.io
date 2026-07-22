@@ -53,7 +53,8 @@ test('reference lesson parses with an unnumbered entry view and eight complete s
 test('reference lesson uses only visual-system entities and never inherits omitted layers', async () => {
   const { result } = await loadReferenceLesson();
   const allowed = new Set([
-    'layer.cortex', 'layer.labels', 'pathway.anterior', 'pathway.optic-radiation',
+    'layer.cortex', 'layer.labels', 'layer.swm', 'pathway.anterior', 'pathway.optic-radiation',
+    'tract.ilf', 'tract.ifof', 'tract.slf1', 'tract.slf2', 'tract.slf3', 'tract.vof',
     'region.lgn', 'region.v1', 'region.v2', 'region.v3v', 'region.v3d', 'region.v4v',
     'region.loa', 'region.lop', 'region.fg1', 'region.fg2', 'region.fg3', 'region.fg4',
     'region.v3a', 'region.v6', 'region.mt',
@@ -63,9 +64,11 @@ test('reference lesson uses only visual-system entities and never inherits omitt
   ]);
   for (const scene of result.value.scenes) {
     assert.equal(scene.snapshot.visibility.entities.every((id) => allowed.has(id)), true);
+    assert.equal(scene.snapshot.visibility.entities.includes('layer.labels'), false);
+  }
+  for (const scene of result.value.scenes.slice(0, 5)) {
     assert.equal(scene.snapshot.visibility.entities.some((id) => id.startsWith('tract.')), false);
     assert.equal(scene.snapshot.visibility.entities.includes('layer.swm'), false);
-    assert.equal(scene.snapshot.visibility.entities.includes('layer.labels'), false);
   }
   assert.deepEqual(result.value.scenes[0].snapshot.visibility.entities, [
     'layer.cortex', 'pathway.anterior', 'pathway.optic-radiation', 'region.lgn', 'region.v1',
@@ -99,22 +102,63 @@ test('posterior scenes disclose mirrored geometry and illustrative event timing'
     assert.deepEqual(scene.fidelityIds, [
       'fidelity.julich-regions', 'fidelity.optic-radiation',
     ]);
+    assert.equal(scene.snapshot.playback.playing, true);
+    assert.equal(scene.snapshot.playback.settled, false);
   }
+  const arrival = result.value.scenes[4];
+  assert.equal(arrival.snapshot.visibility.entities.includes('region.lgn'), true);
+  assert.equal(arrival.snapshot.selection.emphasized.includes('pathway.optic-radiation'), true);
+  assert.equal(arrival.snapshot.selection.emphasized.includes('region.lgn'), true);
 });
 
-test('cortical stream scenes use atlas regions without claiming tract connectivity', async () => {
+test('cortical stream scenes add selected white-matter context without claiming exact connectivity', async () => {
   const { result } = await loadReferenceLesson();
   const streamScenes = result.value.scenes.slice(5);
   const streamProse = streamScenes.map(({ proseMarkdown }) => proseMarkdown).join('\n');
+  const expectedTracts = [
+    ['tract.vof'],
+    ['tract.ifof', 'tract.ilf', 'tract.vof'],
+    ['tract.slf1', 'tract.slf2', 'tract.slf3', 'tract.vof'],
+    ['tract.ilf', 'tract.slf2', 'tract.vof'],
+  ];
 
   assert.equal(streamScenes.length, 4);
-  for (const scene of streamScenes) {
-    assert.deepEqual(scene.fidelityIds, ['fidelity.cortex', 'fidelity.julich-regions']);
-    assert.equal(scene.snapshot.visibility.entities.some((id) => id.startsWith('tract.')), false);
+  for (const [index, scene] of streamScenes.entries()) {
+    assert.deepEqual(scene.fidelityIds, [
+      'fidelity.association-tracts', 'fidelity.cortex',
+      'fidelity.julich-regions', 'fidelity.superficial-white-matter',
+    ]);
+    assert.deepEqual(
+      scene.snapshot.visibility.entities.filter((id) => id.startsWith('tract.')),
+      expectedTracts[index],
+    );
+    assert.equal(scene.snapshot.visibility.entities.includes('layer.swm'), true);
+    assert.equal(scene.snapshot.playback.playing, true);
+    assert.equal(scene.snapshot.playback.settled, false);
   }
-  assert.match(streamProse, /does not demonstrate a connection/i);
-  assert.match(streamProse, /does not display their connections/i);
+  assert.match(streamProse, /50\/50/i);
+  assert.match(streamProse, /zero-mean/i);
+  assert.match(streamProse, /not endpoint-filtered/i);
+  assert.match(streamProse, /do not establish|does not establish/i);
   assert.match(streamProse, /two-stream framework.+not a complete wiring\s+diagram/is);
+});
+
+test('LGN scene retains incoming context and frames the outgoing pathway through V1', async () => {
+  const { result } = await loadReferenceLesson();
+  const scene = result.value.scenes[2];
+  assert.deepEqual(scene.snapshot.visibility.entities, [
+    'layer.cortex', 'pathway.anterior', 'pathway.optic-radiation', 'region.lgn', 'region.v1',
+  ]);
+  assert.deepEqual(scene.fidelityIds, [
+    'fidelity.anterior-pathway', 'fidelity.cortex',
+    'fidelity.julich-regions', 'fidelity.optic-radiation',
+  ]);
+  assert.equal(scene.snapshot.playback.playing, true);
+  assert.equal(scene.snapshot.playback.settled, false);
+  assert.ok(scene.snapshot.camera.position[2] < 0);
+  assert.match(scene.proseMarkdown, /source.+destination|destination.+source/is);
+  assert.match(scene.proseMarkdown, /incoming context/i);
+  assert.match(scene.proseMarkdown, /optic.?radiation.+V1/is);
 });
 
 test('reference content keeps prose educational while curated records own sources', async () => {

@@ -152,8 +152,16 @@ renders the lifecycle label in the document title, lesson header, and introducti
 including no-WebGL mode, without HTML-string injection. An unnumbered topic entry view
 filters the atlas to the relevant visual-system structures before scrolling activates
 eight instructional scenes spanning retinal processing through interacting ventral and
-dorsal cortical streams; fixed-position
-Previous/Next actions traverse the same sequence and can return to that entry view. One
+dorsal cortical streams. The LGN scene uses an authored LGN-dominant oblique view that
+keeps schematic incoming context plus the optic-radiation path and V1 destination in
+frame; both optic-radiation scenes retain directed LGN→V1 motion. The four
+cortical-stream scenes currently add selected named bundles and the broad SWM/U-fibre
+layer as a **Draft prototype**: long-tract impulses use the disclosed
+50/50 direction assumption, SWM uses zero-mean vibration, and neither display proves
+exact endpoints among the highlighted regions. Endpoint-classified scene pruning under
+`brain-atlas-zmq.21` must replace the broad SWM prototype before publication.
+Fixed-position Previous/Next actions traverse the same sequence and can return to that
+entry view. One
 3D stage is shared throughout. The browser root remains fixed; the named, keyboard-
 focusable `#page-scroll` region is the sole vertical lesson surface and retains the
 native scrollbar. Wide layouts pair the reading rail with a pinned stage, compact

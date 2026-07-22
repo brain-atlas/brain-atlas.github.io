@@ -1,6 +1,6 @@
 ---
 name: write-lesson
-description: Design, author, validate, and retrospect on an evidence-based multimedia neuroscience lesson in the Brain Atlas.
+description: Use when creating or substantially revising an evidence-based multimedia neuroscience lesson in the Brain Atlas.
 ---
 
 # Write an Effective Brain Atlas Lesson
@@ -114,6 +114,73 @@ Then apply these rules:
   comprehension depend on catching one unrecoverable animation.
 - State a model boundary at the point where a plausible but unsupported inference
   could arise. Do not repeat implementation disclaimers that add no new protection.
+
+### Compose each 3D view like instructional photography
+
+A correct scene state can still be a poor teaching image. Before setting the camera,
+separate the scene into:
+
+```text
+Teaching geometry: structures, endpoints, and paths the learner must inspect
+Context geometry: cortex, broad fibre texture, landmarks, or duplicates used only for orientation
+Narrative eye path: the intended source → relationship → destination, or comparison order
+Safe frame: title/control occlusion, wide/compact aspect ratios, and desired margins
+Motion signal: the geometry, endpoint caps, and events that must remain legible
+```
+
+Then compose with these rules:
+
+1. **Fit the teaching geometry, not the cortical shell.** Exclude the translucent cortex
+   and broad SWM cloud from camera-fit bounds unless they are the lesson target. They may
+   crop naturally. Do not let an irrelevant large surface make the real subject occupy
+   one-third of the available view.
+2. **Judge projected screen bounds, not only world-space bounds.** A camera aimed at a
+   3D bounding-box center can still render the subject high, low, or off-center. Inspect
+   its projected safe-frame bounds and translate the camera and target together until the
+   intended screen composition is achieved.
+3. **Use thirds to create a visual argument.** Place the primary structure near a thirds
+   intersection and let a tract, gaze direction, or anatomical mass lead toward the next
+   point. Center a symmetric comparison only when symmetry itself is the teaching idea.
+   Keep roughly 8–12% breathing room around relevant endpoints; clipped termini are not
+   intentional negative space.
+4. **Show the complete visual sentence when motion teaches travel.** Keep source, path,
+   and destination in frame so movement has an interpretable beginning and end. A crop
+   that shows only a short moving segment can look frozen even when the model clock is
+   running. Use a closer structural view only when the route is not the current claim.
+5. **Prefer a slight oblique rotation to stacked anatomy.** Rotate enough to separate
+   bilateral shells, overlapping tract bundles, and endpoint caps in depth. Hide one
+   symmetric duplicate only when rotation cannot produce a legible view and the lesson
+   does not require bilateral comparison.
+6. **Make emphasis agree with motion.** Verify visibility, selection/emphasis factors,
+   endpoint caps, and event contrast—not just `playback.playing`. An active tract dimmed
+   as nonselected may be technically animated but perceptually absent.
+7. **Photography is not permission to invent activity.** Reframe and emphasize the
+   activity model the atlas actually provides. Do not add apparent accumulation,
+   thinning, spreading, relay pauses, rate changes, or segmented timing unless the
+   implemented model and evidence support them and the scene discloses them.
+8. **Do not use continuous rotation to rescue weak framing.** Author a strong settled
+   shot first. Use existing auto-rotate only when changing viewpoints is itself useful,
+   never merely to add motion, and always provide the reduced-motion settled view.
+9. **Review the real shell at every supported size.** Capture every scene stage-only for
+   comparison, then inspect the complete wide and compact lesson shell. Check the active
+   animation after the camera settles; thumbnails and one aspect ratio are insufficient.
+
+Use `src/lessons/retina-to-v1.md` as the reference example:
+
+- the title/entry view treats whole-brain orientation as its teaching geometry, centers
+  the complete cortical surface, and keeps the retina→LGN→V1 pathway legible within it;
+- the LGN view keeps incoming context plus LGN, optic radiation, and V1 in one visual
+  sentence;
+- the V1 view uses an oblique source-to-destination angle and emphasizes the tract and
+  endpoint regions so arriving events remain visible; and
+- cortical-stream views fit highlighted atlas regions and selected named tracts while
+  excluding cortex and broad SWM from framing calculations. The current all-fibre SWM
+  display is a Draft prototype pending endpoint-based pruning, not a publication model.
+
+For any materially revised shot, record the teaching-geometry set, authored camera and
+target, projected wide/compact bounds, clipping result, motion visibility, and a visual
+review artifact. Preserve user-authored composition decisions in the lesson source and
+its review Bead.
 
 ## 5. Create active learning and feedback
 

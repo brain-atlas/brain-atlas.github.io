@@ -78,8 +78,8 @@ id: nasal-crossing
 title: The retina recodes light; the chiasm regroups space
 visual: atlas
 camera:
-  position: [0, -20, -155]
-  target: [0, -35, 0]
+  position: [0, -19, -160]
+  target: [0, -30, -37]
   transition: { kind: ease, durationMs: 900 }
 show: [pathway.anterior, region.lgn]
 fidelity: [fidelity.anterior-pathway, fidelity.julich-regions]
@@ -138,20 +138,24 @@ id: lgn-relay
 title: The LGN preserves maps while regulating transmission
 visual: atlas
 camera:
-  position: [105, 175, -145]
-  target: [0, -5, 0]
+  position: [-51, 17, -46]
+  target: [-18, -8, 32]
   transition: { kind: ease, durationMs: 900 }
-show: [layer.cortex, pathway.anterior, region.lgn]
-fidelity: [fidelity.anterior-pathway, fidelity.julich-regions]
+show: [layer.cortex, pathway.anterior, pathway.optic-radiation, region.lgn, region.v1]
+fidelity:
+  - fidelity.cortex
+  - fidelity.julich-regions
+  - fidelity.anterior-pathway
+  - fidelity.optic-radiation
 cutaway: 42
 tissueOpacity: 0.11
 playback:
-  playing: false
+  playing: true
   speed: 70
-  settled: true
+  settled: false
 selection:
   selected: region.lgn
-  emphasized: [region.lgn]
+  emphasized: [region.lgn, region.v1, pathway.anterior, pathway.optic-radiation]
   strength: 0.9
 controls:
   mode: look
@@ -182,17 +186,19 @@ the LGN preserves the spatial organization needed by cortex.
 > **Retrieval check:** Without rereading scene 1, explain how one LGN can receive input
 > from both eyes while representing only one visual hemifield.
 
-> **Model boundary:** The displayed shells locate population-atlas LGN territory. They
-> do not resolve LGN layers, parallel channels, synapses, or measured firing. The
-> anterior schematic still shows only the crossed nasal component.
+> **Model boundary:** This view keeps the population-atlas LGN source, optic-radiation
+> trajectory, and V1 destination in frame while retaining schematic incoming context.
+> It does not resolve LGN layers, parallel channels, synapses, or measured firing. The
+> anterior segment is schematic, optic-radiation geometry is population tractography
+> with a mirrored right side, and all displayed timing is illustrative.
 
 ```atlas-scene
 id: optic-radiation
 title: The optic radiation carries a topographic map
 visual: atlas
 camera:
-  position: [190, 18, -90]
-  target: [0, 0, 0]
+  position: [112, 2, -3]
+  target: [3, -8, 49]
   transition: { kind: ease, durationMs: 900 }
 show: [layer.cortex, pathway.optic-radiation, region.lgn, region.v1]
 fidelity: [fidelity.julich-regions, fidelity.optic-radiation]
@@ -245,20 +251,20 @@ id: v1-arrival
 title: V1 builds a cortical map of local visual structure
 visual: atlas
 camera:
-  position: [60, 25, 235]
-  target: [0, 0, 0]
+  position: [95, 55, 95]
+  target: [0, -5, 45]
   transition: { kind: ease, durationMs: 900 }
-show: [layer.cortex, pathway.optic-radiation, region.v1]
+show: [layer.cortex, pathway.optic-radiation, region.lgn, region.v1]
 fidelity: [fidelity.julich-regions, fidelity.optic-radiation]
 cutaway: 38
 tissueOpacity: 0.16
 playback:
-  playing: false
+  playing: true
   speed: 70
-  settled: true
+  settled: false
 selection:
   selected: region.v1
-  emphasized: [region.v1]
+  emphasized: [pathway.optic-radiation, region.lgn, region.v1]
   strength: 0.95
 controls:
   mode: look
@@ -313,8 +319,8 @@ id: extrastriate-branching
 title: Extrastriate cortex expands the computation
 visual: atlas
 camera:
-  position: [160, 72, 155]
-  target: [0, 0, 0]
+  position: [100, 37, 146]
+  target: [9, -3, 58]
   transition: { kind: ease, durationMs: 900 }
 show:
   - layer.cortex
@@ -326,16 +332,22 @@ show:
   - region.v3a
   - region.v6
   - region.mt
-fidelity: [fidelity.cortex, fidelity.julich-regions]
+  - layer.swm
+  - tract.vof
+fidelity:
+  - fidelity.cortex
+  - fidelity.julich-regions
+  - fidelity.association-tracts
+  - fidelity.superficial-white-matter
 cutaway: 42
 tissueOpacity: 0.13
 playback:
-  playing: false
+  playing: true
   speed: 70
-  settled: true
+  settled: false
 selection:
   selected: region.v2
-  emphasized: [region.v1, region.v2, region.v3v, region.v3d, region.v4v, region.v3a, region.v6, region.mt]
+  emphasized: [region.v1, region.v2, region.v3v, region.v3d, region.v4v, region.v3a, region.v6, region.mt, tract.vof]
   strength: 0.78
 controls:
   mode: look
@@ -360,18 +372,20 @@ clean fork at one anatomical point.
 > also building neurons that combine information across progressively larger portions
 > of the scene? Relate your answer to both localization and object structure.
 
-> **Model boundary:** The shells show population-atlas locations and broad spatial
-> relationships. Their simultaneous display does not demonstrate a connection,
-> processing order, receptive-field size, or functional response. No directed
-> association pathway is claimed in this scene.
+> **Model boundary:** The shells show population-atlas locations. The VOF and broad
+> superficial-white-matter grain add bundle-scale context, but they do not establish
+> exact endpoints among these shells, processing order, or functional response. Bright
+> VOF events sample a disclosed 50/50 direction assumption; the U-fibre texture is not
+> endpoint-filtered and uses zero-mean vibration. Neither animation is measured neural
+> activity.
 
 ```atlas-scene
 id: ventral-stream
 title: The ventral stream builds object quality and identity
 visual: atlas
 camera:
-  position: [185, -58, 105]
-  target: [0, -20, 0]
+  position: [205, -31, 118]
+  target: [0, 11, 2]
   transition: { kind: ease, durationMs: 900 }
 show:
   - layer.cortex
@@ -385,16 +399,24 @@ show:
   - region.fg2
   - region.fg3
   - region.fg4
-fidelity: [fidelity.cortex, fidelity.julich-regions]
+  - layer.swm
+  - tract.ilf
+  - tract.ifof
+  - tract.vof
+fidelity:
+  - fidelity.cortex
+  - fidelity.julich-regions
+  - fidelity.association-tracts
+  - fidelity.superficial-white-matter
 cutaway: 36
 tissueOpacity: 0.14
 playback:
-  playing: false
+  playing: true
   speed: 70
-  settled: true
+  settled: false
 selection:
   selected: region.v4v
-  emphasized: [region.v3v, region.v4v, region.loa, region.lop, region.fg1, region.fg2, region.fg3, region.fg4]
+  emphasized: [region.v3v, region.v4v, region.loa, region.lop, region.fg1, region.fg2, region.fg3, region.fg4, tract.ilf, tract.ifof, tract.vof]
   strength: 0.86
 controls:
   mode: look
@@ -427,16 +449,19 @@ object recognition, but symptoms depend on lesion extent and network organizatio
 The presence of a named atlas area never licenses a one-region/one-function diagnosis.
 
 > **Model boundary:** The displayed V4v, lateral occipital, and fusiform shells provide
-> anatomical context. They do not visualize object representations, category
-> selectivity, causal connections, or an individual's functional localizers.
+> anatomical context. The ILF, IFOF, and VOF contours do not establish that those
+> shells are their exact endpoints or that impulses carry object representations.
+> Long-tract events sample a disclosed 50/50 direction assumption; broad U-fibre grain
+> is not endpoint-filtered and uses zero-mean vibration. Both motions are illustrative,
+> not measured activity or an individual's functional localizers.
 
 ```atlas-scene
 id: dorsal-stream
 title: The dorsal stream transforms vision for space and action
 visual: atlas
 camera:
-  position: [185, 92, -95]
-  target: [0, 20, 0]
+  position: [184, 80, -94]
+  target: [2, 9, -2]
   transition: { kind: ease, durationMs: 900 }
 show:
   - layer.cortex
@@ -458,16 +483,25 @@ show:
   - region.spl7p
   - region.spl5l
   - region.spl5m
-fidelity: [fidelity.cortex, fidelity.julich-regions]
+  - layer.swm
+  - tract.slf1
+  - tract.slf2
+  - tract.slf3
+  - tract.vof
+fidelity:
+  - fidelity.cortex
+  - fidelity.julich-regions
+  - fidelity.association-tracts
+  - fidelity.superficial-white-matter
 cutaway: 45
 tissueOpacity: 0.13
 playback:
-  playing: false
+  playing: true
   speed: 70
-  settled: true
+  settled: false
 selection:
   selected: region.mt
-  emphasized: [region.v3d, region.v3a, region.v6, region.mt, region.hip1, region.hip2, region.hip3, region.hip4, region.hip5, region.hip6, region.hip7, region.hip8, region.spl7a, region.spl7p, region.spl5l, region.spl5m]
+  emphasized: [region.v3d, region.v3a, region.v6, region.mt, region.hip1, region.hip2, region.hip3, region.hip4, region.hip5, region.hip6, region.hip7, region.hip8, region.spl7a, region.spl7p, region.spl5l, region.spl5m, tract.slf1, tract.slf2, tract.slf3, tract.vof]
   strength: 0.84
 controls:
   mode: look
@@ -498,17 +532,18 @@ spatial memory. Those extended routes are outside the anatomy claimed by this le
 > dysfunction, as in optic ataxia.
 
 > **Model boundary:** The displayed MT/V5, V3A, V6, intraparietal, and superior parietal
-> shells do not show motion responses, coordinate frames, computations, or connections.
-> Their grouping is a teaching framework supported by converging evidence, not a claim
-> that every shell has one exclusive function.
+> shells do not show motion responses or computations. The SLF I–III and VOF contours
+> do not establish exact endpoints among these shells or one exclusive function.
+> Long-tract events sample a disclosed 50/50 direction assumption; broad U-fibre grain
+> is not endpoint-filtered and uses zero-mean vibration. Both motions are illustrative.
 
 ```atlas-scene
 id: streams-integrate
 title: Perception and action depend on interacting streams
 visual: atlas
 camera:
-  position: [170, 58, 140]
-  target: [0, 0, 0]
+  position: [198, 59, 169]
+  target: [2, -8, 7]
   transition: { kind: ease, durationMs: 900 }
 show:
   - layer.cortex
@@ -521,16 +556,24 @@ show:
   - region.v6
   - region.hip1
   - region.spl7a
-fidelity: [fidelity.cortex, fidelity.julich-regions]
+  - layer.swm
+  - tract.ilf
+  - tract.slf2
+  - tract.vof
+fidelity:
+  - fidelity.cortex
+  - fidelity.julich-regions
+  - fidelity.association-tracts
+  - fidelity.superficial-white-matter
 cutaway: 40
 tissueOpacity: 0.14
 playback:
-  playing: false
+  playing: true
   speed: 70
-  settled: true
+  settled: false
 selection:
   selected: null
-  emphasized: [region.v1, region.v2, region.v4v, region.loa, region.fg2, region.mt, region.v6, region.hip1, region.spl7a]
+  emphasized: [region.v1, region.v2, region.v4v, region.loa, region.fg2, region.mt, region.v6, region.hip1, region.spl7a, tract.ilf, tract.slf2, tract.vof]
   strength: 0.76
 controls:
   mode: look
@@ -563,7 +606,9 @@ branched, recurrent networks whose specializations are real but incomplete.
 > or early cortical processing, the ventral stream, and the dorsal stream. Then explain
 > why failure at one stage cannot always be localized from behavior alone.
 
-> **Model boundary:** This view juxtaposes representative cortical territories so they
-> can be compared. It does not display their connections, information flow, functional
-> selectivity, or independence. No connecting tracts are shown; spatial proximity must
-> not be read as evidence of a connection or processing route.
+> **Model boundary:** This view juxtaposes representative cortical territories with
+> ILF, SLF II, and VOF bundle-scale context. Their simultaneous display does not
+> establish exact region-to-region connections, information flow, functional
+> selectivity, or independence. Long-tract events use the disclosed 50/50 direction
+> assumption; broad U-fibre grain is not endpoint-filtered and uses zero-mean
+> vibration. Spatial proximity and illustrative motion are not evidence of a route.
