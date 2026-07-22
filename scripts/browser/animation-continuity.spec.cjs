@@ -8,9 +8,9 @@ const PLAYING_VIEWS = [
   { index: 2, id: 'optic-radiation', optic: true },
   { index: 3, id: 'v1-arrival', optic: true },
   { index: 4, id: 'extrastriate-branching', association: true, swm: true, groups: ['vof:L', 'vof:R'] },
-  { index: 5, id: 'ventral-stream', association: true, swm: true, groups: ['ifof:L', 'ifof:R', 'ilf:L', 'ilf:R', 'vof:L', 'vof:R'] },
-  { index: 6, id: 'dorsal-stream', association: true, swm: true, groups: ['slf1:L', 'slf1:R', 'slf2:L', 'slf2:R', 'slf3:L', 'slf3:R', 'vof:L', 'vof:R'] },
-  { index: 7, id: 'streams-integrate', association: true, swm: true, groups: ['ilf:L', 'ilf:R', 'slf2:L', 'slf2:R', 'vof:L', 'vof:R'] },
+  { index: 5, id: 'ventral-stream', association: true, swm: true, groups: ['ifof:L', 'ilf:L', 'vof:L'] },
+  { index: 6, id: 'dorsal-stream', association: true, swm: true, groups: ['slf1:L', 'slf2:L', 'slf3:L', 'vof:L'] },
+  { index: 7, id: 'conclusion', anterior: true, optic: true },
 ];
 
 async function ready(page, viewport) {
@@ -45,6 +45,7 @@ async function activitySample(page) {
       let drawn = 0;
       let inFrame = 0;
       let opacity = Infinity;
+      let visibleObjects = 0;
       let colorEnergy = 0;
       const point = new THREE.Vector3();
       for (const object of objects) {
@@ -55,7 +56,10 @@ async function activitySample(page) {
         let effectivelyVisible = true;
         for (let parent = object; parent; parent = parent.parent) effectivelyVisible &&= parent.visible;
         drawn += count;
-        opacity = Math.min(opacity, effectivelyVisible ? (object.material.opacity ?? 1) : 0);
+        if (effectivelyVisible) {
+          visibleObjects++;
+          opacity = Math.min(opacity, object.material.opacity ?? 1);
+        }
         for (let index = 0; index < count; index++) {
           checksum += (index + 1) * (attribute.getX(index) * 0.3 + attribute.getY(index) * 0.5 + attribute.getZ(index) * 0.7);
           if (color) colorEnergy += Math.abs(color.getX(index)) + Math.abs(color.getY(index)) + Math.abs(color.getZ(index));
@@ -65,7 +69,7 @@ async function activitySample(page) {
           if (effectivelyVisible && Math.abs(point.x) <= 1 && Math.abs(point.y) <= 1 && point.z >= -1 && point.z <= 1) inFrame++;
         }
       }
-      return { checksum, drawn, inFrame, opacity, colorEnergy };
+      return { checksum, drawn, inFrame, opacity: visibleObjects ? opacity : 0, colorEnergy };
     };
     const optic = window.__view.activity.opticRadiation;
     const tracerAttribute = optic.points.geometry.attributes.position;
@@ -132,7 +136,7 @@ for (const [label, viewport] of Object.entries({
         expect(after.optic.endpointCaps.drawn).toBeGreaterThan(0);
         expect(after.optic.endpointCaps.inFrame).toBeGreaterThan(0);
         expect(after.optic.endpointCaps.opacity).toBeGreaterThan(0.5);
-        expect(after.optic.nearV1).toBeGreaterThan(0);
+        expect(after.optic.nearV1, `${expected.id} should show an active tracer near V1`).toBeGreaterThan(0);
       }
       if (expected.association) {
         expect(after.association.modelTime).toBeGreaterThan(before.association.modelTime);

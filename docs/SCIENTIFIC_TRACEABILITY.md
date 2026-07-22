@@ -1,12 +1,15 @@
 # Scientific traceability inventory
 
-Status: current-state inventory initiated by `brain-atlas-yum.1` and updated after
-the fibre-space audit `brain-atlas-yum.5` (2026-07-22). This document separates
-anatomical geometry from the viewer's activity and display models.
+Status: current-state core-model inventory initiated by `brain-atlas-yum.1` and
+updated after the fibre-space audit `brain-atlas-yum.5` (2026-07-22). This document
+separates anatomical geometry from the viewer's activity and display models.
+Lesson-specific teaching claims, citations, and curriculum review live under
+[`docs/lessons/`](lessons/); the current reference record is
+[`retina-to-v1-validation.md`](lessons/retina-to-v1-validation.md).
 `DATA_LICENSES.md` remains the authority for redistribution terms and full source
 citations. `public/data/fidelity.json` is the concise runtime/lesson disclosure
-projection of this inventory; update both atomically, and treat this document as the
-current-state authority if they conflict.
+projection of this core inventory; update both atomically, and treat this document as
+the core representation authority if they conflict.
 
 ## Classification vocabulary
 
@@ -109,33 +112,23 @@ not redistributed in this repository.
 A successful record fetch verifies identity and accessible terms/method text; it does
 not retroactively prove undocumented local processing steps.
 
-## Topic-science evidence for the reference lesson
+## Lesson validation records
 
-The checked-in `src/lessons/retina-to-v1.md` uses the sources below for its teaching
-claims. These records support the scientific explanation; they do not upgrade the
-fidelity of any displayed geometry or activity model.
-
-| Lesson claim area | Evidence and scope |
-|---|---|
-| Retinal computation, center-surround organization, and parallel output | [Kuffler 1953](https://doi.org/10.1152/jn.1953.16.1.37) established concentric receptive-field organization in cat retinal ganglion cells. [Masland 2012](https://doi.org/10.1016/j.neuron.2012.10.002) reviews retinal cell-type diversity and parallel transformations; [Dacey 2000](https://doi.org/10.1146/annurev.neuro.23.1.743) reviews primate spectral pathways. Species and review scope must not be collapsed into a claim that every described circuit was measured in humans. |
-| Partial decussation and hemifield organization | [Mason & Erskine 2001](https://doi.org/10.1152/physrev.2001.81.4.1393) reviews optic-chiasm architecture and development. It supports the nasal-crossing/temporal-uncrossed organization taught in prose, not the schematic curve coordinates. |
-| LGN organization and regulated relay | [Sherman & Koch 1986](https://doi.org/10.1007/BF00235642) reviews state-dependent control of retinogeniculate transmission. The lesson describes relay regulation without assigning the viewer's illustrative event parameters to LGN physiology. |
-| Optic-radiation organization and clinical localization | [Maciag et al. 2024](https://doi.org/10.1148/rg.230081) reviews visual-pathway anatomy and radiologic/clinical correlations. Individual fibre course and lesion expression vary; the current tract display does not resolve Meyer's loop or functional lanes. |
-| V1 receptive fields, binocular interaction, and functional architecture | [Hubel & Wiesel 1962](https://doi.org/10.1113/jphysiol.1962.sp006837) reports classic cat V1 physiology. The lesson presents it as foundational animal work rather than direct human single-cell evidence. |
-| Human V1 retinotopy and cortical magnification | [Benson et al. 2012](https://doi.org/10.1016/j.cub.2012.09.014) links human retinotopic organization to cortical surface topology and documents individual variation. The displayed V1 shells do not visualize an individual's functional retinotopic map. |
-| Distributed extrastriate processing and recurrent hierarchy | [Felleman & Van Essen 1991](https://doi.org/10.1093/cercor/1.1.1-a) synthesizes anatomical connections in macaque cortex as a distributed hierarchy with extensive reciprocal and bypass routes. It supports rejecting a simple serial assembly line; the displayed human atlas shells still do not demonstrate those connections. |
-| Draft white-matter context in cortical-stream scenes | Selected VOF, ILF/IFOF, and SLF bundle displays use the HCP-1065 geometry and generic fidelity records listed above; their presence is provisional editorial context, not evidence that highlighted Jülich shells are exact streamline endpoints or that impulses encode the lesson's functions. Long-tract events retain the disclosed evidence-absent 50/50 direction assumption. The broad all-fibre SWM layer is explicitly not endpoint-filtered and uses zero-mean illustrative vibration. `brain-atlas-zmq.10` and `.21` own defensible endpoint mapping and scene-specific pruning before publication. |
-| Ventral-stream object-quality and categorization framework | [Kravitz et al. 2013](https://doi.org/10.1016/j.tics.2012.10.011) reviews the ventral pathway as a recurrent occipitotemporal network for object quality with multiple outputs. [Grill-Spector & Weiner 2014](https://doi.org/10.1038/nrn3747) reviews the spatially organized functional architecture of human ventral temporal cortex. Neither source licenses one-region/one-category assignments to the displayed Jülich shells. |
-| Dorsal-stream motion, spatial, and visuomotor framework | [Born & Bradley 2005](https://doi.org/10.1146/annurev.neuro.26.041002.131052) reviews motion and disparity processing in primate MT. [Kravitz et al. 2011](https://doi.org/10.1038/nrn3008) reviews the dorsal stream as multiple visuospatial pathways rather than one “where” chain. The current scene groups territories but does not display route connectivity or functional responses. |
-| Perception/action distinction and stream interaction | [Goodale & Milner 1992](https://doi.org/10.1016/0166-2236(92)90344-8) proposed a ventral perception/dorsal action distinction from neuropsychological, behavioral, and physiological evidence. The lesson treats this as a useful functional bias within interacting networks, not an absolute behavioral or anatomical dissociation. |
+Lesson teaching claims and curriculum review are intentionally separate from this core
+model inventory. See
+[`docs/lessons/retina-to-v1-validation.md`](lessons/retina-to-v1-validation.md) for
+the checked early-vision lesson's claim evidence, species/method limits, section review,
+and representation dependencies. Citations in that record support prose; representation
+status continues to come from this inventory and `public/data/fidelity.json`.
 
 ## Runtime anatomy-inspector projection
 
 `public/data/entities.json` now carries a strict six-record `inspectables` projection.
 These records do not replace this inventory or `public/data/fidelity.json`: anatomy copy
-and topic citations come from the verified lesson evidence below, while displayed
-geometry/activity status, processing, limitations, dataset sources, licenses, and review
-dates are composed at runtime from each record's canonical owner fidelity. Selection-only
+and topic citations come from the applicable verified content records, including the
+reference lesson validation record linked above, while displayed geometry/activity
+status, processing, limitations, dataset sources, licenses, and review dates are composed
+at runtime from each record's canonical owner fidelity. Selection-only
 landmarks inherit `fidelity.anterior-pathway` through `pathway.anterior` and do not become
 canonical lesson visibility entities.
 
@@ -160,5 +153,5 @@ is added; `brain-atlas-zmq.10` remains the owner of that research and mapping.
 | Uncrossed temporal-retinal pathways are absent from the anterior schematic. | The geometry remains incomplete as a full hemifield projection; the implemented reference lesson explicitly limits its claim to the drawn nasal crossing and states that uncrossed temporal-retinal paths are omitted. | Disclosure completed by `brain-atlas-zmq.5`; replacement geometry is not currently approved. |
 | Directed activity speed is normalized by contour parameter rather than physical distance. | Shorter contours can appear slower in millimetres per display second even though tract length should primarily change latency, not automatically reduce velocity; no universal biological conduction speed is claimed. | `brain-atlas-yum.10`. |
 | Region names imply tract endpoints without reviewed mapping. | Could overstate connectivity. | `brain-atlas-zmq.10`. |
-| Draft cortical-stream scenes show the complete broad SWM layer rather than endpoint-classified subsets. | The 15,000-fibre texture can dominate highlighted anatomy and must not be read as connections among the displayed regions. It may remain in the local Draft prototype, but cannot ship without reproducible endpoint classification, unknown/ambiguous handling, coherent geometry/activity filtering, and tuned scene presets. | `brain-atlas-zmq.21`, now a direct dependency of publication gate `brain-atlas-zmq.26`. |
+| Pre-publication cortical-stream scenes show the complete broad SWM layer rather than endpoint-classified subsets. | The 15,000-fibre texture can dominate highlighted anatomy and must not be read as connections among the displayed regions. It may remain in the local prototype, but cannot ship without reproducible endpoint classification, unknown/ambiguous handling, coherent geometry/activity filtering, and tuned scene presets. | `brain-atlas-zmq.21`, now a direct dependency of publication gate `brain-atlas-zmq.26`. |
 | Atlas uncertainty and model limitations need unobtrusive UI disclosure. | Users cannot inspect confidence/provenance in context. | `brain-atlas-yum.3`. |

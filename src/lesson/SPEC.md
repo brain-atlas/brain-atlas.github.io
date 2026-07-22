@@ -126,8 +126,9 @@ lifecycle badge belongs to the presentation layer.
 | Add a lesson field | Decide whether it is document metadata, scene wrapper data, or renderer snapshot state; update strict schema, normalizer, fixtures, and diagnostics together. Lifecycle fields must not be confused with scientific fidelity. | INV-3, INV-10, INV-13 |
 | Add a renderer control | Add one canonical axis/field and one explicit adapter binding path; never invoke DOM controls. | INV-3, INV-7 |
 | Add an entity | Add a stable prefixed ID and renderer binding; reference an existing reviewed fidelity record or add one from traceability evidence. | INV-4, INV-8 |
-| Add an inspectable | Reuse a canonical entity ID/binding or add a stable selection-only `landmark.*` child with a resolved owner. Add anatomy claims/citations to traceability, keep representation in the inherited fidelity record, and do not add unsupported tract endpoints. | INV-8, INV-14 |
-| Add a scientific claim | Update traceability/citations first, then curated fidelity metadata atomically. | INV-8 |
+| Add an inspectable | Reuse a canonical entity ID/binding or add a stable selection-only `landmark.*` child with a resolved owner. Add runtime anatomy claims/citations to core traceability, keep representation in the inherited fidelity record, and do not add unsupported tract endpoints. | INV-8, INV-14 |
+| Add or revise a lesson teaching claim | Update that lesson's `docs/lessons/*-validation.md` evidence first. Update core traceability and fidelity metadata too only when the displayed representation or its limitation changes. | scientific review |
+| Add or revise a runtime representation claim | Update core traceability/citations first, then curated entity/fidelity metadata atomically. | INV-8 |
 | Add Markdown presentation | Keep source inert here; implement rendering/sanitization in the UI Bead without weakening parser rejection. | INV-1, INV-6 |
 | Change schema version | Add an explicit migration/compatibility decision and tests; do not broaden v1 silently. | INV-10 |
 | Need temporary exploration | Apply pure commands to a cloned state and restore the authored complete snapshot on return. | INV-2, INV-3 |
@@ -161,7 +162,8 @@ Full repository verification remains `npm test && npm run build:publish`.
 | `unified`, `remark-parse`, `remark-frontmatter` | Positioned Markdown/frontmatter AST parsing |
 | `yaml` | Structured YAML parsing and field locations |
 | `ajv` | Development-time strict JSON-schema compilation plus small shipped runtime helpers used by generated standalone validators |
-| `docs/SCIENTIFIC_TRACEABILITY.md` | Current scientific claim/limitation authority |
+| `docs/SCIENTIFIC_TRACEABILITY.md` | Current runtime representation claim/limitation authority |
+| `docs/lessons/*-validation.md` | Per-lesson teaching-claim and curriculum-review authority |
 | `.pi/plans/brain-atlas-zmq.15-lesson-ux-ui-spec.md` | Approved interaction/state behavior |
 | `.pi/plans/brain-atlas-yum.3-model-fidelity-disclosure.md` | Approved scientific representation-status taxonomy and materiality rule; it does not define lesson lifecycle Draft |
 

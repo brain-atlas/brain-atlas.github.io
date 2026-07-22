@@ -36,8 +36,9 @@ that outcome; it is not the outcome.
 
 ## 1. Inspect the project before authoring
 
-Read the applicable `AGENTS.md`, `src/lesson/SPEC.md`, `src/ui/SPEC.md`, scientific
-traceability records, entity and fidelity catalogs, and the current reference tests.
+Read the applicable `AGENTS.md`, `src/lesson/SPEC.md`, `src/ui/SPEC.md`, core
+scientific traceability, the lesson's `docs/lessons/*-validation.md` record, entity and
+fidelity catalogs, and the current reference tests.
 Inspect the rendered lesson and learn the platform's full capabilities before choosing
 how to teach. Use those capabilities deliberately rather than defaulting to the easiest
 scene. Do not infer capabilities from desired prose or bypass a structured contract with
@@ -114,6 +115,9 @@ Then apply these rules:
   comprehension depend on catching one unrecoverable animation.
 - State a model boundary at the point where a plausible but unsupported inference
   could arise. Do not repeat implementation disclaimers that add no new protection.
+- A Markdown thematic break may mark a candidate future lesson split when one authored
+  scene must temporarily carry two conceptual segments. It does not create scene
+  semantics or excuse an incoherent view; record the deferred split in the lesson Bead.
 
 ### Compose each 3D view like instructional photography
 
@@ -178,7 +182,8 @@ Use `src/lessons/retina-to-v1.md` as the reference example:
   endpoint regions so arriving events remain visible; and
 - cortical-stream views fit highlighted atlas regions and selected named tracts while
   excluding cortex and broad SWM from framing calculations. The current all-fibre SWM
-  display is a Draft prototype pending endpoint-based pruning, not a publication model.
+  display is a pre-publication prototype pending endpoint-based pruning, not a
+  publication model.
 
 For any materially revised shot, record the teaching-geometry set, authored camera and
 target, projected wide/compact bounds, clipping result, motion visibility, and a visual
@@ -221,10 +226,13 @@ systematic reviews, authoritative atlases, and stable public sources. Check that
 source supports the exact claim being made and that species, method, and population
 limits are explicit.
 
-Keep citations and provenance in the repository-approved location. Do not duplicate
-technical source lists into lesson prose when curated fidelity or traceability records
-own them. Offer public further-study resources only when the lesson contract permits
-them and they add learning value.
+Every checked lesson has a `docs/lessons/<lesson-id>-validation.md` record for its
+teaching claims, scientific citations, species/method limits, and section-level review.
+Core runtime geometry, activity, datasets, transforms, and display limitations remain in
+`docs/SCIENTIFIC_TRACEABILITY.md` and the curated entity/fidelity records. Cross-link the
+two when lesson interpretation depends on the displayed representation. Do not duplicate
+technical source lists into lesson prose. Offer public further-study resources only when
+the lesson contract permits them and they add learning value.
 
 Every presented scene in a locally opened lesson must reference at least one curated
 fidelity record so **Model & sources** remains complete; unknown or empty disclosure
@@ -238,8 +246,9 @@ For every scene, ask:
 - Does the scene preserve relevant variability and uncertainty?
 - What could a reasonable learner wrongly infer from this view?
 
-Update scientific traceability and curated fidelity records atomically when a visual
-claim or limitation changes.
+Update the lesson validation record whenever teaching prose changes a scientific claim.
+Update core scientific traceability and curated fidelity records atomically when a
+visual/model claim or limitation changes.
 
 ## 8. Design for access and learner control
 
@@ -248,6 +257,8 @@ Meet the project accessibility contract and WCAG 2.2. In particular:
 - provide equivalent text for meaningful non-text content; for declared supplementary
   images, supply accurate alt text, caption, credit, source URL, and aspect ratio, keep
   sources credential-free HTTPS, and make the lesson intelligible if the image fails;
+  v1 does not accept packaged repository-local image paths, so do not add a committed
+  lesson's external media dependency without reviewing source stability and license;
 - provide captions and a transcript for narration, and audio description or an
   equivalent text account when visual action carries meaning;
 - preserve meaningful reading and focus order;
@@ -271,11 +282,12 @@ Review the lesson in four separate passes:
 
 Run the focused contract/content tests, full repository tests, publication build, and
 the required browser matrix. Also stage the authored Markdown through header **Open
-lesson**: confirm the preview's title, Draft state, counts, and external hosts before
+lesson**: confirm the preview's title, lifecycle state, counts, and external hosts before
 activation; confirm validation makes no image request; then inspect atlas/image selection,
 wide split, compact single-visual, no-WebGL, and image-failure/retry paths. Inspect every
 scene rather than treating a successful parser or screenshot as evidence of learning
-quality. Keep draft status until the project's explicit human review gate is satisfied.
+quality. Keep `status: draft` until the project's explicit human review gate is satisfied;
+after approval, omit it because v1 absence makes no trusted reviewed/published claim.
 
 ## 10. Conduct the post-authoring retrospective
 

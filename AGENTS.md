@@ -82,7 +82,8 @@ their proper artifacts:
 | `docs/ARCHITECTURE.md` and subsystem `SPEC.md` files | Current implemented structure, interfaces, invariants, and failure modes. Label future opportunities as future work. |
 | `docs/FUTURE_FEATURES.md` | Researched ideas that are not committed work. Move actionable work into Beads. |
 | `AGENTS.md` | Durable contributor rules, scientific invariants, and repository workflow. Do not use it as a backlog. |
-| Public traceability records and `DATA_LICENSES.md` | Scientific claims, geometry and behavior provenance, derivations, assumptions, uncertainty, citations, and data terms. |
+| Core public traceability records and `DATA_LICENSES.md` | Runtime geometry and behavior claims, provenance, derivations, assumptions, uncertainty, dataset/method citations, and data terms. |
+| `docs/lessons/*-validation.md` | Lesson-specific teaching claims, scientific citations and evidence limits, pedagogical/scientific review, representation dependencies, and validation dates. |
 | `CITATION.cff` | The software citation for the released viewer. |
 | `THIRD_PARTY_NOTICES.md` | Notices for shipped third-party software and models. |
 
@@ -99,7 +100,8 @@ Review documentation impact whenever behavior or evidence changes:
 |---|---|
 | User-visible behavior, controls, accessibility, or limitations | `README.md` or user documentation; keep screenshots and examples truthful. |
 | Runtime architecture, state ownership, interfaces, or technical invariants | `docs/ARCHITECTURE.md` and the nearest `SPEC.md`; update `AGENTS.md` when the contributor rule itself changes. |
-| Scientific representation, label, teaching claim, activity model, or disclosed limitation | Public traceability records and entity/model metadata; update public copy and `AGENTS.md` when its honesty rules change. |
+| Scientific representation, label, activity model, or disclosed model limitation | Core public traceability records and entity/model metadata; update public copy and `AGENTS.md` when its honesty rules change. |
+| Lesson teaching claim, clinical explanation, historical statement, learning sequence, or curriculum limitation | The lesson's `docs/lessons/*-validation.md` record; also update core traceability/fidelity metadata only when the displayed representation or its limitation changes. |
 | Dataset, asset, atlas/template version, generator, transform, mirroring, derivation, or data license | `DATA_LICENSES.md`, traceability records, source/generator metadata, and the `README.md` source summary. |
 | Shipped dependency, model, or license | Lockfiles and `THIRD_PARTY_NOTICES.md`; revisit security documentation when the trust boundary changes. |
 | Release title, version, authorship, repository URL, or public URL | `CITATION.cff` and matching public documentation. |
@@ -111,8 +113,10 @@ changing them; do not copy an unverified citation from a plan or model output.
 Record versions, stable URLs or DOIs, licenses, transformations, generator/source
 paths, assumptions, uncertainty, and known limitations. Never infer provenance
 from a filename. A scientific claim needs a citation or an explicit evidence gap;
-do not guess. Change data/model behavior and its provenance, citations, and
-user-visible disclosure together.
+do not guess. Keep lesson claim validation separate from core model/asset
+traceability, and cross-link them where a lesson depends on a representation.
+Change data/model behavior and its provenance, citations, and user-visible
+disclosure together.
 
 Before closing a change Bead:
 
@@ -125,9 +129,9 @@ Before closing a change Bead:
    than leaving two apparently authoritative designs; and
 5. record the documentation and verification evidence in the Bead.
 
-See `.pi/plans/README.md` for the design-document lifecycle. The scientific
-inventory being developed under the fidelity work owns detailed claim-level
-traceability; do not duplicate that inventory in `AGENTS.md`.
+See `.pi/plans/README.md` for the design-document lifecycle. Core scientific
+inventories and per-lesson validation records own their respective claim-level
+evidence; do not duplicate those inventories in `AGENTS.md`.
 
 ## Offline data pipeline (heavy generation is NOT in the app)
 Meshing and tractography run offline and emit small JSON/OBJ/GLB into

@@ -159,7 +159,7 @@ remain separate in `public/data/fidelity.json`. See
 The app opens in the complete exploratory Atlas, not inside a lesson. The retained Viewer
 controls provide orbit, zoom, pan, hemispheres, layers, cutaway, tissue, and activity over
 the one canonical global-atlas snapshot. **Lessons** opens a responsive drawer with the
-checked Draft lesson and local Markdown entry. Starting a lesson preserves the actual Atlas
+checked reference lesson and local Markdown entry. Starting a lesson preserves the actual Atlas
 camera and filters. From a lesson, **Back to atlas**, the brand link, browser Back, and
 **Explore this scene** all open Atlas from the lesson’s current rendered camera and complete
 filters. Compact **Return to lesson** and **Exit lesson** actions distinguish temporary
@@ -172,18 +172,23 @@ overlap. Individual stochastic particles are not serialized. A compact Atlas mov
 camera uniformly away from the same target to keep the complete brain framed; anatomy,
 canvas scale, and the MNI transform remain uniform.
 
-The shipped early-vision reference lesson lives at `src/lessons/retina-to-v1.md` and remains
-**[DRAFT]** pending the dedicated scientific and pedagogical content review in
-`brain-atlas-zmq.25`. `src/bootstrap.js` parses it through this same contract and
-renders the lifecycle label in the document title, lesson header, and introduction,
-including no-WebGL mode, without HTML-string injection. An unnumbered topic entry view
-filters the atlas to the relevant visual-system structures before scrolling activates
-eight instructional scenes spanning retinal processing through interacting ventral and
-dorsal cortical streams. The LGN scene uses an authored LGN-dominant oblique view that
-keeps schematic incoming context plus the optic-radiation path and V1 destination in
-frame; both optic-radiation scenes retain directed LGN→V1 motion. The four
-cortical-stream scenes currently add selected named bundles and the broad SWM/U-fibre
-layer as a **Draft prototype**: long-tract impulses use the disclosed
+The shipped **Early Vision: Retina to the Cortical Streams** reference lesson lives at
+`src/lessons/retina-to-v1.md`. Its scientific evidence, section-level curriculum review,
+and representation dependencies are recorded separately in
+[`docs/lessons/retina-to-v1-validation.md`](docs/lessons/retina-to-v1-validation.md).
+The optional Draft marker was removed after explicit human review; under v1, absence of
+`status` makes no machine-readable reviewed or published claim. `src/bootstrap.js` parses
+the lesson through the same contract used for local content. An unnumbered topic entry
+view filters the atlas to the relevant visual-system structures before scrolling
+activates eight instructional scenes centered on retina-to-V1 processing, followed by
+brief ventral/dorsal previews and an early-vision conclusion that reprises the opening
+pathway and lesion prediction. The LGN scene uses an authored LGN-dominant oblique
+view that keeps schematic incoming context plus the optic-radiation path and V1
+destination in frame. The optic-radiation, V1, ventral, and dorsal scenes use a
+centered half-shell cortical cut and hide right-hemisphere objects to reduce duplicate visual load;
+directed LGN→V1 motion remains visible on the independently derived left contours. The
+three cortical preview scenes currently add selected named bundles and the broad SWM/U-
+fibre layer as a **pre-publication prototype**: long-tract impulses use the disclosed
 50/50 direction assumption, SWM uses zero-mean vibration, and neither display proves
 exact endpoints among the highlighted regions. Endpoint-classified scene pruning under
 `brain-atlas-zmq.21` must replace the broad SWM prototype before publication.
@@ -234,12 +239,13 @@ the same controller and renderer adapter. It does not upload, save, or persist t
 and reload returns to Atlas without restoring local source. Declared HTTPS supplementary images begin
 loading only after opening. They remain semantic DOM figures—not WebGL textures—with alt
 text, caption, credit, source link, no-referrer loading, and an accessible retry state.
-Scripts, styles, frames, raw HTML, unsafe URL schemes, arbitrary fetches, and undeclared
-images remain forbidden.
+V1 accepts credential-free HTTPS image sources only; packaged repository-relative lesson
+images are not yet part of the contract. Scripts, styles, frames, raw HTML, unsafe URL
+schemes, arbitrary fetches, and undeclared images remain forbidden.
 
 ## Controls
 
-Use **Lessons** to start/resume the checked Draft lesson or open the local workflow. Use
+Use **Lessons** to start/resume the checked reference lesson or open the local workflow. Use
 **Open lesson** directly to stage local Markdown by paste or `.md` file, correct positioned
 validation errors without losing the active lesson, review the preview/privacy summary,
 and explicitly activate it. Scroll or use Previous/Next to activate a scene. The reference lesson omits Restart

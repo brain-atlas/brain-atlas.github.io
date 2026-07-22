@@ -1,36 +1,36 @@
 ---
-title: "Early vision: from retina to cortical streams"
+title: "Early Vision: Retina to the Cortical Streams"
 schema: 1
-status: draft
 entryScene: orientation
 summary: Explain how early visual signals are transformed from retinal circuits through V1 into interacting ventral and dorsal cortical streams.
 ---
 
-# Early vision: from retina to cortical streams
+# Early Vision: Retina to the Cortical Streams
 
-Early vision is not a camera feeding a picture into the brain. At each stage, neural
-circuits select, reorganize, and transform information. The pathway's anatomy makes one
-of its central organizing principles visible: after the optic chiasm, signals are
-grouped by **visual hemifield**, not by eye.
+Early vision is not a camera feeding a complete picture into the brain. At each
+stage, neural circuits select, reorganize, and transform information. The pathway's
+anatomy makes one central organizing principle visible: after the optic chiasm,
+signals are grouped by **visual hemifield**, not by eye.
 
-> **Predict before you begin:** A patient loses the left half of visual space in both
-> eyes. Is the damaged site more likely to be before or after the optic chiasm, and on
-> which side of the brain? Commit to an answer and return to it in scene 4.
+> **Predict before you begin:** A patient loses the left half of visual space in
+> both eyes. Is the damaged site more likely to be before or after the optic
+> chiasm, and on which side of the brain? Commit to an answer and return to it
+> in scene 4.
 
 By the end of eight scenes, you should be able to:
 
 1. trace either visual hemifield through both retinas to the opposite LGN and V1;
 2. distinguish what the retina, LGN, optic radiation, and V1 contribute;
 3. predict characteristic visual-field loss from lesions at different pathway levels;
-4. explain the different computational biases of the ventral and dorsal streams; and
-5. explain why the two-stream framework describes interacting networks rather than two
-   isolated one-way pipelines, while separating biological claims from modeled display.
+4. summarize the downstream biases of the ventral and dorsal streams without treating
+   them as isolated pathways; and
+5. distinguish biological claims from schematic anatomy and illustrative activity.
 
-The core sequence begins **retina → optic nerve → optic chiasm → optic tract → LGN →
-optic radiation → V1**, then expands through recurrent extrastriate networks toward
-ventral occipitotemporal and dorsal occipitoparietal cortex. Keep your own left and
-right separate from the patient's left and right, and remember that a retinal image is
-reversed across both horizontal and vertical axes.
+The core processing sequence in this lesson is **retina → optic nerve → optic
+chiasm → optic tract → LGN → optic radiation → V1 → V2/V3**. The final cortical
+scenes briefly preview downstream ventral and dorsal processing. Keep your own left
+and right separate from the patient's left and right, and remember that a retinal
+image is reversed across both horizontal and vertical axes.
 
 ```atlas-scene
 id: orientation
@@ -66,12 +66,14 @@ controls:
 layout: dominant
 ```
 
-## Organize the early visual system
+## Organization of the early visual system
 
-Begin with the whole system: paired eyes and optic nerves converge at the chiasm;
-post-chiasmal projections reach the paired LGN in the thalamus; optic radiations fan
-posteriorly toward V1 around the calcarine sulcus. The pathway carries an orderly map
-of visual space while changing how the information is encoded.
+Signals from the two eyes travel through paired optic nerves and meet at the optic
+chiasm. After partial crossing, each optic tract carries the opposite visual hemifield
+from both eyes to the LGN on the same side of the brain. The optic radiation then
+continues from each LGN to V1 in that hemisphere, around the calcarine sulcus. Along
+this route, the system preserves an orderly map of visual space while transforming how
+the information is encoded.
 
 ```atlas-scene
 id: nasal-crossing
@@ -106,32 +108,35 @@ cells compare signals across space and time; retinal ganglion cells then send ac
 potentials through the optic nerve. The output is not a pixel-for-pixel copy of the
 image but a set of parallel neural descriptions.
 
-One foundational description is the **center-surround receptive field**. ON-center and
-OFF-center pathways respond differently to local increments and decrements in light.
-Because center and surround oppose one another, a ganglion cell emphasizes local
-contrast more than uniform illumination. Other ganglion-cell types carry different
+Many retinal ganglion cells have a **center-surround receptive field**: light in a
+central region and light in the surrounding ring drive the cell in opposite directions.
+For an ON-center cell, light in the center increases activity while light in the
+surround suppresses it; an OFF-center cell shows the reverse pattern. Uniform light
+activates both regions and partly cancels, whereas an edge or local contrast can drive
+one region more strongly than the other. Other ganglion-cell types carry different
 combinations of spatial, temporal, color, and motion-related information.
+
+---
 
 Partial crossing at the optic chiasm then reorganizes those parallel signals:
 
-- The **left visual hemifield** falls on the nasal retina of the left eye and temporal
-  retina of the right eye. The nasal fibres cross; the temporal fibres do not. Both
-  components therefore enter the **right optic tract**.
-- The **right visual hemifield** reaches the nasal retina of the right eye and temporal
-  retina of the left eye, then converges in the **left optic tract**.
+- The **left visual hemifield** falls on the nasal (medial) retina of the left eye and
+  the temporal (lateral) retina of the right eye. The nasal fibres cross; the temporal
+  fibres do not. Both components therefore enter the **right optic tract**.
+- The **right visual hemifield** reaches the nasal retina of the right eye and the
+  temporal retina of the left eye, then converges in the **left optic tract**.
 
-This yields a useful rule: each optic nerve represents one eye, whereas each optic
+This yields a useful mapping: each optic nerve represents one eye, whereas each optic
 tract represents the opposite visual hemifield from both eyes.
 
 > **Check your model:** Covering one eye removes input from one optic nerve. Damage to
-> one optic tract instead removes the same visual hemifield from both eyes. Explain why
-> before continuing.
+> one optic tract instead removes the same visual hemifield from both eyes. Why?
 
-> **Model boundary:** In the current schematic, only the nasal-retinal paths are drawn.
-> The uncrossed temporal-retinal pathways are biologically present but
-> omitted, so this is **not a complete depiction** of either eye's projection or both
-> hemifields. Moving dots show direction along the represented teaching path; their
-> spacing and speed are illustrative.
+> **Scene limitations and boundaries:** In the current schematic, only the
+> nasal-retinal paths are drawn. The uncrossed temporal-retinal pathways are
+> biologically present but omitted, so this is **not a complete depiction** of either
+> eye's projection or both hemifields. Moving dots show direction along the represented
+> path; their spacing and speed are illustrative.
 
 ```atlas-scene
 id: lgn-relay
@@ -164,33 +169,40 @@ layout: detail
 
 ## The LGN preserves maps while regulating transmission
 
-Each lateral geniculate nucleus (LGN) represents the **contralateral visual hemifield**
-using input from both eyes. Retinotopic order is preserved: neighboring locations in
-visual space remain systematically related within the LGN. Inputs from the two eyes do
-not simply blend. In primates, the six principal layers keep eye-of-origin and major
-signal classes substantially segregated, with koniocellular zones between them.
+Each lateral geniculate nucleus (LGN) represents the **contralateral visual
+hemifield** using input from both eyes. Retinotopic order is preserved: neighboring
+locations in visual space remain systematically related within the LGN. Input from
+the two eyes is kept largely separate across the six principal layers rather than
+blended into one undifferentiated signal.
 
-The familiar magnocellular, parvocellular, and koniocellular streams emphasize
-different—but interacting—features:
+Three parallel channel families also remain distinguishable as they pass through the
+LGN:
 
-- magnocellular pathways are especially sensitive to rapid luminance changes and low
-  contrast;
-- parvocellular pathways support fine spatial detail and red-green opponent signals;
-- koniocellular pathways are heterogeneous and include blue-yellow opponent signals.
+- **Magnocellular (M)** pathways are especially sensitive to rapid luminance changes
+  and low contrast. They favor temporal resolution over fine spatial detail.
+- **Parvocellular (P)** pathways preserve finer spatial detail and carry important
+  red-green opponent signals. They respond well to more sustained patterns.
+- **Koniocellular (K)** neurons occupy thinner zones between the principal layers.
+  They are a varied group: some carry short-wavelength, blue-yellow opponent signals,
+  but the K pathway is not one uniform color channel.
 
-Calling the LGN a *relay* should not imply a passive cable junction. Retinal drive is
-shaped by local inhibition, brainstem state signals, and extensive feedback from visual
-cortex. These influences can regulate which signals are transmitted and when, while
-the LGN preserves the spatial organization needed by cortex.
+These channels interact, and none maps by itself onto a complete percept such as
+“motion,” “form,” or “color.” Instead, they preserve complementary descriptions that
+cortex can compare and recombine.
 
-> **Retrieval check:** Without rereading scene 1, explain how one LGN can receive input
-> from both eyes while representing only one visual hemifield.
+Although the LGN acts as a *relay*, it is not a passive junction. Local inhibition,
+brainstem state signals, and feedback from visual cortex shape retinal drive. The LGN
+can therefore regulate which retinal signals are transmitted and when while preserving
+the spatial organization needed by cortex.
 
-> **Model boundary:** This view keeps the population-atlas LGN source, optic-radiation
-> trajectory, and V1 destination in frame while retaining schematic incoming context.
-> It does not resolve LGN layers, parallel channels, synapses, or measured firing. The
-> anterior segment is schematic, optic-radiation geometry is population tractography
-> with a mirrored right side, and all displayed timing is illustrative.
+> **Retrieval check:** Without rereading scene 1, explain how one LGN can receive
+> input from both eyes while representing only one visual hemifield.
+
+> **Scene limitations and boundaries:** This view keeps incoming schematic pathway
+> context, the population-atlas LGN source, the optic-radiation trajectory, and the V1
+> destination in frame. It does not resolve LGN layers, parallel channels, synapses, or
+> measured firing. The anterior segment is schematic, the right optic radiation is
+> mirrored from the left, and all displayed timing is illustrative.
 
 ```atlas-scene
 id: optic-radiation
@@ -202,7 +214,9 @@ camera:
   transition: { kind: ease, durationMs: 900 }
 show: [layer.cortex, pathway.optic-radiation, region.lgn, region.v1]
 fidelity: [fidelity.julich-regions, fidelity.optic-radiation]
-cutaway: 58
+hemispheres:
+  global: { L: true, R: false }
+cutaway: 50
 tissueOpacity: 0.12
 playback:
   playing: true
@@ -222,29 +236,32 @@ layout: dominant
 LGN relay-cell axons travel through the retrolenticular internal capsule and fan out as
 the optic radiation toward V1. The projection is topographic rather than randomly
 wired: relative positions in the visual field remain systematically organized along
-the route and at the cortical destination.
+the route and at the destination.
 
-Its broad clinical organization turns visual-field loss into a localization tool.
-Fibres representing the **upper visual field** arise from inferior retina and sweep
-anteriorly through the temporal lobe in Meyer's loop before reaching the lower bank of
-the calcarine sulcus. Fibres representing the **lower visual field** take a more
-superior parietal course to the upper bank.
+Because upper- and lower-field fibres take different routes, the pattern of visual-field
+loss can help localize a lesion. Fibres representing the **upper visual field** arise
+from inferior retina and sweep anteriorly through the temporal lobe in Meyer's loop
+before reaching the lower bank of the calcarine sulcus. Fibres representing the
+**lower visual field** arise from superior retina and take a more direct parietal route
+to the upper bank. This scene shows the left pathway for clarity, but the organization
+occurs on both sides.
 
-> **Predict, then check:** What would selective damage to the right temporal optic
-> radiation remove? It should produce a **left superior quadrantanopia** in both eyes:
-> loss of the upper-left quarter of visual space. A larger right post-chiasmal lesion
-> can remove the entire left hemifield.
+> **Predict, then check:** What would selective damage to the right temporal-lobe optic
+> radiation in Meyer's loop most likely remove? It would most likely produce a **left
+> superior quadrantanopia** in both eyes: loss of the upper-left quarter of visual space.
+> A larger right post-chiasmal lesion could remove the entire left hemifield.
 
-The lesion rule is powerful but not perfectly geometric in individual patients.
-Fibre trajectories vary, lesions cross pathway boundaries, and field defects can be
-incomplete or incongruent.
+This organization is not perfectly geometric in individual patients. Fibre trajectories
+vary, and lesions can cross pathway boundaries, so field defects may be incomplete or
+less congruent than this idealized model predicts.
 
-> **Model boundary:** The displayed streamlines show the gross LGN-to-V1 projection,
-> not separate retinotopic lanes or a patient-specific Meyer's loop. The left-side
-> contours are derived from population HCP-1065 tractography; the displayed right side is mirrored
-> rather than independently tracked. Bright events move in the
-> supported LGN-to-V1 direction, but their rates, bursts, speed, and **timing are
-> illustrative**—they are **not recorded spikes** or measured physiology.
+> **Scene boundaries and limitations:** The displayed streamlines show the gross
+> LGN-to-V1 projection, not separate retinotopic lanes or a patient-specific Meyer's
+> loop. This scene shows only the left contours derived from population HCP-1065
+> tractography; elsewhere in the atlas, the right side is mirrored from the left and is
+> hidden here. Bright events move in the biologically supported LGN-to-V1 direction, but
+> their rates, bursts, speed, and **timing are illustrative**---they are **not recorded
+> spikes** or measured physiology.
 
 ```atlas-scene
 id: v1-arrival
@@ -256,7 +273,9 @@ camera:
   transition: { kind: ease, durationMs: 900 }
 show: [layer.cortex, pathway.optic-radiation, region.lgn, region.v1]
 fidelity: [fidelity.julich-regions, fidelity.optic-radiation]
-cutaway: 38
+hemispheres:
+  global: { L: true, R: false }
+cutaway: 50
 tissueOpacity: 0.16
 playback:
   playing: true
@@ -273,46 +292,46 @@ layout: detail
 
 ## V1 builds a cortical map of local visual structure
 
-The optic radiation terminates primarily in layer 4 of primary visual cortex (V1),
-which lies largely along the calcarine sulcus. Each V1 represents the opposite visual
-hemifield. The map is **retinotopic**, but it is not scaled like the retinal image:
-central vision receives disproportionately large cortical territory, a property called
+The optic radiation terminates mainly in the input layers of primary visual cortex
+(V1), which lies largely along the calcarine sulcus. Each V1 represents the opposite
+visual hemifield. This map is strongly **retinotopic**: neighboring points in visual
+space map to neighboring cortical locations.
+
+Retinotopy does not mean that every part of the field receives equal cortical space.
+Central vision occupies disproportionately large territory because many more neurons
+process the region around the point of gaze. This unequal scaling is called
 **cortical magnification**.
 
-V1 also transforms the representation. Many neurons respond selectively to local
-features such as edge orientation, spatial scale, position, motion direction, or input
-from the two eyes. These selectivities arise within layered feedforward circuits and
-are reshaped by local recurrence and feedback. V1 is therefore neither a passive
-screen nor the place where visual perception is completed; it supplies structured
-representations to a larger recurrent network of visual areas.
+V1 also changes what the activity represents. Its neurons compare local inputs and
+become selective for features such as edge orientation, spatial scale, position,
+motion direction, and signals from the two eyes. Feedforward input, local circuitry,
+and feedback all shape these responses. As with the LGN, V1 is neither a passive
+screen nor the endpoint of perception. It continues to structure and refine signals
+for a larger recurrent network.
 
-Classic physiology made these ideas experimentally concrete. Stephen Kuffler mapped
-center-surround retinal receptive fields using spots of light. David Hubel and Torsten
-Wiesel then showed how neurons in cat visual cortex respond to oriented
-contours and are organized across cortex. Human lesion maps and modern functional MRI
-connect that cellular work to the retinotopic organization of human V1.
+Animal physiology established many of these cellular principles. Hubel and Wiesel
+showed that neurons in cat V1 respond selectively to oriented contours. Human lesion
+studies and functional MRI connect that foundational work to the retinotopic
+organization of human V1.
 
-> **Checkpoint:** Close your eyes or look away and reconstruct the pathway to V1. At
-> each arrow, name what is preserved and what changes: retinal encoding → hemifield
-> regrouping → thalamic organization and regulation → topographic white-matter
-> projection → cortical mapping and feature selectivity.
+> **Checkpoint:** Without looking back, reconstruct the pathway to V1. At each step,
+> name what is preserved and what changes: retinal encoding → hemifield regrouping →
+> thalamic organization and regulation → topographic white-matter projection →
+> cortical mapping and local feature selectivity.
 
-Return to the opening case. Loss of the **left visual hemifield in both eyes** is a
-left homonymous hemianopia. It localizes **after the chiasm on the right**—for example,
-the right optic tract, LGN, optic radiation, or V1—because those structures represent
-the left side of visual space from both eyes.
-
-Use the same model to distinguish four lesion patterns:
+Return to the opening prediction. Loss of the **left visual hemifield in both eyes** is
+a left homonymous hemianopia. It localizes **after the chiasm on the right** because
+the right optic tract, LGN, optic radiation, and V1 each represent the left side of
+visual space from both eyes. The same model distinguishes four common lesion patterns:
 
 1. one optic nerve → monocular visual loss in that eye;
 2. central optic chiasm → preferential loss of both temporal visual fields;
 3. one post-chiasmal pathway → contralateral homonymous visual-field loss;
-4. temporal optic radiation → contralateral superior quadrantanopia.
+4. temporal-lobe optic radiation → contralateral superior quadrantanopia.
 
-> **Model boundary:** The V1 shells are population-atlas boundaries, not an
-> individual's cortex or a map of eccentricity, polar angle, layers, columns, or cell
-> responses. The right optic-radiation geometry remains mirrored, and displayed event
-> timing remains illustrative rather than measured physiology.
+> **Scene boundaries and limitations:** The V1 shells are population-atlas boundaries,
+> not an individual's cortex or a map of eccentricity, polar angle, layers, columns, or
+> cell responses. Event timing remains illustrative rather than measured physiology.
 
 ```atlas-scene
 id: extrastriate-branching
@@ -356,28 +375,31 @@ layout: dominant
 
 ## Extrastriate cortex expands the computation
 
-V1 is an entrance to cortical vision, not its endpoint. Signals reach V2 and other
-extrastriate areas through multiple feedforward routes, while extensive lateral and
-feedback connections send information in the opposite direction. The result is a
-distributed recurrent network, not a single assembly line.
+Visual signals do not move through one fixed sequence of cortical areas. Multiple
+feedforward routes carry signals into extrastriate cortex, while lateral and feedback
+connections return information to earlier areas. The result is a distributed recurrent
+network rather than a simple processing chain.
 
-Many early extrastriate areas retain maps of visual space while combining information
-over larger regions and becoming selective for different mixtures of form, color,
-depth, and motion. V2 participates in both major streams. Ventral subdivisions of V3
-and V4 lie toward occipitotemporal cortex; dorsal V3, V3A, V6, and MT/V5 contribute to
-occipitoparietal processing. These are graded biases and overlapping routes, not a
-clean fork at one anatomical point.
+Many extrastriate areas preserve a map of visual space while combining information over
+larger portions of the field. Their specializations form overlapping, graded biases
+rather than a clean fork. V2 and parts of V3 contribute to multiple routes. Ventral
+regions become increasingly useful for analyzing form and surface properties, while
+areas such as V3A, V6, and MT/V5 contribute to motion, depth, and spatial processing in
+dorsal networks.
 
 > **Self-explanation:** Why would a visual system preserve retinotopic position while
 > also building neurons that combine information across progressively larger portions
 > of the scene? Relate your answer to both localization and object structure.
 
-> **Model boundary:** The shells show population-atlas locations. The VOF and broad
-> superficial-white-matter grain add bundle-scale context, but they do not establish
-> exact endpoints among these shells, processing order, or functional response. Bright
-> VOF events sample a disclosed 50/50 direction assumption; the U-fibre texture is not
-> endpoint-filtered and uses zero-mean vibration. Neither animation is measured neural
-> activity.
+> **Scene boundaries and limitations:** The shells show population-atlas locations.
+> The VOF and broad superficial-white-matter grain add bundle-scale context, but they do
+> not establish exact endpoints among these shells, processing order, or functional
+> response. The tract and superficial-fibre shapes come from tractography; their motion
+> does not. Bright VOF events use a seeded display model with a disclosed 50/50 direction
+> assumption. The U-fibre texture is not endpoint-filtered, so displayed fibres may not
+> connect the regions in this scene. Its vibration is analytically zero-mean: amplitude
+> varies with a local-to-own fibre-length ratio, while frequency and phase are display
+> choices. Neither animation is measured neural activity.
 
 ```atlas-scene
 id: ventral-stream
@@ -408,7 +430,9 @@ fidelity:
   - fidelity.julich-regions
   - fidelity.association-tracts
   - fidelity.superficial-white-matter
-cutaway: 36
+hemispheres:
+  global: { L: true, R: false }
+cutaway: 50
 tissueOpacity: 0.14
 playback:
   playing: true
@@ -423,37 +447,14 @@ controls:
 layout: detail
 ```
 
-## The ventral stream builds object quality and identity
+## Preview: the ventral stream
 
 The ventral stream extends from occipital visual cortex toward lateral occipital and
-ventral temporal cortex. Its computations increasingly support stable descriptions of
-**object quality**—shape, surface, color, and category—despite changes in position,
-size, viewpoint, or illumination. “What” is a useful shorthand, but **vision for
-perception** better captures its role in identifying and describing what is seen.
-
-This is not a rigid sequence in which one area finishes color, another finishes shape,
-and a final area names the object. Ventral cortex contains overlapping, recurrent
-representations. Retinotopic biases persist, lateral occipital regions respond strongly
-to object form, and ventral temporal cortex contains spatially organized patterns that
-support categorization at several levels. Memory, attention, context, and task goals
-feed back into this network.
-
-> **Transfer:** A person can orient the hand appropriately to post a card through a
-> slot but cannot reliably report the slot's orientation. Which stream is more likely
-> to be disproportionately impaired? The pattern points toward ventral perceptual
-> processing, while reminding us that preserved action does not mean the streams are
-> independent.
-
-Ventral occipitotemporal damage can produce selective disturbances of color, face, or
-object recognition, but symptoms depend on lesion extent and network organization.
-The presence of a named atlas area never licenses a one-region/one-function diagnosis.
-
-> **Model boundary:** The displayed V4v, lateral occipital, and fusiform shells provide
-> anatomical context. The ILF, IFOF, and VOF contours do not establish that those
-> shells are their exact endpoints or that impulses carry object representations.
-> Long-tract events sample a disclosed 50/50 direction assumption; broad U-fibre grain
-> is not endpoint-filtered and uses zero-mean vibration. Both motions are illustrative,
-> not measured activity or an individual's functional localizers.
+ventral temporal cortex. Across this network, processing increasingly supports stable
+descriptions of **object quality**---shape, surface, color, and category---even when an
+object changes position, size, viewpoint, or illumination. “What” is useful shorthand,
+but **vision for perception** better captures the stream's role in identifying and
+describing what is seen.
 
 ```atlas-scene
 id: dorsal-stream
@@ -493,7 +494,9 @@ fidelity:
   - fidelity.julich-regions
   - fidelity.association-tracts
   - fidelity.superficial-white-matter
-cutaway: 45
+hemispheres:
+  global: { L: true, R: false }
+cutaway: 50
 tissueOpacity: 0.13
 playback:
   playing: true
@@ -508,64 +511,40 @@ controls:
 layout: detail
 ```
 
-## The dorsal stream transforms vision for space and action
+## Preview: the dorsal stream
 
 The dorsal stream extends from occipital visual cortex toward posterior parietal
-cortex. MT/V5 is strongly involved in motion and binocular-disparity processing; V3A
-and V6 contribute to motion, depth, and wide-field spatial analysis; intraparietal and
-superior parietal regions transform visual information into coordinates useful for
-attention, eye movements, reaching, and grasping.
+cortex. Different parts of the network contribute different information. MT/V5 is
+strongly involved in motion and binocular-disparity processing. V3A and V6 contribute
+to motion, depth, and wide-field spatial analysis. Intraparietal and superior parietal
+regions help convert visual information into forms useful for attention, eye movements,
+reaching, and grasping.
 
-“Where” captures spatial processing, but **vision for action** or “how” emphasizes a
-deeper computational demand. A reach must continually relate a target to the eyes,
-head, body, and moving hand. Dorsal processing therefore links perception to
-time-sensitive sensorimotor transformations rather than merely reporting an object's
-address.
-
-The dorsal stream is itself a family of routes, including projections toward premotor
-and prefrontal systems and toward medial temporal systems involved in navigation and
-spatial memory. Those extended routes are outside the anatomy claimed by this lesson.
-
-> **Transfer:** A person recognizes and describes a cup but reaches to the wrong place
-> or misorients the hand when trying to grasp it. Which stream is more likely to be
-> disproportionately impaired? That pattern is consistent with dorsal visuomotor
-> dysfunction, as in optic ataxia.
-
-> **Model boundary:** The displayed MT/V5, V3A, V6, intraparietal, and superior parietal
-> shells do not show motion responses or computations. The SLF I–III and VOF contours
-> do not establish exact endpoints among these shells or one exclusive function.
-> Long-tract events sample a disclosed 50/50 direction assumption; broad U-fibre grain
-> is not endpoint-filtered and uses zero-mean vibration. Both motions are illustrative.
+“Where” captures spatial analysis, but **vision for action** describes the larger
+problem. Reaching for an object requires the brain to continually relate the target to
+the eyes, head, body, and moving hand. Dorsal processing therefore links vision to
+time-sensitive sensorimotor control rather than merely reporting an address.
 
 ```atlas-scene
-id: streams-integrate
-title: Perception and action depend on interacting streams
+id: conclusion
+title: Follow the hemifield from retina to cortex
 visual: atlas
 camera:
-  position: [198, 59, 169]
-  target: [2, -8, 7]
+  position: [147, 53, -137]
+  target: [0, 0, 0]
   transition: { kind: ease, durationMs: 900 }
 show:
   - layer.cortex
+  - pathway.anterior
+  - pathway.optic-radiation
+  - region.lgn
   - region.v1
-  - region.v2
-  - region.v4v
-  - region.loa
-  - region.fg2
-  - region.mt
-  - region.v6
-  - region.hip1
-  - region.spl7a
-  - layer.swm
-  - tract.ilf
-  - tract.slf2
-  - tract.vof
 fidelity:
   - fidelity.cortex
   - fidelity.julich-regions
-  - fidelity.association-tracts
-  - fidelity.superficial-white-matter
-cutaway: 40
+  - fidelity.anterior-pathway
+  - fidelity.optic-radiation
+cutaway: 24
 tissueOpacity: 0.14
 playback:
   playing: true
@@ -573,42 +552,47 @@ playback:
   settled: false
 selection:
   selected: null
-  emphasized: [region.v1, region.v2, region.v4v, region.loa, region.fg2, region.mt, region.v6, region.hip1, region.spl7a, tract.ilf, tract.slf2, tract.vof]
-  strength: 0.76
+  emphasized: [pathway.anterior, pathway.optic-radiation, region.lgn, region.v1]
+  strength: 0.7
 controls:
   mode: look
 layout: dominant
 ```
 
-## Perception and action depend on interacting streams
+## Conclusion: Follow the Hemifield
 
-The two-stream framework explains important functional biases, not a complete wiring
-diagram. Both streams receive mixed visual information, communicate with one another,
-and participate in recurrent loops with attention, memory, and motor systems. A simple
-act such as picking up a familiar mug needs ventral information about identity and
-handle structure together with dorsal information about current location, pose, and
-the changing relationship between hand and target.
+Return to the opening prediction. Loss of the **left visual hemifield in both eyes** is
+a left homonymous hemianopia. The lesion is therefore **after the chiasm on the right**,
+somewhere along the right optic tract, LGN, optic radiation, or V1. Those structures
+all represent the left side of visual space using input from both eyes.
 
-The framework also evolved with the evidence. Monkey lesion studies motivated the
-classic ventral “what” and dorsal “where” distinction. Neuropsychological dissociations
-then sharpened it toward ventral vision-for-perception and dorsal vision-for-action.
-Modern anatomical and functional work replaces two serial chains with interacting,
-branched, recurrent networks whose specializations are real but incomplete.
+The route explains why:
 
-> **Cumulative retrieval:** Reconstruct the whole system without rereading. For each
-> stage, state its dominant contribution: retinal parallel encoding; chiasmatic
-> hemifield regrouping; LGN organization and regulation; optic-radiation topography; V1
-> retinotopy and local feature selectivity; ventral object-quality representations; and
-> dorsal spatial and visuomotor transformations.
+- The **retina** converts light into parallel neural descriptions and emphasizes local
+  contrast rather than sending a complete picture.
+- The **optic chiasm** regroups those signals by visual hemifield: nasal fibres cross,
+  whereas temporal fibres remain on the same side.
+- The **LGN** preserves retinotopy, keeps major eye and channel signals organized, and
+  regulates transmission rather than acting as a passive junction.
+- The **optic radiation** carries that topographic organization toward V1. Its temporal
+  and parietal routes help relate visual-field defects to lesion location.
+- **V1** preserves a cortical map of the opposite visual hemifield while expanding
+  central vision and building selectivity for local visual structure.
 
-> **Final transfer:** You must recognize a moving friend in a crowd, locate them as you
-> move, and reach out for a handshake. Identify at least one contribution from retinal
-> or early cortical processing, the ventral stream, and the dorsal stream. Then explain
-> why failure at one stage cannot always be localized from behavior alone.
+**V2 and parts of V3** continue early cortical processing and contribute to multiple
+downstream routes; the system does not split into two isolated pathways immediately
+after V1. Beyond these shared stages, recurrent extrastriate networks combine information
+over larger portions of the field. The ventral and dorsal stream scenes are a brief
+preview of later biases toward vision for perception and vision for action. These
+interacting networks extend the transformations of early vision rather than replacing
+them.
 
-> **Model boundary:** This view juxtaposes representative cortical territories with
-> ILF, SLF II, and VOF bundle-scale context. Their simultaneous display does not
-> establish exact region-to-region connections, information flow, functional
-> selectivity, or independence. Long-tract events use the disclosed 50/50 direction
-> assumption; broad U-fibre grain is not endpoint-filtered and uses zero-mean
-> vibration. Spatial proximity and illustrative motion are not evidence of a route.
+> **Final retrieval:** Trace the right visual hemifield from both retinas to V1 without
+> looking back. At each stage, name one feature that is preserved and one transformation
+> that occurs.
+
+> **Scene limitations and boundaries:** This closing view reprises the mixed-fidelity
+> whole pathway. The cortical and region meshes are population-atlas anatomy; the left
+> optic radiation is population tractography and the displayed right side is mirrored;
+> the anterior eye-to-LGN segment is schematic. All moving-event timing remains
+> illustrative rather than measured physiology.

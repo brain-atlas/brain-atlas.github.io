@@ -269,15 +269,16 @@ test('the lesson drawer starts and exactly resumes the checked lesson from Atlas
 
   await page.locator('#lessons-trigger').click();
   await expect(page.locator('#lesson-drawer')).toBeVisible();
-  await expect(page.locator('[data-lesson-id="retina-to-v1"]')).toContainText('Early vision');
-  await expect(page.locator('[data-lesson-id="retina-to-v1"]')).toContainText('[DRAFT]');
+  await expect(page.locator('[data-lesson-id="retina-to-v1"]')).toContainText('Early Vision: Retina to the Cortical Streams');
+  await expect(page.locator('[data-lesson-id="retina-to-v1"]')).not.toContainText('[DRAFT]');
   await page.locator('[data-start-lesson="retina-to-v1"]').click();
 
   await expect(page.locator('#lesson-drawer')).toBeHidden();
   await expect(page.locator('#page-scroll')).toBeVisible();
   await expect(page.locator('#atlas-workspace')).toBeHidden();
   await expect(page.locator('#back-to-atlas')).toBeVisible();
-  await expect(page.locator('#lesson-title')).toContainText('Early vision');
+  await expect(page.locator('#lesson-title')).toHaveText('Early Vision: Retina to the Cortical Streams');
+  await expect(page.locator('#lesson-status')).toBeHidden();
   expect(await page.locator('canvas').count()).toBe(1);
 
   await page.locator('#scene-next').click();
