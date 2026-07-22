@@ -304,6 +304,19 @@ overall anatomy reads correctly**:
   independently generated right-side streamlines replace it. Region,
   association-tract, and superficial-WM geometry are real bilateral data.
 
+## AI-assisted development
+
+Generative AI coding assistants supported software implementation, test creation,
+documentation, research organization, and code review. Their suggestions were
+human-directed and treated as drafts. The human maintainer made the scientific
+and product decisions, reviewed and tested changes, verified cited sources, and
+remains responsible for the software and its claims. AI systems are not credited
+as authors.
+
+No generative AI model runs in the deployed viewer, and the viewer does not send
+lesson content, imported Markdown, anatomy data, or other user content to an AI
+service.
+
 ## Citing the viewer
 
 Use [`CITATION.cff`](CITATION.cff) to cite the software, including the release or
