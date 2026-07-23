@@ -47,8 +47,9 @@ preset/custom controls, all/within/touches/unordered-between semantics, explicit
 unknown/ambiguous handling, L/R inheritance, canonical Atlas projection, count summaries,
 coherent association/SWM geometry/activity masks, and the development `lastRebuildMs` diagnostic against the 120 ms bound. `animation-continuity.spec.cjs` audits every playing
 entry/instructional view after camera settlement in wide and compact layouts, including
-model clocks, draw ranges/checksums, in-frame motion, V1-proximal optic events and caps,
-selected association groups, and distinct Skip/Pause/Play/reduced-motion semantics.
+model clocks, draw ranges/checksums, in-frame motion, changing settled-stage pixels,
+V1-proximal optic events and caps, selected association groups, and distinct
+Skip/Pause/Play/reduced-motion semantics.
 The broader matrix covers Atlas-as-Home, the responsive Lessons drawer, checked and
 local activation, direct/static routes, Back/Forward and
 reload recovery, persistent global state, lesson-derived Atlas handoff from the actual

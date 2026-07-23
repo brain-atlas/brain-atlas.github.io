@@ -81,9 +81,23 @@ async function activitySample(page) {
           if (effectivelyVisible && Math.abs(point.x) <= 1 && Math.abs(point.y) <= 1 && point.z >= -1 && point.z <= 1) inFrame++;
         }
       }
-      return { checksum, drawn, inFrame, opacity: visibleObjects ? opacity : 0, colorEnergy };
+      return {
+        checksum,
+        drawn,
+        inFrame,
+        opacity: visibleObjects ? opacity : 0,
+        colorEnergy,
+        automaticallyCulled: objects.some((object) => object.frustumCulled),
+      };
     };
-    const optic = window.__view.activity.opticRadiation;
+    const activity = window.__view.activity;
+    const optic = activity.opticRadiation;
+    let transparentPathwayDepthWrites = 0;
+    activity.anterior.points[0]?.parent?.traverse((object) => {
+      if (object.isMesh && object.material.transparent && object.material.depthWrite) {
+        transparentPathwayDepthWrites++;
+      }
+    });
     const tracerAttribute = optic.points.geometry.attributes.position;
     const tracerCount = Math.min(optic.points.geometry.drawRange.count, tracerAttribute.count);
     let nearV1 = 0;
@@ -94,10 +108,14 @@ async function activitySample(page) {
     }
     return {
       scene: window.__lesson.controllerState.activeSceneId,
-      state: window.__view.activity.state,
+      state: activity.state,
       camera: window.__view.camera.position.toArray(),
       target: window.__view.controls.target.toArray(),
-      anterior: { distanceMm: window.__view.activity.anterior.distanceMm, points: summarize(window.__view.activity.anterior.points) },
+      anterior: {
+        distanceMm: activity.anterior.distanceMm,
+        points: summarize(activity.anterior.points),
+        transparentPathwayDepthWrites,
+      },
       optic: {
         modelTime: optic.modelTime,
         activeCount: optic.activeCount,
@@ -128,22 +146,27 @@ for (const [label, viewport] of Object.entries({
       await waitForSettledCamera(page, expected.index);
       await waitForExpectedActivity(page, expected);
       const before = await activitySample(page);
+      const beforeFrame = await page.locator('#stage').screenshot();
       await page.waitForTimeout(900);
       const after = await activitySample(page);
+      const afterFrame = await page.locator('#stage').screenshot();
 
       expect(after.scene).toBe(expected.id);
+      expect(afterFrame.equals(beforeFrame), `${expected.id} should visibly change rendered stage pixels`).toBe(false);
       expect(after.state).toMatchObject({ playing: true, settled: false, reducedMotion: false });
       after.camera.forEach((value, axis) => expect(value).toBeCloseTo(before.camera[axis], 10));
       after.target.forEach((value, axis) => expect(value).toBeCloseTo(before.target[axis], 10));
       if (expected.anterior) {
         expect(after.anterior.distanceMm).toBeGreaterThan(before.anterior.distanceMm);
         expect(after.anterior.points.checksum).not.toBe(before.anterior.points.checksum);
+        expect(after.anterior.transparentPathwayDepthWrites).toBe(0);
         expect(after.anterior.points.inFrame).toBeGreaterThan(0);
         expect(after.anterior.points.opacity).toBeGreaterThan(0.5);
       }
       if (expected.optic) {
         expect(after.optic.modelTime).toBeGreaterThan(before.optic.modelTime);
         expect(after.optic.points.checksum).not.toBe(before.optic.points.checksum);
+        expect(after.optic.points.automaticallyCulled).toBe(false);
         expect(after.optic.points.inFrame).toBeGreaterThan(0);
         expect(after.optic.points.opacity).toBeGreaterThan(0.5);
         expect(after.optic.endpointCaps.drawn).toBeGreaterThan(0);
@@ -154,6 +177,7 @@ for (const [label, viewport] of Object.entries({
       if (expected.association) {
         expect(after.association.modelTime).toBeGreaterThan(before.association.modelTime);
         expect(after.association.points.checksum).not.toBe(before.association.points.checksum);
+        expect(after.association.points.automaticallyCulled).toBe(false);
         expect(after.association.points.inFrame).toBeGreaterThan(0);
         expect(after.association.points.opacity).toBeGreaterThan(0.5);
         expect(after.association.points.colorEnergy).toBeGreaterThan(0);
@@ -164,6 +188,7 @@ for (const [label, viewport] of Object.entries({
       if (expected.swm) {
         expect(after.swm.modelTime).toBeGreaterThan(before.swm.modelTime);
         expect(after.swm.points.checksum).not.toBe(before.swm.points.checksum);
+        expect(after.swm.points.automaticallyCulled).toBe(false);
         expect(after.swm.points.inFrame).toBeGreaterThan(0);
         expect(after.swm.points.opacity).toBeGreaterThan(0.25);
       }

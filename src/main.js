@@ -160,7 +160,7 @@ for (const path of ANT_PATHS) {
   const col = new THREE.Color(path.color);
   const curve = new THREE.CatmullRomCurve3(path.cp.map((v) => new THREE.Vector3(...v)), false, 'centripetal');
   const tube = new THREE.Mesh(new THREE.TubeGeometry(curve, 90, 1.0, 8, false),
-    new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.5 }));
+    new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.5, depthWrite: false }));
   anteriorGroup.add(tube);
   const glow = new THREE.Mesh(new THREE.TubeGeometry(curve, 80, 2.4, 8, false),
     new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.08, blending: THREE.AdditiveBlending, depthWrite: false }));
@@ -299,6 +299,8 @@ trGeo.setDrawRange(0, 0);
 const opticRadiationPoints = new THREE.Points(trGeo, new THREE.PointsMaterial({
   color: 0xfff0d8, size: 1.3, map: SPR, transparent: true, depthWrite: false,
   blending: THREE.AdditiveBlending, sizeAttenuation: true }));
+// This zero-initialized buffer moves in place, so its automatic bound is not authoritative.
+opticRadiationPoints.frustumCulled = false;
 fibreGroup.add(opticRadiationPoints);
 const tracers = [];
 function writeFibrePoint(poly, t, target, offset) {
@@ -520,6 +522,8 @@ tractImpulseGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Ar
 tractImpulseGeo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(MAX_TRACT_IMPULSES * 3), 3).setUsage(THREE.DynamicDrawUsage));
 tractImpulseGeo.setDrawRange(0, 0);
 const tractImpulsePoints = new THREE.Points(tractImpulseGeo, new THREE.PointsMaterial({ size: 2.0, map: SPR, vertexColors: true, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, sizeAttenuation: true }));
+// This zero-initialized buffer moves in place, so its automatic bound is not authoritative.
+tractImpulsePoints.frustumCulled = false;
 tractImpulsePoints.name = 'association-impulses';
 tractImpulsePoints.userData = { activity: 'modeled-association-impulses' };
 tractGroup.add(tractImpulsePoints);
@@ -675,6 +679,8 @@ swmGeo.setDrawRange(0, 0);
 const swmPoints = new THREE.Points(swmGeo, new THREE.PointsMaterial({
   color: 0xc8bdf0, size: 0.85, map: SPR, transparent: true, opacity: 0.7,
   depthWrite: false, blending: THREE.AdditiveBlending, sizeAttenuation: true }));
+// This zero-initialized buffer moves in place, so its automatic bound is not authoritative.
+swmPoints.frustumCulled = false;
 swmPoints.name = 'swm-vibration';
 swmGroup.add(swmPoints);
 if (import.meta.env.DEV) {
