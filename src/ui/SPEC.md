@@ -140,6 +140,7 @@ scientific catalogs, authored lesson state, or anatomical coordinates.
 | INV-47 | `visibility.entities=[]` is a valid Atlas state. Viewer controls remain enabled, both Viewer and Model & sources name the empty state, and re-enabling any layer restores it through the canonical command path. Lesson fidelity records retain their nonempty validation contract. | `scripts/browser/explore-edge.spec.cjs` empty-state recovery in Chromium/Firefox | A learner can inspect and recover from an intentionally blank atlas without turning valid state into renderer fallback. |
 | INV-48 | Catalog-bound layer-panel topology stays mounted across canonical edits. Stable semantic subgroup buttons own `aria-expanded`/`aria-controls`; projections update L/R, leaf, and parent states in place while preserving expansion, logical focus, and panel scroll. | `scripts/browser/explore-edge.spec.cjs` repeated region/tract keyboard toggles | Filter truth remains canonical without converting every edit into a destructive DOM navigation event. |
 | INV-49 | Viewer controls are a nonmodal wide dock when open. Closing removes its grid track, returns the width to the one stage, and overlays only its semantic reopen summary; compact layouts retain a bounded stacked panel. The existing stage observer updates camera aspect without resetting state. | `scripts/browser/explore-edge.spec.cjs` wide/compact disclosure and aspect checks | Collapse serves the primary spatial task without duplicating controls, renderer state, or canvas ownership. |
+| INV-50 | Numbered lesson prose remains fully opaque whether or not its scene is active; the rail and scene number carry current-position emphasis. Every retained layer row exposes entity-specific L/R names plus one keyboard-operable combined-hemisphere toggle whose pressed state synchronizes with canonical projection. | `scripts/browser/hardening.spec.cjs` contrast and retained-control checks | Reading order cannot reduce prose below WCAG contrast, and repeated hemisphere controls remain distinguishable and operable without a pointer. |
 
 ## Failure Modes
 
@@ -187,6 +188,7 @@ scientific catalogs, authored lesson state, or anatomical coordinates.
 | FAIL-40 | Turning off the final visualization enters fallback and hides the recovery controls | Atlas passed an empty fidelity-ID list into the lesson-only nonempty fidelity view model | Render explicit Atlas empty-state copy before that model boundary; keep the canonical snapshot, stage, and controls active. |
 | FAIL-41 | An L/R edit collapses its subgroup, drops focus, or moves panel scroll | Canonical panel projection rebuilt the complete `#layers` subtree with every group closed | Build after stable catalog binding, then synchronize controls in place and leave disclosure/focus/scroll as DOM presentation state. |
 | FAIL-42 | Closing Viewer controls leaves a full-height blank sidebar or distorts the stage | Native details hid content while the workspace retained a fixed second grid track, or resizing bypassed the stage observer | Remove the wide grid track in the closed state, overlay only the reopen summary, retain compact stacking, and verify exact camera aspect. |
+| FAIL-43 | Upcoming lesson prose is faded or a screen reader announces many context-free “L”/“R” controls | Scene-level opacity de-emphasizes readable content, or layer buttons omit entity context/use a pointer-only text shortcut | Keep prose opacity at one; use rail/number styling for active emphasis; expose entity-specific button names and synchronize semantic pressed state in place. |
 
 ## Decision Framework
 
@@ -235,6 +237,7 @@ node --test test/scene-navigation.test.js test/lesson-scene-controller.test.js \
 | INV-45, FAIL-38 | `scripts/browser/hardening.spec.cjs` request inventory plus `scripts/browser/performance.spec.cjs` under the documented mobile emulation |
 | INV-46, FAIL-39 | `test/fibre-endpoint-filter.test.js`, `test/explore-session.test.js`, `test/reference-lesson.test.js`, and `scripts/browser/fibre-endpoint-filter.spec.cjs` in Firefox/Chromium |
 | INV-47–INV-49, FAIL-40–FAIL-42 | `scripts/browser/explore-edge.spec.cjs` empty recovery, retained keyboard disclosure/focus/scroll, and wide/compact dock/aspect checks in Firefox/Chromium |
+| INV-50, FAIL-43 | `scripts/browser/hardening.spec.cjs` full-opacity lesson prose plus entity-specific keyboard layer toggles in Chromium/Firefox |
 
 Full repository verification remains `npm test && npm run build:publish` plus
 wide, compact, reduced-motion, no-WebGL, accessibility, production-hook, and mobile-profile browser checks.

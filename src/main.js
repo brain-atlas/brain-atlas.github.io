@@ -1228,6 +1228,9 @@ function syncStreamParent(cb, syncers, hemiMap) {
   for (const s of syncers) { const rh = hemiMap[s.id]; if (!(rh.L && rh.R)) allOn = false; if (rh.L || rh.R) allOff = false; }
   cb.checked = allOn; cb.indeterminate = !allOn && !allOff;
 }
+function syncEntityHemisphereToggle(toggle, { L, R }) {
+  toggle.setAttribute('aria-pressed', L && R ? 'true' : (L || R ? 'mixed' : 'false'));
+}
 const STREAM_ORDER = [['subcortical', 'Subcortical'], ['early', 'Early / shared'], ['ventral', 'Ventral — “what”'], ['dorsal', 'Dorsal — “where / how”'],
   ['temporal', 'Temporal targets'], ['parietal', 'Inferior parietal'], ['frontal', 'Frontal targets'], ['gap', 'Unparcellated (GapMap)']];
 const DEFAULT_OFF = ['labels'];   // layers that start hidden
@@ -1268,7 +1271,8 @@ function buildPanel(regions, tracts, { initialize = !panelInitialized } = {}) {
       hemiMap[it.id] = hemiMap[it.id] || { L: true, R: true };
       const row = document.createElement('div'); row.className = 'lyr lyr-child';
       const sw = document.createElement('span'); sw.className = 'swatch'; sw.style.background = it.color; sw.style.color = it.color;
-      const nm = document.createElement('span'); nm.className = 'lyr-t'; nm.textContent = it.name;
+      const nm = document.createElement('button'); nm.type = 'button'; nm.className = 'lyr-t layer-entity-toggle'; nm.textContent = it.name;
+      nm.setAttribute('aria-label', `Show ${it.name} in both hemispheres`);
       const pills = document.createElement('span'); pills.className = 'hemi-pills';
       const pill = {};
       const entityId = entityIdForRenderer(rendererKind, it.id);
@@ -1276,6 +1280,7 @@ function buildPanel(regions, tracts, { initialize = !panelInitialized } = {}) {
       if (entityId) row.dataset.entityId = entityId;
       const applyEntityState = () => {
         const state = hemiMap[it.id];
+        syncEntityHemisphereToggle(nm, state);
         const commands = entityId ? [
           { type: 'visibility.set', entity: entityId, visible: state.L || state.R },
           { type: 'hemispheres.set-entity', entity: entityId, L: state.L, R: state.R },
@@ -1285,13 +1290,15 @@ function buildPanel(regions, tracts, { initialize = !panelInitialized } = {}) {
       };
       for (const h of ['L', 'R']) {
         const p = document.createElement('button'); p.type = 'button'; p.className = 'pill'; p.textContent = h; p.dataset.hemisphere = h;
+        p.setAttribute('aria-label', `Show ${h === 'L' ? 'left' : 'right'} hemisphere for ${it.name}`);
         p.classList.toggle('on', hemiMap[it.id][h]); p.setAttribute('aria-pressed', String(hemiMap[it.id][h]));
         p.addEventListener('click', () => { hemiMap[it.id][h] = !hemiMap[it.id][h]; p.classList.toggle('on', hemiMap[it.id][h]); p.setAttribute('aria-pressed', String(hemiMap[it.id][h])); applyEntityState(); });
         pills.append(p); pill[h] = p;
       }
+      syncEntityHemisphereToggle(nm, hemiMap[it.id]);
       nm.addEventListener('click', () => { const on = !(hemiMap[it.id].L || hemiMap[it.id].R); hemiMap[it.id].L = hemiMap[it.id].R = on; for (const h of ['L', 'R']) { pill[h].classList.toggle('on', on); pill[h].setAttribute('aria-pressed', String(on)); } applyEntityState(); });
       row.append(sw, nm, pills); kids.appendChild(row);
-      syncers.push({ id: it.id, pill });
+      syncers.push({ id: it.id, pill, entityToggle: nm });
     }
     cb.addEventListener('change', () => {
       const on = cb.checked;
@@ -1299,6 +1306,7 @@ function buildPanel(regions, tracts, { initialize = !panelInitialized } = {}) {
       for (const s of syncers) {
         hemiMap[s.id].L = hemiMap[s.id].R = on;
         for (const h of ['L', 'R']) { s.pill[h].classList.toggle('on', on); s.pill[h].setAttribute('aria-pressed', String(on)); }
+        syncEntityHemisphereToggle(s.entityToggle, hemiMap[s.id]);
         const entityId = entityIdForRenderer(rendererKind, s.id);
         if (entityId) commands.push(
           { type: 'visibility.set', entity: entityId, visible: on },
@@ -1369,6 +1377,8 @@ function syncPanelControls(model) {
       pill.classList.toggle('on', on);
       pill.setAttribute('aria-pressed', String(on));
     }
+    const entityToggle = row.querySelector('.layer-entity-toggle');
+    if (entityToggle) syncEntityHemisphereToggle(entityToggle, entity);
   }
   for (const group of root.querySelectorAll('.lyr-grpwrap')) {
     const states = [...group.querySelectorAll('.lyr-child[data-entity-id]')]

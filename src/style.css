@@ -60,8 +60,7 @@ button:disabled, fieldset:disabled button, fieldset:disabled input { cursor: not
 .lesson-intro > p:first-of-type { font-size: clamp(1.12rem, 1.8vw, 1.4rem); color: var(--text); }
 .lesson-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; margin-top: 24px; color: var(--muted); font-family: var(--font-mono); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; }
 .lesson-meta span + span::before { content: "·"; margin-right: 16px; color: var(--dim); }
-.lesson-scene { position: relative; min-height: 82vh; display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: 18px; align-content: center; padding: 15vh clamp(8px, 3vw, 34px) 15vh 0; border-bottom: 1px solid var(--line); opacity: 0.46; transition: opacity 220ms ease; }
-.lesson-scene.is-active { opacity: 1; }
+.lesson-scene { position: relative; min-height: 82vh; display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: 18px; align-content: center; padding: 15vh clamp(8px, 3vw, 34px) 15vh 0; border-bottom: 1px solid var(--line); }
 .scene-rail { position: relative; display: flex; justify-content: center; }
 .scene-rail::after { content: ""; position: absolute; top: 42px; bottom: 0; width: 1px; background: var(--line); }
 .scene-number { width: 34px; height: 34px; display: grid; place-items: center; border: 1px solid var(--line-strong); border-radius: 50%; color: var(--dim); font-size: 0.65rem; background: var(--bg); transition: color 180ms, border-color 180ms, background 180ms; }
@@ -175,6 +174,8 @@ input[type="range"] { flex: 1; min-width: 80px; accent-color: var(--accent); }
 .lyr, .hemi-row { min-height: 28px; display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 0.72rem; }
 .lyr input { accent-color: var(--accent); }
 .lyr-t { flex: 1; min-width: 0; }
+button.layer-entity-toggle { min-height: 0; padding: 0; border: 0; color: inherit; background: transparent; font: inherit; line-height: inherit; text-align: left; }
+button.layer-entity-toggle:hover:not(:disabled) { color: var(--text); border-color: transparent; background: transparent; }
 .lyr-t.dim { color: var(--dim); font-style: italic; }
 .swatch { width: 6px; height: 6px; flex: none; border-radius: 50%; box-shadow: 0 0 7px currentColor; }
 .lyr-grpwrap { min-width: 0; }

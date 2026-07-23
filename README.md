@@ -339,7 +339,9 @@ The **Viewer controls** dock contains Play/Pause, activity speed, **Cutaway**,
 custom all/touches/within/between queries, Auto-rotate, and Reset. Closing the dock on a
 wide screen returns its space to the atlas while leaving a keyboard-accessible reopen
 control; compact screens keep the bounded stacked panel. Structure disclosures, focus,
-and scroll remain stable while L/R filters change. Selecting no visualizations is a
+and scroll remain stable while L/R filters change. Every structure row names its L/R
+controls in context and provides a keyboard-operable combined-hemisphere toggle.
+Selecting no visualizations is a
 valid, labelled state, and any layer can be re-enabled without reloading. Counts and
 known/unknown/ambiguous assignment quality update in an accessible status summary.
 Lesson mode keeps the fieldset disabled so panel clicks cannot bypass authored state.
