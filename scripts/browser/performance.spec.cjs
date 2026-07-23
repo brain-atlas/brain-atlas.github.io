@@ -184,6 +184,6 @@ test('representative mobile profile keeps direct lessons lighter and animation r
     expect(sample.frameSample.p95Ms).toBeLessThan(250);
   }
   expect(directLesson.encodedAssetBytes).toBeLessThan(atlasHome.encodedAssetBytes);
-  expect(directLesson.assetPaths).not.toContain('/data/swm_fibres.json');
+  expect(directLesson.assetPaths.filter(path => path === '/data/swm_fibres.json')).toHaveLength(1);
   expect(directLesson.assetPaths.some(path => path.startsWith('/data/regions/fg4_'))).toBe(false);
 });

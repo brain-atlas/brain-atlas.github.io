@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 
+import { createFibreEndpointIndex, filterFibreEndpoints } from '../src/fibre-endpoint-filter.js';
 import { createLessonCatalog, parseLesson } from '../src/lesson/index.js';
 import { markdownToViewModel } from '../src/ui/markdown-view-model.js';
 import { createLessonPresentation } from '../src/ui/lesson-presentation.js';
@@ -51,11 +52,11 @@ test('reference lesson parses with an unnumbered entry view and eight complete s
   assert.equal(Object.isFrozen(result.value), true);
 });
 
-test('reference lesson uses only visual-system entities and never inherits omitted layers', async () => {
+test('reference lesson uses only visual-system entities and keeps scenes 1 and 3 unchanged', async () => {
   const { result } = await loadReferenceLesson();
   const allowed = new Set([
     'layer.cortex', 'layer.labels', 'layer.swm', 'pathway.anterior', 'pathway.optic-radiation',
-    'tract.ilf', 'tract.ifof', 'tract.slf1', 'tract.slf2', 'tract.slf3', 'tract.vof',
+    'tract.ilf', 'tract.ifof', 'tract.slf1', 'tract.slf2', 'tract.slf3', 'tract.vof', 'tract.mdlf',
     'region.lgn', 'region.v1', 'region.v2', 'region.v3v', 'region.v3d', 'region.v4v',
     'region.loa', 'region.lop', 'region.fg1', 'region.fg2', 'region.fg3', 'region.fg4',
     'region.v3a', 'region.v6', 'region.mt',
@@ -67,16 +68,18 @@ test('reference lesson uses only visual-system entities and never inherits omitt
     assert.equal(scene.snapshot.visibility.entities.every((id) => allowed.has(id)), true);
     assert.equal(scene.snapshot.visibility.entities.includes('layer.labels'), false);
   }
-  for (const scene of result.value.scenes.slice(0, 5)) {
-    assert.equal(scene.snapshot.visibility.entities.some((id) => id.startsWith('tract.')), false);
-    assert.equal(scene.snapshot.visibility.entities.includes('layer.swm'), false);
-  }
-  assert.deepEqual(result.value.scenes[0].snapshot.visibility.entities, [
-    'layer.cortex', 'pathway.anterior', 'pathway.optic-radiation', 'region.lgn', 'region.v1',
+  assert.deepEqual(result.value.scenes[1].snapshot.visibility.entities, [
+    'pathway.anterior', 'region.lgn',
   ]);
+  assert.deepEqual(result.value.scenes[1].snapshot.fibreFilter, {
+    preset: null, mode: 'all', setA: [], setB: [],
+  });
   assert.deepEqual(result.value.scenes[3].snapshot.visibility.entities, [
     'layer.cortex', 'pathway.optic-radiation', 'region.lgn', 'region.v1',
   ]);
+  assert.deepEqual(result.value.scenes[3].snapshot.fibreFilter, {
+    preset: null, mode: 'all', setA: [], setB: [],
+  });
 });
 
 test('crossing scene marks its future retina-to-chiasm split and discloses omitted temporal pathways', async () => {
@@ -101,68 +104,110 @@ test('posterior scenes use the approved left-only midline cut and disclose mirro
   for (const scene of result.value.scenes.slice(3, 5)) {
     assert.deepEqual(scene.snapshot.hemispheres.global, { L: true, R: false });
     assert.equal(scene.snapshot.cutaway.position, 50);
+    assert.equal(scene.snapshot.playback.playing, true);
+    assert.equal(scene.snapshot.playback.settled, false);
   }
   assert.match(posterior, /right side is mirrored/i);
   assert.match(posterior, /timing.+illustrative/is);
   assert.match(posterior, /not recorded\s+(?:>\s*)?spikes|not measured physiology/i);
-  for (const scene of result.value.scenes.slice(3, 5)) {
-    assert.deepEqual(scene.fidelityIds, [
-      'fidelity.julich-regions', 'fidelity.optic-radiation',
-    ]);
-    assert.equal(scene.snapshot.playback.playing, true);
-    assert.equal(scene.snapshot.playback.settled, false);
-  }
+  assert.deepEqual(result.value.scenes[3].fidelityIds, [
+    'fidelity.julich-regions', 'fidelity.optic-radiation',
+  ]);
   const arrival = result.value.scenes[4];
+  assert.deepEqual(arrival.fidelityIds, [
+    'fidelity.association-tracts', 'fidelity.cortex', 'fidelity.julich-regions',
+    'fidelity.optic-radiation', 'fidelity.superficial-white-matter',
+  ]);
   assert.equal(arrival.snapshot.visibility.entities.includes('region.lgn'), true);
   assert.equal(arrival.snapshot.selection.emphasized.includes('pathway.optic-radiation'), true);
   assert.equal(arrival.snapshot.selection.emphasized.includes('region.lgn'), true);
 });
 
-test('cortical preview scenes add selected white-matter context without claiming exact connectivity', async () => {
-  const { result } = await loadReferenceLesson();
-  const streamScenes = result.value.scenes.slice(5, 8);
-  const streamProse = streamScenes.map(({ proseMarkdown }) => proseMarkdown).join('\n');
-  const expectedTracts = [
-    ['tract.vof'],
-    ['tract.ifof', 'tract.ilf', 'tract.vof'],
-    ['tract.slf1', 'tract.slf2', 'tract.slf3', 'tract.vof'],
-  ];
-  const expectedFibreFilters = [
-    'fibre-filter.extrastriate',
-    'fibre-filter.ventral',
-    'fibre-filter.dorsal',
-  ];
-
-  assert.deepEqual(streamScenes.map(({ id }) => id), [
-    'extrastriate-branching', 'ventral-stream', 'dorsal-stream',
+test('requested scenes use touches-any filtering and every nonzero matching named tract group', async () => {
+  const [{ result }, endpointArtifact] = await Promise.all([
+    loadReferenceLesson(),
+    json('public/data/fibre_endpoints.json'),
   ]);
-  for (const [index, scene] of streamScenes.entries()) {
+  const endpointIndex = createFibreEndpointIndex(endpointArtifact);
+  const [overview, scene1, scene2, scene3, scene4, scene5, scene6, scene7, scene8] = result.value.scenes;
+  const sharedFilter = {
+    preset: null,
+    mode: 'touches-any',
+    setA: ['region.v1', 'region.v2', 'region.v3d', 'region.v3v'],
+    setB: [],
+  };
+  const customFilters = new Map([
+    [overview, sharedFilter],
+    [scene2, { preset: null, mode: 'touches-any', setA: ['region.lgn'], setB: [] }],
+    [scene4, { preset: null, mode: 'touches-any', setA: ['region.v1'], setB: [] }],
+    [scene5, sharedFilter],
+  ]);
+  for (const [scene, expected] of customFilters) {
+    assert.deepEqual(scene.snapshot.fibreFilter, expected);
+    assert.equal(scene.snapshot.visibility.entities.includes('layer.swm'), true);
+  }
+  assert.deepEqual(scene6.snapshot.fibreFilter, {
+    preset: 'fibre-filter.ventral',
+    mode: 'touches-any',
+    setA: ['region.fg1', 'region.fg2', 'region.fg3', 'region.fg4', 'region.loa',
+      'region.lop', 'region.v1', 'region.v2', 'region.v3v', 'region.v4v'],
+    setB: [],
+  });
+  assert.equal(scene6.snapshot.visibility.entities.includes('layer.swm'), true);
+  assert.deepEqual(scene7.snapshot.fibreFilter.preset, 'fibre-filter.dorsal');
+  assert.equal(scene7.snapshot.visibility.entities.includes('layer.swm'), true);
+
+  for (const scene of [scene4, scene5, scene6, scene7]) {
+    const resultForScene = filterFibreEndpoints(
+      endpointIndex,
+      scene.snapshot.fibreFilter,
+      scene.snapshot.hemispheres.global,
+    );
+    const matchingTracts = resultForScene.association
+      .filter(({ L, R }) => L.some(Boolean) || R.some(Boolean))
+      .map(({ id }) => `tract.${id}`)
+      .sort();
+    assert.deepEqual(
+      scene.snapshot.visibility.entities.filter((id) => id.startsWith('tract.')),
+      matchingTracts,
+      `${scene.id} must show every named tract group with a matching contour`,
+    );
+  }
+  assert.deepEqual(scene1.snapshot.fibreFilter, { preset: null, mode: 'all', setA: [], setB: [] });
+  assert.deepEqual(scene3.snapshot.fibreFilter, { preset: null, mode: 'all', setA: [], setB: [] });
+  assert.deepEqual(scene8.snapshot, overview.snapshot);
+  assert.deepEqual(scene8.fidelityIds, overview.fidelityIds);
+});
+
+test('endpoint-filtered lesson copy identifies areas without claiming exact connectivity', async () => {
+  const { result } = await loadReferenceLesson();
+  const filteredScenes = [result.value.scenes[0], ...result.value.scenes.slice(2, 3), ...result.value.scenes.slice(4, 9)];
+  const filteredProse = filteredScenes.map(({ proseMarkdown }) => proseMarkdown).join('\n');
+  const streamProse = result.value.scenes.slice(5, 8).map(({ proseMarkdown }) => proseMarkdown).join('\n');
+
+  for (const scene of result.value.scenes.slice(5, 8)) {
     assert.deepEqual(scene.fidelityIds, [
       'fidelity.association-tracts', 'fidelity.cortex',
       'fidelity.julich-regions', 'fidelity.superficial-white-matter',
     ]);
-    assert.deepEqual(
-      scene.snapshot.visibility.entities.filter((id) => id.startsWith('tract.')),
-      expectedTracts[index],
-    );
-    assert.equal(scene.snapshot.visibility.entities.includes('layer.swm'), true);
-    assert.equal(scene.snapshot.fibreFilter.preset, expectedFibreFilters[index]);
-    assert.equal(scene.snapshot.fibreFilter.mode, 'touches-any');
     assert.equal(scene.snapshot.playback.playing, true);
     assert.equal(scene.snapshot.playback.settled, false);
   }
-  for (const scene of streamScenes.filter(({ id }) => ['ventral-stream', 'dorsal-stream'].includes(id))) {
+  for (const scene of result.value.scenes.slice(6, 8)) {
     assert.deepEqual(scene.snapshot.hemispheres.global, { L: true, R: false });
     assert.equal(scene.snapshot.cutaway.position, 50);
   }
+  assert.match(result.value.scenes[6].proseMarkdown, /V1.+V2.+V3v.+V4v.+LOA.+LOp.+FG1.+FG4/is);
+  assert.match(result.value.scenes[7].proseMarkdown, /V1.+V2.+V3d.+V3A.+V6.+MT.+intraparietal.+superior parietal/is);
+  assert.match(filteredProse, /unordered geometric endpoint/i);
   assert.match(streamProse, /50\/50/i);
   assert.match(streamProse, /zero-mean/i);
   assert.match(streamProse, /qualified.*endpoint proximity|qualified endpoint-proximity/is);
   assert.match(streamProse, /Jülich.*maximum-probability|maximum-probability.*Jülich/is);
-  assert.match(streamProse, /unordered/i);
   assert.match(streamProse, /unknown.*ambiguous|ambiguous.*unknown/is);
   assert.match(streamProse, /2009a.*2009c|2009c.*2009a/is);
   assert.match(streamProse, /not.*(?:termination|connection strength)/is);
+  assert.doesNotMatch(filteredProse, /fibres leaving V1|tracts leaving V1/i);
   assert.doesNotMatch(streamProse, /not endpoint-filtered|no (?:approved )?named-region\s+(?:>\s*)?endpoint classification/i);
 });
 
@@ -205,22 +250,26 @@ test('conclusion reprises the opening pathway and resolves the opening predictio
   assert.doesNotMatch(conclusion.proseMarkdown, /moving friend|handshake|familiar mug|hard fork/i);
 });
 
-test('LGN scene retains incoming context and frames the outgoing pathway through V1', async () => {
+test('LGN scene retains incoming context and adds endpoint-filtered superficial fibres', async () => {
   const { result } = await loadReferenceLesson();
   const scene = result.value.scenes[2];
   assert.deepEqual(scene.snapshot.visibility.entities, [
-    'layer.cortex', 'pathway.anterior', 'pathway.optic-radiation', 'region.lgn', 'region.v1',
+    'layer.cortex', 'layer.swm', 'pathway.anterior', 'pathway.optic-radiation', 'region.lgn', 'region.v1',
   ]);
   assert.deepEqual(scene.fidelityIds, [
-    'fidelity.anterior-pathway', 'fidelity.cortex',
-    'fidelity.julich-regions', 'fidelity.optic-radiation',
+    'fidelity.anterior-pathway', 'fidelity.cortex', 'fidelity.julich-regions',
+    'fidelity.optic-radiation', 'fidelity.superficial-white-matter',
   ]);
+  assert.deepEqual(scene.snapshot.fibreFilter, {
+    preset: null, mode: 'touches-any', setA: ['region.lgn'], setB: [],
+  });
   assert.equal(scene.snapshot.playback.playing, true);
   assert.equal(scene.snapshot.playback.settled, false);
   assert.ok(scene.snapshot.camera.position[2] < 0);
   assert.match(scene.proseMarkdown, /source.+destination|destination.+source/is);
   assert.match(scene.proseMarkdown, /incoming.+context/is);
   assert.match(scene.proseMarkdown, /optic.?radiation.+V1/is);
+  assert.match(scene.proseMarkdown, /22 superficial.+LGN|LGN.+22 superficial/is);
 });
 
 test('reference content keeps prose educational while curated records own sources', async () => {
