@@ -1,0 +1,261 @@
+const { test, expect } = require('@playwright/test');
+const fs = require('fs');
+
+const BASE_URL = process.env.BRAIN_ATLAS_URL ?? 'http://127.0.0.1:5199/';
+const AXE_SOURCE = fs.readFileSync(require.resolve('axe-core/axe.min.js'), 'utf8');
+
+function monitor(page) {
+  const errors = [];
+  page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
+  page.on('pageerror', error => errors.push(String(error)));
+  return errors;
+}
+
+async function waitForQuietRequests(page, active, quietMs = 400) {
+  for (;;) {
+    await page.waitForTimeout(quietMs);
+    if (active.size === 0) return;
+  }
+}
+
+async function seriousAccessibilityViolations(page) {
+  await page.waitForTimeout(200); // Audit the settled CSS state, not the initial 150 ms control transition.
+  await page.evaluate(AXE_SOURCE);
+  return page.evaluate(async () => {
+    const result = await axe.run(document, {
+      runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'] },
+    });
+    return result.violations
+      .filter(({ impact }) => impact === 'serious' || impact === 'critical')
+      .map(({ id, impact, help, nodes }) => ({
+        id,
+        impact,
+        help,
+        targets: nodes.map(({ target }) => target),
+      }));
+  });
+}
+
+test('compact workspaces and modal surfaces pass serious automated accessibility checks', async ({ page }) => { // Tests INV-9, INV-10, INV-30, INV-42
+  const errors = monitor(page);
+  const audits = {};
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto(BASE_URL);
+  await page.waitForFunction(() => document.getElementById('app')?.dataset.state === 'ready');
+  audits.atlas = await seriousAccessibilityViolations(page);
+
+  await page.locator('#lessons-trigger').click();
+  audits.drawer = await seriousAccessibilityViolations(page);
+  await page.keyboard.press('Escape');
+  await page.locator('#lesson-import-trigger').click();
+  audits.import = await seriousAccessibilityViolations(page);
+  await page.keyboard.press('Escape');
+
+  await page.goto(new URL('?lesson=retina-to-v1', BASE_URL).href);
+  await page.waitForFunction(() => document.getElementById('app')?.dataset.state === 'ready');
+  audits.lesson = await seriousAccessibilityViolations(page);
+  await page.locator('#model-sources-trigger').click();
+  audits.modelSources = await seriousAccessibilityViolations(page);
+  await expect(page.locator('#fidelity-panel')).toContainText(
+    'Event rates, rhythms, bursts, time dilation, and travel speed are illustrative rather than measured LGN or V1 physiology.',
+  );
+  await page.locator('#fidelity-close').click();
+
+  await page.locator('#anatomy-browser').evaluate(element => { element.open = true; });
+  await page.locator('#anatomy-options [data-inspectable-id="region.lgn"]').evaluate(element => element.click());
+  audits.anatomyInspector = await seriousAccessibilityViolations(page);
+
+  await page.goto(new URL('?no-webgl=1&lesson=retina-to-v1', BASE_URL).href);
+  await page.waitForFunction(() => document.getElementById('app')?.dataset.state === 'fallback');
+  audits.noWebglLesson = await seriousAccessibilityViolations(page);
+
+  expect(audits).toEqual({
+    atlas: [],
+    drawer: [],
+    import: [],
+    lesson: [],
+    modelSources: [],
+    anatomyInspector: [],
+    noWebglLesson: [],
+  });
+  expect(errors).toEqual([]);
+});
+
+test('compact keyboard journey preserves modal containment, announcements, and reciprocal focus', async ({ page }) => { // Tests INV-10, INV-22, INV-30, INV-41, INV-42
+  const errors = monitor(page);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto(BASE_URL);
+  await page.waitForFunction(() => document.getElementById('app')?.dataset.state === 'ready');
+
+  await page.locator('#lessons-trigger').focus();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('#lesson-drawer')).toBeVisible();
+  await expect(page.locator('[data-start-lesson="retina-to-v1"]')).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('#back-to-atlas')).toBeFocused();
+  await expect(page.locator('#announcer')).toContainText('Opened lesson');
+
+  await page.locator('#model-sources-trigger').focus();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('#fidelity-panel')).toHaveAttribute('role', 'dialog');
+  await expect(page.locator('#fidelity-panel')).toHaveAttribute('aria-modal', 'true');
+  await expect(page.locator('#fidelity-close')).toBeFocused();
+  await page.keyboard.press('Shift+Tab');
+  expect(await page.evaluate(() => document.getElementById('fidelity-panel').contains(document.activeElement))).toBe(true);
+  await page.keyboard.press('Tab');
+  await expect(page.locator('#fidelity-close')).toBeFocused();
+  await page.keyboard.press('Escape');
+  await expect(page.locator('#model-sources-trigger')).toBeFocused();
+
+  const anatomySummary = page.locator('#anatomy-browser > summary');
+  await anatomySummary.focus();
+  await page.keyboard.press('Enter');
+  const lgn = page.locator('#anatomy-options [data-inspectable-id="region.lgn"]');
+  await lgn.focus();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('#anatomy-inspector')).toHaveAttribute('role', 'dialog');
+  await expect(page.locator('#anatomy-inspector-close')).toBeFocused();
+  await page.keyboard.press('Escape');
+  await expect(lgn).toBeFocused();
+
+  await page.locator('#back-to-atlas').focus();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('#return-to-lesson')).toBeFocused();
+  await expect(page.locator('#announcer')).toContainText('Atlas workspace opened from');
+  await page.keyboard.press('Enter');
+  await expect(page.locator('#back-to-atlas')).toBeFocused();
+  await expect(page.locator('#announcer')).toContainText('Returned to Early Vision');
+  expect(errors).toEqual([]);
+});
+
+test('compact Atlas keeps every semantic camera action at least 44 CSS pixels high', async ({ page }) => { // Tests INV-23
+  const errors = monitor(page);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto(BASE_URL);
+  await page.waitForFunction(() => document.getElementById('app')?.dataset.state === 'ready');
+  if (!await page.locator('#viewer-console').getAttribute('open')) {
+    await page.locator('#viewer-console > summary').click();
+  }
+
+  const actions = await page.locator('#viewer-console [data-view], #viewer-console [data-explore-camera], #reset')
+    .evaluateAll(elements => elements.filter(element => element.getClientRects().length).map(element => ({
+      name: element.textContent.trim(),
+      height: element.getBoundingClientRect().height,
+    })));
+  expect(actions.length).toBeGreaterThan(0);
+  expect(actions.every(({ height }) => height >= 44)).toBe(true);
+  expect(errors).toEqual([]);
+});
+
+test('compact and 200%-equivalent lesson layouts contain panels without root scroll or overlap', async ({ page }) => { // Tests INV-10, INV-13, INV-15
+  const errors = monitor(page);
+  for (const viewport of [
+    { width: 390, height: 844 },
+    { width: 320, height: 568 },
+    { width: 800, height: 450 },
+    { width: 720, height: 450 },
+  ]) {
+    await page.setViewportSize(viewport);
+    await page.goto(new URL('?lesson=retina-to-v1', BASE_URL).href);
+    await page.waitForFunction(() => document.getElementById('app')?.dataset.state === 'ready');
+
+    const layout = await page.evaluate(() => {
+      const stageTitle = document.getElementById('stage-heading').getBoundingClientRect();
+      const stageActions = document.querySelector('.stage-actions').getBoundingClientRect();
+      const pageSurface = document.getElementById('page-scroll');
+      const visibleButtons = [...document.querySelectorAll('.topbar button, .scene-transport button')]
+        .filter(button => button.getClientRects().length && !button.disabled);
+      return {
+        viewport: [document.documentElement.clientWidth, document.documentElement.clientHeight],
+        scrollWidth: document.documentElement.scrollWidth,
+        rootScroll: [scrollX, scrollY],
+        pageSurface: pageSurface.getBoundingClientRect().toJSON(),
+        stageHeaderOverlap: Math.max(0, Math.min(stageTitle.right, stageActions.right) - Math.max(stageTitle.left, stageActions.left))
+          * Math.max(0, Math.min(stageTitle.bottom, stageActions.bottom) - Math.max(stageTitle.top, stageActions.top)),
+        minimumButtonHeight: Math.min(...visibleButtons.map(button => button.getBoundingClientRect().height)),
+      };
+    });
+    expect(layout.scrollWidth).toBe(layout.viewport[0]);
+    expect(layout.rootScroll).toEqual([0, 0]);
+    expect(layout.pageSurface.left).toBeGreaterThanOrEqual(0);
+    expect(layout.pageSurface.right).toBeLessThanOrEqual(layout.viewport[0] + 1);
+    expect(layout.stageHeaderOverlap).toBe(0);
+    expect(layout.minimumButtonHeight).toBeGreaterThanOrEqual(44);
+
+    await page.locator('#model-sources-trigger').click();
+    const panel = await page.locator('#fidelity-panel').boundingBox();
+    expect(panel.x).toBeGreaterThanOrEqual(0);
+    expect(panel.y).toBeGreaterThanOrEqual(0);
+    expect(panel.x + panel.width).toBeLessThanOrEqual(viewport.width + 1);
+    expect(panel.y + panel.height).toBeLessThanOrEqual(viewport.height + 1);
+    await page.locator('#fidelity-close').click();
+
+    await page.evaluate(() => { document.getElementById('page-scroll').scrollTop = 300; });
+    expect(await page.evaluate(() => [scrollX, scrollY])).toEqual([0, 0]);
+  }
+  expect(errors).toEqual([]);
+});
+
+test('direct lesson entry defers independently packaged assets outside its active view', async ({ page }) => { // Tests INV-45
+  const errors = monitor(page);
+  const requests = [];
+  const active = new Set();
+  page.on('request', request => {
+    if (new URL(request.url()).origin !== new URL(BASE_URL).origin) return;
+    requests.push(new URL(request.url()).pathname);
+    active.add(request);
+  });
+  const finish = request => active.delete(request);
+  page.on('requestfinished', finish);
+  page.on('requestfailed', finish);
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto(new URL('?lesson=retina-to-v1', BASE_URL).href);
+  await page.waitForFunction(() => document.getElementById('app')?.dataset.state === 'ready');
+  await waitForQuietRequests(page, active);
+
+  expect(requests).toContain('/models/brain_mni.glb');
+  expect(requests).toContain('/data/or_fibres.json');
+  expect(requests).toContain('/data/regions/lgn_L.obj');
+  expect(requests).toContain('/data/regions/lgn_R.obj');
+  expect(requests).toContain('/data/regions/v1_L.obj');
+  expect(requests).toContain('/data/regions/v1_R.obj');
+  expect(requests).not.toContain('/data/swm_fibres.json');
+  expect(requests.some(path => path.startsWith('/data/regions/fg4_'))).toBe(false);
+
+  for (let index = 0; index <= 4; index++) {
+    await page.locator('#scene-next').click();
+    await page.waitForFunction(expected => window.__lesson?.navigation?.activeIndex === expected, index);
+    if (await page.locator('#scene-skip').isVisible()) await page.locator('#scene-skip').click();
+  }
+  await waitForQuietRequests(page, active);
+
+  expect(requests.filter(path => path === '/data/swm_fibres.json')).toHaveLength(1);
+  expect(requests.filter(path => path === '/data/regions/v2_L.obj')).toHaveLength(1);
+  expect(requests.filter(path => path === '/data/regions/v2_R.obj')).toHaveLength(1);
+  expect(requests.some(path => path.startsWith('/data/regions/fg4_'))).toBe(false);
+  expect(errors).toEqual([]);
+});
+
+test('Atlas Home still requests the complete authored default asset set', async ({ page }) => { // Tests INV-45
+  const errors = monitor(page);
+  const requests = [];
+  const active = new Set();
+  page.on('request', request => {
+    if (new URL(request.url()).origin !== new URL(BASE_URL).origin) return;
+    requests.push(new URL(request.url()).pathname);
+    active.add(request);
+  });
+  const finish = request => active.delete(request);
+  page.on('requestfinished', finish);
+  page.on('requestfailed', finish);
+
+  await page.goto(BASE_URL);
+  await page.waitForFunction(() => document.getElementById('app')?.dataset.state === 'ready');
+  await waitForQuietRequests(page, active);
+
+  expect(requests.filter(path => path === '/data/swm_fibres.json')).toHaveLength(1);
+  expect(requests.filter(path => path === '/data/regions/fg4_L.obj')).toHaveLength(1);
+  expect(requests.filter(path => path === '/data/regions/fg4_R.obj')).toHaveLength(1);
+  expect(errors).toEqual([]);
+});

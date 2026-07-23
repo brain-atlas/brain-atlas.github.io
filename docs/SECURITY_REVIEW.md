@@ -79,7 +79,9 @@ reviewed artifact, or relaxing the standalone loopback/authentication boundary.
   WebGL textures, `referrerpolicy="no-referrer"`, lazy loading, complete attribution,
   and accessible failure/retry handling; there is no arbitrary `fetch`, `eval`,
   dynamic script insertion, or third-party runtime code.
-- Tracer and superficial-fibre GPU buffers have explicit upper bounds.
+- Tracer and superficial-fibre GPU buffers have explicit upper bounds. Canonical
+  visibility starts each bilateral region mesh pair and the SWM dataset at most once,
+  so a direct lesson does not parse unrelated independently packaged geometry.
 - A restrictive meta Content Security Policy limits scripts and connections to
   the same origin, permits HTTPS only in `img-src`, and disables objects, base-URL
   changes, and form submission.
@@ -152,8 +154,11 @@ reviewed artifact, or relaxing the standalone loopback/authentication boundary.
   They provide no confidentiality boundary and must remain suitable for public
   redistribution.
 - Large but bounded public data files can cause slow loading or memory pressure
-  on low-resource devices. This is an availability/performance limitation, not
-  a server compromise path.
+  on low-resource devices. Direct lessons defer unrelated region meshes and SWM,
+  but Atlas Home deliberately loads the complete authored default, and association
+  metadata and geometry remain combined in one eager file. This is an
+  availability/performance limitation, not a server compromise path. See
+  [`PERFORMANCE.md`](PERFORMANCE.md) for measured emulation and unverified physical-device limits.
 - Opening a lesson that declares external images reveals the learner's IP address
   and ordinary transport metadata to the listed hosts. The import preview discloses
   those hosts before activation and requests omit the page referrer, but the static

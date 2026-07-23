@@ -70,6 +70,20 @@ For GitHub Pages or any public deployment, build from a clean checkout with
 check prevents untracked experiments with unknown provenance from entering the
 published `dist/` directory.
 
+### Loading and mobile limits
+
+No-WebGL sessions load neither Three.js nor anatomical geometry. After the WebGL gate,
+Atlas Home requests the complete authored dataset. A direct checked lesson loads only
+the region meshes in its active view and defers SWM until a later scene requests it;
+each deferred asset loads at most once through the canonical visibility path.
+`tracts.json` remains eager because it combines association geometry with panel metadata.
+
+A throttled 390×844 Chromium production profile reduced the direct lesson's initial
+encoded anatomical/catalog transfer by 82.5% relative to Atlas Home. This desktop-hosted
+emulation does not prove physical-phone GPU, battery, thermal, or mobile-Safari behavior.
+See [`docs/PERFORMANCE.md`](docs/PERFORMANCE.md) for the method, measurements, replay
+command, and deferred device matrix.
+
 ### Standalone workstation binary
 
 Build one executable containing the reviewed Vite page, anatomical assets,
@@ -158,7 +172,7 @@ src/ui/              renderer-independent presentation, workspace, scroll, and c
 src/pathways.js      schematic anterior-pathway control points
 src/style.css        responsive editorial scientific-instrument UI
 test/                 focused Node tests for extracted pure behavior
-scripts/browser/      replayable Firefox/Chromium Atlas, Lesson, history, and input checks
+scripts/browser/      replayable Firefox/Chromium UX, accessibility, and performance checks
 tools/assets/         offline hash-bound anatomical generators, replay printer, and verifier
 public/models/       licensed runtime GLB assets, including brain_mni.glb
 public/data/entities.json / fidelity.json   stable scene/inspectable IDs and disclosure records

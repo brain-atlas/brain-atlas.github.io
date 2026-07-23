@@ -156,7 +156,7 @@ button.on, button[aria-expanded="true"] { color: #031613; border-color: var(--ac
 .val { width: 36px; color: var(--accent); font-family: var(--font-mono); font-size: 0.68rem; text-align: right; }
 input[type="range"] { flex: 1; min-width: 80px; accent-color: var(--accent); }
 .btns { display: flex; flex-wrap: wrap; gap: 6px; margin-left: auto; }
-.btns button { min-height: 32px; padding: 6px 10px; font-size: 0.7rem; }
+.btns button { min-height: 44px; padding: 6px 10px; font-size: 0.7rem; }
 .btns .wide { flex: 1; min-width: 100px; }
 .layer-tree { min-width: 0; display: grid; grid-template-columns: repeat(2, minmax(220px, 1fr)); gap: 4px 18px; }
 .lyr-sec { grid-column: 1 / -1; margin-top: 10px; color: var(--dim); font-family: var(--font-mono); font-size: 0.58rem; letter-spacing: 0.15em; text-transform: uppercase; }

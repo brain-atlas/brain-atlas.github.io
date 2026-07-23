@@ -186,6 +186,8 @@ for (const lb of LANDMARKS) {
 // group tagged with tree metadata (id, name, parent) for later visibility logic.
 const regionGroup = new THREE.Group(); mniGroup.add(regionGroup);
 const regionsById = {};
+const regionMetadataById = {};
+const regionMeshLoads = new Set();
 const orLines = {}, orCaps = {};
 const hemiState = { L: true, R: true };     // global master L/R filter (ANDs with per-item)
 const regionHemi = {};                      // id -> {L,R} per-region hemisphere visibility
@@ -234,24 +236,31 @@ function makeRegionMaterial(hex, opacity) {
     transparent: true, depthWrite: false, side: THREE.DoubleSide,
   });
 }
+function loadRegionMeshes(reg) {
+  if (regionMeshLoads.has(reg.id)) return;
+  regionMeshLoads.add(reg.id);
+  const group = regionsById[reg.id];
+  const mat = makeRegionMaterial(reg.color, reg.opacity);
+  for (const hemi of Object.keys(reg.meshes)) {
+    new OBJLoader().load('/' + reg.meshes[hemi].file, (obj) => {
+      let geom = null; obj.traverse((n) => { if (n.isMesh && !geom) geom = n.geometry; });
+      if (!geom) return;
+      if (!geom.attributes.normal) geom.computeVertexNormals();
+      const mesh = new THREE.Mesh(geom, mat); mesh.frustumCulled = false; mesh.userData = { hemi };
+      mesh.visible = hemiState[hemi] && (regionHemi[reg.id] ? regionHemi[reg.id][hemi] : true);
+      group.add(mesh);
+      reapplyLessonMaterialFactors(group);
+      applyRegionMesh(reg.id);
+    }, undefined, (e) => console.warn('region mesh failed:', reg.meshes[hemi].file, e));
+  }
+}
 function loadRegions() {
   fetch('/data/regions.json').then((r) => r.json()).then(({ regions }) => {
     for (const reg of regions) {
-      const mat = makeRegionMaterial(reg.color, reg.opacity);
       const group = new THREE.Group(); group.userData = { id: reg.id, name: reg.name, parent: reg.parent };
-      for (const hemi of Object.keys(reg.meshes)) {
-        new OBJLoader().load('/' + reg.meshes[hemi].file, (obj) => {
-          let geom = null; obj.traverse((n) => { if (n.isMesh && !geom) geom = n.geometry; });
-          if (!geom) return;
-          if (!geom.attributes.normal) geom.computeVertexNormals();
-          const mesh = new THREE.Mesh(geom, mat); mesh.frustumCulled = false; mesh.userData = { hemi };
-          mesh.visible = hemiState[hemi] && (regionHemi[reg.id] ? regionHemi[reg.id][hemi] : true);
-          group.add(mesh);
-          reapplyLessonMaterialFactors(group);
-          applyRegionMesh(reg.id);
-        }, undefined, (e) => console.warn('region mesh failed:', reg.meshes[hemi].file, e));
-      }
-      regionGroup.add(group); regionsById[reg.id] = group;
+      regionGroup.add(group);
+      regionsById[reg.id] = group;
+      regionMetadataById[reg.id] = reg;
     }
     _regions = regions; buildPanel(regions, tractsMeta);
     markViewerReady('regions');
@@ -567,6 +576,7 @@ const swmGroup = new THREE.Group(); mniGroup.add(swmGroup);
 const SWM = { L: [], R: [] };
 const swmLines = { L: null, R: null };
 const swmDots = []; let swmT = 0;
+let swmLoadStarted = false;
 const MAXSWM = 15000;
 const swmGeo = new THREE.BufferGeometry();
 swmGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(MAXSWM * 3), 3).setUsage(THREE.DynamicDrawUsage));
@@ -585,6 +595,8 @@ if (import.meta.env.DEV) {
 }
 
 function loadSwm() {
+  if (swmLoadStarted) return;
+  swmLoadStarted = true;
   fetch('/data/swm_fibres.json').then((r) => r.json()).then((data) => {
     const linePos = { L: [], R: [] };
     const lloc = data.lloc, lens = data.len;   // baked local-mean length + own length (mm)
@@ -1124,6 +1136,14 @@ function lessonRendererObjects(entity) {
   }
   return [];
 }
+function ensureVisibilityAssets(entityIds, catalog) {
+  for (const entityId of entityIds) {
+    const entity = catalog.entitiesById[entityId];
+    const { kind, id } = entity.renderer;
+    if (kind === 'layer' && id === 'swm') loadSwm();
+    if (kind === 'region') loadRegionMeshes(regionMetadataById[id]);
+  }
+}
 function applyLessonMaterialOpacity(material) {
   const selection = material.userData.lessonSelectionFactor ?? 1;
   const visibility = material.userData.lessonVisibilityFactor ?? 1;
@@ -1266,6 +1286,7 @@ export function createLessonRendererAdapter(catalog, { onTransitionStateChange =
       }
     },
     setVisibility(value) {
+      ensureVisibilityAssets(value.entities, catalog);
       remember('visibility', value);
       lessonVisibilityActive = true;
       const now = performance.now();
@@ -1440,5 +1461,4 @@ loadBrain();
 loadFibres();
 loadRegions();
 loadTracts();
-loadSwm();
 requestAnimationFrame(animate);

@@ -135,6 +135,7 @@ scientific catalogs, authored lesson state, or anatomical coordinates.
 | INV-42 | Wide anatomy details are nonmodal. Compact details live outside the inert app, own a named page lock, cycle visible focus, support Escape/Close, and restore the connected invoker or stage fallback. | compact browser test | Details preserve context without leaking focus or stranding it on a removed control. |
 | INV-43 | No-WebGL retains the same semantic names, anatomy copy, statuses, limitations, citations, and licenses; only raycast/highlight is absent. | no-WebGL browser test | GPU capability does not gate scientific inspection. |
 | INV-44 | Inspection highlight is a transient material factor composed with canonical visibility/authored-selection factors; it never dispatches `selection.set`, changes camera/filter/playback, mutates geometry, or enters resume/history state. | main/bootstrap review + canonical snapshot browser assertion | Inspection remains an overlay on the one renderer rather than another scene/filter system. |
+| INV-45 | Canonical visibility starts independently packaged region OBJ pairs and SWM data at most once. Direct lesson entry requests only its current region meshes and defers SWM until a later snapshot needs it; Atlas Home still realizes the complete authored default. | `scripts/browser/hardening.spec.cjs` request inventory + mobile production profile | Lesson routes avoid unrelated geometry without creating a second loader, renderer, filter path, or transform. |
 
 ## Failure Modes
 
@@ -177,6 +178,7 @@ scientific catalogs, authored lesson state, or anatomical coordinates.
 | FAIL-35 | Unknown anatomy record appears with generic copy/status | Detail projection guessed a record or fidelity fallback | Throw before DOM rendering; built-in catalog failure is an application error. |
 | FAIL-36 | First touch opens details or an orbit/scroll drag selects anatomy | Pointer type/staging or movement threshold was bypassed | Route raw intents through the pure reducer and require a bounded tap before emitting touch. |
 | FAIL-37 | Compact sheet leaks focus/scroll or close returns to a removed button | Inspector was placed inside the inert app, shared another lock owner, or trusted a disconnected invoker | Keep the sheet external, lock by `anatomy-inspector`, filter visible focusables, and fall back to the connected preview/summary. |
+| FAIL-38 | Direct lesson entry downloads every region and SWM, or a deferred object appears with stale state | Heavy loaders run before the first snapshot, repeat after re-entry, or late geometry bypasses existing group factors | Start region/SWM loads from canonical visibility, guard each asset once, and reapply visibility/hemisphere/material state through the retained groups. |
 
 ## Decision Framework
 
@@ -221,9 +223,10 @@ node --test test/scene-navigation.test.js test/lesson-scene-controller.test.js \
 | INV-34, FAIL-32 | `scripts/browser/explore-lifecycle.spec.cjs`, `home-workspace.spec.cjs`, `home-edge.spec.cjs`, and `home-production.spec.cjs` in Firefox and Chromium |
 | INV-35–INV-40, FAIL-33–FAIL-36 | `test/catalog.test.js`, `test/anatomy-inspector.test.js`, `test/tract-region-mapping.test.js` |
 | INV-41–INV-44, FAIL-37 | `scripts/browser/anatomy-inspector.spec.cjs` in Firefox/Chromium, including real Chromium touch and no-WebGL |
+| INV-45, FAIL-38 | `scripts/browser/hardening.spec.cjs` request inventory plus `scripts/browser/performance.spec.cjs` under the documented mobile emulation |
 
 Full repository verification remains `npm test && npm run build:publish` plus
-wide, compact, reduced-motion, no-WebGL, and production-hook browser checks.
+wide, compact, reduced-motion, no-WebGL, accessibility, production-hook, and mobile-profile browser checks.
 
 ## Dependencies
 

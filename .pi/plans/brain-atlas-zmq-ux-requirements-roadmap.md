@@ -485,9 +485,18 @@ Build selection and highlighting on the same renderer-command and stable-entity-
 boundaries. Do not simulate clicks, mutate anatomical geometry, or introduce another
 coordinate transform.
 
-### Hardening (`brain-atlas-zmq.9`)
+### Hardening (`brain-atlas-zmq.9`) — Implemented
 
-Do not postpone basic semantics or responsive design until this task; each preceding task must meet its own accessibility acceptance. This task is the integrated verification and performance gate before declaring the first lesson release-ready.
+The integrated gate now covers settled-state axe scans, keyboard focus and announcements,
+44 px semantic camera actions, 320/390/short-wide/200%-equivalent containment, Chromium
+real touch, reduced motion, no-WebGL and renderer failure, checked/local import,
+inspection, history, and the one-canvas lifecycle in Firefox and Chromium. Canonical
+visibility demand-loads each independently packaged region pair and SWM once; direct
+reference-lesson entry transfers 82.5% fewer encoded anatomical/catalog bytes than the
+complete Atlas in the recorded throttled production profile. [`docs/PERFORMANCE.md`](../../docs/PERFORMANCE.md)
+records the method and explicitly defers physical iOS/Android GPU, battery, thermal, and
+backgrounding claims. Basic semantics and responsive design remain requirements of each
+feature rather than debt reserved for this gate.
 
 ## 13. File conflicts and execution strategy
 
