@@ -38,15 +38,18 @@ export function parseArguments(arguments_, environment = process.env) {
   const assetsDir = values.get('assets') ?? 'release';
   const repo = values.get('repo') ?? environment.GITHUB_REPOSITORY;
   const sha = values.get('sha') ?? environment.GITHUB_SHA;
-  let tag = values.get('tag') ?? environment.GITHUB_REF_NAME;
+  let tag = values.get('tag');
   if (!['nightly', 'stable'].includes(channel)) throw new Error('channel must be nightly or stable');
   if (!REPOSITORY_PATTERN.test(repo ?? '')) throw new Error(`invalid GitHub repository ${JSON.stringify(repo)}`);
   if (!SHA_PATTERN.test(sha ?? '')) throw new Error(`invalid source commit ${JSON.stringify(sha)}`);
   if (channel === 'nightly') {
     if (tag && tag !== 'nightly') throw new Error('nightly publication tag must be nightly');
     tag = 'nightly';
-  } else if (!STABLE_TAG_PATTERN.test(tag ?? '')) {
-    throw new Error(`stable publication requires a semantic version tag, got ${JSON.stringify(tag)}`);
+  } else {
+    tag ??= environment.GITHUB_REF_NAME;
+    if (!STABLE_TAG_PATTERN.test(tag ?? '')) {
+      throw new Error(`stable publication requires a semantic version tag, got ${JSON.stringify(tag)}`);
+    }
   }
   return { channel, assetsDir, repo, sha, tag, dryRun };
 }

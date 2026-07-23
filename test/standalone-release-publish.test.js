@@ -21,7 +21,7 @@ test('parseArguments derives explicit dry-run publication inputs without accepti
   assert.deepEqual(parseArguments([
     '--channel', 'nightly', '--assets', 'release', '--repo', 'brain-atlas/brain-atlas.github.io',
     '--sha', SHA, '--dry-run',
-  ], {}), {
+  ], { GITHUB_REF_NAME: 'main' }), {
     channel: 'nightly', assetsDir: 'release', repo: 'brain-atlas/brain-atlas.github.io',
     sha: SHA, tag: 'nightly', dryRun: true,
   });
