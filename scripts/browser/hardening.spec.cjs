@@ -57,7 +57,7 @@ test('compact workspaces and modal surfaces pass serious automated accessibility
   await page.locator('#model-sources-trigger').click();
   audits.modelSources = await seriousAccessibilityViolations(page);
   await expect(page.locator('#fidelity-panel')).toContainText(
-    'Event rates, rhythms, bursts, time dilation, and travel speed are illustrative rather than measured LGN or V1 physiology.',
+    'Event rates, rhythms, bursts, time dilation, the common 40 MNI mm/display-second speed at activity speed 70, and playback scaling are illustrative rather than measured LGN or V1 physiology or universal axonal conduction velocity.',
   );
   await page.locator('#fidelity-close').click();
 
