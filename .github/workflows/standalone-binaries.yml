@@ -1,0 +1,246 @@
+name: Standalone binaries
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  build:
+    name: Build and verify standalone binaries
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - name: Check out source
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Set up Go
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: go.mod
+          cache: false
+
+      - name: Install locked dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Audit dependencies
+        run: npm audit --audit-level=high
+
+      - name: Run Node tests
+        run: npm test
+
+      - name: Build and inspect ordinary publication
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run build:publish
+          if rg -n '__view|__lesson|_brain-atlas/lifecycle|standalone/lifecycle' dist/assets/*.js; then
+            echo 'ordinary publication contains debug or standalone lifecycle code' >&2
+            exit 1
+          fi
+          if find dist \( -type f -name '*.map' -o -type l \) -print | grep -q .; then
+            echo 'ordinary publication contains source maps or symlinks' >&2
+            exit 1
+          fi
+
+      - name: Stage and inspect standalone production site
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run build:standalone:site
+          rg -l '_brain-atlas/lifecycle' internal/site/dist/standalone-assets/*.js >/dev/null
+          if rg -n '__view|__lesson' internal/site/dist/standalone-assets/*.js; then
+            echo 'standalone production artifact contains development hooks' >&2
+            exit 1
+          fi
+          test -f internal/site/dist/index.html
+          test -f internal/site/dist/THIRD_PARTY_NOTICES.md
+
+      - name: Run Go verification
+        shell: bash
+        run: |
+          set -euo pipefail
+          CGO_ENABLED=0 go test ./...
+          go test -race ./internal/standalone
+          go vet ./...
+
+      - name: Determine release label
+        id: metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          short_sha="${GITHUB_SHA:0:12}"
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            label="$GITHUB_REF_NAME"
+          elif [[ "$GITHUB_EVENT_NAME" == push && "$GITHUB_REF" == refs/heads/main ]]; then
+            label="nightly-$short_sha"
+          else
+            label="ci-$short_sha"
+          fi
+          printf 'label=%s\n' "$label" >> "$GITHUB_OUTPUT"
+
+      - name: Build and reproduce release bundle
+        shell: bash
+        env:
+          RELEASE_LABEL: ${{ steps.metadata.outputs.label }}
+          SOURCE_COMMIT: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          if [[ -n "$(git status --porcelain --untracked-files=normal)" ]]; then
+            git status --short
+            echo 'release bundle requires a clean source checkout' >&2
+            exit 1
+          fi
+          source_date_epoch="$(git show -s --format=%ct "$SOURCE_COMMIT")"
+          go run ./cmd/package-standalone \
+            -label "$RELEASE_LABEL" \
+            -commit "$SOURCE_COMMIT" \
+            -source-date-epoch "$source_date_epoch"
+          go run ./cmd/package-standalone -verify-only -label "$RELEASE_LABEL"
+          cp "release/brain-atlas-$RELEASE_LABEL-SHA256SUMS" /tmp/brain-atlas-first-SHA256SUMS
+          go run ./cmd/package-standalone \
+            -label "$RELEASE_LABEL" \
+            -commit "$SOURCE_COMMIT" \
+            -source-date-epoch "$source_date_epoch"
+          go run ./cmd/package-standalone -verify-only -label "$RELEASE_LABEL"
+          cmp /tmp/brain-atlas-first-SHA256SUMS "release/brain-atlas-$RELEASE_LABEL-SHA256SUMS"
+
+      - name: Smoke-test moved Linux binary
+        shell: bash
+        env:
+          RELEASE_LABEL: ${{ steps.metadata.outputs.label }}
+        run: |
+          set -euo pipefail
+          smoke_dir="$(mktemp -d)"
+          server_pid=''
+          cleanup() {
+            if [[ -n "$server_pid" ]]; then
+              kill -TERM "$server_pid" 2>/dev/null || true
+              wait "$server_pid" 2>/dev/null || true
+            fi
+            rm -rf "$smoke_dir"
+          }
+          trap cleanup EXIT
+          tar -xzf "release/brain-atlas-$RELEASE_LABEL-linux-amd64.tar.gz" -C "$smoke_dir"
+          file "$smoke_dir/brain-atlas" | grep -q 'statically linked'
+          "$smoke_dir/brain-atlas" -no-open -stay-open -addr 127.0.0.1:5199 >"$smoke_dir/server.log" 2>&1 &
+          server_pid=$!
+          for _ in 1 2 3 4 5; do
+            curl --fail --silent --show-error http://127.0.0.1:5199/ >/dev/null 2>&1 && break
+            sleep 1
+          done
+          curl --fail --silent --show-error http://127.0.0.1:5199/ >/dev/null
+          curl --fail --silent --show-error http://127.0.0.1:5199/data/entities.json >/dev/null
+          curl --fail --silent --show-error http://127.0.0.1:5199/models/brain_mni.glb >/dev/null
+          test "$(curl --silent --output /dev/null --write-out '%{http_code}' http://127.0.0.1:5199/.gitkeep)" = 404
+          test "$(curl --silent --request POST --output /dev/null --write-out '%{http_code}' http://127.0.0.1:5199/)" = 405
+          kill -TERM "$server_pid"
+          wait "$server_pid"
+          server_pid=''
+
+      - name: Upload standalone bundle
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: brain-atlas-${{ github.sha }}
+          path: release
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 0
+
+  publish-nightly:
+    name: Publish rolling nightly prerelease
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    concurrency:
+      group: standalone-nightly
+      cancel-in-progress: false
+    permissions:
+      contents: write
+    steps:
+      - name: Check out publication code
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+
+      - name: Download standalone bundle
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: brain-atlas-${{ github.sha }}
+          path: release
+
+      - name: Publish verified nightly
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/publish-standalone-release.mjs \
+            --channel nightly \
+            --assets release \
+            --repo "$GITHUB_REPOSITORY" \
+            --sha "$GITHUB_SHA"
+
+  publish-stable:
+    name: Publish immutable stable release
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    concurrency:
+      group: standalone-stable-${{ github.ref }}
+      cancel-in-progress: false
+    permissions:
+      contents: write
+    steps:
+      - name: Check out publication code
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+
+      - name: Download standalone bundle
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: brain-atlas-${{ github.sha }}
+          path: release
+
+      - name: Publish verified stable release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/publish-standalone-release.mjs \
+            --channel stable \
+            --assets release \
+            --repo "$GITHUB_REPOSITORY" \
+            --sha "$GITHUB_SHA" \
+            --tag "$GITHUB_REF_NAME"

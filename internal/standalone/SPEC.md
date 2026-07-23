@@ -38,7 +38,9 @@ the resulting tracker channel starts normal `http.Server.Shutdown`.
 - `../site/embed.go` — checked Vite-asset embedding boundary.
 - `../../src/standalone/lifecycle.js` — standalone-only held-request client.
 - `../../scripts/build-standalone.mjs` — publication guard, standalone Vite
-  build, and `CGO_ENABLED=0` Go build.
+  staging, stage-only release entry, and host `CGO_ENABLED=0` Go build.
+- `../releasepack/SPEC.md` — six-target deterministic release archive,
+  checksum, and provenance contract.
 
 ## Public Interface
 
@@ -74,7 +76,7 @@ assets.
 
 | ID | Symptom | Cause | Fix |
 |---|---|---|---|
-| FAIL-1 | Executable reports that `index.html` is missing. | Go was built directly before the standalone Vite staging build. | Run `npm run build:standalone`; do not weaken the embedded-site check. |
+| FAIL-1 | A directly built executable reports that `index.html` is missing. | The tracked `.gitkeep` permitted clean Go compilation, but no standalone Vite site was staged before `go build`. | Run `npm run build:standalone`; release tooling must use `npm run build:standalone:site` first. Do not embed a fallback page or weaken the `index.html` check. |
 | FAIL-2 | Browser does not open, but the process remains running. | OS URL helper is absent or rejected the request. | Use the printed URL; browser-open failure is deliberately nonfatal. |
 | FAIL-3 | Reload closes the server. | Grace period removed, zeroed unintentionally, or reconnect no longer invalidates the stale timer. | Restore INV-4 and its lifecycle tests. |
 | FAIL-4 | Server never exits after all Atlas pages close. | Lifecycle module omitted from standalone output, cookie rejected, stream not canceled, or `-stay-open` selected. | Check standalone marker, root cookie, lifecycle response, and command flags. |
@@ -100,9 +102,9 @@ assets.
 | INV-1, INV-6, INV-10 | `CGO_ENABLED=0 go test ./internal/standalone -run 'ValidateLoopback|Run|Browser'` | Uses injected browser and real loopback HTTP. |
 | INV-3, INV-5, INV-8 | `CGO_ENABLED=0 go test ./internal/standalone -run 'Handler|LifecycleEndpoint|Static'` | `httptest` covers cookies, stream cancellation, methods, headers, MIME, and missing files. |
 | INV-4 | `go test -race ./internal/standalone -run Lifecycle` | Fake timers deterministically fire stale callbacks. Race instrumentation may use the host C toolchain; release builds remain CGO-free. |
-| INV-2, INV-7 | `npm run build:standalone` plus moved-binary and GOOS/GOARCH smoke builds | Operational release evidence. |
+| INV-2, INV-7 | `npm run build:standalone` plus `npm run build:release -- --label ci-local`, whole-bundle validation, and moved-binary smoke tests | Host and six-target operational release evidence. |
 | INV-9 | `node --test test/build-config.test.js test/standalone-lifecycle.test.js test/standalone-build.test.js` and marker searches in both outputs | Verifies mode separation and browser reconnect behavior. |
-| All | `npm test && CGO_ENABLED=0 go test ./...` | Full regression suites. |
+| All | `npm test && CGO_ENABLED=0 go test ./...` | The tracked `internal/site/dist/.gitkeep` makes this work in a clean checkout; `FS()` still rejects missing staged `index.html`. |
 
 ## Dependencies
 
@@ -111,5 +113,6 @@ assets.
 | Vite publication build | internal | `vite.config.js`, `scripts/check-publish.mjs` |
 | Embedded site | internal | `internal/site/embed.go` |
 | Browser lifecycle client | internal | `src/standalone/lifecycle.js` |
+| Release packaging | internal | `internal/releasepack/SPEC.md`, `cmd/package-standalone` |
 | Lesson contract and renderer | internal, unchanged | `src/lesson/SPEC.md`, `src/main.js` |
 | Go standard library | external | Go 1.23+ module contract; no third-party modules |

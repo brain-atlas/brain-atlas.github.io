@@ -1,6 +1,10 @@
 node_modules/
+__pycache__/
+*.pyc
 dist/
 build/
+release/
+!internal/site/dist/
 internal/site/dist/*
 !internal/site/dist/.gitkeep
 .direnv/

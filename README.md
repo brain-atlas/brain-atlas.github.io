@@ -6,6 +6,87 @@ LGN → optic radiations → V1), rendered as animated, field-quadrant-coded flo
 smooth with tens of thousands of vertices — unlike the Canvas-2D prototype it
 replaces.
 
+## Use Brain Atlas
+
+### Open the hosted viewer
+
+**[Open Brain Atlas in your browser](https://brain-atlas.github.io/)** — no
+installation, account, or download is required. The hosted GitHub Pages app is
+the simplest and recommended way to use the atlas.
+
+### Download a standalone binary
+
+The standalone download contains the same reviewed atlas and opens it from one
+local executable. It needs neither Node nor files beside the executable at
+runtime.
+
+- **Stable versions:** [Brain Atlas releases](https://github.com/brain-atlas/brain-atlas.github.io/releases)
+- **Latest successful `main` build:** [mutable nightly prerelease](https://github.com/brain-atlas/brain-atlas.github.io/releases/tag/nightly)
+
+Nightly is a preview channel: its tag and assets move after a newer `main` build
+passes. Stable `v*` releases are versioned and are not replaced. Each release
+provides these unsigned archives:
+
+| Platform | Intel/AMD 64-bit | ARM 64-bit |
+|---|---|---|
+| Linux | `linux-amd64.tar.gz` | `linux-arm64.tar.gz` |
+| macOS | `darwin-amd64.tar.gz` | `darwin-arm64.tar.gz` |
+| Windows | `windows-amd64.zip` | `windows-arm64.zip` |
+
+Download the archive, its commit-matched `SHA256SUMS`, and `PROVENANCE.json` from
+the same release. Compare the archive's SHA-256 before extracting it. On macOS,
+for example:
+
+```bash
+shasum -a 256 brain-atlas-<label>-darwin-arm64.tar.gz
+# Compare with the matching line in brain-atlas-<label>-SHA256SUMS.
+tar -xzf brain-atlas-<label>-darwin-arm64.tar.gz
+./brain-atlas
+```
+
+On Linux, use `sha256sum` and extract the `.tar.gz`; on Windows, use
+`Get-FileHash -Algorithm SHA256`, extract the `.zip`, and run
+`brain-atlas.exe`. The archives also carry the project license, data-license
+record, third-party notices, and citation file for inspection; they are not
+runtime dependencies.
+
+At runtime the executable:
+
+- listens on an OS-assigned `127.0.0.1` port and rejects non-loopback `-addr`
+  values;
+- prints the URL and asks the operating system to open the default browser;
+- exits ten seconds after the last authenticated Brain Atlas page disconnects,
+  while allowing reloads or another tab to reconnect; and
+- still accepts Ctrl+C or SIGTERM for immediate graceful shutdown.
+
+Use `-no-open` to copy the printed URL yourself, `-stay-open` to run until
+interrupted, or `-shutdown-grace 30s` to change the reconnect window. If browser
+launch fails, the server remains available at the printed URL and does not arm
+automatic shutdown until a page connects. This is a local web launcher, not a
+native WebView or LAN server. Imported lessons may still contact the
+supplementary HTTPS image hosts shown in their activation preview.
+
+#### Opening the unsigned binary on macOS
+
+The project does not yet sign or notarize macOS binaries. After verifying the
+archive checksum, try to open `brain-atlas` once. If macOS blocks it, follow
+Apple's one-time [Privacy & Security **Open Anyway**
+procedure](https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unknown-developer-mh40616/mac).
+
+If that control is unavailable and you trust the verified release, an advanced
+command-line fallback removes quarantine from this executable only:
+
+```bash
+xattr -d com.apple.quarantine /path/to/brain-atlas
+```
+
+Do not use `sudo`, disable Gatekeeper, or recursively clear quarantine from
+Downloads or another directory. Windows may likewise show a SmartScreen warning
+because its binaries are unsigned. See [`docs/RELEASES.md`](docs/RELEASES.md)
+for channel, checksum, provenance, and maintainer details.
+
+## Scientific scope
+
 **Everything posterior to the chiasm uses real atlas/template data in one runtime
 MNI/ICBM RAS-millimetre frame.** The cortical surface and LGN/V1 shells are
 MNI152NLin2009cAsym. Association tracts are verified ICBM 2009a Nonlinear
@@ -22,54 +103,6 @@ undirected, low-confidence endpoint proximity for the checked display sample—n
 terminations, strengths, functions, or input/output direction. See “What's real vs
 schematic” and the scientific traceability inventory below.
 
-## Run it
-
-The dev environment is a Nix flake wired through direnv (matching the sibling
-project). From this directory:
-
-```bash
-direnv allow      # loads the flake: Node 22 + Go + git, then runs `npm install`
-npm run dev       # Vite dev server → http://localhost:5180
-```
-
-Without direnv:
-
-```bash
-nix develop       # or have Node 22 and Go 1.23+ on PATH
-npm install
-npm run dev
-```
-
-Run the focused renderer-independent tests, then build a static bundle for any
-local webhost (`base: './'` keeps paths relative):
-
-```bash
-npm test
-npm run build             # → dist/ for local development
-npm run build:publish     # refuse untracked public/ assets, then build
-npm run preview           # serve dist/ on :5180
-# or: python -m http.server -d dist 8000
-```
-
-### Viewing stability
-
-This is a heavy WebGL page. Vite's **HMR full-reloads** can churn the GPU context
-and occasionally crash a browser tab — especially across repeated dev-server
-restarts. For stable viewing use the **static preview** (no HMR):
-
-```bash
-npm run build && npm run preview   # → http://localhost:5180
-```
-
-Use `npm run dev` only while editing. If a tab misbehaves after a restart,
-hard-reload it (or reopen) once the server is back up. The optic-radiation mesh is
-decimated specifically to keep GPU memory low.
-
-For GitHub Pages or any public deployment, build from a clean checkout with
-`npm run build:publish`. Vite copies every file under `public/`; the publication
-check prevents untracked experiments with unknown provenance from entering the
-published `dist/` directory.
-
 ### Loading and mobile limits
 
 No-WebGL sessions load neither Three.js nor anatomical geometry. After the WebGL gate,
@@ -83,39 +116,6 @@ encoded anatomical/catalog transfer by 82.5% relative to Atlas Home. This deskto
 emulation does not prove physical-phone GPU, battery, thermal, or mobile-Safari behavior.
 See [`docs/PERFORMANCE.md`](docs/PERFORMANCE.md) for the method, measurements, replay
 command, and deferred device matrix.
-
-### Standalone workstation binary
-
-Build one executable containing the reviewed Vite page, anatomical assets,
-licenses, and notices:
-
-```bash
-npm run build:standalone
-./build/brain-atlas           # Windows: .\\build\\brain-atlas.exe
-```
-
-The build script runs the publication guard, emits a standalone-only Vite bundle,
-and compiles it with `CGO_ENABLED=0`. Node and Go are build-time requirements;
-the resulting executable needs neither Node nor adjacent asset files. Set `GOOS`
-and `GOARCH` before the npm command to cross-compile with the installed Go
-toolchain.
-
-At runtime the executable:
-
-- listens on an OS-assigned `127.0.0.1` port and rejects non-loopback `-addr`
-  values;
-- prints the URL and asks the operating system to open the default browser;
-- exits ten seconds after the last authenticated Brain Atlas page disconnects,
-  while allowing reloads or another tab to reconnect; and
-- still accepts Ctrl+C or SIGTERM for immediate graceful shutdown.
-
-Use `-no-open` to copy the printed URL yourself, `-stay-open` to run until
-interrupted, or `-shutdown-grace 30s` to change the reconnect window. If browser
-launch fails, the server remains available at the printed URL and does not arm
-automatic shutdown until a page connects. The binary is a local web launcher,
-not a native WebView or network server; it is not signed or notarized by this
-build. Imported lessons may still contact the supplementary HTTPS image hosts
-shown in their activation preview.
 
 ## Coordinate handling
 
@@ -160,8 +160,10 @@ flake.nix            Nix devShell (Node 22 + Go + git); blocks bare `nix develop
 .envrc / .envrc.d/   direnv: `use flake`, then npm install on entry
 index.html           semantic Atlas/Lesson shell, drawer, shared stage, and viewer controls
 cmd/brain-atlas/     standalone executable flags and process lifecycle
+cmd/package-standalone/ six-target release build orchestrator
 internal/site/       standalone Vite embed boundary
 internal/standalone/ loopback HTTP, browser handoff, and tab-lifecycle shutdown
+internal/releasepack/ deterministic archives, checksums, provenance, and validation
 src/standalone/      standalone-only browser lifecycle client
 src/bootstrap.js     workspace/history, lesson/import, navigation, disclosure, and fallback
 src/main.js          lazy Three.js scene, data loading, activity, adapter, and panel bridge
@@ -173,6 +175,7 @@ src/pathways.js      schematic anterior-pathway control points
 src/style.css        responsive editorial scientific-instrument UI
 test/                 focused Node tests for extracted pure behavior
 scripts/browser/      replayable Firefox/Chromium UX, accessibility, and performance checks
+.github/workflows/standalone-binaries.yml  artifact/nightly/stable release gates
 tools/assets/         offline hash-bound anatomical generators, replay printer, and verifier
 public/models/       licensed runtime GLB assets, including brain_mni.glb
 public/data/entities.json / fidelity.json   stable scene/inspectable IDs and disclosure records
@@ -366,6 +369,75 @@ overall anatomy reads correctly**:
 - **Mirrored:** the right optic radiation is a sagittal mirror of the left until
   independently generated right-side streamlines replace it. Region,
   association-tract, and superficial-WM geometry are real bilateral data.
+
+## Development
+
+The development environment is a Nix flake wired through direnv. From a source
+checkout:
+
+```bash
+direnv allow      # loads Node 22 + Go + git, then installs npm packages
+npm run dev       # Vite development server → http://localhost:5180
+```
+
+Without direnv:
+
+```bash
+nix develop       # or have Node 22 and Go 1.23+ on PATH
+npm ci --ignore-scripts
+npm run dev
+```
+
+Run the renderer-independent and standalone tests, then build the ordinary
+static publication:
+
+```bash
+npm test
+CGO_ENABLED=0 go test ./...
+go test -race ./internal/standalone
+npm run build             # → dist/ for local development
+npm run build:publish     # publication guard, then ordinary production build
+npm run preview           # serve dist/ on :5180
+```
+
+Vite's HMR full reloads can churn the GPU context on this heavy WebGL page. For
+stable viewing, use the HMR-free preview:
+
+```bash
+npm run build && npm run preview
+```
+
+Use `npm run dev` only while editing. If a tab misbehaves after a restart,
+hard-reload or reopen it once the server is back. The optic-radiation mesh is
+decimated specifically to reduce GPU memory pressure.
+
+For GitHub Pages or another public deployment, build from a clean checkout with
+`npm run build:publish`. Vite copies every file under `public/`; the publication
+guard prevents untracked experiments with unknown provenance from entering
+`dist/`.
+
+### Build standalone binaries from source
+
+Build one host executable containing the reviewed production page, anatomical
+assets, licenses, and notices:
+
+```bash
+npm run build:standalone
+./build/brain-atlas           # Windows: .\\build\\brain-atlas.exe
+```
+
+The build forces `CGO_ENABLED=0`; Node and Go are build-time requirements only.
+To reproduce all six release archives, checksums, and provenance:
+
+```bash
+npm run build:release -- --label ci-local
+npm run verify:release -- --label ci-local
+```
+
+The release workflow and maintainer procedure are documented in
+[`docs/RELEASES.md`](docs/RELEASES.md). Do not manually move `nightly`, publish a
+`v*` tag, or alter an existing stable release without the repository's approval
+and verification gates.
 
 ## AI-assisted development
 

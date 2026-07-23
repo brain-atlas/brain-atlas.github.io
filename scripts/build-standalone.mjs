@@ -18,11 +18,17 @@ export function goBuildEnvironment(baseEnvironment) {
   return { ...baseEnvironment, CGO_ENABLED: '0' };
 }
 
+export function buildPlan(arguments_) {
+  if (arguments_.length === 0) return { buildBinary: true };
+  if (arguments_.length === 1 && arguments_[0] === '--site-only') return { buildBinary: false };
+  throw new Error(`unknown standalone build option: ${arguments_.join(' ')}`);
+}
+
 function hostGoos(platform) {
   return platform === 'win32' ? 'windows' : platform;
 }
 
-async function buildStandalone() {
+async function stageStandaloneSite() {
   execFileSync(process.execPath, [join(ROOT, 'scripts', 'check-publish.mjs')], {
     cwd: ROOT,
     stdio: 'inherit',
@@ -37,6 +43,14 @@ async function buildStandalone() {
     else process.env.BRAIN_ATLAS_STANDALONE = previousStandalone;
     await mkdir(STAGING_DIR, { recursive: true });
     await writeFile(PLACEHOLDER, '');
+  }
+}
+
+async function buildStandalone({ buildBinary }) {
+  await stageStandaloneSite();
+  if (!buildBinary) {
+    console.log(`Standalone Brain Atlas site: ${STAGING_DIR}`);
+    return;
   }
 
   await mkdir(BUILD_DIR, { recursive: true });
@@ -58,7 +72,14 @@ async function buildStandalone() {
 
 const invokedPath = process.argv[1] ? pathToFileURL(resolve(process.argv[1])).href : '';
 if (import.meta.url === invokedPath) {
-  buildStandalone().catch((error) => {
+  let plan;
+  try {
+    plan = buildPlan(process.argv.slice(2));
+  } catch (error) {
+    console.error(error instanceof Error ? error.message : error);
+    process.exitCode = 1;
+  }
+  if (plan) buildStandalone(plan).catch((error) => {
     console.error(error instanceof Error ? error.message : error);
     process.exitCode = 1;
   });
