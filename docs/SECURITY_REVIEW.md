@@ -221,6 +221,14 @@ or relaxing the standalone loopback/authentication boundary.
 - Dependency major versions are intentionally not upgraded during this review.
   Zero known vulnerabilities were reported; Dependabot and future focused
   compatibility testing remain required.
+- The Ubuntu standalone release job does not rerun `npm test`. Seven scientific
+  asset-regeneration tests require the recorded Darwin arm64/Nix byte-exact
+  environment, and decision `brain-atlas-ek3` chose not to run a partial Node
+  suite in release CI. Maintainers must therefore run the complete 200-test
+  local Nix gate before integration; the remote release job independently keeps
+  dependency audit, publication isolation, Go/race/vet, deterministic packaging,
+  bundle validation, and extracted-binary smoke controls. This local-only Node
+  gate is a residual process dependency, not an enforced GitHub status check.
 - A compromised maintainer or GitHub organization owner could authorize a
   malicious deployment. The organization does not currently require two-factor
   authentication; require it before adding collaborators. Before publication,

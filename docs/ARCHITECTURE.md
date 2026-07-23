@@ -46,10 +46,14 @@ explicit shutdown endpoint. See [`internal/standalone/SPEC.md`](../internal/stan
 `.github/workflows/standalone-binaries.yml` is independent of the Pages
 deployment workflow. Its read-only Ubuntu build job runs for pull requests,
 `main`, semantic-version tags, and manual dispatches. It stages one production
-standalone Vite tree, verifies ordinary/standalone bundle separation, runs Node
-and Go checks, and calls `cmd/package-standalone` to cross-build Linux, macOS,
-and Windows for amd64 and arm64 with `CGO_ENABLED=0`. The build job receives no
-release credential.
+standalone Vite tree, audits locked Node dependencies, verifies ordinary/standalone
+bundle separation, runs Go/release checks, and calls `cmd/package-standalone` to
+cross-build Linux, macOS, and Windows for amd64 and arm64 with `CGO_ENABLED=0`.
+The build job receives no release credential. It does not run the Node suite:
+seven scientific asset-regeneration tests require the recorded Darwin arm64/Nix
+byte-exact environment, so decision `brain-atlas-ek3` retains the complete
+`npm test` suite as a required local gate rather than selecting a partial Ubuntu
+subset.
 
 `internal/releasepack` owns the deterministic distribution contract. It writes
 normalized tar/gzip or ZIP archives containing one executable plus the required

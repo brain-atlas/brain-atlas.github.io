@@ -65,7 +65,7 @@ test('build job is read-only, pinned, credential-free, and retains the exact rel
 
   const combinedRuns = build.steps.filter(({ run }) => run).map(({ run }) => run).join('\n');
   for (const command of [
-    'npm ci --ignore-scripts', 'npm audit --audit-level=high', 'npm test', 'npm run build:publish',
+    'npm ci --ignore-scripts', 'npm audit --audit-level=high', 'npm run build:publish',
     'npm run build:standalone:site', 'CGO_ENABLED=0 go test ./...',
     'go test -race ./internal/standalone', 'go vet ./...', 'go run ./cmd/package-standalone',
   ]) assert.match(combinedRuns, new RegExp(command.replaceAll('.', '\\.').replaceAll('*', '\\*')));
@@ -74,6 +74,19 @@ test('build job is read-only, pinned, credential-free, and retains the exact rel
   assert.match(combinedRuns, /data\/entities\.json/);
   assert.match(combinedRuns, /models\/brain_mni\.glb/);
   assert.equal(JSON.stringify(build).includes('GH_TOKEN'), false);
+});
+
+test('Ubuntu release CI leaves the Darwin-byte-exact Node suite to the documented local gate', () => {
+  const build = workflow().jobs.build;
+  const combinedRuns = build.steps.filter(({ run }) => run).map(({ run }) => run).join('\n');
+  const releases = readFileSync(new URL('../docs/RELEASES.md', import.meta.url), 'utf8');
+  const security = readFileSync(new URL('../docs/SECURITY_REVIEW.md', import.meta.url), 'utf8');
+
+  assert.equal(build.steps.some(({ name }) => name === 'Run Node tests'), false);
+  assert.equal(combinedRuns.includes('npm test'), false);
+  assert.match(releases, /does not run `npm test`/);
+  assert.match(releases, /recorded Darwin arm64\/Nix environment/);
+  assert.match(security, /release job does not rerun `npm test`/);
 });
 
 test('nightly and stable jobs alone receive write permission and consume the build artifact', () => {

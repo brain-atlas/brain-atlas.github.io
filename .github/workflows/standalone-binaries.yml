@@ -41,9 +41,6 @@ jobs:
       - name: Audit dependencies
         run: npm audit --audit-level=high
 
-      - name: Run Node tests
-        run: npm test
-
       - name: Build and inspect ordinary publication
         shell: bash
         run: |

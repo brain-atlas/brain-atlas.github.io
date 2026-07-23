@@ -50,7 +50,7 @@ The read-only build job:
 
 1. checks out full tag history without persisted credentials;
 2. installs locked Node 22 dependencies and the Go version selected by `go.mod`;
-3. audits and tests the project;
+3. audits the locked Node dependencies;
 4. verifies that the ordinary Pages artifact has no standalone lifecycle or
    development hooks;
 5. stages one standalone production Vite tree;
@@ -65,6 +65,15 @@ The read-only build job:
 
 Only GitHub-owned Actions are used, and each is pinned to a full commit SHA. The
 build job receives only `contents: read`.
+
+The Ubuntu release job does not run `npm test`. Seven tests exercise scientific
+asset regeneration against the recorded Darwin arm64/Nix environment, including
+byte-exact uv, Python, package-tree, and fixture checks that Ubuntu cannot
+satisfy. Decision `brain-atlas-ek3` keeps the complete 200-test `npm test` suite
+as a required local gate instead of running a partial Node suite in this
+workflow. The release job still runs the locked dependency audit, publication
+and build isolation checks, Go tests/race/vet, deterministic package validation,
+and the extracted Linux smoke test.
 
 ## Nightly publication
 
