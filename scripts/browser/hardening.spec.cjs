@@ -185,6 +185,36 @@ test('compact Atlas keeps every semantic camera action at least 44 CSS pixels hi
   expect(errors).toEqual([]);
 });
 
+test('compact Atlas exposes 44 CSS pixel effective Viewer targets', async ({ page }) => { // Tests INV-52
+  const errors = monitor(page);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto(BASE_URL);
+  await page.waitForFunction(() => document.getElementById('app')?.dataset.state === 'ready');
+  if (!await page.locator('#viewer-console').getAttribute('open')) {
+    await page.locator('#viewer-console > summary').click();
+  }
+  await page.locator('.lyr-disclosure[aria-expanded="false"]')
+    .evaluateAll((disclosures) => disclosures.forEach((disclosure) => disclosure.click()));
+
+  const targets = await page.locator('#viewer-console').evaluate((viewer) => {
+    const visible = (element) => element.getClientRects().length > 0 && getComputedStyle(element).visibility !== 'hidden';
+    return [...viewer.querySelectorAll('button, summary, select, input[type="range"], input[type="checkbox"]')]
+      .filter((element) => visible(element) && !element.disabled)
+      .map((element) => {
+        const target = element.matches('input[type="checkbox"]') ? (element.closest('label') ?? element) : element;
+        const rect = target.getBoundingClientRect();
+        return {
+          name: element.getAttribute('aria-label') || element.textContent.trim() || element.type,
+          width: rect.width,
+          height: rect.height,
+        };
+      });
+  });
+  expect(targets.length).toBeGreaterThan(40);
+  expect(targets.filter(({ width, height }) => width < 44 || height < 44)).toEqual([]);
+  expect(errors).toEqual([]);
+});
+
 test('compact and 200%-equivalent lesson layouts contain panels without root scroll or overlap', async ({ page }) => { // Tests INV-10, INV-13, INV-15
   const errors = monitor(page);
   for (const viewport of [
