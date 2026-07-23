@@ -813,7 +813,7 @@
   },
   {
    "id": "sts2",
-   "name": "STS2 (ILF\u2192)",
+   "name": "STS2",
    "area": "STS2",
    "stream": "temporal",
    "parent": "superior temporal sulcus",
@@ -987,7 +987,7 @@
   },
   {
    "id": "ofc",
-   "name": "OFC (IFOF\u2192)",
+   "name": "OFC",
    "area": "Fo4",
    "stream": "frontal",
    "parent": "orbitofrontal cortex",
@@ -1016,7 +1016,7 @@
   },
   {
    "id": "presma",
-   "name": "preSMA (SLF I\u2192)",
+   "name": "preSMA",
    "area": "6ma",
    "stream": "frontal",
    "parent": "medial superior frontal",
@@ -1045,7 +1045,7 @@
   },
   {
    "id": "dlpfc",
-   "name": "DLPFC (SLF II\u2192)",
+   "name": "DLPFC",
    "area": "IFS3",
    "stream": "frontal",
    "parent": "inferior frontal sulcus",
@@ -1074,7 +1074,7 @@
   },
   {
    "id": "broca",
-   "name": "Broca 44 (SLF III\u2192)",
+   "name": "Broca 44",
    "area": "44",
    "stream": "frontal",
    "parent": "inferior frontal gyrus",

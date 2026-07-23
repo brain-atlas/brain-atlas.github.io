@@ -150,6 +150,9 @@ test('cortical preview scenes add selected white-matter context without claiming
   assert.match(streamProse, /50\/50/i);
   assert.match(streamProse, /zero-mean/i);
   assert.match(streamProse, /not endpoint-filtered/i);
+  assert.match(streamProse, /qualified.*endpoint proximity|qualified endpoint-proximity/is);
+  assert.match(streamProse, /not.*(?:termination|connection strength)/is);
+  assert.match(streamProse, /no (?:approved )?named-region\s+(?:>\s*)?endpoint classification/i);
   assert.match(streamProse, /do\s+(?:>\s*)?not establish|does\s+(?:>\s*)?not establish/i);
 });
 

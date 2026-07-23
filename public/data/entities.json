@@ -90,12 +90,21 @@
           "target": "landmark.optic-chiasm",
           "direction": "directed",
           "evidence": "schematic-teaching",
-          "summary": "The drawn nasal-retinal route runs from this eye marker to the optic chiasm before crossing toward the contralateral LGN."
+          "method": "schematic-teaching",
+          "status": "illustrative",
+          "confidence": "not-applicable",
+          "summary": "The drawn nasal-retinal route runs from this eye marker to the optic chiasm before crossing toward the contralateral LGN.",
+          "sources": [
+            {
+              "label": "Mason & Erskine 2001 \u2014 optic-chiasm organization",
+              "url": "https://doi.org/10.1152/physrev.2001.81.4.1393"
+            }
+          ]
         }
       ],
       "sources": [
         {
-          "label": "Mason & Erskine 2001 — optic-chiasm organization",
+          "label": "Mason & Erskine 2001 \u2014 optic-chiasm organization",
           "url": "https://doi.org/10.1152/physrev.2001.81.4.1393"
         }
       ]
@@ -115,12 +124,21 @@
           "target": "landmark.optic-chiasm",
           "direction": "directed",
           "evidence": "schematic-teaching",
-          "summary": "The drawn nasal-retinal route runs from this eye marker to the optic chiasm before crossing toward the contralateral LGN."
+          "method": "schematic-teaching",
+          "status": "illustrative",
+          "confidence": "not-applicable",
+          "summary": "The drawn nasal-retinal route runs from this eye marker to the optic chiasm before crossing toward the contralateral LGN.",
+          "sources": [
+            {
+              "label": "Mason & Erskine 2001 \u2014 optic-chiasm organization",
+              "url": "https://doi.org/10.1152/physrev.2001.81.4.1393"
+            }
+          ]
         }
       ],
       "sources": [
         {
-          "label": "Mason & Erskine 2001 — optic-chiasm organization",
+          "label": "Mason & Erskine 2001 \u2014 optic-chiasm organization",
           "url": "https://doi.org/10.1152/physrev.2001.81.4.1393"
         }
       ]
@@ -139,13 +157,22 @@
         {
           "target": "region.lgn",
           "direction": "directed",
-          "evidence": "established-anatomy",
-          "summary": "Nasal-retinal fibres cross at the chiasm and continue in the contralateral optic tract toward the LGN."
+          "evidence": "literature-curated",
+          "method": "literature-review",
+          "status": "supported",
+          "confidence": "high",
+          "summary": "Nasal-retinal fibres cross at the chiasm and continue in the contralateral optic tract toward the LGN.",
+          "sources": [
+            {
+              "label": "Mason & Erskine 2001 \u2014 optic-chiasm organization",
+              "url": "https://doi.org/10.1152/physrev.2001.81.4.1393"
+            }
+          ]
         }
       ],
       "sources": [
         {
-          "label": "Mason & Erskine 2001 — optic-chiasm organization",
+          "label": "Mason & Erskine 2001 \u2014 optic-chiasm organization",
           "url": "https://doi.org/10.1152/physrev.2001.81.4.1393"
         }
       ]
@@ -164,13 +191,22 @@
         {
           "target": "region.v1",
           "direction": "directed",
-          "evidence": "displayed-dataset",
-          "summary": "The displayed projection runs from the LGN toward V1."
+          "evidence": "literature-curated",
+          "method": "literature-review",
+          "status": "supported",
+          "confidence": "high",
+          "summary": "The displayed projection runs from the LGN toward V1.",
+          "sources": [
+            {
+              "label": "Maciag et al. 2024 \u2014 visual-pathway anatomy and localization",
+              "url": "https://doi.org/10.1148/rg.230081"
+            }
+          ]
         }
       ],
       "sources": [
         {
-          "label": "Maciag et al. 2024 — visual-pathway anatomy and localization",
+          "label": "Maciag et al. 2024 \u2014 visual-pathway anatomy and localization",
           "url": "https://doi.org/10.1148/rg.230081"
         }
       ]
@@ -189,13 +225,22 @@
         {
           "target": "pathway.optic-radiation",
           "direction": "directed",
-          "evidence": "established-anatomy",
-          "summary": "LGN relay-cell axons project toward V1 through the optic radiation."
+          "evidence": "literature-curated",
+          "method": "literature-review",
+          "status": "supported",
+          "confidence": "high",
+          "summary": "LGN relay-cell axons project toward V1 through the optic radiation.",
+          "sources": [
+            {
+              "label": "Maciag et al. 2024 \u2014 visual-pathway anatomy and localization",
+              "url": "https://doi.org/10.1148/rg.230081"
+            }
+          ]
         }
       ],
       "sources": [
         {
-          "label": "Sherman & Koch 1986 — regulated retinogeniculate transmission",
+          "label": "Sherman & Koch 1986 \u2014 regulated retinogeniculate transmission",
           "url": "https://doi.org/10.1007/BF00235642"
         }
       ]
@@ -213,12 +258,1175 @@
       "relationships": [],
       "sources": [
         {
-          "label": "Hubel & Wiesel 1962 — V1 receptive fields and functional architecture",
+          "label": "Hubel & Wiesel 1962 \u2014 V1 receptive fields and functional architecture",
           "url": "https://doi.org/10.1113/jphysiol.1962.sp006837"
         },
         {
-          "label": "Benson et al. 2012 — human V1 retinotopy and variation",
+          "label": "Benson et al. 2012 \u2014 human V1 retinotopy and variation",
           "url": "https://doi.org/10.1016/j.cub.2012.09.014"
+        }
+      ]
+    },
+    {
+      "id": "layer.swm",
+      "entity": "layer.swm",
+      "label": "Superficial white matter",
+      "shortLabel": "Superficial WM",
+      "renderer": {
+        "kind": "layer",
+        "id": "swm"
+      },
+      "description": "The displayed superficial-white-matter layer is a broad sample of short bilateral tractography contours. It has no approved named-region endpoint classification and must not be read as named U-fibre or region-to-region connections.",
+      "relationships": [],
+      "sources": [
+        {
+          "label": "HCP-1065 fibre template",
+          "url": "https://brain.labsolver.org/hcp_template.html"
+        },
+        {
+          "label": "Yeh et al. 2021 \u2014 streamline termination and node-assignment limits",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7615246/"
+        }
+      ]
+    },
+    {
+      "id": "tract.ilf",
+      "entity": "tract.ilf",
+      "label": "ILF",
+      "shortLabel": "ILF",
+      "renderer": {
+        "kind": "tract",
+        "id": "ilf"
+      },
+      "description": "The displayed ILF is a bilateral 180-streamline-per-hemisphere sample from the HCP-1065 population-averaged association bundle. Its supported relationships report only low-confidence endpoint proximity to selected displayed J\u00fclich shells; streamline order supplies no polarity.",
+      "relationships": [
+        {
+          "target": "region.gap-tp",
+          "direction": "undirected",
+          "evidence": "displayed-dataset",
+          "method": "displayed-endpoint-proximity",
+          "status": "qualified",
+          "confidence": "low",
+          "summary": "In the displayed sample, 89 left and 95 right ILF streamlines have an unordered endpoint nearest to the Temporo-parietal (unparc.) shell within 3 mm; the 5 mm counts are 99 left and 137 right. This is a qualified proximity observation, not a measured termination or connection strength.",
+          "sources": [
+            {
+              "label": "HCP-1065 population-averaged tractography atlas",
+              "url": "https://brain.labsolver.org/hcp_trk_atlas.html"
+            },
+            {
+              "label": "J\u00fclich-Brain v3.0.3 dataset",
+              "url": "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
+            },
+            {
+              "label": "Yeh et al. 2021 \u2014 streamline termination and node-assignment limits",
+              "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7615246/"
+            }
+          ]
+        },
+        {
+          "target": "region.sts2",
+          "direction": "undirected",
+          "evidence": "displayed-dataset",
+          "method": "displayed-endpoint-proximity",
+          "status": "qualified",
+          "confidence": "low",
+          "summary": "In the displayed sample, 71 left and 27 right ILF streamlines have an unordered endpoint nearest to the STS2 shell within 3 mm; the 5 mm counts are 74 left and 28 right. This is a qualified proximity observation, not a measured termination or connection strength.",
+          "sources": [
+            {
+              "label": "HCP-1065 population-averaged tractography atlas",
+              "url": "https://brain.labsolver.org/hcp_trk_atlas.html"
+            },
+            {
+              "label": "J\u00fclich-Brain v3.0.3 dataset",
+              "url": "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
+            },
+            {
+              "label": "Yeh et al. 2021 \u2014 streamline termination and node-assignment limits",
+              "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7615246/"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "HCP-1065 population-averaged tractography atlas",
+          "url": "https://brain.labsolver.org/hcp_trk_atlas.html"
+        },
+        {
+          "label": "Yeh 2022 \u2014 population tract-to-region connectome",
+          "url": "https://doi.org/10.1038/s41467-022-32595-4"
+        },
+        {
+          "label": "Yeh et al. 2021 \u2014 streamline termination and node-assignment limits",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7615246/"
+        }
+      ]
+    },
+    {
+      "id": "tract.ifof",
+      "entity": "tract.ifof",
+      "label": "IFOF",
+      "shortLabel": "IFOF",
+      "renderer": {
+        "kind": "tract",
+        "id": "ifof"
+      },
+      "description": "The displayed IFOF is a bilateral 180-streamline-per-hemisphere sample from the HCP-1065 population-averaged association bundle. Its supported relationships report only low-confidence endpoint proximity to selected displayed J\u00fclich shells; streamline order supplies no polarity.",
+      "relationships": [
+        {
+          "target": "region.fp1",
+          "direction": "undirected",
+          "evidence": "displayed-dataset",
+          "method": "displayed-endpoint-proximity",
+          "status": "qualified",
+          "confidence": "low",
+          "summary": "In the displayed sample, 72 left and 32 right IFOF streamlines have an unordered endpoint nearest to the Fp1 (pole) shell within 3 mm; the 5 mm counts are 81 left and 44 right. This is a qualified proximity observation, not a measured termination or connection strength.",
+          "sources": [
+            {
+              "label": "HCP-1065 population-averaged tractography atlas",
+              "url": "https://brain.labsolver.org/hcp_trk_atlas.html"
+            },
+            {
+              "label": "J\u00fclich-Brain v3.0.3 dataset",
+              "url": "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
+            },
+            {
+              "label": "Yeh et al. 2021 \u2014 streamline termination and node-assignment limits",
+              "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7615246/"
+            }
+          ]
+        },
+        {
+          "target": "region.gap-fi",
+          "direction": "undirected",
+          "evidence": "displayed-dataset",
+          "method": "displayed-endpoint-proximity",
+          "status": "qualified",
+          "confidence": "low",
+          "summary": "In the displayed sample, 22 left and 74 right IFOF streamlines have an unordered endpoint nearest to the Frontal (unparc.) shell within 3 mm; the 5 mm counts are 34 left and 92 right. This is a qualified proximity observation, not a measured termination or connection strength.",
+          "sources": [
+            {
+              "label": "HCP-1065 population-averaged tractography atlas",
+              "url": "https://brain.labsolver.org/hcp_trk_atlas.html"
+            },
+            {
+              "label": "J\u00fclich-Brain v3.0.3 dataset",
+              "url": "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
+            },
+            {
+              "label": "Yeh et al. 2021 \u2014 streamline termination and node-assignment limits",
+              "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7615246/"
+            }
+          ]
+        },
+        {
+          "target": "region.v1",
+          "direction": "undirected",
+          "evidence": "displayed-dataset",
+          "method": "displayed-endpoint-proximity",
+          "status": "qualified",
+          "confidence": "low",
+          "summary": "In the displayed sample, 54 left and 59 right IFOF streamlines have an unordered endpoint nearest to the Primary visual cortex (V1) shell within 3 mm; the 5 mm counts are 85 left and 75 right. This is a qualified proximity observation, not a measured termination or connection strength.",
+          "sources": [
+            {
+              "label": "HCP-1065 population-averaged tractography atlas",
+              "url": "https://brain.labsolver.org/hcp_trk_atlas.html"
+            },
+            {
+              "label": "J\u00fclich-Brain v3.0.3 dataset",
+              "url": "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
+            },
+            {
+              "label": "Yeh et al. 2021 \u2014 streamline termination and node-assignment limits",
+              "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7615246/"
+            }
+          ]
+        },
+        {
+          "target": "region.v2",
+          "direction": "undirected",
+          "evidence": "displayed-dataset",
+          "method": "displayed-endpoint-proximity",
+          "status": "qualified",
+          "confidence": "low",
+          "summary": "In the displayed sample, 31 left and 24 right IFOF streamlines have an unordered endpoint nearest to the V2 shell within 3 mm; the 5 mm counts are 35 left and 27 right. This is a qualified proximity observation, not a measured termination or connection strength.",
+          "sources": [
+            {
+              "label": "HCP-1065 population-averaged tractography atlas",
+              "url": "https://brain.labsolver.org/hcp_trk_atlas.html"
+            },
+            {
+              "label": "J\u00fclich-Brain v3.0.3 dataset",
+              "url": "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
+            },
+            {
+              "label": "Yeh et al. 2021 \u2014 streamline termination and node-assignment limits",
+              "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7615246/"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "HCP-1065 population-averaged tractography atlas",
+          "url": "https://brain.labsolver.org/hcp_trk_atlas.html"
+        },
+        {
+          "label": "Yeh 2022 \u2014 population tract-to-region connectome",
+          "url": "https://doi.org/10.1038/s41467-022-32595-4"
+        },
+        {
+          "label": "Yeh et al. 2021 \u2014 streamline termination and node-assignment limits",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7615246/"
+        }
+      ]
+    },
+    {
+      "id": "tract.slf1",
+      "entity": "tract.slf1",
+      "label": "SLF I",
+      "shortLabel": "SLF I",
+      "renderer": {
+        "kind": "tract",
+        "id": "slf1"
+      },
+      "description": "The displayed SLF I is a bilateral 180-streamline-per-hemisphere sample from the HCP-1065 population-averaged association bundle. Its supported relationships report only low-confidence endpoint proximity to selected displayed J\u00fclich shells; streamline order supplies no polarity.",
+      "relationships": [
+        {
+          "target": "region.gap-fi",
+          "direction": "undirected",
+          "evidence": "displayed-dataset",
+          "method": "displayed-endpoint-proximity",
+          "status": "qualified",
+          "confidence": "low",
+          "summary": "In the displayed sample, 93 left and 19 right SLF I streamlines have an unordered endpoint nearest to the Frontal (unparc.) shell within 3 mm; the 5 mm counts are 107 left and 19 right. This is a qualified proximity observation, not a measured termination or connection strength.",
+          "sources": [
+            {
+              "label": "HCP-1065 population-averaged tractography atlas",
+              "url": "https://brain.labsolver.org/hcp_trk_atlas.html"
+            },
+            {
+              "label": "J\u00fclich-Brain v3.0.3 dataset",
+              "url": "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
+            },
+            {
+              "label": "Yeh et al. 2021 \u2014 streamline termination and node-assignment limits",
+              "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7615246/"
+            }
+          ]
+        },
+        {
+          "target": "region.gap-fo",
+          "direction": "undirected",
+          "evidence": "displayed-dataset",
+          "method": "displayed-endpoint-proximity",
+          "status": "qualified",
+          "confidence": "low",
+          "summary": "In the displayed sample, 121 left and 37 right SLF I streamlines have an unordered endpoint nearest to the Fronto-occipital (unparc.) shell within 3 mm; the 5 mm counts are 121 left and 41 right. This is a qualified proximity observation, not a measured termination or connection strength.",
+          "sources": [
+            {
+              "label": "HCP-1065 population-averaged tractography atlas",
+              "url": "https://brain.labsolver.org/hcp_trk_atlas.html"
+            },
+            {
+              "label": "J\u00fclich-Brain v3.0.3 dataset",
+              "url": "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
+            },
+            {
+              "label": "Yeh et al. 2021 \u2014 streamline termination and node-assignment limits",
+              "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7615246/"
+            }
+          ]
+        },
+        {
+          "target": "region.presma",
+          "direction": "undirected",
+          "evidence": "displayed-dataset",
+          "method": "displayed-endpoint-proximity",
+          "status": "qualified",
+          "confidence": "low",
+          "summary": "In the displayed sample, 46 left and 22 right SLF I streamlines have an unordered endpoint nearest to the preSMA shell within 3 mm; the 5 mm counts are 53 left and 24 right. This is a qualified proximity observation, not a measured termination or connection strength.",
+          "sources": [
+            {
+              "label": "HCP-1065 population-averaged tractography atlas",
+              "url": "https://brain.labsolver.org/hcp_trk_atlas.html"
+            },
+            {
+              "label": "J\u00fclich-Brain v3.0.3 dataset",
+              "url": "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
+            },
+            {
+              "label": "Yeh et al. 2021 \u2014 streamline termination and node-assignment limits",
+              "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7615246/"
+            }
+          ]
+        },
+        {
+          "target": "region.spl5m",
+          "direction": "undirected",
+          "evidence": "displayed-dataset",
+          "method": "displayed-endpoint-proximity",
+          "status": "qualified",
+          "confidence": "low",
+          "summary": "In the displayed sample, 51 left and 29 right SLF I streamlines have an unordered endpoint nearest to the 5M shell within 3 mm; the 5 mm counts are 52 left and 44 right. This is a qualified proximity observation, not a measured termination or connection strength.",
+          "sources": [
+            {
+              "label": "HCP-1065 population-averaged tractography atlas",
+              "url": "https://brain.labsolver.org/hcp_trk_atlas.html"
+            },
+            {
+              "label": "J\u00fclich-Brain v3.0.3 dataset",
+              "url": "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
+            },
+            {
+              "label": "Yeh et al. 2021 \u2014 streamline termination and node-assignment limits",
+              "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7615246/"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "HCP-1065 population-averaged tractography atlas",
+          "url": "https://brain.labsolver.org/hcp_trk_atlas.html"
+        },
+        {
+          "label": "Yeh 2022 \u2014 population tract-to-region connectome",
+          "url": "https://doi.org/10.1038/s41467-022-32595-4"
+        },
+        {
+          "label": "Yeh et al. 2021 \u2014 streamline termination and node-assignment limits",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7615246/"
+        }
+      ]
+    },
+    {
+      "id": "tract.slf2",
+      "entity": "tract.slf2",
+      "label": "SLF II",
+      "shortLabel": "SLF II",
+      "renderer": {
+        "kind": "tract",
+        "id": "slf2"
+      },
+      "description": "The displayed SLF II is a bilateral 180-streamline-per-hemisphere sample from the HCP-1065 population-averaged association bundle. Its supported relationships report only low-confidence endpoint proximity to selected displayed J\u00fclich shells; streamline order supplies no polarity.",
+      "relationships": [
+        {
+          "target": "region.gap-fi",
+          "direction": "undirected",
+          "evidence": "displayed-dataset",
+          "method": "displayed-endpoint-proximity",
+          "status": "qualified",
+          "confidence": "low",
+          "summary": "In the displayed sample, 91 left and 65 right SLF II streamlines have an unordered endpoint nearest to the Frontal (unparc.) shell within 3 mm; the 5 mm counts are 105 left and 87 right. This is a qualified proximity observation, not a measured termination or connection strength.",
+          "sources": [
+            {
+              "label": "HCP-1065 population-averaged tractography atlas",
+              "url": "https://brain.labsolver.org/hcp_trk_atlas.html"
+            },
+            {
+              "label": "J\u00fclich-Brain v3.0.3 dataset",
+              "url": "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
+            },
+            {
+              "label": "Yeh et al. 2021 \u2014 streamline termination and node-assignment limits",
+              "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7615246/"
+            }
+          ]
+        },
+        {
+          "target": "region.gap-fii",
+          "direction": "undirected",
+          "evidence": "displayed-dataset",
+          "method": "displayed-endpoint-proximity",
+          "status": "qualified",
+          "confidence": "low",
+          "summary": "In the displayed sample, 36 left and 58 right SLF II streamlines have an unordered endpoint nearest to the Frontal-II (unparc.) shell within 3 mm; the 5 mm counts are 62 left and 68 right. This is a qualified proximity observation, not a measured termination or connection strength.",
+          "sources": [
+            {
+              "label": "HCP-1065 population-averaged tractography atlas",
+              "url": "https://brain.labsolver.org/hcp_trk_atlas.html"
+            },
+            {
+              "label": "J\u00fclich-Brain v3.0.3 dataset",
+              "url": "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
+            },
+            {
+              "label": "Yeh et al. 2021 \u2014 streamline termination and node-assignment limits",
+              "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7615246/"
+            }
+          ]
+        },
+        {
+          "target": "region.pfm",
+          "direction": "undirected",
+          "evidence": "displayed-dataset",
+          "method": "displayed-endpoint-proximity",
+          "status": "qualified",
+          "confidence": "low",
+          "summary": "In the displayed sample, 26 left and 31 right SLF II streamlines have an unordered endpoint nearest to the PFm shell within 3 mm; the 5 mm counts are 48 left and 32 right. This is a qualified proximity observation, not a measured termination or connection strength.",
+          "sources": [
+            {
+              "label": "HCP-1065 population-averaged tractography atlas",
+              "url": "https://brain.labsolver.org/hcp_trk_atlas.html"
+            },
+            {
+              "label": "J\u00fclich-Brain v3.0.3 dataset",
+              "url": "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
+            },
+            {
+              "label": "Yeh et al. 2021 \u2014 streamline termination and node-assignment limits",
+              "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7615246/"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "HCP-1065 population-averaged tractography atlas",
+          "url": "https://brain.labsolver.org/hcp_trk_atlas.html"
+        },
+        {
+          "label": "Yeh 2022 \u2014 population tract-to-region connectome",
+          "url": "https://doi.org/10.1038/s41467-022-32595-4"
+        },
+        {
+          "label": "Yeh et al. 2021 \u2014 streamline termination and node-assignment limits",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7615246/"
+        }
+      ]
+    },
+    {
+      "id": "tract.slf3",
+      "entity": "tract.slf3",
+      "label": "SLF III",
+      "shortLabel": "SLF III",
+      "renderer": {
+        "kind": "tract",
+        "id": "slf3"
+      },
+      "description": "The displayed SLF III is a bilateral 180-streamline-per-hemisphere sample from the HCP-1065 population-averaged association bundle. Its supported relationships report only low-confidence endpoint proximity to selected displayed J\u00fclich shells; streamline order supplies no polarity.",
+      "relationships": [
+        {
+          "target": "region.broca",
+          "direction": "undirected",
+          "evidence": "displayed-dataset",
+          "method": "displayed-endpoint-proximity",
+          "status": "qualified",
+          "confidence": "low",
+          "summary": "In the displayed sample, 30 left and 44 right SLF III streamlines have an unordered endpoint nearest to the Broca 44 shell within 3 mm; the 5 mm counts are 38 left and 59 right. This is a qualified proximity observation, not a measured termination or connection strength.",
+          "sources": [
+            {
+              "label": "HCP-1065 population-averaged tractography atlas",
+              "url": "https://brain.labsolver.org/hcp_trk_atlas.html"
+            },
+            {
+              "label": "J\u00fclich-Brain v3.0.3 dataset",
+              "url": "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
+            },
+            {
+              "label": "Yeh et al. 2021 \u2014 streamline termination and node-assignment limits",
+              "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7615246/"
+            }
+          ]
+        },
+        {
+          "target": "region.op6",
+          "direction": "undirected",
+          "evidence": "displayed-dataset",
+          "method": "displayed-endpoint-proximity",
+          "status": "qualified",
+          "confidence": "low",
+          "summary": "In the displayed sample, 83 left and 46 right SLF III streamlines have an unordered endpoint nearest to the Op6 (operc.) shell within 3 mm; the 5 mm counts are 88 left and 56 right. This is a qualified proximity observation, not a measured termination or connection strength.",
+          "sources": [
+            {
+              "label": "HCP-1065 population-averaged tractography atlas",
+              "url": "https://brain.labsolver.org/hcp_trk_atlas.html"
+            },
+            {
+              "label": "J\u00fclich-Brain v3.0.3 dataset",
+              "url": "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
+            },
+            {
+              "label": "Yeh et al. 2021 \u2014 streamline termination and node-assignment limits",
+              "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7615246/"
+            }
+          ]
+        },
+        {
+          "target": "region.pf",
+          "direction": "undirected",
+          "evidence": "displayed-dataset",
+          "method": "displayed-endpoint-proximity",
+          "status": "qualified",
+          "confidence": "low",
+          "summary": "In the displayed sample, 79 left and 37 right SLF III streamlines have an unordered endpoint nearest to the PF shell within 3 mm; the 5 mm counts are 97 left and 37 right. This is a qualified proximity observation, not a measured termination or connection strength.",
+          "sources": [
+            {
+              "label": "HCP-1065 population-averaged tractography atlas",
+              "url": "https://brain.labsolver.org/hcp_trk_atlas.html"
+            },
+            {
+              "label": "J\u00fclich-Brain v3.0.3 dataset",
+              "url": "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
+            },
+            {
+              "label": "Yeh et al. 2021 \u2014 streamline termination and node-assignment limits",
+              "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7615246/"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "HCP-1065 population-averaged tractography atlas",
+          "url": "https://brain.labsolver.org/hcp_trk_atlas.html"
+        },
+        {
+          "label": "Yeh 2022 \u2014 population tract-to-region connectome",
+          "url": "https://doi.org/10.1038/s41467-022-32595-4"
+        },
+        {
+          "label": "Yeh et al. 2021 \u2014 streamline termination and node-assignment limits",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7615246/"
+        }
+      ]
+    },
+    {
+      "id": "tract.vof",
+      "entity": "tract.vof",
+      "label": "VOF",
+      "shortLabel": "VOF",
+      "renderer": {
+        "kind": "tract",
+        "id": "vof"
+      },
+      "description": "The displayed VOF is a bilateral 180-streamline-per-hemisphere sample from the HCP-1065 population-averaged association bundle. Its supported relationships report only low-confidence endpoint proximity to selected displayed J\u00fclich shells; streamline order supplies no polarity.",
+      "relationships": [
+        {
+          "target": "region.loa",
+          "direction": "undirected",
+          "evidence": "displayed-dataset",
+          "method": "displayed-endpoint-proximity",
+          "status": "qualified",
+          "confidence": "low",
+          "summary": "In the displayed sample, 72 left and 25 right VOF streamlines have an unordered endpoint nearest to the LOC-a shell within 3 mm; the 5 mm counts are 73 left and 34 right. This is a qualified proximity observation, not a measured termination or connection strength.",
+          "sources": [
+            {
+              "label": "HCP-1065 population-averaged tractography atlas",
+              "url": "https://brain.labsolver.org/hcp_trk_atlas.html"
+            },
+            {
+              "label": "J\u00fclich-Brain v3.0.3 dataset",
+              "url": "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
+            },
+            {
+              "label": "Yeh et al. 2021 \u2014 streamline termination and node-assignment limits",
+              "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7615246/"
+            }
+          ]
+        },
+        {
+          "target": "region.lop",
+          "direction": "undirected",
+          "evidence": "displayed-dataset",
+          "method": "displayed-endpoint-proximity",
+          "status": "qualified",
+          "confidence": "low",
+          "summary": "In the displayed sample, 47 left and 34 right VOF streamlines have an unordered endpoint nearest to the LOC-p shell within 3 mm; the 5 mm counts are 47 left and 40 right. This is a qualified proximity observation, not a measured termination or connection strength.",
+          "sources": [
+            {
+              "label": "HCP-1065 population-averaged tractography atlas",
+              "url": "https://brain.labsolver.org/hcp_trk_atlas.html"
+            },
+            {
+              "label": "J\u00fclich-Brain v3.0.3 dataset",
+              "url": "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
+            },
+            {
+              "label": "Yeh et al. 2021 \u2014 streamline termination and node-assignment limits",
+              "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7615246/"
+            }
+          ]
+        },
+        {
+          "target": "region.v3a",
+          "direction": "undirected",
+          "evidence": "displayed-dataset",
+          "method": "displayed-endpoint-proximity",
+          "status": "qualified",
+          "confidence": "low",
+          "summary": "In the displayed sample, 92 left and 60 right VOF streamlines have an unordered endpoint nearest to the V3A shell within 3 mm; the 5 mm counts are 92 left and 60 right. This is a qualified proximity observation, not a measured termination or connection strength.",
+          "sources": [
+            {
+              "label": "HCP-1065 population-averaged tractography atlas",
+              "url": "https://brain.labsolver.org/hcp_trk_atlas.html"
+            },
+            {
+              "label": "J\u00fclich-Brain v3.0.3 dataset",
+              "url": "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
+            },
+            {
+              "label": "Yeh et al. 2021 \u2014 streamline termination and node-assignment limits",
+              "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7615246/"
+            }
+          ]
+        },
+        {
+          "target": "region.v3d",
+          "direction": "undirected",
+          "evidence": "displayed-dataset",
+          "method": "displayed-endpoint-proximity",
+          "status": "qualified",
+          "confidence": "low",
+          "summary": "In the displayed sample, 46 left and 69 right VOF streamlines have an unordered endpoint nearest to the V3d shell within 3 mm; the 5 mm counts are 46 left and 69 right. This is a qualified proximity observation, not a measured termination or connection strength.",
+          "sources": [
+            {
+              "label": "HCP-1065 population-averaged tractography atlas",
+              "url": "https://brain.labsolver.org/hcp_trk_atlas.html"
+            },
+            {
+              "label": "J\u00fclich-Brain v3.0.3 dataset",
+              "url": "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
+            },
+            {
+              "label": "Yeh et al. 2021 \u2014 streamline termination and node-assignment limits",
+              "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7615246/"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "HCP-1065 population-averaged tractography atlas",
+          "url": "https://brain.labsolver.org/hcp_trk_atlas.html"
+        },
+        {
+          "label": "Yeh 2022 \u2014 population tract-to-region connectome",
+          "url": "https://doi.org/10.1038/s41467-022-32595-4"
+        },
+        {
+          "label": "Yeh et al. 2021 \u2014 streamline termination and node-assignment limits",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7615246/"
+        }
+      ]
+    },
+    {
+      "id": "tract.af",
+      "entity": "tract.af",
+      "label": "Arcuate",
+      "shortLabel": "Arcuate",
+      "renderer": {
+        "kind": "tract",
+        "id": "af"
+      },
+      "description": "The displayed Arcuate is a bilateral 180-streamline-per-hemisphere sample from the HCP-1065 population-averaged association bundle. Its supported relationships report only low-confidence endpoint proximity to selected displayed J\u00fclich shells; streamline order supplies no polarity.",
+      "relationships": [
+        {
+          "target": "region.broca",
+          "direction": "undirected",
+          "evidence": "displayed-dataset",
+          "method": "displayed-endpoint-proximity",
+          "status": "qualified",
+          "confidence": "low",
+          "summary": "In the displayed sample, 83 left and 90 right Arcuate streamlines have an unordered endpoint nearest to the Broca 44 shell within 3 mm; the 5 mm counts are 93 left and 91 right. This is a qualified proximity observation, not a measured termination or connection strength.",
+          "sources": [
+            {
+              "label": "HCP-1065 population-averaged tractography atlas",
+              "url": "https://brain.labsolver.org/hcp_trk_atlas.html"
+            },
+            {
+              "label": "J\u00fclich-Brain v3.0.3 dataset",
+              "url": "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
+            },
+            {
+              "label": "Yeh et al. 2021 \u2014 streamline termination and node-assignment limits",
+              "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7615246/"
+            }
+          ]
+        },
+        {
+          "target": "region.gap-fi",
+          "direction": "undirected",
+          "evidence": "displayed-dataset",
+          "method": "displayed-endpoint-proximity",
+          "status": "qualified",
+          "confidence": "low",
+          "summary": "In the displayed sample, 53 left and 58 right Arcuate streamlines have an unordered endpoint nearest to the Frontal (unparc.) shell within 3 mm; the 5 mm counts are 70 left and 65 right. This is a qualified proximity observation, not a measured termination or connection strength.",
+          "sources": [
+            {
+              "label": "HCP-1065 population-averaged tractography atlas",
+              "url": "https://brain.labsolver.org/hcp_trk_atlas.html"
+            },
+            {
+              "label": "J\u00fclich-Brain v3.0.3 dataset",
+              "url": "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
+            },
+            {
+              "label": "Yeh et al. 2021 \u2014 streamline termination and node-assignment limits",
+              "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7615246/"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "HCP-1065 population-averaged tractography atlas",
+          "url": "https://brain.labsolver.org/hcp_trk_atlas.html"
+        },
+        {
+          "label": "Yeh 2022 \u2014 population tract-to-region connectome",
+          "url": "https://doi.org/10.1038/s41467-022-32595-4"
+        },
+        {
+          "label": "Yeh et al. 2021 \u2014 streamline termination and node-assignment limits",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7615246/"
+        }
+      ]
+    },
+    {
+      "id": "tract.mdlf",
+      "entity": "tract.mdlf",
+      "label": "MdLF",
+      "shortLabel": "MdLF",
+      "renderer": {
+        "kind": "tract",
+        "id": "mdlf"
+      },
+      "description": "The displayed MdLF is a bilateral 180-streamline-per-hemisphere sample from the HCP-1065 population-averaged association bundle. Its supported relationships report only low-confidence endpoint proximity to selected displayed J\u00fclich shells; streamline order supplies no polarity.",
+      "relationships": [
+        {
+          "target": "region.spl7a",
+          "direction": "undirected",
+          "evidence": "displayed-dataset",
+          "method": "displayed-endpoint-proximity",
+          "status": "qualified",
+          "confidence": "low",
+          "summary": "In the displayed sample, 70 left and 51 right MdLF streamlines have an unordered endpoint nearest to the 7A shell within 3 mm; the 5 mm counts are 112 left and 108 right. This is a qualified proximity observation, not a measured termination or connection strength.",
+          "sources": [
+            {
+              "label": "HCP-1065 population-averaged tractography atlas",
+              "url": "https://brain.labsolver.org/hcp_trk_atlas.html"
+            },
+            {
+              "label": "J\u00fclich-Brain v3.0.3 dataset",
+              "url": "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
+            },
+            {
+              "label": "Yeh et al. 2021 \u2014 streamline termination and node-assignment limits",
+              "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7615246/"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "HCP-1065 population-averaged tractography atlas",
+          "url": "https://brain.labsolver.org/hcp_trk_atlas.html"
+        },
+        {
+          "label": "Yeh 2022 \u2014 population tract-to-region connectome",
+          "url": "https://doi.org/10.1038/s41467-022-32595-4"
+        },
+        {
+          "label": "Yeh et al. 2021 \u2014 streamline termination and node-assignment limits",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7615246/"
+        }
+      ]
+    },
+    {
+      "id": "region.broca",
+      "entity": "region.broca",
+      "label": "Broca 44",
+      "shortLabel": "Broca 44",
+      "renderer": {
+        "kind": "region",
+        "id": "broca"
+      },
+      "description": "This displayed atlas shell represents 44 in the inferior frontal gyrus group. Relationship records report only low-confidence proximity of sampled displayed bundle endpoints to this shell, not measured connectivity, function, or an individual cortical boundary.",
+      "relationships": [],
+      "sources": [
+        {
+          "label": "J\u00fclich-Brain probabilistic cytoarchitectonic atlas",
+          "url": "https://doi.org/10.1126/science.abb4588"
+        },
+        {
+          "label": "J\u00fclich-Brain v3.0.3 dataset",
+          "url": "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
+        }
+      ]
+    },
+    {
+      "id": "region.fp1",
+      "entity": "region.fp1",
+      "label": "Fp1 (pole)",
+      "shortLabel": "Fp1 (pole)",
+      "renderer": {
+        "kind": "region",
+        "id": "fp1"
+      },
+      "description": "This displayed atlas shell represents Fp1 in the frontal pole group. Relationship records report only low-confidence proximity of sampled displayed bundle endpoints to this shell, not measured connectivity, function, or an individual cortical boundary.",
+      "relationships": [],
+      "sources": [
+        {
+          "label": "J\u00fclich-Brain probabilistic cytoarchitectonic atlas",
+          "url": "https://doi.org/10.1126/science.abb4588"
+        },
+        {
+          "label": "J\u00fclich-Brain v3.0.3 dataset",
+          "url": "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
+        }
+      ]
+    },
+    {
+      "id": "region.gap-fi",
+      "entity": "region.gap-fi",
+      "label": "Frontal (unparc.)",
+      "shortLabel": "Frontal (unparc.)",
+      "renderer": {
+        "kind": "region",
+        "id": "gap_fi"
+      },
+      "description": "This displayed atlas shell represents Frontal-I in the GapMap group. Relationship records report only low-confidence proximity of sampled displayed bundle endpoints to this shell, not measured connectivity, function, or an individual cortical boundary.",
+      "relationships": [],
+      "sources": [
+        {
+          "label": "J\u00fclich-Brain probabilistic cytoarchitectonic atlas",
+          "url": "https://doi.org/10.1126/science.abb4588"
+        },
+        {
+          "label": "J\u00fclich-Brain v3.0.3 dataset",
+          "url": "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
+        }
+      ]
+    },
+    {
+      "id": "region.gap-fii",
+      "entity": "region.gap-fii",
+      "label": "Frontal-II (unparc.)",
+      "shortLabel": "Frontal-II (unparc.)",
+      "renderer": {
+        "kind": "region",
+        "id": "gap_fii"
+      },
+      "description": "This displayed atlas shell represents Frontal-II in the GapMap group. Relationship records report only low-confidence proximity of sampled displayed bundle endpoints to this shell, not measured connectivity, function, or an individual cortical boundary.",
+      "relationships": [],
+      "sources": [
+        {
+          "label": "J\u00fclich-Brain probabilistic cytoarchitectonic atlas",
+          "url": "https://doi.org/10.1126/science.abb4588"
+        },
+        {
+          "label": "J\u00fclich-Brain v3.0.3 dataset",
+          "url": "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
+        }
+      ]
+    },
+    {
+      "id": "region.gap-fo",
+      "entity": "region.gap-fo",
+      "label": "Fronto-occipital (unparc.)",
+      "shortLabel": "Fronto-occipital (unparc.)",
+      "renderer": {
+        "kind": "region",
+        "id": "gap_fo"
+      },
+      "description": "This displayed atlas shell represents Frontal-to-Occipital in the GapMap group. Relationship records report only low-confidence proximity of sampled displayed bundle endpoints to this shell, not measured connectivity, function, or an individual cortical boundary.",
+      "relationships": [],
+      "sources": [
+        {
+          "label": "J\u00fclich-Brain probabilistic cytoarchitectonic atlas",
+          "url": "https://doi.org/10.1126/science.abb4588"
+        },
+        {
+          "label": "J\u00fclich-Brain v3.0.3 dataset",
+          "url": "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
+        }
+      ]
+    },
+    {
+      "id": "region.gap-tp",
+      "entity": "region.gap-tp",
+      "label": "Temporo-parietal (unparc.)",
+      "shortLabel": "Temporo-parietal (unparc.)",
+      "renderer": {
+        "kind": "region",
+        "id": "gap_tp"
+      },
+      "description": "This displayed atlas shell represents Temporal-to-Parietal in the GapMap group. Relationship records report only low-confidence proximity of sampled displayed bundle endpoints to this shell, not measured connectivity, function, or an individual cortical boundary.",
+      "relationships": [],
+      "sources": [
+        {
+          "label": "J\u00fclich-Brain probabilistic cytoarchitectonic atlas",
+          "url": "https://doi.org/10.1126/science.abb4588"
+        },
+        {
+          "label": "J\u00fclich-Brain v3.0.3 dataset",
+          "url": "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
+        }
+      ]
+    },
+    {
+      "id": "region.loa",
+      "entity": "region.loa",
+      "label": "LOC-a",
+      "shortLabel": "LOC-a",
+      "renderer": {
+        "kind": "region",
+        "id": "loa"
+      },
+      "description": "This displayed atlas shell represents hOc4la in the occipital cortex group. Relationship records report only low-confidence proximity of sampled displayed bundle endpoints to this shell, not measured connectivity, function, or an individual cortical boundary.",
+      "relationships": [],
+      "sources": [
+        {
+          "label": "J\u00fclich-Brain probabilistic cytoarchitectonic atlas",
+          "url": "https://doi.org/10.1126/science.abb4588"
+        },
+        {
+          "label": "J\u00fclich-Brain v3.0.3 dataset",
+          "url": "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
+        }
+      ]
+    },
+    {
+      "id": "region.lop",
+      "entity": "region.lop",
+      "label": "LOC-p",
+      "shortLabel": "LOC-p",
+      "renderer": {
+        "kind": "region",
+        "id": "lop"
+      },
+      "description": "This displayed atlas shell represents hOc4lp in the occipital cortex group. Relationship records report only low-confidence proximity of sampled displayed bundle endpoints to this shell, not measured connectivity, function, or an individual cortical boundary.",
+      "relationships": [],
+      "sources": [
+        {
+          "label": "J\u00fclich-Brain probabilistic cytoarchitectonic atlas",
+          "url": "https://doi.org/10.1126/science.abb4588"
+        },
+        {
+          "label": "J\u00fclich-Brain v3.0.3 dataset",
+          "url": "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
+        }
+      ]
+    },
+    {
+      "id": "region.op6",
+      "entity": "region.op6",
+      "label": "Op6 (operc.)",
+      "shortLabel": "Op6 (operc.)",
+      "renderer": {
+        "kind": "region",
+        "id": "op6"
+      },
+      "description": "This displayed atlas shell represents Op6 in the frontal operculum group. Relationship records report only low-confidence proximity of sampled displayed bundle endpoints to this shell, not measured connectivity, function, or an individual cortical boundary.",
+      "relationships": [],
+      "sources": [
+        {
+          "label": "J\u00fclich-Brain probabilistic cytoarchitectonic atlas",
+          "url": "https://doi.org/10.1126/science.abb4588"
+        },
+        {
+          "label": "J\u00fclich-Brain v3.0.3 dataset",
+          "url": "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
+        }
+      ]
+    },
+    {
+      "id": "region.pf",
+      "entity": "region.pf",
+      "label": "PF",
+      "shortLabel": "PF",
+      "renderer": {
+        "kind": "region",
+        "id": "pf"
+      },
+      "description": "This displayed atlas shell represents PF in the inferior parietal group. Relationship records report only low-confidence proximity of sampled displayed bundle endpoints to this shell, not measured connectivity, function, or an individual cortical boundary.",
+      "relationships": [],
+      "sources": [
+        {
+          "label": "J\u00fclich-Brain probabilistic cytoarchitectonic atlas",
+          "url": "https://doi.org/10.1126/science.abb4588"
+        },
+        {
+          "label": "J\u00fclich-Brain v3.0.3 dataset",
+          "url": "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
+        }
+      ]
+    },
+    {
+      "id": "region.pfm",
+      "entity": "region.pfm",
+      "label": "PFm",
+      "shortLabel": "PFm",
+      "renderer": {
+        "kind": "region",
+        "id": "pfm"
+      },
+      "description": "This displayed atlas shell represents PFm in the inferior parietal group. Relationship records report only low-confidence proximity of sampled displayed bundle endpoints to this shell, not measured connectivity, function, or an individual cortical boundary.",
+      "relationships": [],
+      "sources": [
+        {
+          "label": "J\u00fclich-Brain probabilistic cytoarchitectonic atlas",
+          "url": "https://doi.org/10.1126/science.abb4588"
+        },
+        {
+          "label": "J\u00fclich-Brain v3.0.3 dataset",
+          "url": "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
+        }
+      ]
+    },
+    {
+      "id": "region.presma",
+      "entity": "region.presma",
+      "label": "preSMA",
+      "shortLabel": "preSMA",
+      "renderer": {
+        "kind": "region",
+        "id": "presma"
+      },
+      "description": "This displayed atlas shell represents 6ma in the medial superior frontal group. Relationship records report only low-confidence proximity of sampled displayed bundle endpoints to this shell, not measured connectivity, function, or an individual cortical boundary.",
+      "relationships": [],
+      "sources": [
+        {
+          "label": "J\u00fclich-Brain probabilistic cytoarchitectonic atlas",
+          "url": "https://doi.org/10.1126/science.abb4588"
+        },
+        {
+          "label": "J\u00fclich-Brain v3.0.3 dataset",
+          "url": "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
+        }
+      ]
+    },
+    {
+      "id": "region.spl5m",
+      "entity": "region.spl5m",
+      "label": "5M",
+      "shortLabel": "5M",
+      "renderer": {
+        "kind": "region",
+        "id": "spl5m"
+      },
+      "description": "This displayed atlas shell represents 5M in the superior parietal lobule group. Relationship records report only low-confidence proximity of sampled displayed bundle endpoints to this shell, not measured connectivity, function, or an individual cortical boundary.",
+      "relationships": [],
+      "sources": [
+        {
+          "label": "J\u00fclich-Brain probabilistic cytoarchitectonic atlas",
+          "url": "https://doi.org/10.1126/science.abb4588"
+        },
+        {
+          "label": "J\u00fclich-Brain v3.0.3 dataset",
+          "url": "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
+        }
+      ]
+    },
+    {
+      "id": "region.spl7a",
+      "entity": "region.spl7a",
+      "label": "7A",
+      "shortLabel": "7A",
+      "renderer": {
+        "kind": "region",
+        "id": "spl7a"
+      },
+      "description": "This displayed atlas shell represents 7A in the superior parietal lobule group. Relationship records report only low-confidence proximity of sampled displayed bundle endpoints to this shell, not measured connectivity, function, or an individual cortical boundary.",
+      "relationships": [],
+      "sources": [
+        {
+          "label": "J\u00fclich-Brain probabilistic cytoarchitectonic atlas",
+          "url": "https://doi.org/10.1126/science.abb4588"
+        },
+        {
+          "label": "J\u00fclich-Brain v3.0.3 dataset",
+          "url": "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
+        }
+      ]
+    },
+    {
+      "id": "region.sts2",
+      "entity": "region.sts2",
+      "label": "STS2",
+      "shortLabel": "STS2",
+      "renderer": {
+        "kind": "region",
+        "id": "sts2"
+      },
+      "description": "This displayed atlas shell represents STS2 in the superior temporal sulcus group. Relationship records report only low-confidence proximity of sampled displayed bundle endpoints to this shell, not measured connectivity, function, or an individual cortical boundary.",
+      "relationships": [],
+      "sources": [
+        {
+          "label": "J\u00fclich-Brain probabilistic cytoarchitectonic atlas",
+          "url": "https://doi.org/10.1126/science.abb4588"
+        },
+        {
+          "label": "J\u00fclich-Brain v3.0.3 dataset",
+          "url": "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
+        }
+      ]
+    },
+    {
+      "id": "region.v2",
+      "entity": "region.v2",
+      "label": "V2",
+      "shortLabel": "V2",
+      "renderer": {
+        "kind": "region",
+        "id": "v2"
+      },
+      "description": "This displayed atlas shell represents hOc2 in the occipital cortex group. Relationship records report only low-confidence proximity of sampled displayed bundle endpoints to this shell, not measured connectivity, function, or an individual cortical boundary.",
+      "relationships": [],
+      "sources": [
+        {
+          "label": "J\u00fclich-Brain probabilistic cytoarchitectonic atlas",
+          "url": "https://doi.org/10.1126/science.abb4588"
+        },
+        {
+          "label": "J\u00fclich-Brain v3.0.3 dataset",
+          "url": "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
+        }
+      ]
+    },
+    {
+      "id": "region.v3a",
+      "entity": "region.v3a",
+      "label": "V3A",
+      "shortLabel": "V3A",
+      "renderer": {
+        "kind": "region",
+        "id": "v3a"
+      },
+      "description": "This displayed atlas shell represents hOc4d in the occipital cortex group. Relationship records report only low-confidence proximity of sampled displayed bundle endpoints to this shell, not measured connectivity, function, or an individual cortical boundary.",
+      "relationships": [],
+      "sources": [
+        {
+          "label": "J\u00fclich-Brain probabilistic cytoarchitectonic atlas",
+          "url": "https://doi.org/10.1126/science.abb4588"
+        },
+        {
+          "label": "J\u00fclich-Brain v3.0.3 dataset",
+          "url": "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
+        }
+      ]
+    },
+    {
+      "id": "region.v3d",
+      "entity": "region.v3d",
+      "label": "V3d",
+      "shortLabel": "V3d",
+      "renderer": {
+        "kind": "region",
+        "id": "v3d"
+      },
+      "description": "This displayed atlas shell represents hOc3d in the occipital cortex group. Relationship records report only low-confidence proximity of sampled displayed bundle endpoints to this shell, not measured connectivity, function, or an individual cortical boundary.",
+      "relationships": [],
+      "sources": [
+        {
+          "label": "J\u00fclich-Brain probabilistic cytoarchitectonic atlas",
+          "url": "https://doi.org/10.1126/science.abb4588"
+        },
+        {
+          "label": "J\u00fclich-Brain v3.0.3 dataset",
+          "url": "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
         }
       ]
     }
@@ -579,7 +1787,7 @@
     {
       "id": "region.sts2",
       "type": "region",
-      "label": "STS2 (ILF\u2192)",
+      "label": "STS2",
       "renderer": {
         "kind": "region",
         "id": "sts2"
@@ -645,7 +1853,7 @@
     {
       "id": "region.ofc",
       "type": "region",
-      "label": "OFC (IFOF\u2192)",
+      "label": "OFC",
       "renderer": {
         "kind": "region",
         "id": "ofc"
@@ -656,7 +1864,7 @@
     {
       "id": "region.presma",
       "type": "region",
-      "label": "preSMA (SLF I\u2192)",
+      "label": "preSMA",
       "renderer": {
         "kind": "region",
         "id": "presma"
@@ -667,7 +1875,7 @@
     {
       "id": "region.dlpfc",
       "type": "region",
-      "label": "DLPFC (SLF II\u2192)",
+      "label": "DLPFC",
       "renderer": {
         "kind": "region",
         "id": "dlpfc"
@@ -678,7 +1886,7 @@
     {
       "id": "region.broca",
       "type": "region",
-      "label": "Broca 44 (SLF III\u2192)",
+      "label": "Broca 44",
       "renderer": {
         "kind": "region",
         "id": "broca"

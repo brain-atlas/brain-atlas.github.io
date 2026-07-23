@@ -30,6 +30,7 @@ function semanticDiagnostics(entityManifest, fidelityManifest) {
   const inspectableIds = new Set(entityManifest.inspectables.map(({ id }) => id));
   const rendererBindings = new Set();
   const inspectableBindings = new Set();
+  const undirectedPairs = new Set();
 
   entityManifest.entities.forEach((entity, index) => {
     if (!fidelityIds.has(entity.fidelity)) {
@@ -92,6 +93,7 @@ function semanticDiagnostics(entityManifest, fidelityManifest) {
       ));
     }
     inspectableBindings.add(binding);
+    const localTargets = new Set();
     inspectable.relationships.forEach((relationship, relationshipIndex) => {
       const path = `/inspectables/${index}/relationships/${relationshipIndex}/target`;
       if (relationship.target === inspectable.id) {
@@ -106,6 +108,25 @@ function semanticDiagnostics(entityManifest, fidelityManifest) {
           `unknown inspectable relationship target: ${relationship.target}`,
           { path },
         ));
+      }
+      if (localTargets.has(relationship.target)) {
+        diagnostics.push(createDiagnostic(
+          'catalog.semantic.duplicate-inspectable-relationship',
+          `duplicate inspectable relationship: ${inspectable.id} -> ${relationship.target}`,
+          { path },
+        ));
+      }
+      localTargets.add(relationship.target);
+      if (relationship.direction === 'undirected' && inspectableIds.has(relationship.target)) {
+        const pair = [inspectable.id, relationship.target].sort().join('\u0000');
+        if (undirectedPairs.has(pair)) {
+          diagnostics.push(createDiagnostic(
+            'catalog.semantic.duplicate-undirected-relationship',
+            `undirected relationship must be authored once: ${inspectable.id} / ${relationship.target}`,
+            { path },
+          ));
+        }
+        undirectedPairs.add(pair);
       }
     });
   });
@@ -131,12 +152,32 @@ export function createLessonCatalog(entityManifest, fidelityManifest) {
     .sort((a, b) => a.id.localeCompare(b.id))
     .map((record) => structuredClone(record));
   const entitiesById = sortedObject(entities.map((entity) => [entity.id, entity]));
-  const inspectables = [...entityManifest.inspectables]
+  const mutableInspectables = [...entityManifest.inspectables]
     .sort((a, b) => a.id.localeCompare(b.id))
     .map((inspectable) => ({
       ...structuredClone(inspectable),
       fidelity: entitiesById[inspectable.entity].fidelity,
     }));
+  const mutableById = Object.fromEntries(
+    mutableInspectables.map((inspectable) => [inspectable.id, inspectable]),
+  );
+  for (const inspectable of entityManifest.inspectables) {
+    for (const relationship of inspectable.relationships) {
+      if (relationship.direction !== 'undirected') continue;
+      mutableById[relationship.target].relationships.push({
+        ...structuredClone(relationship),
+        target: inspectable.id,
+      });
+    }
+  }
+  const inspectables = mutableInspectables.map((inspectable) => ({
+    ...inspectable,
+    relationships: [...inspectable.relationships].sort((a, b) => (
+      a.target.localeCompare(b.target)
+      || a.evidence.localeCompare(b.evidence)
+      || a.method.localeCompare(b.method)
+    )),
+  }));
 
   return deepFreeze({
     schemaVersion: entityManifest.schemaVersion,

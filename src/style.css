@@ -270,7 +270,9 @@ input[type="range"] { flex: 1; min-width: 80px; accent-color: var(--accent); }
 .anatomy-inspector-section p { margin: 0; }
 .anatomy-inspector-section ul { margin: 0; padding-left: 18px; }
 .anatomy-inspector-section .fidelity-statuses { margin-bottom: 14px; padding-bottom: 14px; }
-.anatomy-relationship-meta { display: block; margin-top: 4px; color: var(--dim); font-family: var(--font-mono); font-size: 0.6rem; }
+.anatomy-relationship-meta, .anatomy-relationship-method { display: block; margin-top: 4px; color: var(--dim); font-family: var(--font-mono); font-size: 0.6rem; }
+.anatomy-relationship-sources { display: grid; gap: 2px; margin-top: 6px !important; padding-left: 16px !important; }
+.anatomy-relationship-sources a { color: var(--accent); font-size: 0.7rem; }
 
 .fidelity-panel { position: fixed; z-index: 80; top: var(--topbar); right: 0; bottom: 0; width: min(480px, 42vw); overflow: auto; overscroll-behavior: contain; border-left: 1px solid var(--line-strong); background: rgba(7,16,25,0.98); box-shadow: -24px 0 70px rgba(0,0,0,0.44); }
 .fidelity-panel[hidden] { display: none; }

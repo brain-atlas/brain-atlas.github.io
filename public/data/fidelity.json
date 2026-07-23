@@ -4,11 +4,16 @@
     {
       "id": "fidelity.cortex",
       "geometry": {
-        "statuses": ["data-derived", "derived"],
+        "statuses": [
+          "data-derived",
+          "derived"
+        ],
         "summary": "A decimated marching-cubes shell derived from the TemplateFlow MNI152NLin2009cAsym brain mask."
       },
       "activity": {
-        "statuses": ["none"],
+        "statuses": [
+          "none"
+        ],
         "summary": "The cortical shell has no activity model.",
         "direction": "none"
       },
@@ -48,11 +53,16 @@
     {
       "id": "fidelity.julich-regions",
       "geometry": {
-        "statuses": ["data-derived", "derived"],
-        "summary": "Bilateral shells extracted and simplified from the Jülich-Brain v3.0.3 maximum-probability map."
+        "statuses": [
+          "data-derived",
+          "derived"
+        ],
+        "summary": "Bilateral shells extracted and simplified from the J\u00fclich-Brain v3.0.3 maximum-probability map."
       },
       "activity": {
-        "statuses": ["none"],
+        "statuses": [
+          "none"
+        ],
         "summary": "Region shells have no activity model.",
         "direction": "none"
       },
@@ -73,11 +83,11 @@
       ],
       "sources": [
         {
-          "label": "Jülich-Brain paper",
+          "label": "J\u00fclich-Brain paper",
           "url": "https://doi.org/10.1126/science.abb4588"
         },
         {
-          "label": "Jülich-Brain v3.0.3 dataset",
+          "label": "J\u00fclich-Brain v3.0.3 dataset",
           "url": "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
         }
       ],
@@ -92,11 +102,16 @@
     {
       "id": "fidelity.anterior-pathway",
       "geometry": {
-        "statuses": ["schematic"],
+        "statuses": [
+          "schematic"
+        ],
         "summary": "Hand-authored eye-to-chiasm-to-LGN teaching curves and illustrative landmarks."
       },
       "activity": {
-        "statuses": ["modeled", "illustrative"],
+        "statuses": [
+          "modeled",
+          "illustrative"
+        ],
         "summary": "Evenly spaced display dots travel along the schematic crossing paths.",
         "direction": "directed"
       },
@@ -122,11 +137,18 @@
     {
       "id": "fidelity.optic-radiation",
       "geometry": {
-        "statuses": ["data-derived", "derived", "mirrored"],
+        "statuses": [
+          "data-derived",
+          "derived",
+          "mirrored"
+        ],
         "summary": "Left LGN-to-V1 streamlines tracked on the HCP-1065 nonlinear ICBM152-2009a FIB in decoded RAS+ millimetres; the displayed right side is mirrored at runtime."
       },
       "activity": {
-        "statuses": ["modeled", "illustrative"],
+        "statuses": [
+          "modeled",
+          "illustrative"
+        ],
         "summary": "Directed LGN-to-V1 events use a stochastic refractory display model on the streamline contours.",
         "direction": "directed"
       },
@@ -171,11 +193,17 @@
     {
       "id": "fidelity.association-tracts",
       "geometry": {
-        "statuses": ["data-derived", "derived"],
+        "statuses": [
+          "data-derived",
+          "derived"
+        ],
         "summary": "Selected and resampled bilateral ICBM-2009a RAS+ streamlines from the HCP-1065 population tractography atlas."
       },
       "activity": {
-        "statuses": ["modeled", "illustrative"],
+        "statuses": [
+          "modeled",
+          "illustrative"
+        ],
         "summary": "Seeded refractory code-like events choose one of two endpoint directions from explicit per-tract probability metadata.",
         "direction": "modeled"
       },
@@ -195,6 +223,10 @@
         },
         {
           "summary": "Tractography does not establish precise cortical endpoints; the complete checked-in generator and tool manifest remains future reproducibility work.",
+          "material": true
+        },
+        {
+          "summary": "Qualified inspector links report only low-confidence nearest-surface endpoint proximity for the deterministic display sample; they are not terminations, pairwise connections, strengths, population probabilities, functions, or directions.",
           "material": true
         }
       ],
@@ -227,11 +259,17 @@
     {
       "id": "fidelity.superficial-white-matter",
       "geometry": {
-        "statuses": ["data-derived", "derived"],
+        "statuses": [
+          "data-derived",
+          "derived"
+        ],
         "summary": "Real bilateral short contours tracked on the HCP-1065 nonlinear ICBM152-2009a FIB and filtered with an exact TemplateFlow-derived 2009c cortical ribbon in decoded RAS+ millimetres."
       },
       "activity": {
-        "statuses": ["modeled", "illustrative"],
+        "statuses": [
+          "modeled",
+          "illustrative"
+        ],
         "summary": "Independently phased bounded vibration moves around fixed contour homes with no assigned travel direction.",
         "direction": "undirected"
       },
@@ -248,6 +286,10 @@
       "limitations": [
         {
           "summary": "Vibration is not measured activity, firing rate, conduction, or literal bidirectional signaling by one axon.",
+          "material": true
+        },
+        {
+          "summary": "No named-region endpoint classification is approved for the broad superficial-white-matter sample, so it cannot support named U-fibre or region-to-region relationships.",
           "material": true
         }
       ],
@@ -272,11 +314,15 @@
     {
       "id": "fidelity.display-labels",
       "geometry": {
-        "statuses": ["display-only"],
+        "statuses": [
+          "display-only"
+        ],
         "summary": "Text labels and viewer-authored stream groupings annotate other represented entities."
       },
       "activity": {
-        "statuses": ["none"],
+        "statuses": [
+          "none"
+        ],
         "summary": "Labels have no activity model.",
         "direction": "none"
       },

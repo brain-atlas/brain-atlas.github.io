@@ -1,0 +1,5847 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": {
+    "tool": "tools/map_tract_regions.py",
+    "version": 1
+  },
+  "environment": {
+    "python": ">=3.13,<3.14",
+    "packages": {
+      "numpy": "2.5.1",
+      "rtree": "1.4.1",
+      "scipy": "1.18.0",
+      "trimesh": "4.12.2"
+    }
+  },
+  "inputs": {
+    "tracts": {
+      "path": "public/data/tracts.json",
+      "sha256": "568d8848a6dfe4cb859d9c7ec8e572a90cf0d71d0b7c741c4a1e1e2e4471b213"
+    },
+    "regions": {
+      "path": "public/data/regions.json",
+      "sha256": "d7aeaa5cc16d58d949485ee7447b39067113166516064f8cd32bbcfbf7f2dc0b"
+    },
+    "regionMeshes": {
+      "path": "public/data/regions/*.obj",
+      "count": 90,
+      "sha256": "a3affd0d19b12946bb6cfce0c045813cbfe68332f0388108b9f59c6b5aedc828",
+      "hashMethod": "SHA-256 over sorted repo-relative UTF-8 path, NUL, bytes, NUL"
+    }
+  },
+  "coordinateFrames": {
+    "fibres": {
+      "template": "ICBM 2009a Nonlinear Asymmetric",
+      "templateVariantEvidence": "direct source record",
+      "coordinateConvention": "RAS+",
+      "units": "mm",
+      "templateConversion": "none; decoded source RAS+ frame retained through resampling"
+    },
+    "regions": {
+      "template": "MNI152NLin2009cAsym",
+      "coordinateConvention": "RAS+",
+      "units": "mm"
+    },
+    "templateConversion": "none; common RAS+ world only"
+  },
+  "method": {
+    "endpointOrder": "ignored; first and last points form an unordered pair",
+    "distance": "exact nearest point on each shipped decimated region triangle surface",
+    "candidateAssignment": "nearest same-hemisphere displayed region shell",
+    "screenRadiiMm": [
+      3,
+      5
+    ],
+    "minimumStreamlinesPerHemisphere": 18,
+    "streamlinesPerHemisphere": 180,
+    "qualification": "at least 18 sampled streamlines in L and R at both 3 mm and 5 mm",
+    "counting": "a streamline counts once for a region when either unordered endpoint matches",
+    "direction": "undirected"
+  },
+  "tracts": [
+    {
+      "id": "ilf",
+      "name": "ILF",
+      "hemispheres": {
+        "L": {
+          "streamlines": 180,
+          "assignments": [
+            {
+              "regionId": "lgn",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v1",
+              "within3mm": 48,
+              "medianMatchedDistance3mm": 2.145,
+              "within5mm": 70,
+              "medianMatchedDistance5mm": 2.677
+            },
+            {
+              "regionId": "v2",
+              "within3mm": 34,
+              "medianMatchedDistance3mm": 1.629,
+              "within5mm": 39,
+              "medianMatchedDistance5mm": 1.946
+            },
+            {
+              "regionId": "v3v",
+              "within3mm": 6,
+              "medianMatchedDistance3mm": 0.568,
+              "within5mm": 7,
+              "medianMatchedDistance5mm": 0.612
+            },
+            {
+              "regionId": "v3d",
+              "within3mm": 13,
+              "medianMatchedDistance3mm": 0.657,
+              "within5mm": 16,
+              "medianMatchedDistance5mm": 0.769
+            },
+            {
+              "regionId": "v4v",
+              "within3mm": 11,
+              "medianMatchedDistance3mm": 1.588,
+              "within5mm": 12,
+              "medianMatchedDistance5mm": 1.627
+            },
+            {
+              "regionId": "loa",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "lop",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg1",
+              "within3mm": 1,
+              "medianMatchedDistance3mm": 0.112,
+              "within5mm": 1,
+              "medianMatchedDistance5mm": 0.112
+            },
+            {
+              "regionId": "fg2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg3",
+              "within3mm": 1,
+              "medianMatchedDistance3mm": 1.059,
+              "within5mm": 1,
+              "medianMatchedDistance5mm": 1.059
+            },
+            {
+              "regionId": "fg4",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v3a",
+              "within3mm": 10,
+              "medianMatchedDistance3mm": 0.985,
+              "within5mm": 10,
+              "medianMatchedDistance5mm": 0.985
+            },
+            {
+              "regionId": "v6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "mt",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip3",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip4",
+              "within3mm": 8,
+              "medianMatchedDistance3mm": 2.146,
+              "within5mm": 8,
+              "medianMatchedDistance5mm": 2.146
+            },
+            {
+              "regionId": "hip5",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip7",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip8",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl7a",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl7p",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl5l",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl5m",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "sts2",
+              "within3mm": 71,
+              "medianMatchedDistance3mm": 1.055,
+              "within5mm": 74,
+              "medianMatchedDistance5mm": 1.091
+            },
+            {
+              "regionId": "pf",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pft",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pfm",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pga",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hpo1",
+              "within3mm": 13,
+              "medianMatchedDistance3mm": 0.216,
+              "within5mm": 13,
+              "medianMatchedDistance5mm": 0.216
+            },
+            {
+              "regionId": "ofc",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "presma",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "dlpfc",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "broca",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fp1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "sfg8",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "op6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pcg6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "gap_fi",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "gap_fii",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "gap_fo",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "gap_tp",
+              "within3mm": 89,
+              "medianMatchedDistance3mm": 1.15,
+              "within5mm": 99,
+              "medianMatchedDistance5mm": 1.272
+            }
+          ]
+        },
+        "R": {
+          "streamlines": 180,
+          "assignments": [
+            {
+              "regionId": "lgn",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v1",
+              "within3mm": 15,
+              "medianMatchedDistance3mm": 1.275,
+              "within5mm": 22,
+              "medianMatchedDistance5mm": 2.116
+            },
+            {
+              "regionId": "v2",
+              "within3mm": 7,
+              "medianMatchedDistance3mm": 0.371,
+              "within5mm": 8,
+              "medianMatchedDistance5mm": 0.615
+            },
+            {
+              "regionId": "v3v",
+              "within3mm": 4,
+              "medianMatchedDistance3mm": 1.039,
+              "within5mm": 4,
+              "medianMatchedDistance5mm": 1.039
+            },
+            {
+              "regionId": "v3d",
+              "within3mm": 12,
+              "medianMatchedDistance3mm": 1.631,
+              "within5mm": 13,
+              "medianMatchedDistance5mm": 1.64
+            },
+            {
+              "regionId": "v4v",
+              "within3mm": 3,
+              "medianMatchedDistance3mm": 1.72,
+              "within5mm": 4,
+              "medianMatchedDistance5mm": 1.732
+            },
+            {
+              "regionId": "loa",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "lop",
+              "within3mm": 1,
+              "medianMatchedDistance3mm": 0.829,
+              "within5mm": 1,
+              "medianMatchedDistance5mm": 0.829
+            },
+            {
+              "regionId": "fg1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg3",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg4",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v3a",
+              "within3mm": 10,
+              "medianMatchedDistance3mm": 0.928,
+              "within5mm": 10,
+              "medianMatchedDistance5mm": 0.928
+            },
+            {
+              "regionId": "v6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "mt",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip3",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip4",
+              "within3mm": 14,
+              "medianMatchedDistance3mm": 1.35,
+              "within5mm": 16,
+              "medianMatchedDistance5mm": 1.4
+            },
+            {
+              "regionId": "hip5",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip6",
+              "within3mm": 1,
+              "medianMatchedDistance3mm": 2.77,
+              "within5mm": 1,
+              "medianMatchedDistance5mm": 2.77
+            },
+            {
+              "regionId": "hip7",
+              "within3mm": 5,
+              "medianMatchedDistance3mm": 0.752,
+              "within5mm": 5,
+              "medianMatchedDistance5mm": 0.752
+            },
+            {
+              "regionId": "hip8",
+              "within3mm": 19,
+              "medianMatchedDistance3mm": 0.714,
+              "within5mm": 20,
+              "medianMatchedDistance5mm": 0.789
+            },
+            {
+              "regionId": "spl7a",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl7p",
+              "within3mm": 7,
+              "medianMatchedDistance3mm": 0.191,
+              "within5mm": 7,
+              "medianMatchedDistance5mm": 0.191
+            },
+            {
+              "regionId": "spl5l",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl5m",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "sts2",
+              "within3mm": 27,
+              "medianMatchedDistance3mm": 0.636,
+              "within5mm": 28,
+              "medianMatchedDistance5mm": 0.684
+            },
+            {
+              "regionId": "pf",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pft",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pfm",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pga",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hpo1",
+              "within3mm": 28,
+              "medianMatchedDistance3mm": 0.967,
+              "within5mm": 28,
+              "medianMatchedDistance5mm": 0.967
+            },
+            {
+              "regionId": "ofc",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "presma",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "dlpfc",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "broca",
+              "within3mm": 1,
+              "medianMatchedDistance3mm": 1.841,
+              "within5mm": 1,
+              "medianMatchedDistance5mm": 1.841
+            },
+            {
+              "regionId": "fp1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "sfg8",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "op6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 1,
+              "medianMatchedDistance5mm": 3.511
+            },
+            {
+              "regionId": "pcg6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "gap_fi",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "gap_fii",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "gap_fo",
+              "within3mm": 26,
+              "medianMatchedDistance3mm": 0.661,
+              "within5mm": 26,
+              "medianMatchedDistance5mm": 0.661
+            },
+            {
+              "regionId": "gap_tp",
+              "within3mm": 95,
+              "medianMatchedDistance3mm": 1.256,
+              "within5mm": 137,
+              "medianMatchedDistance5mm": 1.93
+            }
+          ]
+        }
+      },
+      "robustRegionIds": [
+        "gap_tp",
+        "sts2"
+      ],
+      "thresholdSensitiveRegionIds": [
+        "v1"
+      ]
+    },
+    {
+      "id": "ifof",
+      "name": "IFOF",
+      "hemispheres": {
+        "L": {
+          "streamlines": 180,
+          "assignments": [
+            {
+              "regionId": "lgn",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v1",
+              "within3mm": 54,
+              "medianMatchedDistance3mm": 2.266,
+              "within5mm": 85,
+              "medianMatchedDistance5mm": 2.778
+            },
+            {
+              "regionId": "v2",
+              "within3mm": 31,
+              "medianMatchedDistance3mm": 1.257,
+              "within5mm": 35,
+              "medianMatchedDistance5mm": 1.393
+            },
+            {
+              "regionId": "v3v",
+              "within3mm": 15,
+              "medianMatchedDistance3mm": 1.296,
+              "within5mm": 15,
+              "medianMatchedDistance5mm": 1.296
+            },
+            {
+              "regionId": "v3d",
+              "within3mm": 8,
+              "medianMatchedDistance3mm": 1.9,
+              "within5mm": 8,
+              "medianMatchedDistance5mm": 1.9
+            },
+            {
+              "regionId": "v4v",
+              "within3mm": 1,
+              "medianMatchedDistance3mm": 1.118,
+              "within5mm": 1,
+              "medianMatchedDistance5mm": 1.118
+            },
+            {
+              "regionId": "loa",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "lop",
+              "within3mm": 5,
+              "medianMatchedDistance3mm": 1.69,
+              "within5mm": 5,
+              "medianMatchedDistance5mm": 1.69
+            },
+            {
+              "regionId": "fg1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg3",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg4",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v3a",
+              "within3mm": 7,
+              "medianMatchedDistance3mm": 1.223,
+              "within5mm": 7,
+              "medianMatchedDistance5mm": 1.223
+            },
+            {
+              "regionId": "v6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "mt",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip3",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip4",
+              "within3mm": 7,
+              "medianMatchedDistance3mm": 1.338,
+              "within5mm": 7,
+              "medianMatchedDistance5mm": 1.338
+            },
+            {
+              "regionId": "hip5",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip7",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip8",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl7a",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl7p",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl5l",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl5m",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "sts2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pf",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pft",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pfm",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pga",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hpo1",
+              "within3mm": 12,
+              "medianMatchedDistance3mm": 1.906,
+              "within5mm": 12,
+              "medianMatchedDistance5mm": 1.906
+            },
+            {
+              "regionId": "ofc",
+              "within3mm": 17,
+              "medianMatchedDistance3mm": 0.919,
+              "within5mm": 20,
+              "medianMatchedDistance5mm": 0.976
+            },
+            {
+              "regionId": "presma",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "dlpfc",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "broca",
+              "within3mm": 11,
+              "medianMatchedDistance3mm": 1.208,
+              "within5mm": 22,
+              "medianMatchedDistance5mm": 2.979
+            },
+            {
+              "regionId": "fp1",
+              "within3mm": 72,
+              "medianMatchedDistance3mm": 1.504,
+              "within5mm": 81,
+              "medianMatchedDistance5mm": 1.784
+            },
+            {
+              "regionId": "sfg8",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "op6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pcg6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "gap_fi",
+              "within3mm": 22,
+              "medianMatchedDistance3mm": 0.341,
+              "within5mm": 34,
+              "medianMatchedDistance5mm": 0.835
+            },
+            {
+              "regionId": "gap_fii",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "gap_fo",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "gap_tp",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 4,
+              "medianMatchedDistance5mm": 4.352
+            }
+          ]
+        },
+        "R": {
+          "streamlines": 180,
+          "assignments": [
+            {
+              "regionId": "lgn",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v1",
+              "within3mm": 59,
+              "medianMatchedDistance3mm": 1.091,
+              "within5mm": 75,
+              "medianMatchedDistance5mm": 1.622
+            },
+            {
+              "regionId": "v2",
+              "within3mm": 24,
+              "medianMatchedDistance3mm": 0.548,
+              "within5mm": 27,
+              "medianMatchedDistance5mm": 0.667
+            },
+            {
+              "regionId": "v3v",
+              "within3mm": 23,
+              "medianMatchedDistance3mm": 0.854,
+              "within5mm": 23,
+              "medianMatchedDistance5mm": 0.854
+            },
+            {
+              "regionId": "v3d",
+              "within3mm": 5,
+              "medianMatchedDistance3mm": 1.707,
+              "within5mm": 6,
+              "medianMatchedDistance5mm": 2.174
+            },
+            {
+              "regionId": "v4v",
+              "within3mm": 9,
+              "medianMatchedDistance3mm": 0.981,
+              "within5mm": 9,
+              "medianMatchedDistance5mm": 0.981
+            },
+            {
+              "regionId": "loa",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "lop",
+              "within3mm": 3,
+              "medianMatchedDistance3mm": 0.5,
+              "within5mm": 4,
+              "medianMatchedDistance5mm": 1.33
+            },
+            {
+              "regionId": "fg1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg3",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg4",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v3a",
+              "within3mm": 8,
+              "medianMatchedDistance3mm": 0.256,
+              "within5mm": 8,
+              "medianMatchedDistance5mm": 0.256
+            },
+            {
+              "regionId": "v6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "mt",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip3",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip4",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip5",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip7",
+              "within3mm": 4,
+              "medianMatchedDistance3mm": 0.644,
+              "within5mm": 4,
+              "medianMatchedDistance5mm": 0.644
+            },
+            {
+              "regionId": "hip8",
+              "within3mm": 1,
+              "medianMatchedDistance3mm": 1.122,
+              "within5mm": 1,
+              "medianMatchedDistance5mm": 1.122
+            },
+            {
+              "regionId": "spl7a",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl7p",
+              "within3mm": 1,
+              "medianMatchedDistance3mm": 0.087,
+              "within5mm": 1,
+              "medianMatchedDistance5mm": 0.087
+            },
+            {
+              "regionId": "spl5l",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl5m",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "sts2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pf",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pft",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pfm",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pga",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hpo1",
+              "within3mm": 3,
+              "medianMatchedDistance3mm": 0.176,
+              "within5mm": 3,
+              "medianMatchedDistance5mm": 0.176
+            },
+            {
+              "regionId": "ofc",
+              "within3mm": 26,
+              "medianMatchedDistance3mm": 0.753,
+              "within5mm": 26,
+              "medianMatchedDistance5mm": 0.753
+            },
+            {
+              "regionId": "presma",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "dlpfc",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "broca",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 1,
+              "medianMatchedDistance5mm": 4.147
+            },
+            {
+              "regionId": "fp1",
+              "within3mm": 32,
+              "medianMatchedDistance3mm": 1.13,
+              "within5mm": 44,
+              "medianMatchedDistance5mm": 1.85
+            },
+            {
+              "regionId": "sfg8",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "op6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pcg6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "gap_fi",
+              "within3mm": 74,
+              "medianMatchedDistance3mm": 1.185,
+              "within5mm": 92,
+              "medianMatchedDistance5mm": 1.457
+            },
+            {
+              "regionId": "gap_fii",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "gap_fo",
+              "within3mm": 7,
+              "medianMatchedDistance3mm": 0.953,
+              "within5mm": 7,
+              "medianMatchedDistance5mm": 0.953
+            },
+            {
+              "regionId": "gap_tp",
+              "within3mm": 3,
+              "medianMatchedDistance3mm": 1.374,
+              "within5mm": 3,
+              "medianMatchedDistance5mm": 1.374
+            }
+          ]
+        }
+      },
+      "robustRegionIds": [
+        "fp1",
+        "gap_fi",
+        "v1",
+        "v2"
+      ],
+      "thresholdSensitiveRegionIds": [
+        "ofc"
+      ]
+    },
+    {
+      "id": "slf1",
+      "name": "SLF I",
+      "hemispheres": {
+        "L": {
+          "streamlines": 180,
+          "assignments": [
+            {
+              "regionId": "lgn",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v3v",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v3d",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v4v",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "loa",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "lop",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg3",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg4",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v3a",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "mt",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip3",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip4",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip5",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip7",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip8",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl7a",
+              "within3mm": 2,
+              "medianMatchedDistance3mm": 1.232,
+              "within5mm": 2,
+              "medianMatchedDistance5mm": 1.232
+            },
+            {
+              "regionId": "spl7p",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl5l",
+              "within3mm": 4,
+              "medianMatchedDistance3mm": 1.669,
+              "within5mm": 4,
+              "medianMatchedDistance5mm": 1.669
+            },
+            {
+              "regionId": "spl5m",
+              "within3mm": 51,
+              "medianMatchedDistance3mm": 2.08,
+              "within5mm": 52,
+              "medianMatchedDistance5mm": 2.098
+            },
+            {
+              "regionId": "sts2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pf",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pft",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pfm",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pga",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hpo1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "ofc",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "presma",
+              "within3mm": 46,
+              "medianMatchedDistance3mm": 1.503,
+              "within5mm": 53,
+              "medianMatchedDistance5mm": 1.975
+            },
+            {
+              "regionId": "dlpfc",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "broca",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fp1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "sfg8",
+              "within3mm": 10,
+              "medianMatchedDistance3mm": 0.584,
+              "within5mm": 11,
+              "medianMatchedDistance5mm": 0.708
+            },
+            {
+              "regionId": "op6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pcg6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "gap_fi",
+              "within3mm": 93,
+              "medianMatchedDistance3mm": 0.772,
+              "within5mm": 107,
+              "medianMatchedDistance5mm": 0.928
+            },
+            {
+              "regionId": "gap_fii",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "gap_fo",
+              "within3mm": 121,
+              "medianMatchedDistance3mm": 1.099,
+              "within5mm": 121,
+              "medianMatchedDistance5mm": 1.107
+            },
+            {
+              "regionId": "gap_tp",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            }
+          ]
+        },
+        "R": {
+          "streamlines": 180,
+          "assignments": [
+            {
+              "regionId": "lgn",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v3v",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v3d",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v4v",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "loa",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "lop",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg3",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg4",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v3a",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "mt",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip3",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip4",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip5",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip7",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip8",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl7a",
+              "within3mm": 2,
+              "medianMatchedDistance3mm": 2.532,
+              "within5mm": 3,
+              "medianMatchedDistance5mm": 2.781
+            },
+            {
+              "regionId": "spl7p",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl5l",
+              "within3mm": 51,
+              "medianMatchedDistance3mm": 2.47,
+              "within5mm": 76,
+              "medianMatchedDistance5mm": 2.8
+            },
+            {
+              "regionId": "spl5m",
+              "within3mm": 29,
+              "medianMatchedDistance3mm": 2.012,
+              "within5mm": 44,
+              "medianMatchedDistance5mm": 2.417
+            },
+            {
+              "regionId": "sts2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pf",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pft",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pfm",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pga",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hpo1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "ofc",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "presma",
+              "within3mm": 22,
+              "medianMatchedDistance3mm": 1.583,
+              "within5mm": 24,
+              "medianMatchedDistance5mm": 1.629
+            },
+            {
+              "regionId": "dlpfc",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "broca",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fp1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "sfg8",
+              "within3mm": 137,
+              "medianMatchedDistance3mm": 0.714,
+              "within5mm": 137,
+              "medianMatchedDistance5mm": 0.714
+            },
+            {
+              "regionId": "op6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pcg6",
+              "within3mm": 7,
+              "medianMatchedDistance3mm": 1.45,
+              "within5mm": 9,
+              "medianMatchedDistance5mm": 1.715
+            },
+            {
+              "regionId": "gap_fi",
+              "within3mm": 19,
+              "medianMatchedDistance3mm": 0.374,
+              "within5mm": 19,
+              "medianMatchedDistance5mm": 0.374
+            },
+            {
+              "regionId": "gap_fii",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "gap_fo",
+              "within3mm": 37,
+              "medianMatchedDistance3mm": 2.061,
+              "within5mm": 41,
+              "medianMatchedDistance5mm": 2.293
+            },
+            {
+              "regionId": "gap_tp",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            }
+          ]
+        }
+      },
+      "robustRegionIds": [
+        "gap_fi",
+        "gap_fo",
+        "presma",
+        "spl5m"
+      ],
+      "thresholdSensitiveRegionIds": []
+    },
+    {
+      "id": "slf2",
+      "name": "SLF II",
+      "hemispheres": {
+        "L": {
+          "streamlines": 180,
+          "assignments": [
+            {
+              "regionId": "lgn",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v3v",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v3d",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v4v",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "loa",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "lop",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg3",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg4",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v3a",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "mt",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip1",
+              "within3mm": 9,
+              "medianMatchedDistance3mm": 0.646,
+              "within5mm": 9,
+              "medianMatchedDistance5mm": 0.646
+            },
+            {
+              "regionId": "hip2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 1,
+              "medianMatchedDistance5mm": 4.674
+            },
+            {
+              "regionId": "hip3",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip4",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip5",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip7",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip8",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl7a",
+              "within3mm": 7,
+              "medianMatchedDistance3mm": 1.393,
+              "within5mm": 7,
+              "medianMatchedDistance5mm": 1.393
+            },
+            {
+              "regionId": "spl7p",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl5l",
+              "within3mm": 3,
+              "medianMatchedDistance3mm": 1.601,
+              "within5mm": 3,
+              "medianMatchedDistance5mm": 1.601
+            },
+            {
+              "regionId": "spl5m",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "sts2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pf",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pft",
+              "within3mm": 12,
+              "medianMatchedDistance3mm": 2.343,
+              "within5mm": 18,
+              "medianMatchedDistance5mm": 2.492
+            },
+            {
+              "regionId": "pfm",
+              "within3mm": 26,
+              "medianMatchedDistance3mm": 1.458,
+              "within5mm": 48,
+              "medianMatchedDistance5mm": 2.582
+            },
+            {
+              "regionId": "pga",
+              "within3mm": 8,
+              "medianMatchedDistance3mm": 0.823,
+              "within5mm": 8,
+              "medianMatchedDistance5mm": 0.823
+            },
+            {
+              "regionId": "hpo1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "ofc",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "presma",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "dlpfc",
+              "within3mm": 1,
+              "medianMatchedDistance3mm": 2.737,
+              "within5mm": 3,
+              "medianMatchedDistance5mm": 4.482
+            },
+            {
+              "regionId": "broca",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fp1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "sfg8",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "op6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pcg6",
+              "within3mm": 40,
+              "medianMatchedDistance3mm": 2.213,
+              "within5mm": 70,
+              "medianMatchedDistance5mm": 2.845
+            },
+            {
+              "regionId": "gap_fi",
+              "within3mm": 91,
+              "medianMatchedDistance3mm": 0.861,
+              "within5mm": 105,
+              "medianMatchedDistance5mm": 1.136
+            },
+            {
+              "regionId": "gap_fii",
+              "within3mm": 36,
+              "medianMatchedDistance3mm": 1.246,
+              "within5mm": 62,
+              "medianMatchedDistance5mm": 2.589
+            },
+            {
+              "regionId": "gap_fo",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "gap_tp",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            }
+          ]
+        },
+        "R": {
+          "streamlines": 180,
+          "assignments": [
+            {
+              "regionId": "lgn",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v3v",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v3d",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v4v",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "loa",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "lop",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg3",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg4",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v3a",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "mt",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip1",
+              "within3mm": 11,
+              "medianMatchedDistance3mm": 1.063,
+              "within5mm": 12,
+              "medianMatchedDistance5mm": 1.085
+            },
+            {
+              "regionId": "hip2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip3",
+              "within3mm": 18,
+              "medianMatchedDistance3mm": 0.842,
+              "within5mm": 19,
+              "medianMatchedDistance5mm": 0.897
+            },
+            {
+              "regionId": "hip4",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip5",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip6",
+              "within3mm": 18,
+              "medianMatchedDistance3mm": 0.262,
+              "within5mm": 18,
+              "medianMatchedDistance5mm": 0.262
+            },
+            {
+              "regionId": "hip7",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip8",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl7a",
+              "within3mm": 7,
+              "medianMatchedDistance3mm": 1.005,
+              "within5mm": 8,
+              "medianMatchedDistance5mm": 1.166
+            },
+            {
+              "regionId": "spl7p",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl5l",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl5m",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "sts2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pf",
+              "within3mm": 3,
+              "medianMatchedDistance3mm": 0.216,
+              "within5mm": 3,
+              "medianMatchedDistance5mm": 0.216
+            },
+            {
+              "regionId": "pft",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pfm",
+              "within3mm": 31,
+              "medianMatchedDistance3mm": 1.239,
+              "within5mm": 32,
+              "medianMatchedDistance5mm": 1.265
+            },
+            {
+              "regionId": "pga",
+              "within3mm": 57,
+              "medianMatchedDistance3mm": 0.9,
+              "within5mm": 62,
+              "medianMatchedDistance5mm": 0.953
+            },
+            {
+              "regionId": "hpo1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "ofc",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "presma",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "dlpfc",
+              "within3mm": 3,
+              "medianMatchedDistance3mm": 1.555,
+              "within5mm": 3,
+              "medianMatchedDistance5mm": 1.555
+            },
+            {
+              "regionId": "broca",
+              "within3mm": 1,
+              "medianMatchedDistance3mm": 0.702,
+              "within5mm": 3,
+              "medianMatchedDistance5mm": 3.636
+            },
+            {
+              "regionId": "fp1",
+              "within3mm": 7,
+              "medianMatchedDistance3mm": 2.529,
+              "within5mm": 8,
+              "medianMatchedDistance5mm": 2.636
+            },
+            {
+              "regionId": "sfg8",
+              "within3mm": 15,
+              "medianMatchedDistance3mm": 1.548,
+              "within5mm": 17,
+              "medianMatchedDistance5mm": 1.56
+            },
+            {
+              "regionId": "op6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pcg6",
+              "within3mm": 9,
+              "medianMatchedDistance3mm": 0.235,
+              "within5mm": 10,
+              "medianMatchedDistance5mm": 0.509
+            },
+            {
+              "regionId": "gap_fi",
+              "within3mm": 65,
+              "medianMatchedDistance3mm": 1.301,
+              "within5mm": 87,
+              "medianMatchedDistance5mm": 1.866
+            },
+            {
+              "regionId": "gap_fii",
+              "within3mm": 58,
+              "medianMatchedDistance3mm": 1.039,
+              "within5mm": 68,
+              "medianMatchedDistance5mm": 1.33
+            },
+            {
+              "regionId": "gap_fo",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "gap_tp",
+              "within3mm": 4,
+              "medianMatchedDistance3mm": 1.021,
+              "within5mm": 4,
+              "medianMatchedDistance5mm": 1.021
+            }
+          ]
+        }
+      },
+      "robustRegionIds": [
+        "gap_fi",
+        "gap_fii",
+        "pfm"
+      ],
+      "thresholdSensitiveRegionIds": []
+    },
+    {
+      "id": "slf3",
+      "name": "SLF III",
+      "hemispheres": {
+        "L": {
+          "streamlines": 180,
+          "assignments": [
+            {
+              "regionId": "lgn",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v3v",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v3d",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v4v",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "loa",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "lop",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg3",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg4",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v3a",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "mt",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip1",
+              "within3mm": 6,
+              "medianMatchedDistance3mm": 0.587,
+              "within5mm": 6,
+              "medianMatchedDistance5mm": 0.587
+            },
+            {
+              "regionId": "hip2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 1,
+              "medianMatchedDistance5mm": 4.285
+            },
+            {
+              "regionId": "hip3",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip4",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip5",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip7",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip8",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl7a",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl7p",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl5l",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl5m",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "sts2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pf",
+              "within3mm": 79,
+              "medianMatchedDistance3mm": 1.453,
+              "within5mm": 97,
+              "medianMatchedDistance5mm": 1.814
+            },
+            {
+              "regionId": "pft",
+              "within3mm": 11,
+              "medianMatchedDistance3mm": 1.515,
+              "within5mm": 11,
+              "medianMatchedDistance5mm": 1.515
+            },
+            {
+              "regionId": "pfm",
+              "within3mm": 19,
+              "medianMatchedDistance3mm": 0.927,
+              "within5mm": 55,
+              "medianMatchedDistance5mm": 3.412
+            },
+            {
+              "regionId": "pga",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hpo1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "ofc",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "presma",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "dlpfc",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "broca",
+              "within3mm": 30,
+              "medianMatchedDistance3mm": 1.354,
+              "within5mm": 38,
+              "medianMatchedDistance5mm": 1.523
+            },
+            {
+              "regionId": "fp1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "sfg8",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "op6",
+              "within3mm": 83,
+              "medianMatchedDistance3mm": 1.136,
+              "within5mm": 88,
+              "medianMatchedDistance5mm": 1.199
+            },
+            {
+              "regionId": "pcg6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "gap_fi",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "gap_fii",
+              "within3mm": 25,
+              "medianMatchedDistance3mm": 1.288,
+              "within5mm": 45,
+              "medianMatchedDistance5mm": 2.526
+            },
+            {
+              "regionId": "gap_fo",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "gap_tp",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            }
+          ]
+        },
+        "R": {
+          "streamlines": 180,
+          "assignments": [
+            {
+              "regionId": "lgn",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v3v",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v3d",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v4v",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "loa",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "lop",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg3",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg4",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v3a",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "mt",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip1",
+              "within3mm": 31,
+              "medianMatchedDistance3mm": 1.121,
+              "within5mm": 31,
+              "medianMatchedDistance5mm": 1.121
+            },
+            {
+              "regionId": "hip2",
+              "within3mm": 25,
+              "medianMatchedDistance3mm": 0.2,
+              "within5mm": 27,
+              "medianMatchedDistance5mm": 0.3
+            },
+            {
+              "regionId": "hip3",
+              "within3mm": 2,
+              "medianMatchedDistance3mm": 0.848,
+              "within5mm": 2,
+              "medianMatchedDistance5mm": 0.848
+            },
+            {
+              "regionId": "hip4",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip5",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip7",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip8",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl7a",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl7p",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl5l",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl5m",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "sts2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pf",
+              "within3mm": 37,
+              "medianMatchedDistance3mm": 1.208,
+              "within5mm": 37,
+              "medianMatchedDistance5mm": 1.208
+            },
+            {
+              "regionId": "pft",
+              "within3mm": 57,
+              "medianMatchedDistance3mm": 1.006,
+              "within5mm": 60,
+              "medianMatchedDistance5mm": 1.045
+            },
+            {
+              "regionId": "pfm",
+              "within3mm": 14,
+              "medianMatchedDistance3mm": 0.831,
+              "within5mm": 16,
+              "medianMatchedDistance5mm": 1.114
+            },
+            {
+              "regionId": "pga",
+              "within3mm": 7,
+              "medianMatchedDistance3mm": 0.659,
+              "within5mm": 7,
+              "medianMatchedDistance5mm": 0.659
+            },
+            {
+              "regionId": "hpo1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "ofc",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "presma",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "dlpfc",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "broca",
+              "within3mm": 44,
+              "medianMatchedDistance3mm": 1.027,
+              "within5mm": 59,
+              "medianMatchedDistance5mm": 1.593
+            },
+            {
+              "regionId": "fp1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "sfg8",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "op6",
+              "within3mm": 46,
+              "medianMatchedDistance3mm": 1.296,
+              "within5mm": 56,
+              "medianMatchedDistance5mm": 1.792
+            },
+            {
+              "regionId": "pcg6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "gap_fi",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "gap_fii",
+              "within3mm": 17,
+              "medianMatchedDistance3mm": 1.092,
+              "within5mm": 28,
+              "medianMatchedDistance5mm": 1.311
+            },
+            {
+              "regionId": "gap_fo",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "gap_tp",
+              "within3mm": 2,
+              "medianMatchedDistance3mm": 0.315,
+              "within5mm": 2,
+              "medianMatchedDistance5mm": 0.315
+            }
+          ]
+        }
+      },
+      "robustRegionIds": [
+        "broca",
+        "op6",
+        "pf"
+      ],
+      "thresholdSensitiveRegionIds": [
+        "gap_fii"
+      ]
+    },
+    {
+      "id": "vof",
+      "name": "VOF",
+      "hemispheres": {
+        "L": {
+          "streamlines": 180,
+          "assignments": [
+            {
+              "regionId": "lgn",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v3v",
+              "within3mm": 11,
+              "medianMatchedDistance3mm": 1.428,
+              "within5mm": 11,
+              "medianMatchedDistance5mm": 1.428
+            },
+            {
+              "regionId": "v3d",
+              "within3mm": 46,
+              "medianMatchedDistance3mm": 0.635,
+              "within5mm": 46,
+              "medianMatchedDistance5mm": 0.635
+            },
+            {
+              "regionId": "v4v",
+              "within3mm": 14,
+              "medianMatchedDistance3mm": 1.072,
+              "within5mm": 14,
+              "medianMatchedDistance5mm": 1.072
+            },
+            {
+              "regionId": "loa",
+              "within3mm": 72,
+              "medianMatchedDistance3mm": 1.03,
+              "within5mm": 73,
+              "medianMatchedDistance5mm": 1.039
+            },
+            {
+              "regionId": "lop",
+              "within3mm": 47,
+              "medianMatchedDistance3mm": 0.832,
+              "within5mm": 47,
+              "medianMatchedDistance5mm": 0.832
+            },
+            {
+              "regionId": "fg1",
+              "within3mm": 4,
+              "medianMatchedDistance3mm": 0.832,
+              "within5mm": 4,
+              "medianMatchedDistance5mm": 0.832
+            },
+            {
+              "regionId": "fg2",
+              "within3mm": 21,
+              "medianMatchedDistance3mm": 0.791,
+              "within5mm": 27,
+              "medianMatchedDistance5mm": 1.36
+            },
+            {
+              "regionId": "fg3",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg4",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v3a",
+              "within3mm": 92,
+              "medianMatchedDistance3mm": 0.515,
+              "within5mm": 92,
+              "medianMatchedDistance5mm": 0.515
+            },
+            {
+              "regionId": "v6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "mt",
+              "within3mm": 10,
+              "medianMatchedDistance3mm": 0.885,
+              "within5mm": 10,
+              "medianMatchedDistance5mm": 0.885
+            },
+            {
+              "regionId": "hip1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip3",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip4",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip5",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip7",
+              "within3mm": 6,
+              "medianMatchedDistance3mm": 0.648,
+              "within5mm": 6,
+              "medianMatchedDistance5mm": 0.648
+            },
+            {
+              "regionId": "hip8",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl7a",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl7p",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl5l",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl5m",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "sts2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pf",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pft",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pfm",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pga",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hpo1",
+              "within3mm": 13,
+              "medianMatchedDistance3mm": 1.238,
+              "within5mm": 13,
+              "medianMatchedDistance5mm": 1.238
+            },
+            {
+              "regionId": "ofc",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "presma",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "dlpfc",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "broca",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fp1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "sfg8",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "op6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pcg6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "gap_fi",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "gap_fii",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "gap_fo",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "gap_tp",
+              "within3mm": 10,
+              "medianMatchedDistance3mm": 0.339,
+              "within5mm": 11,
+              "medianMatchedDistance5mm": 0.43
+            }
+          ]
+        },
+        "R": {
+          "streamlines": 180,
+          "assignments": [
+            {
+              "regionId": "lgn",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v2",
+              "within3mm": 1,
+              "medianMatchedDistance3mm": 1.593,
+              "within5mm": 1,
+              "medianMatchedDistance5mm": 1.593
+            },
+            {
+              "regionId": "v3v",
+              "within3mm": 24,
+              "medianMatchedDistance3mm": 1.825,
+              "within5mm": 24,
+              "medianMatchedDistance5mm": 1.825
+            },
+            {
+              "regionId": "v3d",
+              "within3mm": 69,
+              "medianMatchedDistance3mm": 1.0,
+              "within5mm": 69,
+              "medianMatchedDistance5mm": 1.0
+            },
+            {
+              "regionId": "v4v",
+              "within3mm": 91,
+              "medianMatchedDistance3mm": 1.706,
+              "within5mm": 92,
+              "medianMatchedDistance5mm": 1.709
+            },
+            {
+              "regionId": "loa",
+              "within3mm": 25,
+              "medianMatchedDistance3mm": 1.145,
+              "within5mm": 34,
+              "medianMatchedDistance5mm": 1.481
+            },
+            {
+              "regionId": "lop",
+              "within3mm": 34,
+              "medianMatchedDistance3mm": 0.479,
+              "within5mm": 40,
+              "medianMatchedDistance5mm": 0.694
+            },
+            {
+              "regionId": "fg1",
+              "within3mm": 2,
+              "medianMatchedDistance3mm": 0.821,
+              "within5mm": 2,
+              "medianMatchedDistance5mm": 0.821
+            },
+            {
+              "regionId": "fg2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg3",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg4",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v3a",
+              "within3mm": 60,
+              "medianMatchedDistance3mm": 0.486,
+              "within5mm": 60,
+              "medianMatchedDistance5mm": 0.486
+            },
+            {
+              "regionId": "v6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "mt",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip3",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip4",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip5",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip7",
+              "within3mm": 19,
+              "medianMatchedDistance3mm": 0.723,
+              "within5mm": 19,
+              "medianMatchedDistance5mm": 0.723
+            },
+            {
+              "regionId": "hip8",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl7a",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl7p",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl5l",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl5m",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "sts2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pf",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pft",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pfm",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pga",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hpo1",
+              "within3mm": 15,
+              "medianMatchedDistance3mm": 0.099,
+              "within5mm": 15,
+              "medianMatchedDistance5mm": 0.099
+            },
+            {
+              "regionId": "ofc",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "presma",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "dlpfc",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "broca",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fp1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "sfg8",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "op6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pcg6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "gap_fi",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "gap_fii",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "gap_fo",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "gap_tp",
+              "within3mm": 1,
+              "medianMatchedDistance3mm": 2.667,
+              "within5mm": 2,
+              "medianMatchedDistance5mm": 3.451
+            }
+          ]
+        }
+      },
+      "robustRegionIds": [
+        "loa",
+        "lop",
+        "v3a",
+        "v3d"
+      ],
+      "thresholdSensitiveRegionIds": []
+    },
+    {
+      "id": "af",
+      "name": "Arcuate",
+      "hemispheres": {
+        "L": {
+          "streamlines": 180,
+          "assignments": [
+            {
+              "regionId": "lgn",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v3v",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v3d",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v4v",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "loa",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "lop",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg3",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg4",
+              "within3mm": 2,
+              "medianMatchedDistance3mm": 2.758,
+              "within5mm": 7,
+              "medianMatchedDistance5mm": 3.25
+            },
+            {
+              "regionId": "v3a",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "mt",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip3",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip4",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip5",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip7",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip8",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl7a",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl7p",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl5l",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl5m",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "sts2",
+              "within3mm": 18,
+              "medianMatchedDistance3mm": 1.82,
+              "within5mm": 27,
+              "medianMatchedDistance5mm": 2.343
+            },
+            {
+              "regionId": "pf",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pft",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pfm",
+              "within3mm": 1,
+              "medianMatchedDistance3mm": 2.534,
+              "within5mm": 1,
+              "medianMatchedDistance5mm": 2.534
+            },
+            {
+              "regionId": "pga",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hpo1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "ofc",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "presma",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "dlpfc",
+              "within3mm": 4,
+              "medianMatchedDistance3mm": 2.831,
+              "within5mm": 6,
+              "medianMatchedDistance5mm": 2.91
+            },
+            {
+              "regionId": "broca",
+              "within3mm": 83,
+              "medianMatchedDistance3mm": 1.584,
+              "within5mm": 93,
+              "medianMatchedDistance5mm": 1.755
+            },
+            {
+              "regionId": "fp1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "sfg8",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "op6",
+              "within3mm": 3,
+              "medianMatchedDistance3mm": 0.139,
+              "within5mm": 3,
+              "medianMatchedDistance5mm": 0.139
+            },
+            {
+              "regionId": "pcg6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "gap_fi",
+              "within3mm": 53,
+              "medianMatchedDistance3mm": 1.238,
+              "within5mm": 70,
+              "medianMatchedDistance5mm": 1.763
+            },
+            {
+              "regionId": "gap_fii",
+              "within3mm": 7,
+              "medianMatchedDistance3mm": 1.715,
+              "within5mm": 8,
+              "medianMatchedDistance5mm": 1.968
+            },
+            {
+              "regionId": "gap_fo",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "gap_tp",
+              "within3mm": 21,
+              "medianMatchedDistance3mm": 2.499,
+              "within5mm": 59,
+              "medianMatchedDistance5mm": 3.436
+            }
+          ]
+        },
+        "R": {
+          "streamlines": 180,
+          "assignments": [
+            {
+              "regionId": "lgn",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v3v",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v3d",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v4v",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "loa",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 1,
+              "medianMatchedDistance5mm": 4.875
+            },
+            {
+              "regionId": "lop",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg3",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg4",
+              "within3mm": 8,
+              "medianMatchedDistance3mm": 2.13,
+              "within5mm": 11,
+              "medianMatchedDistance5mm": 2.256
+            },
+            {
+              "regionId": "v3a",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "mt",
+              "within3mm": 1,
+              "medianMatchedDistance3mm": 0.472,
+              "within5mm": 5,
+              "medianMatchedDistance5mm": 3.575
+            },
+            {
+              "regionId": "hip1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip3",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip4",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip5",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip7",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip8",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl7a",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl7p",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl5l",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl5m",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "sts2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pf",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pft",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pfm",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pga",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hpo1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "ofc",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "presma",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "dlpfc",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "broca",
+              "within3mm": 90,
+              "medianMatchedDistance3mm": 1.222,
+              "within5mm": 91,
+              "medianMatchedDistance5mm": 1.226
+            },
+            {
+              "regionId": "fp1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "sfg8",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "op6",
+              "within3mm": 1,
+              "medianMatchedDistance3mm": 2.745,
+              "within5mm": 1,
+              "medianMatchedDistance5mm": 2.745
+            },
+            {
+              "regionId": "pcg6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "gap_fi",
+              "within3mm": 58,
+              "medianMatchedDistance3mm": 1.501,
+              "within5mm": 65,
+              "medianMatchedDistance5mm": 1.703
+            },
+            {
+              "regionId": "gap_fii",
+              "within3mm": 20,
+              "medianMatchedDistance3mm": 1.267,
+              "within5mm": 23,
+              "medianMatchedDistance5mm": 1.3
+            },
+            {
+              "regionId": "gap_fo",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "gap_tp",
+              "within3mm": 14,
+              "medianMatchedDistance3mm": 1.053,
+              "within5mm": 47,
+              "medianMatchedDistance5mm": 3.967
+            }
+          ]
+        }
+      },
+      "robustRegionIds": [
+        "broca",
+        "gap_fi"
+      ],
+      "thresholdSensitiveRegionIds": [
+        "gap_tp"
+      ]
+    },
+    {
+      "id": "mdlf",
+      "name": "MdLF",
+      "hemispheres": {
+        "L": {
+          "streamlines": 180,
+          "assignments": [
+            {
+              "regionId": "lgn",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v3v",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v3d",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v4v",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "loa",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "lop",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg3",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg4",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v3a",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "mt",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip3",
+              "within3mm": 1,
+              "medianMatchedDistance3mm": 2.404,
+              "within5mm": 1,
+              "medianMatchedDistance5mm": 2.404
+            },
+            {
+              "regionId": "hip4",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip5",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip6",
+              "within3mm": 51,
+              "medianMatchedDistance3mm": 1.118,
+              "within5mm": 57,
+              "medianMatchedDistance5mm": 1.225
+            },
+            {
+              "regionId": "hip7",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip8",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl7a",
+              "within3mm": 70,
+              "medianMatchedDistance3mm": 1.916,
+              "within5mm": 112,
+              "medianMatchedDistance5mm": 2.81
+            },
+            {
+              "regionId": "spl7p",
+              "within3mm": 5,
+              "medianMatchedDistance3mm": 1.523,
+              "within5mm": 5,
+              "medianMatchedDistance5mm": 1.523
+            },
+            {
+              "regionId": "spl5l",
+              "within3mm": 1,
+              "medianMatchedDistance3mm": 2.7,
+              "within5mm": 4,
+              "medianMatchedDistance5mm": 3.275
+            },
+            {
+              "regionId": "spl5m",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "sts2",
+              "within3mm": 21,
+              "medianMatchedDistance3mm": 1.132,
+              "within5mm": 40,
+              "medianMatchedDistance5mm": 2.813
+            },
+            {
+              "regionId": "pf",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pft",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pfm",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pga",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hpo1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "ofc",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "presma",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "dlpfc",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "broca",
+              "within3mm": 1,
+              "medianMatchedDistance3mm": 1.487,
+              "within5mm": 3,
+              "medianMatchedDistance5mm": 4.145
+            },
+            {
+              "regionId": "fp1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "sfg8",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "op6",
+              "within3mm": 30,
+              "medianMatchedDistance3mm": 2.387,
+              "within5mm": 76,
+              "medianMatchedDistance5mm": 3.242
+            },
+            {
+              "regionId": "pcg6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "gap_fi",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "gap_fii",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "gap_fo",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "gap_tp",
+              "within3mm": 6,
+              "medianMatchedDistance3mm": 2.381,
+              "within5mm": 7,
+              "medianMatchedDistance5mm": 2.528
+            }
+          ]
+        },
+        "R": {
+          "streamlines": 180,
+          "assignments": [
+            {
+              "regionId": "lgn",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v3v",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v3d",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v4v",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "loa",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "lop",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg3",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "fg4",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v3a",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "v6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "mt",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip3",
+              "within3mm": 47,
+              "medianMatchedDistance3mm": 1.011,
+              "within5mm": 51,
+              "medianMatchedDistance5mm": 1.015
+            },
+            {
+              "regionId": "hip4",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip5",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip7",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hip8",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "spl7a",
+              "within3mm": 51,
+              "medianMatchedDistance3mm": 1.811,
+              "within5mm": 108,
+              "medianMatchedDistance5mm": 3.223
+            },
+            {
+              "regionId": "spl7p",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 3,
+              "medianMatchedDistance5mm": 3.941
+            },
+            {
+              "regionId": "spl5l",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 2,
+              "medianMatchedDistance5mm": 3.898
+            },
+            {
+              "regionId": "spl5m",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "sts2",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pf",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pft",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pfm",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "pga",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "hpo1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "ofc",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "presma",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "dlpfc",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "broca",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 2,
+              "medianMatchedDistance5mm": 4.131
+            },
+            {
+              "regionId": "fp1",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "sfg8",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "op6",
+              "within3mm": 12,
+              "medianMatchedDistance3mm": 2.745,
+              "within5mm": 73,
+              "medianMatchedDistance5mm": 3.558
+            },
+            {
+              "regionId": "pcg6",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "gap_fi",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "gap_fii",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "gap_fo",
+              "within3mm": 0,
+              "medianMatchedDistance3mm": null,
+              "within5mm": 0,
+              "medianMatchedDistance5mm": null
+            },
+            {
+              "regionId": "gap_tp",
+              "within3mm": 11,
+              "medianMatchedDistance3mm": 2.394,
+              "within5mm": 22,
+              "medianMatchedDistance5mm": 3.13
+            }
+          ]
+        }
+      },
+      "robustRegionIds": [
+        "spl7a"
+      ],
+      "thresholdSensitiveRegionIds": [
+        "op6"
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "relationship.ilf-gap-tp",
+      "source": "tract.ilf",
+      "target": "region.gap-tp",
+      "direction": "undirected",
+      "evidence": "displayed-dataset",
+      "method": "displayed-endpoint-proximity",
+      "status": "qualified",
+      "confidence": "low",
+      "hemispheres": {
+        "L": {
+          "within3mm": 89,
+          "within5mm": 99
+        },
+        "R": {
+          "within3mm": 95,
+          "within5mm": 137
+        }
+      }
+    },
+    {
+      "id": "relationship.ilf-sts2",
+      "source": "tract.ilf",
+      "target": "region.sts2",
+      "direction": "undirected",
+      "evidence": "displayed-dataset",
+      "method": "displayed-endpoint-proximity",
+      "status": "qualified",
+      "confidence": "low",
+      "hemispheres": {
+        "L": {
+          "within3mm": 71,
+          "within5mm": 74
+        },
+        "R": {
+          "within3mm": 27,
+          "within5mm": 28
+        }
+      }
+    },
+    {
+      "id": "relationship.ifof-fp1",
+      "source": "tract.ifof",
+      "target": "region.fp1",
+      "direction": "undirected",
+      "evidence": "displayed-dataset",
+      "method": "displayed-endpoint-proximity",
+      "status": "qualified",
+      "confidence": "low",
+      "hemispheres": {
+        "L": {
+          "within3mm": 72,
+          "within5mm": 81
+        },
+        "R": {
+          "within3mm": 32,
+          "within5mm": 44
+        }
+      }
+    },
+    {
+      "id": "relationship.ifof-gap-fi",
+      "source": "tract.ifof",
+      "target": "region.gap-fi",
+      "direction": "undirected",
+      "evidence": "displayed-dataset",
+      "method": "displayed-endpoint-proximity",
+      "status": "qualified",
+      "confidence": "low",
+      "hemispheres": {
+        "L": {
+          "within3mm": 22,
+          "within5mm": 34
+        },
+        "R": {
+          "within3mm": 74,
+          "within5mm": 92
+        }
+      }
+    },
+    {
+      "id": "relationship.ifof-v1",
+      "source": "tract.ifof",
+      "target": "region.v1",
+      "direction": "undirected",
+      "evidence": "displayed-dataset",
+      "method": "displayed-endpoint-proximity",
+      "status": "qualified",
+      "confidence": "low",
+      "hemispheres": {
+        "L": {
+          "within3mm": 54,
+          "within5mm": 85
+        },
+        "R": {
+          "within3mm": 59,
+          "within5mm": 75
+        }
+      }
+    },
+    {
+      "id": "relationship.ifof-v2",
+      "source": "tract.ifof",
+      "target": "region.v2",
+      "direction": "undirected",
+      "evidence": "displayed-dataset",
+      "method": "displayed-endpoint-proximity",
+      "status": "qualified",
+      "confidence": "low",
+      "hemispheres": {
+        "L": {
+          "within3mm": 31,
+          "within5mm": 35
+        },
+        "R": {
+          "within3mm": 24,
+          "within5mm": 27
+        }
+      }
+    },
+    {
+      "id": "relationship.slf1-gap-fi",
+      "source": "tract.slf1",
+      "target": "region.gap-fi",
+      "direction": "undirected",
+      "evidence": "displayed-dataset",
+      "method": "displayed-endpoint-proximity",
+      "status": "qualified",
+      "confidence": "low",
+      "hemispheres": {
+        "L": {
+          "within3mm": 93,
+          "within5mm": 107
+        },
+        "R": {
+          "within3mm": 19,
+          "within5mm": 19
+        }
+      }
+    },
+    {
+      "id": "relationship.slf1-gap-fo",
+      "source": "tract.slf1",
+      "target": "region.gap-fo",
+      "direction": "undirected",
+      "evidence": "displayed-dataset",
+      "method": "displayed-endpoint-proximity",
+      "status": "qualified",
+      "confidence": "low",
+      "hemispheres": {
+        "L": {
+          "within3mm": 121,
+          "within5mm": 121
+        },
+        "R": {
+          "within3mm": 37,
+          "within5mm": 41
+        }
+      }
+    },
+    {
+      "id": "relationship.slf1-presma",
+      "source": "tract.slf1",
+      "target": "region.presma",
+      "direction": "undirected",
+      "evidence": "displayed-dataset",
+      "method": "displayed-endpoint-proximity",
+      "status": "qualified",
+      "confidence": "low",
+      "hemispheres": {
+        "L": {
+          "within3mm": 46,
+          "within5mm": 53
+        },
+        "R": {
+          "within3mm": 22,
+          "within5mm": 24
+        }
+      }
+    },
+    {
+      "id": "relationship.slf1-spl5m",
+      "source": "tract.slf1",
+      "target": "region.spl5m",
+      "direction": "undirected",
+      "evidence": "displayed-dataset",
+      "method": "displayed-endpoint-proximity",
+      "status": "qualified",
+      "confidence": "low",
+      "hemispheres": {
+        "L": {
+          "within3mm": 51,
+          "within5mm": 52
+        },
+        "R": {
+          "within3mm": 29,
+          "within5mm": 44
+        }
+      }
+    },
+    {
+      "id": "relationship.slf2-gap-fi",
+      "source": "tract.slf2",
+      "target": "region.gap-fi",
+      "direction": "undirected",
+      "evidence": "displayed-dataset",
+      "method": "displayed-endpoint-proximity",
+      "status": "qualified",
+      "confidence": "low",
+      "hemispheres": {
+        "L": {
+          "within3mm": 91,
+          "within5mm": 105
+        },
+        "R": {
+          "within3mm": 65,
+          "within5mm": 87
+        }
+      }
+    },
+    {
+      "id": "relationship.slf2-gap-fii",
+      "source": "tract.slf2",
+      "target": "region.gap-fii",
+      "direction": "undirected",
+      "evidence": "displayed-dataset",
+      "method": "displayed-endpoint-proximity",
+      "status": "qualified",
+      "confidence": "low",
+      "hemispheres": {
+        "L": {
+          "within3mm": 36,
+          "within5mm": 62
+        },
+        "R": {
+          "within3mm": 58,
+          "within5mm": 68
+        }
+      }
+    },
+    {
+      "id": "relationship.slf2-pfm",
+      "source": "tract.slf2",
+      "target": "region.pfm",
+      "direction": "undirected",
+      "evidence": "displayed-dataset",
+      "method": "displayed-endpoint-proximity",
+      "status": "qualified",
+      "confidence": "low",
+      "hemispheres": {
+        "L": {
+          "within3mm": 26,
+          "within5mm": 48
+        },
+        "R": {
+          "within3mm": 31,
+          "within5mm": 32
+        }
+      }
+    },
+    {
+      "id": "relationship.slf3-broca",
+      "source": "tract.slf3",
+      "target": "region.broca",
+      "direction": "undirected",
+      "evidence": "displayed-dataset",
+      "method": "displayed-endpoint-proximity",
+      "status": "qualified",
+      "confidence": "low",
+      "hemispheres": {
+        "L": {
+          "within3mm": 30,
+          "within5mm": 38
+        },
+        "R": {
+          "within3mm": 44,
+          "within5mm": 59
+        }
+      }
+    },
+    {
+      "id": "relationship.slf3-op6",
+      "source": "tract.slf3",
+      "target": "region.op6",
+      "direction": "undirected",
+      "evidence": "displayed-dataset",
+      "method": "displayed-endpoint-proximity",
+      "status": "qualified",
+      "confidence": "low",
+      "hemispheres": {
+        "L": {
+          "within3mm": 83,
+          "within5mm": 88
+        },
+        "R": {
+          "within3mm": 46,
+          "within5mm": 56
+        }
+      }
+    },
+    {
+      "id": "relationship.slf3-pf",
+      "source": "tract.slf3",
+      "target": "region.pf",
+      "direction": "undirected",
+      "evidence": "displayed-dataset",
+      "method": "displayed-endpoint-proximity",
+      "status": "qualified",
+      "confidence": "low",
+      "hemispheres": {
+        "L": {
+          "within3mm": 79,
+          "within5mm": 97
+        },
+        "R": {
+          "within3mm": 37,
+          "within5mm": 37
+        }
+      }
+    },
+    {
+      "id": "relationship.vof-loa",
+      "source": "tract.vof",
+      "target": "region.loa",
+      "direction": "undirected",
+      "evidence": "displayed-dataset",
+      "method": "displayed-endpoint-proximity",
+      "status": "qualified",
+      "confidence": "low",
+      "hemispheres": {
+        "L": {
+          "within3mm": 72,
+          "within5mm": 73
+        },
+        "R": {
+          "within3mm": 25,
+          "within5mm": 34
+        }
+      }
+    },
+    {
+      "id": "relationship.vof-lop",
+      "source": "tract.vof",
+      "target": "region.lop",
+      "direction": "undirected",
+      "evidence": "displayed-dataset",
+      "method": "displayed-endpoint-proximity",
+      "status": "qualified",
+      "confidence": "low",
+      "hemispheres": {
+        "L": {
+          "within3mm": 47,
+          "within5mm": 47
+        },
+        "R": {
+          "within3mm": 34,
+          "within5mm": 40
+        }
+      }
+    },
+    {
+      "id": "relationship.vof-v3a",
+      "source": "tract.vof",
+      "target": "region.v3a",
+      "direction": "undirected",
+      "evidence": "displayed-dataset",
+      "method": "displayed-endpoint-proximity",
+      "status": "qualified",
+      "confidence": "low",
+      "hemispheres": {
+        "L": {
+          "within3mm": 92,
+          "within5mm": 92
+        },
+        "R": {
+          "within3mm": 60,
+          "within5mm": 60
+        }
+      }
+    },
+    {
+      "id": "relationship.vof-v3d",
+      "source": "tract.vof",
+      "target": "region.v3d",
+      "direction": "undirected",
+      "evidence": "displayed-dataset",
+      "method": "displayed-endpoint-proximity",
+      "status": "qualified",
+      "confidence": "low",
+      "hemispheres": {
+        "L": {
+          "within3mm": 46,
+          "within5mm": 46
+        },
+        "R": {
+          "within3mm": 69,
+          "within5mm": 69
+        }
+      }
+    },
+    {
+      "id": "relationship.af-broca",
+      "source": "tract.af",
+      "target": "region.broca",
+      "direction": "undirected",
+      "evidence": "displayed-dataset",
+      "method": "displayed-endpoint-proximity",
+      "status": "qualified",
+      "confidence": "low",
+      "hemispheres": {
+        "L": {
+          "within3mm": 83,
+          "within5mm": 93
+        },
+        "R": {
+          "within3mm": 90,
+          "within5mm": 91
+        }
+      }
+    },
+    {
+      "id": "relationship.af-gap-fi",
+      "source": "tract.af",
+      "target": "region.gap-fi",
+      "direction": "undirected",
+      "evidence": "displayed-dataset",
+      "method": "displayed-endpoint-proximity",
+      "status": "qualified",
+      "confidence": "low",
+      "hemispheres": {
+        "L": {
+          "within3mm": 53,
+          "within5mm": 70
+        },
+        "R": {
+          "within3mm": 58,
+          "within5mm": 65
+        }
+      }
+    },
+    {
+      "id": "relationship.mdlf-spl7a",
+      "source": "tract.mdlf",
+      "target": "region.spl7a",
+      "direction": "undirected",
+      "evidence": "displayed-dataset",
+      "method": "displayed-endpoint-proximity",
+      "status": "qualified",
+      "confidence": "low",
+      "hemispheres": {
+        "L": {
+          "within3mm": 70,
+          "within5mm": 112
+        },
+        "R": {
+          "within3mm": 51,
+          "within5mm": 108
+        }
+      }
+    }
+  ],
+  "reviewedHypotheses": [
+    {
+      "tractId": "ilf",
+      "regionId": "sts2",
+      "formerLabel": "STS2 (ILF\u2192)",
+      "status": "qualified-robust",
+      "hemispheres": {
+        "L": {
+          "within3mm": 71,
+          "within5mm": 74
+        },
+        "R": {
+          "within3mm": 27,
+          "within5mm": 28
+        }
+      }
+    },
+    {
+      "tractId": "ifof",
+      "regionId": "ofc",
+      "formerLabel": "OFC (IFOF\u2192)",
+      "status": "threshold-sensitive",
+      "hemispheres": {
+        "L": {
+          "within3mm": 17,
+          "within5mm": 20
+        },
+        "R": {
+          "within3mm": 26,
+          "within5mm": 26
+        }
+      }
+    },
+    {
+      "tractId": "slf1",
+      "regionId": "presma",
+      "formerLabel": "preSMA (SLF I\u2192)",
+      "status": "qualified-robust",
+      "hemispheres": {
+        "L": {
+          "within3mm": 46,
+          "within5mm": 53
+        },
+        "R": {
+          "within3mm": 22,
+          "within5mm": 24
+        }
+      }
+    },
+    {
+      "tractId": "slf2",
+      "regionId": "dlpfc",
+      "formerLabel": "DLPFC (SLF II\u2192)",
+      "status": "rejected",
+      "hemispheres": {
+        "L": {
+          "within3mm": 1,
+          "within5mm": 3
+        },
+        "R": {
+          "within3mm": 3,
+          "within5mm": 3
+        }
+      }
+    },
+    {
+      "tractId": "slf3",
+      "regionId": "broca",
+      "formerLabel": "Broca 44 (SLF III\u2192)",
+      "status": "qualified-robust",
+      "hemispheres": {
+        "L": {
+          "within3mm": 30,
+          "within5mm": 38
+        },
+        "R": {
+          "within3mm": 44,
+          "within5mm": 59
+        }
+      }
+    }
+  ],
+  "exclusions": [
+    {
+      "entity": "layer.swm",
+      "status": "not-mapped",
+      "reason": "The broad superficial-white-matter sample has no approved named-region endpoint classification; proximity must not be presented as named U-fibre connectivity."
+    }
+  ],
+  "limitations": [
+    "Counts describe the deterministic 180-streamline display sample per tract and hemisphere; they are not population probabilities.",
+    "Endpoint proximity is not a synaptic termination, connection strength, tract abundance, or functional relationship.",
+    "The nearest-surface screen uses the shipped decimated J\u00fclich shells and only the 45 displayed candidate regions.",
+    "Association fibres are ICBM-2009a RAS+ millimetres and region shells are MNI152NLin2009cAsym RAS+ millimetres; no template warp was applied.",
+    "Tractography can contain false positives, false negatives, termination bias, and gyral bias; low confidence is mandatory.",
+    "The 3 mm, 5 mm, and 18-of-180 thresholds are project curation rules, not inferential statistics."
+  ]
+}

@@ -106,18 +106,6 @@ const inspectableRendererSchema = {
   },
 };
 
-const inspectableRelationshipSchema = {
-  type: 'object',
-  additionalProperties: false,
-  required: ['target', 'direction', 'evidence', 'summary'],
-  properties: {
-    target: stableId,
-    direction: { enum: ['directed', 'undirected', 'unknown'] },
-    evidence: { enum: ['established-anatomy', 'displayed-dataset', 'schematic-teaching'] },
-    summary: nonEmptyText,
-  },
-};
-
 const inspectableSourceSchema = {
   type: 'object',
   additionalProperties: false,
@@ -125,6 +113,29 @@ const inspectableSourceSchema = {
   properties: {
     label: nonEmptyText,
     url: httpsUrl,
+  },
+};
+
+const inspectableRelationshipSchema = {
+  type: 'object',
+  additionalProperties: false,
+  required: [
+    'target', 'direction', 'evidence', 'method', 'status', 'confidence',
+    'summary', 'sources',
+  ],
+  properties: {
+    target: stableId,
+    direction: { enum: ['directed', 'undirected', 'unknown'] },
+    evidence: { enum: ['literature-curated', 'displayed-dataset', 'schematic-teaching'] },
+    method: { enum: ['literature-review', 'displayed-endpoint-proximity', 'schematic-teaching'] },
+    status: { enum: ['supported', 'qualified', 'illustrative'] },
+    confidence: { enum: ['high', 'moderate', 'low', 'not-applicable'] },
+    summary: nonEmptyText,
+    sources: {
+      type: 'array',
+      minItems: 1,
+      items: inspectableSourceSchema,
+    },
   },
 };
 

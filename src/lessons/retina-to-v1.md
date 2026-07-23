@@ -392,14 +392,17 @@ dorsal networks.
 > of the scene? Relate your answer to both localization and object structure.
 
 > **Scene boundaries and limitations:** The shells show population-atlas locations.
-> The VOF and broad superficial-white-matter grain add bundle-scale context, but they do
-> not establish exact endpoints among these shells, processing order, or functional
-> response. The tract and superficial-fibre shapes come from tractography; their motion
-> does not. Bright VOF events use a seeded display model with a disclosed 50/50 direction
-> assumption. The U-fibre texture is not endpoint-filtered, so displayed fibres may not
-> connect the regions in this scene. Its vibration is analytically zero-mean: amplitude
-> varies with a local-to-own fibre-length ratio, while frequency and phase are display
-> choices. Neither animation is measured neural activity.
+> Named long bundles have a qualified endpoint proximity record only when sampled,
+> unordered endpoints passed the conservative bilateral surface-distance screen. That
+> low-confidence observation does not establish an exact termination, pairwise
+> connectivity, connection strength, direction, processing order, or functional response.
+> Bright tract events instead use a seeded display model with a disclosed 50/50 direction
+> assumption. The broad superficial-white-matter grain has no approved named-region
+> endpoint classification and is not endpoint-filtered, so its fibres must not be read as
+> connections among the regions in this scene. Its vibration is analytically zero-mean:
+> amplitude varies with a local-to-own fibre-length ratio, while frequency and phase are
+> display choices. The tract and superficial-fibre shapes come from tractography; neither
+> animation is measured neural activity.
 
 ```atlas-scene
 id: ventral-stream

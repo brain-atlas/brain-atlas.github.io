@@ -65,6 +65,24 @@ test('anatomy details separate explanation from displayed fidelity and citations
   assert.equal(Object.isFrozen(model.relationships[0]), true);
 });
 
+test('relationship details expose readable source class, method, status, confidence, and sources', async () => { // Tests INV-37
+  const currentCatalog = await catalog;
+  const model = createAnatomyDetailViewModel('tract.ilf', currentCatalog);
+  const relationship = model.relationships.find(({ target }) => target === 'region.sts2');
+
+  assert.deepEqual(relationship.labels, {
+    direction: 'Undirected',
+    evidence: 'Displayed dataset',
+    method: 'Displayed endpoint proximity',
+    status: 'Qualified',
+    confidence: 'Low confidence',
+  });
+  assert.ok(relationship.sources.some(({ url }) => url.includes('PMC7615246')));
+  assert.match(relationship.summary, /not a measured termination or connection strength/i);
+  assert.equal(Object.isFrozen(relationship.labels), true);
+  assert.equal(Object.isFrozen(relationship.sources), true);
+});
+
 test('unknown inspector records fail instead of receiving reassuring defaults', async () => { // Tests FAIL-35
   const currentCatalog = await catalog;
   assert.throws(

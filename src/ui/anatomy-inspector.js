@@ -1,6 +1,34 @@
 import { deepFreeze } from '../lesson/scene-state.js';
 
 const INPUTS = new Set(['pointer', 'focus', 'keyboard', 'touch']);
+const RELATIONSHIP_LABELS = Object.freeze({
+  direction: Object.freeze({
+    directed: 'Directed',
+    undirected: 'Undirected',
+    unknown: 'Unknown direction',
+  }),
+  evidence: Object.freeze({
+    'literature-curated': 'Literature curated',
+    'displayed-dataset': 'Displayed dataset',
+    'schematic-teaching': 'Schematic teaching',
+  }),
+  method: Object.freeze({
+    'literature-review': 'Literature review',
+    'displayed-endpoint-proximity': 'Displayed endpoint proximity',
+    'schematic-teaching': 'Schematic teaching',
+  }),
+  status: Object.freeze({
+    supported: 'Supported',
+    qualified: 'Qualified',
+    illustrative: 'Illustrative',
+  }),
+  confidence: Object.freeze({
+    high: 'High confidence',
+    moderate: 'Moderate confidence',
+    low: 'Low confidence',
+    'not-applicable': 'Confidence not applicable',
+  }),
+});
 
 function selectionState({
   previewedId = null,
@@ -54,7 +82,17 @@ export function createAnatomyDetailViewModel(id, catalog) {
   const relationships = inspectable.relationships.map((relationship) => {
     const target = catalog.inspectablesById[relationship.target];
     if (!target) throw new RangeError(`unknown inspectable relationship target: ${relationship.target}`);
-    return { ...structuredClone(relationship), targetLabel: target.label };
+    return {
+      ...structuredClone(relationship),
+      targetLabel: target.label,
+      labels: {
+        direction: RELATIONSHIP_LABELS.direction[relationship.direction],
+        evidence: RELATIONSHIP_LABELS.evidence[relationship.evidence],
+        method: RELATIONSHIP_LABELS.method[relationship.method],
+        status: RELATIONSHIP_LABELS.status[relationship.status],
+        confidence: RELATIONSHIP_LABELS.confidence[relationship.confidence],
+      },
+    };
   });
 
   return deepFreeze({

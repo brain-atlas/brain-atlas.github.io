@@ -18,7 +18,9 @@ async function ready(page, viewport = { width: 1440, height: 900 }, path = '') {
 
 async function openInspectableList(page) {
   const disclosure = page.locator('#anatomy-browser');
-  if (!await disclosure.getAttribute('open')) await disclosure.locator(':scope > summary').click();
+  if (!await disclosure.evaluate(element => element.open)) {
+    await disclosure.locator(':scope > summary').click();
+  }
 }
 
 test('DOM focus previews anatomy and wide explicit activation opens cited nonmodal details', async ({ page }) => { // Tests INV-41
@@ -28,7 +30,7 @@ test('DOM focus previews anatomy and wide explicit activation opens cited nonmod
     ? await page.evaluate(() => window.__lesson.exploreState.snapshot)
     : null;
   await openInspectableList(page);
-  await expect(page.locator('#anatomy-options button')).toHaveCount(6);
+  await expect(page.locator('#anatomy-options button')).toHaveCount(33);
 
   const lgn = page.locator('#anatomy-options [data-inspectable-id="region.lgn"]');
   await lgn.focus();
@@ -45,7 +47,7 @@ test('DOM focus previews anatomy and wide explicit activation opens cited nonmod
   await expect(page.locator('#anatomy-inspector')).not.toHaveAttribute('role', 'dialog');
   await expect(page.locator('#anatomy-inspector')).toContainText('Anatomy');
   await expect(page.locator('#anatomy-inspector')).toContainText('Shown here');
-  await expect(page.locator('#anatomy-inspector')).toContainText('Established anatomy');
+  await expect(page.locator('#anatomy-inspector')).toContainText('Literature curated');
   await expect(page.locator('.anatomy-inspector-anatomy-sources a[href^="https://doi.org/"]')).toHaveCount(1);
   if (HAS_DEV_HOOKS) {
     expect(await page.evaluate(() => window.__lesson.exploreState.snapshot)).toEqual(snapshot);
@@ -53,6 +55,19 @@ test('DOM focus previews anatomy and wide explicit activation opens cited nonmod
 
   await page.locator('#anatomy-inspector-close').click();
   await expect(lgn).toBeFocused();
+
+  await openInspectableList(page);
+  const ilf = page.locator('#anatomy-options [data-inspectable-id="tract.ilf"]');
+  await ilf.click();
+  await expect(page.locator('#anatomy-inspector-context')).toHaveText('Association bundle');
+  await expect(page.locator('#anatomy-inspector')).toContainText('Displayed dataset');
+  await expect(page.locator('#anatomy-inspector')).toContainText('Displayed endpoint proximity');
+  await expect(page.locator('#anatomy-inspector')).toContainText('Qualified');
+  await expect(page.locator('#anatomy-inspector')).toContainText('Low confidence');
+  await expect(page.locator('#anatomy-inspector')).toContainText('STS2');
+  await expect(page.locator('#anatomy-inspector a[href*="PMC7615246"]').first()).toBeVisible();
+  await page.locator('#anatomy-inspector-close').click();
+  await expect(ilf).toBeFocused();
 
   await page.locator('#lessons-trigger').click();
   await page.locator('[data-start-lesson="retina-to-v1"]').click();
@@ -107,7 +122,7 @@ test('no-WebGL Atlas retains semantic anatomy names, status, limitations, and ci
   await expect(inspector).toBeVisible();
   await expect(inspector).toContainText('Schematic');
   await expect(inspector).toContainText(/uncrossed temporal-retinal/i);
-  await expect(inspector.locator('a[href="https://doi.org/10.1152/physrev.2001.81.4.1393"]')).toBeVisible();
+  await expect(inspector.locator('a[href="https://doi.org/10.1152/physrev.2001.81.4.1393"]')).toHaveCount(2);
   expect(await page.locator('canvas').count()).toBe(0);
   expect(errors).toEqual([]);
 });

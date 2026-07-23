@@ -317,7 +317,9 @@ recovered lineage and violate the one-transform invariant. Regenerating contours
 a 2009c voxel lattice would add interpolation choices without evidence of an
 anatomical warp to correct. The honest statement is: **decoded 2009a fibre-frame
 RAS+ coordinates overlaid with 2009c surfaces in the shared RAS-millimetre world
-frame, with the FIB variant evidence limit disclosed**.
+frame, with the FIB variant evidence limit disclosed**. The offline endpoint-proximity
+screen in `TRACT_REGION_MAPPING.md` uses that common world without changing it; a
+nearest-shell distance is not evidence that the two releases share a voxel grid.
 
 ## Remaining limitations and work owners
 
@@ -333,9 +335,11 @@ frame, with the FIB variant evidence limit disclosed**.
   direct FIB-to-companion-T1 build binding remains unavailable.
 - Right optic-radiation mirroring remains a material limitation owned by
   `brain-atlas-yum.7`.
-- Association endpoint-region meaning remains limited by tractography and naming.
-  `brain-atlas-zmq.10` owns label review; `brain-atlas-zmq.21` owns reproducible
-  endpoint classification and scene filtering.
+- Association endpoint-region meaning remains limited by tractography, the selected
+  display sample, the incomplete displayed-region candidate set, and mixed-release
+  common-world comparison. `TRACT_REGION_MAPPING.md` records the implemented
+  low-confidence bilateral proximity screen and removed arrow labels;
+  `brain-atlas-zmq.21` owns per-fibre endpoint classification and scene filtering.
 - Tractography does not establish biological polarity. Association direction remains
   the separately disclosed 50/50 modeled fallback.
 

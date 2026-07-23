@@ -37,7 +37,8 @@ This subsystem does **not** render Markdown, own scrolling, import files, fetch 
 - `commands.js` — allowlisted pure scene-state transitions.
 - `renderer-adapter.js` — single renderer port; no Three.js dependency.
 - `index.js` — supported consumer entry point.
-- `public/data/entities.json` — stable scene and inspectable domain IDs to current renderer bindings plus curated anatomy citations.
+- `public/data/entities.json` — stable scene and inspectable domain IDs to current renderer bindings plus curated anatomy and relationship evidence.
+- `public/data/tract_region_mapping.json` — generated offline evidence bound to dataset-derived catalog relationships by regression tests; it is not fetched by the browser.
 - `public/data/fidelity.json` — curated geometry/activity disclosure records.
 
 ## Public interface
@@ -46,7 +47,7 @@ Import consumer APIs from `src/lesson/index.js`.
 
 | Export | Contract |
 |---|---|
-| `createLessonCatalog(entityManifest, fidelityManifest)` | Validates strict catalogs and returns frozen sorted entity/inspectable/fidelity IDs, presets, and record lookups. Inspectables derive fidelity only from their resolved owner entity. |
+| `createLessonCatalog(entityManifest, fidelityManifest)` | Validates strict catalogs and returns frozen sorted entity/inspectable/fidelity IDs, presets, and record lookups. Inspectables derive fidelity only from their resolved owner entity; each authored undirected relationship receives one deterministic reciprocal inspector projection. |
 | `parseLesson(source, catalog)` | Returns `{ ok: true, value }` or `{ ok: false, diagnostics }`; never returns partial lesson data. |
 | `normalizeSceneSnapshot(directive, catalog)` | Expands an author directive to the complete canonical v1 state. Throws `LessonContractError` on invalid shape/reference. |
 | `normalizeCanonicalSnapshot(snapshot, catalog)` | Revalidates exact canonical keys and semantics, then returns a new frozen snapshot. |
@@ -101,7 +102,7 @@ lifecycle badge belongs to the presentation layer.
 | INV-11 | Browser validation uses checked-in standalone functions; runtime validation never requires `eval`, `new Function`, or a relaxed CSP. | generated-validator test + browser CSP smoke | The lesson trust boundary remains compatible with static secure hosting. |
 | INV-12 | Optional `entryScene` resolves to exactly one authored scene before presentation; unknown references reject the lesson rather than falling back to scene order. | strict metadata schema + parser semantic test | A topic entry view remains explicit, portable, and independent of tutorial-specific runtime code. |
 | INV-13 | Optional lifecycle metadata accepts only `status: draft` in v1 and is preserved as frozen parsed data; absence means no lifecycle claim. | strict metadata schema + parser/reference tests | Draft content is visibly identifiable without title parsing, while untrusted lessons cannot self-assert a trusted reviewed/published state. |
-| INV-14 | Every inspectable has a unique stable ID/binding, a resolved canonical owner, owner-derived fidelity, resolved non-self relationship targets, strict evidence/direction vocabulary, and verified-shape HTTPS citations. Child landmarks use only `landmark` renderer bindings and remain outside scene entity IDs. | catalog schema/semantics + tests | Search, canvas picking, DOM equivalence, and cited details share one honest registry without creating a second visibility system. |
+| INV-14 | Every inspectable has a unique stable ID/binding, a resolved canonical owner, owner-derived fidelity, and verified-shape HTTPS citations. Every relationship has one resolved non-self target plus strict direction, evidence class, method, status, confidence, summary, and source records. Undirected pairs are authored once and projected reciprocally; duplicate/reversed authoring fails. Child landmarks use only `landmark` renderer bindings and remain outside scene entity IDs. | catalog schema/semantics + mapping/catalog tests | Search, canvas picking, reciprocal relationship inspection, and cited details share one honest registry without creating a second visibility system or upgrading representation fidelity. |
 
 ## Failure modes
 
@@ -117,7 +118,7 @@ lifecycle badge belongs to the presentation layer.
 | FAIL-8 | `renderer.adapter.capture-mismatch` | Applied renderer state differs from requested canonical state | Treat as integration drift; do not continue scene orchestration. |
 | FAIL-9 | `lesson.semantic.unknown-entry-scene` | Frontmatter `entryScene` does not match an authored scene ID | Correct the metadata or add the intended complete scene; never infer the entry view. |
 | FAIL-10 | `lesson.schema.const` at `/status` | Frontmatter claims an unsupported lifecycle value such as `reviewed` or `published` | Reject the lesson; only explicit `draft` is supported until a separately approved trusted publication model exists. |
-| FAIL-11 | `catalog.semantic.*inspectable*` | Inspectable owner/target is missing, a relationship targets itself, renderer binding drifts/collides, or a selection-only child is not a landmark | Fix the project-authored catalog before starting the renderer; never infer an owner, target, fidelity, or binding from a label. |
+| FAIL-11 | `catalog.semantic.*inspectable*` | Inspectable owner/target is missing, a relationship targets itself or duplicates an authored/undirected pair, renderer binding drifts/collides, or a selection-only child is not a landmark | Fix the project-authored catalog before starting the renderer; never infer an owner, target, fidelity, relationship, or binding from a label. |
 
 ## Decision framework
 
@@ -126,7 +127,7 @@ lifecycle badge belongs to the presentation layer.
 | Add a lesson field | Decide whether it is document metadata, scene wrapper data, or renderer snapshot state; update strict schema, normalizer, fixtures, and diagnostics together. Lifecycle fields must not be confused with scientific fidelity. | INV-3, INV-10, INV-13 |
 | Add a renderer control | Add one canonical axis/field and one explicit adapter binding path; never invoke DOM controls. | INV-3, INV-7 |
 | Add an entity | Add a stable prefixed ID and renderer binding; reference an existing reviewed fidelity record or add one from traceability evidence. | INV-4, INV-8 |
-| Add an inspectable | Reuse a canonical entity ID/binding or add a stable selection-only `landmark.*` child with a resolved owner. Add runtime anatomy claims/citations to core traceability, keep representation in the inherited fidelity record, and do not add unsupported tract endpoints. | INV-8, INV-14 |
+| Add an inspectable | Reuse a canonical entity ID/binding or add a stable selection-only `landmark.*` child with a resolved owner. Add runtime anatomy claims/citations to core traceability and keep representation in the inherited fidelity record. Dataset-derived association relationships must match the checked offline mapping artifact, remain undirected/qualified/low-confidence, and be authored once for reciprocal projection. | INV-8, INV-14 |
 | Add or revise a lesson teaching claim | Update that lesson's `docs/lessons/*-validation.md` evidence first. Update core traceability and fidelity metadata too only when the displayed representation or its limitation changes. | scientific review |
 | Add or revise a runtime representation claim | Update core traceability/citations first, then curated entity/fidelity metadata atomically. | INV-8 |
 | Add Markdown presentation | Keep source inert here; implement rendering/sanitization in the UI Bead without weakening parser rejection. | INV-1, INV-6 |
@@ -148,7 +149,7 @@ node --test test/lesson-schema.test.js test/scene-state.test.js \
 |---|---|
 | INV-1, INV-6, INV-9 | `test/lesson-parser.test.js` |
 | INV-2, INV-3, FAIL-6 | `test/scene-state.test.js` |
-| INV-4, INV-8, INV-14, FAIL-5, FAIL-11 | `test/catalog.test.js`, `test/anatomy-inspector.test.js`, and scientific review |
+| INV-4, INV-8, INV-14, FAIL-5, FAIL-11 | `test/catalog.test.js`, `test/anatomy-inspector.test.js`, `test/tract-region-mapping.test.js`, offline artifact drift check, and scientific review |
 | INV-5, INV-10, INV-12, INV-13 | schema, parser, command, and adapter negative tests |
 | INV-7, FAIL-7, FAIL-8 | `test/renderer-adapter.test.js` plus structural `rg` check |
 | INV-11 | `test/generated-validators.test.js` plus CSP browser smoke |

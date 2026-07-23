@@ -16,8 +16,11 @@ source RAS+ world frame through resampling rather than claiming authorship on th
 2009c voxel grid. The official releases describe the same anatomy with different
 sampling. The app performs no per-dataset
 fitting and applies one runtime transform. Only the anterior eye → chiasm → LGN
-segment is schematic. See “What's real vs schematic” and the scientific
-traceability inventory below.
+segment is schematic. The cited anatomy inspector separates literature-curated,
+schematic, and displayed-dataset relationships. Association links are only
+undirected, low-confidence endpoint proximity for the checked display sample—not
+terminations, strengths, functions, or input/output direction. See “What's real vs
+schematic” and the scientific traceability inventory below.
 
 ## Run it
 
@@ -98,7 +101,10 @@ region, and association assets from exact upstream sources and reproduce current
 and SWM JSON from registered recovered TrackVis intermediates. Manual OR/SWM DSI
 replays diverged and are retained as evidence, not replacement candidates. Detailed
 fibre hashes, affines, derivations, replay classes, and numeric checks are in
-[`docs/TRACT_SPACE_PROVENANCE.md`](docs/TRACT_SPACE_PROVENANCE.md).
+[`docs/TRACT_SPACE_PROVENANCE.md`](docs/TRACT_SPACE_PROVENANCE.md). The separate
+[`docs/TRACT_REGION_MAPPING.md`](docs/TRACT_REGION_MAPPING.md) record documents the
+offline nearest-surface screen, input hashes, qualified/sensitive/rejected outcomes,
+and interpretation limits without adding a runtime transform.
 
 ## Layout
 
@@ -259,9 +265,12 @@ settles activity without accelerating model time.
 Pointer drag rotates only when the scene control policy permits it. In normal Lesson
 mode, touch swipes scroll `#page-scroll` without rotating the camera. Atlas Home and the
 lesson-derived Atlas view grant full orbit, wheel/pinch zoom, right-drag/two-finger pan,
-and canonical viewer-filter editing. Use **Inspect anatomy** for an equivalent named
-keyboard/screen-reader path to each seeded canvas target; focus previews, and activation
-opens the same cited detail view. Reduced-motion preference makes authored camera changes
+and canonical viewer-filter editing. Use **Inspect anatomy** for an equivalent named keyboard/screen-reader path to each
+currently visible reviewed canvas target; focus previews, and activation opens the same
+cited detail view. Relationship details show direction, source class, method, status,
+confidence, and sources. Association records always say **Undirected · Displayed dataset ·
+Qualified · Low confidence**; superficial white matter intentionally has no named-region
+relationship. Reduced-motion preference makes authored camera changes
 instant, settles activity, disables Play, and removes the Skip action.
 
 The collapsed **Viewer controls** section retains Play/Pause, activity speed,
@@ -288,9 +297,12 @@ overall anatomy reads correctly**:
   Diffusion MRI does not measure polarity, so direction is sampled per accepted
   event from an explicit 50/50 assumption for each tract and hemisphere. Rates,
   inhibition/refractory timing, and speed are illustrative display algorithms,
-  not measured spikes or physiology. The in-view **Association model & sources**
-  disclosure links the tract evidence. “Inhibition” means per-channel refractory
-  self-inhibition and recovery, not inhibition between anatomical tracts.
+  not measured spikes or physiology. Separately, a qualified inspector link means
+  at least 18/180 sampled streamlines in each hemisphere had an unordered endpoint
+  nearest to that displayed region shell within both 3 mm and 5 mm. It remains a
+  low-confidence proximity observation—not a termination, connection strength,
+  function, or direction. “Inhibition” means per-channel refractory self-inhibition
+  and recovery, not inhibition between anatomical tracts.
 - **Schematic (labelled in the legend):** the anterior pathway (eye → chiasm →
   LGN) and its flow dots, the eye markers, and the LGN→V1 tracer *timing* — a
   physiologically patterned but illustrative firing model (superposition +
@@ -344,7 +356,9 @@ Principal sources:
   rule.
 - Association tracts (`public/data/tracts.json`): selected and resampled from the
   **HCP-1065 Population-Averaged Tractography Atlas** (Yeh 2022), in ICBM 2009a
-  Nonlinear Asymmetric RAS+ world millimetres.
+  Nonlinear Asymmetric RAS+ world millimetres. `tools/map_tract_regions.py` compares
+  their unordered display endpoints with the shipped Jülich shell triangles offline;
+  `public/data/tract_region_mapping.json` freezes the descriptive result.
 - Superficial white matter (`public/data/swm_fibres.json`): short bilateral
   contours re-tracked on the same HCP-1065 FIB from a 2009c TemplateFlow-derived
   superficial-WM seed with matched qform/sform world matrices, filtered by

@@ -697,7 +697,7 @@
           },
           {
             "id": "sts2",
-            "name": "STS2 (ILF→)",
+            "name": "STS2",
             "area": "STS2",
             "stream": "temporal",
             "parent": "superior temporal sulcus",
@@ -763,7 +763,7 @@
           },
           {
             "id": "ofc",
-            "name": "OFC (IFOF→)",
+            "name": "OFC",
             "area": "Fo4",
             "stream": "frontal",
             "parent": "orbitofrontal cortex",
@@ -774,7 +774,7 @@
           },
           {
             "id": "presma",
-            "name": "preSMA (SLF I→)",
+            "name": "preSMA",
             "area": "6ma",
             "stream": "frontal",
             "parent": "medial superior frontal",
@@ -785,7 +785,7 @@
           },
           {
             "id": "dlpfc",
-            "name": "DLPFC (SLF II→)",
+            "name": "DLPFC",
             "area": "IFS3",
             "stream": "frontal",
             "parent": "inferior frontal sulcus",
@@ -796,7 +796,7 @@
           },
           {
             "id": "broca",
-            "name": "Broca 44 (SLF III→)",
+            "name": "Broca 44",
             "area": "44",
             "stream": "frontal",
             "parent": "inferior frontal gyrus",
@@ -1135,8 +1135,8 @@
     {
       "id": "region-manifest",
       "path": "public/data/regions.json",
-      "bytes": 21406,
-      "sha256": "1d7d6891e8abe33c78093ab2e99407f6f1095e57cb25951085d11f4a506d988c",
+      "bytes": 21337,
+      "sha256": "d7aeaa5cc16d58d949485ee7447b39067113166516064f8cd32bbcfbf7f2dc0b",
       "pipelineId": "regions",
       "autoReplacePublicAsset": false,
       "keyOrder": [

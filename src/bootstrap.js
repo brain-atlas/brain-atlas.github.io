@@ -495,10 +495,6 @@ function titleCaseStatus(value) {
   return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
-function readableEvidence(value) {
-  return titleCaseStatus(value.replaceAll('-', ' '));
-}
-
 function appendInspectorLinks(container, heading, links, className) {
   if (!links.length) return;
   const section = node('section', `anatomy-inspector-section ${className}`);
@@ -527,7 +523,7 @@ function renderAnatomyDetail(id) {
 
   if (model.relationships.length) {
     const relationships = node('section', 'anatomy-inspector-section anatomy-inspector-relationships');
-    relationships.append(node('h3', '', 'Supported relationships'));
+    relationships.append(node('h3', '', 'Relationship evidence'));
     const list = document.createElement('ul');
     for (const relationship of model.relationships) {
       const item = document.createElement('li');
@@ -535,8 +531,20 @@ function renderAnatomyDetail(id) {
       item.append(node(
         'span',
         'anatomy-relationship-meta',
-        `${titleCaseStatus(relationship.direction)} · ${readableEvidence(relationship.evidence)} · ${relationship.targetLabel}`,
+        `${relationship.labels.direction} · ${relationship.labels.evidence} · ${relationship.labels.status} · ${relationship.labels.confidence} · ${relationship.targetLabel}`,
       ));
+      item.append(node('span', 'anatomy-relationship-method', `Method: ${relationship.labels.method}`));
+      const sourceList = node('ul', 'anatomy-relationship-sources');
+      for (const source of relationship.sources) {
+        const sourceItem = document.createElement('li');
+        const anchor = node('a', '', source.label);
+        anchor.href = source.url;
+        anchor.target = '_blank';
+        anchor.rel = 'noopener noreferrer';
+        sourceItem.append(anchor);
+        sourceList.append(sourceItem);
+      }
+      item.append(sourceList);
       list.append(item);
     }
     relationships.append(list);
@@ -565,9 +573,11 @@ function renderAnatomyDetail(id) {
   appendInspectorLinks(fragment, 'Licenses', model.licenses, 'anatomy-inspector-licenses');
   fragment.append(node('p', 'review-date', `Representation record reviewed ${model.reviewed}`));
 
+  const entityType = catalog.entitiesById[model.entity].type;
   byId('anatomy-inspector-context').textContent = id.startsWith('landmark.')
     ? 'Schematic landmark'
-    : (catalog.entitiesById[model.entity].type === 'region' ? 'Atlas region' : 'Visual pathway');
+    : ({ region: 'Atlas region', tract: 'Association bundle', layer: 'Atlas layer' }[entityType]
+      ?? 'Visual pathway');
   byId('anatomy-inspector-title').textContent = model.label;
   content.replaceChildren(fragment);
 }
