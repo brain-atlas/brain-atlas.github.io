@@ -169,7 +169,7 @@ internal/releasepack/ deterministic archives, checksums, provenance, and validat
 src/standalone/      standalone-only browser lifecycle client
 src/bootstrap.js     workspace/history, lesson/import, navigation, disclosure, and fallback
 src/main.js          lazy Three.js scene, data loading, activity, adapter, and panel bridge
-src/activity/        renderer-independent seeded impulse, vibration, and timing math
+src/activity/        renderer-independent physical travel, seeded impulse, vibration, and timing math
 src/lesson/          versioned lesson parsing, catalogs, scene state, and adapter port
 src/lessons/         checked-in Obsidian-style lesson content
 src/ui/              renderer-independent presentation, workspace, scroll, and camera models
@@ -355,19 +355,24 @@ overall anatomy reads correctly**:
 - **Modeled activity on data-derived geometry:** all eight named association
   bundles carry seeded, inhibited code-like impulses in both directions.
   Diffusion MRI does not measure polarity, so direction is sampled per accepted
-  event from an explicit 50/50 assumption for each tract and hemisphere. Rates,
-  inhibition/refractory timing, and speed are illustrative display algorithms,
-  not measured spikes or physiology. Separately, a qualified inspector link means
+  event from an explicit 50/50 assumption for each tract and hemisphere. Each event
+  traverses cumulative MNI arc length at 40 mm per display second when the activity
+  speed control is 70, so shorter contours finish sooner. This common speed, playback
+  scaling, event rate, and refractory timing are illustrative display algorithms—not
+  measured spikes, tract-specific physiology, or universal axonal conduction velocity.
+  Separately, a qualified inspector link means
   at least 18/180 sampled streamlines in each hemisphere had an unordered endpoint
   nearest to that displayed region shell within both 3 mm and 5 mm. It remains a
   low-confidence proximity observation—not a termination, connection strength,
   function, or direction. “Inhibition” means per-channel refractory self-inhibition
   and recovery, not inhibition between anatomical tracts.
 - **Schematic (labelled in the legend):** the anterior pathway (eye → chiasm →
-  LGN) and its flow dots, the eye markers, and the LGN→V1 tracer *timing* — a
-  physiologically patterned but illustrative firing model (superposition +
-  thinning, with refractoriness and bursts), not recorded spikes. Biological
-  time is dilated so the pattern is legible on screen.
+  LGN), its flow dots, and the eye markers. Anterior and LGN→V1 dots share the same
+  cumulative-distance travel contract as long-tract impulses: 40 MNI mm per display
+  second at activity speed 70. LGN→V1 event timing remains a physiologically patterned
+  but illustrative firing model (superposition + thinning, with refractoriness and
+  bursts), not recorded spikes. Biological time is dilated for legibility; the common
+  travel speed is not a measured or universal conduction velocity.
 - **Undirected activity:** superficial-WM/U-fibre dots follow bounded sinusoids
   around fixed homes on real bilateral contours. Amplitude derives from local
   fibre-length structure, random phase prevents coherent travel, and no endpoint

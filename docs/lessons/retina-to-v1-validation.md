@@ -2,8 +2,9 @@
 
 Status: current lesson-specific review record for `src/lessons/retina-to-v1.md`,
 maintained under `brain-atlas-zmq.25`, with displayed relationship limits reconciled
-under `brain-atlas-zmq.10` and endpoint-filtered cortical previews under
-`brain-atlas-zmq.21` (2026-07-22).
+under `brain-atlas-zmq.10`, endpoint-filtered cortical previews under
+`brain-atlas-zmq.21`, and cumulative-distance directed activity under
+`brain-atlas-yum.10` (2026-07-22).
 
 This record owns the lesson's teaching-claim evidence, section-level scientific and
 pedagogical review, and curriculum-specific representation limits. It does not own
@@ -26,8 +27,8 @@ published claim. Final review of the revised prose remains the closeout gate for
 The scientific review found no blocking factual error in the lesson's intended scope.
 The lesson remains valid only with its explicit boundaries: incomplete schematic
 anterior geometry, mirrored right optic-radiation source geometry, population-atlas
-region shells, illustrative activity, only low-confidence qualified endpoint proximity
-for a subset of association-bundle/displayed-shell pairs, and categorical geometric
+region shells, illustrative cumulative-distance activity, only low-confidence
+qualified endpoint proximity for a subset of association-bundle/displayed-shell pairs, and categorical geometric
 endpoint filters that make no biological connection claim. The extrastriate, ventral,
 and dorsal previews now use reproducible scene presets rather than the all-fibre SWM
 population.
@@ -38,11 +39,11 @@ population.
 |---|---|
 | Title and introduction | The shorter title states the pathway and cortical scope. The introduction frames vision as staged transformation, elicits a lesion prediction, and states five observable objectives. |
 | Topic entry | The unnumbered entry orients the whole retina→LGN→V1 system without treating spatial juxtaposition as proof of connectivity. |
-| Retina and chiasm | Retinal parallel encoding and hemifield regrouping are both accurate but exceed one ideal scene-sized teaching job. The revised center-surround explanation states how center and surround drive ganglion-cell activity in opposite directions and why uniform illumination partly cancels. A thematic break marks the candidate future split. Expanding the retinal model or adding a dedicated visual remains future work; the nasal-only geometry omission stays explicit. |
+| Retina and chiasm | Retinal parallel encoding and hemifield regrouping are both accurate but exceed one ideal scene-sized teaching job. The revised center-surround explanation states how center and surround drive ganglion-cell activity in opposite directions and why uniform illumination partly cancels. A thematic break marks the candidate future split. Expanding the retinal model or adding a dedicated visual remains future work; the nasal-only geometry omission stays explicit. Flow direction remains biological, but cumulative-distance speed and playback scaling remain illustrative. |
 | LGN | Revised prose introduces M, P, and K channels separately, avoids one-channel/one-percept claims, and distinguishes regulated relay from passive transfer. The 3D shell does not resolve layers or channels, so this material remains prose-only with a local boundary statement. |
-| Optic radiation | The revised prose directly connects distinct temporal/parietal routes to visual-field localization and distinguishes inferior-retinal origin from the temporal-lobe course through Meyer's loop. Topographic organization, individual variability, mirrored-source limitations, and illustrative timing remain aligned. The scene shows only the independently derived left contours with a centered half-shell cortical cutaway. |
+| Optic radiation | The revised prose directly connects distinct temporal/parietal routes to visual-field localization and distinguishes inferior-retinal origin from the temporal-lobe course through Meyer's loop. Topographic organization, individual variability, mirrored-source limitations, and illustrative cumulative-distance timing remain aligned. The scene shows only the independently derived left contours with a centered half-shell cortical cutaway. |
 | V1 | Revised prose separates retinotopy, cortical magnification, local feature selectivity, historical animal evidence, and clinical localization. The centered left-only view supplies anatomy, not layers, columns, cell responses, or a functional retinotopy map. |
-| Extrastriate cortex | The prose rejects a serial chain and describes graded recurrent processing. Its boundary distinguishes four claims: inspector relationships report only qualified low-confidence unordered endpoint proximity; the scene preset reports categorical endpoint membership; association events use a separate 50/50 direction assumption; and SWM amplitude depends partly on fibre-length structure while frequency/phase remain display choices. Neither proximity, categorical assignment, nor simultaneous display demonstrates terminations, connections, strengths, functions, or processing direction. |
+| Extrastriate cortex | The prose rejects a serial chain and describes graded recurrent processing. Its boundary distinguishes four claims: inspector relationships report only qualified low-confidence unordered endpoint proximity; the scene preset reports categorical endpoint membership; association events use a separate 50/50 direction assumption and common illustrative 40 MNI mm/display-second base rate; and SWM amplitude depends partly on fibre-length structure while frequency/phase remain display choices. Neither proximity, categorical assignment, nor simultaneous display demonstrates terminations, connections, strengths, functions, or processing direction. |
 | Ventral stream preview | The shortened prose introduces object-quality and perception biases without expanding into downstream clinical or network detail. A left-only cut reduces duplicate visual load; the ventral endpoint preset narrows both fibre layers without asserting a connection among shown regions. |
 | Dorsal stream preview | The shortened prose introduces motion, spatial, and vision-for-action biases without expanding into downstream routes. A left-only cut reduces duplicate visual load; the dorsal endpoint preset narrows both fibre layers without asserting a connection among shown regions. |
 | Conclusion | The new eighth scene reprises the opening whole-pathway visual and lesion prediction, summarizes the retina→chiasm→LGN→optic-radiation→V1 transformations, then identifies V2 and parts of V3 as shared early cortical stages that contribute to multiple downstream routes rather than a hard two-stream fork. It ends with retrieval and treats later ventral/dorsal biases only as a brief downstream preview. |

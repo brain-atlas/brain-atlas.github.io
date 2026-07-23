@@ -97,7 +97,7 @@ async function activitySample(page) {
       state: window.__view.activity.state,
       camera: window.__view.camera.position.toArray(),
       target: window.__view.controls.target.toArray(),
-      anterior: { phase: window.__view.activity.anterior.phase, points: summarize(window.__view.activity.anterior.points) },
+      anterior: { distanceMm: window.__view.activity.anterior.distanceMm, points: summarize(window.__view.activity.anterior.points) },
       optic: {
         modelTime: optic.modelTime,
         activeCount: optic.activeCount,
@@ -136,7 +136,7 @@ for (const [label, viewport] of Object.entries({
       after.camera.forEach((value, axis) => expect(value).toBeCloseTo(before.camera[axis], 10));
       after.target.forEach((value, axis) => expect(value).toBeCloseTo(before.target[axis], 10));
       if (expected.anterior) {
-        expect(after.anterior.phase).toBeGreaterThan(before.anterior.phase);
+        expect(after.anterior.distanceMm).toBeGreaterThan(before.anterior.distanceMm);
         expect(after.anterior.points.checksum).not.toBe(before.anterior.points.checksum);
         expect(after.anterior.points.inFrame).toBeGreaterThan(0);
         expect(after.anterior.points.opacity).toBeGreaterThan(0.5);
@@ -170,6 +170,40 @@ for (const [label, viewport] of Object.entries({
     }
   });
 }
+
+test('actual short and long association contours share physical speed but have different latency', async ({ page }) => {
+  await ready(page, { width: 1440, height: 900 });
+  for (let index = 0; index <= 4; index++) await page.locator('#scene-next').click();
+  await waitForSettledCamera(page, 4);
+  await waitForExpectedActivity(page, { association: true, groups: ['vof:L', 'vof:R'] });
+  await page.waitForFunction(() => window.__view.association?.physicalTravel?.profileCount > 1);
+  await page.waitForFunction(() => {
+    const active = window.__view.association.activeTravel;
+    return active.length > 1 && active.some((event) => event.lengthMm !== active[0].lengthMm);
+  });
+
+  const { travel, active } = await page.evaluate(() => ({
+    travel: window.__view.association.physicalTravel,
+    active: window.__view.association.activeTravel,
+  }));
+
+  expect(travel.unit).toBe('MNI mm per display second');
+  expect(travel.speedMmPerDisplaySecond).toBe(40);
+  expect(travel.shortestLengthMm).toBeGreaterThan(0);
+  expect(travel.longestLengthMm).toBeGreaterThan(travel.shortestLengthMm);
+  expect(travel.shortestTransitDisplaySeconds).toBeCloseTo(
+    travel.shortestLengthMm / travel.speedMmPerDisplaySecond,
+    10,
+  );
+  expect(travel.longestTransitDisplaySeconds).toBeCloseTo(
+    travel.longestLengthMm / travel.speedMmPerDisplaySecond,
+    10,
+  );
+  expect(travel.shortestTransitDisplaySeconds).toBeLessThan(travel.longestTransitDisplaySeconds);
+  expect(active.length).toBeGreaterThan(1);
+  expect(active.every((event) => event.speedMmPerDisplaySecond === 40)).toBe(true);
+  expect(active.every((event) => event.distanceMm >= 0 && event.distanceMm <= event.lengthMm)).toBe(true);
+});
 
 test('Skip, Pause, Play, and reduced motion retain distinct activity semantics', async ({ page }) => { // Tests INV-33, FAIL-31
   await ready(page, { width: 1440, height: 900 });

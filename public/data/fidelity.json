@@ -112,14 +112,15 @@
           "modeled",
           "illustrative"
         ],
-        "summary": "Evenly spaced display dots travel along the schematic crossing paths.",
+        "summary": "Dots spaced by cumulative arc length travel along the schematic crossing paths at the shared illustrative physical-distance display speed.",
         "direction": "directed"
       },
       "supports": [
         "The represented nasal-retinal paths cross at the optic chiasm before reaching the contralateral LGN."
       ],
       "assumptions": [
-        "Control points, landmark positions, speed, spacing, color, and tube width are teaching choices."
+        "Control points, landmark positions, spacing, color, and tube width are teaching choices.",
+        "The common 40 MNI mm/display-second speed at activity speed 70 and all playback scaling are illustrative rather than measured physiology."
       ],
       "uncertainties": [
         "Schematic coordinates are not measured anatomy."
@@ -149,7 +150,7 @@
           "modeled",
           "illustrative"
         ],
-        "summary": "Directed LGN-to-V1 events use a stochastic refractory display model on the streamline contours.",
+        "summary": "Directed LGN-to-V1 events use a stochastic refractory display model and cumulative-distance travel on the streamline contours.",
         "direction": "directed"
       },
       "supports": [
@@ -168,7 +169,7 @@
           "material": true
         },
         {
-          "summary": "Event rates, rhythms, bursts, time dilation, and travel speed are illustrative rather than measured LGN or V1 physiology.",
+          "summary": "Event rates, rhythms, bursts, time dilation, the common 40 MNI mm/display-second speed at activity speed 70, and playback scaling are illustrative rather than measured LGN or V1 physiology or universal axonal conduction velocity.",
           "material": true
         }
       ],
@@ -204,7 +205,7 @@
           "modeled",
           "illustrative"
         ],
-        "summary": "Seeded refractory code-like events choose one of two endpoint directions from explicit per-tract probability metadata.",
+        "summary": "Seeded refractory code-like events choose one of two endpoint directions and traverse cumulative MNI arc length at a common illustrative display speed.",
         "direction": "modeled"
       },
       "supports": [
@@ -220,7 +221,7 @@
       ],
       "limitations": [
         {
-          "summary": "The 50/50 direction, channel rates, refractory recovery, and travel speed are disclosed display assumptions rather than measured axon proportions or physiology.",
+          "summary": "The 50/50 direction, channel rates, refractory recovery, common 40 MNI mm/display-second speed at activity speed 70, and playback scaling are disclosed display assumptions rather than measured axon proportions, physiology, or universal conduction velocity.",
           "material": true
         },
         {

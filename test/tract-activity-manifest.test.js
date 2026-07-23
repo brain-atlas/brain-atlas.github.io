@@ -23,11 +23,15 @@ const loadManifest = () => loadJson('../public/data/tract_activity.json');
 test('activity manifest records the approved seeded model', async () => {
   const manifest = await loadManifest();
 
-  assert.equal(manifest.schemaVersion, 1);
+  assert.equal(manifest.schemaVersion, 2);
   assert.equal(manifest.model.seed, DEFAULT_ASSOCIATION_SEED);
   assert.equal(manifest.model.channelsPerGroup, DEFAULT_ASSOCIATION_MODEL.channelsPerGroup);
   assert.equal(manifest.model.refractoryModelSeconds, DEFAULT_ASSOCIATION_MODEL.refractory);
   assert.equal(manifest.model.recoveryTauModelSeconds, DEFAULT_ASSOCIATION_MODEL.recoveryTau);
+  assert.equal(manifest.model.travelDistanceBasis, 'cumulative-mni-arc-length');
+  assert.deepEqual(manifest.model.travelSpeedMniMmPerDisplaySecond, [40, 40]);
+  assert.equal(manifest.model.referencePlaybackSpeed, 70);
+  assert.equal('contourUnitsPerModelSecond' in manifest.model, false);
   assert.equal(manifest.directionSamplingUnit, 'accepted-code-event');
 });
 

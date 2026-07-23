@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "space": "activity metadata only; geometry remains in tracts.json",
   "seed": 1096043603,
   "directionSamplingUnit": "accepted-code-event",
@@ -13,7 +13,9 @@
     "privateModulationCyclesPerModelSecond": [0.08, 0.35],
     "refractoryModelSeconds": 0.05,
     "recoveryTauModelSeconds": 0.2,
-    "contourUnitsPerModelSecond": [0.3, 0.48],
+    "travelDistanceBasis": "cumulative-mni-arc-length",
+    "travelSpeedMniMmPerDisplaySecond": [40, 40],
+    "referencePlaybackSpeed": 70,
     "maxActiveRenderedImpulses": 520,
     "commonCrossTractDrive": false,
     "forcedBursts": false,
@@ -23,7 +25,7 @@
     "https://doi.org/10.1089/brain.2011.0033",
     "https://doi.org/10.1109/TIT.1981.1056305"
   ],
-  "disclosure": "Direction is not measured by diffusion MRI. Every named association tract uses an explicit 50/50 source-to-endpoint assumption because this review found no defensible quantitative human ratio. Event timing, inhibition, and speed are illustrative display algorithms, not measured neuronal physiology.",
+  "disclosure": "Direction is not measured by diffusion MRI. Every named association tract uses an explicit 50/50 source-to-endpoint assumption because this review found no defensible quantitative human ratio. Events traverse cumulative MNI arc length at a common 40 mm per display second when playback speed is 70; event timing, inhibition, playback scaling, and travel speed are illustrative display algorithms, not measured neuronal physiology or a universal conduction velocity.",
   "tracts": [
     {
       "id": "ilf",

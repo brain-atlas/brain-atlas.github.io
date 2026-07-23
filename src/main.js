@@ -8,10 +8,17 @@ import {
   advanceAssociationTime,
   associationGroupsFromManifest,
   associationModelFromManifest,
-  canonicalContourParameter,
+  canonicalContourDistance,
   createAssociationImpulseEngine,
   updateAssociationEventPool,
 } from './activity/association-impulses.js';
+import {
+  DIRECTED_TRAVEL_SPEED_MNI_MM_PER_DISPLAY_SECOND,
+  contourTransitDuration,
+  createContourDistanceProfile,
+  distanceAfterDisplayTime,
+  sampleContourDistance,
+} from './activity/physical-contour-travel.js';
 import { createSwmVibration, vibrationContourParameter } from './activity/swm-vibration.js';
 import { createFrameDeltaReader } from './activity/frame-time.js';
 import {
@@ -166,7 +173,8 @@ for (const path of ANT_PATHS) {
     color: col, size: 1.25, map: SPR, transparent: true, depthWrite: false,
     blending: THREE.AdditiveBlending, sizeAttenuation: true }));
   anteriorGroup.add(points);
-  flows.push({ curve, geo, pos, points });
+  const profile = createContourDistanceProfile(curve.getSpacedPoints(128));
+  flows.push({ profile, geo, pos, points });
 }
 
 // Landmark spheres (eyes/chiasm) + CSS2D labels
@@ -282,6 +290,7 @@ function loadRegions() {
 // LGN -> V1, recycling. Everything is in MNI mm under mniGroup.
 const fibreGroup = new THREE.Group(); mniGroup.add(fibreGroup);
 let FIB = null;
+const opticRadiationProfiles = new WeakMap();
 
 const MAXTR = 600;   // pool cap; firing model targets ~500 concurrent (see BIO_PER_WALL)
 const trGeo = new THREE.BufferGeometry();
@@ -354,7 +363,12 @@ function launchTracer(f) {
   const h = f.side === 0 ? 'L' : 'R';
   if (!hemiState[h] || tracers.length >= MAXTR) return;
   const poly = (f.side === 0 ? FIB.L : FIB.R)[f.idx];
-  tracers.push({ poly, t: 0, speed: 0.28 + Math.random() * 0.16, hemi: h });
+  tracers.push({
+    profile: opticRadiationProfiles.get(poly),
+    distanceMm: 0,
+    speedMmPerDisplaySecond: DIRECTED_TRAVEL_SPEED_MNI_MM_PER_DISPLAY_SECOND,
+    hemi: h,
+  });
 }
 function maybeScheduleBurst(f, t) {               // bursts follow relative silence
   if (Math.random() >= 0.04) return;
@@ -385,16 +399,23 @@ function generateFiring(dtWall) {
 
 function updateTracers(dt) {
   if (!FIB) return;
-  const sp = st.speed / 70, arr = trGeo.attributes.position.array;
+  const playbackRate = st.speed / 70, arr = trGeo.attributes.position.array;
   if (st.flow) {
     generateFiring(dt);
-    for (const tr of tracers) tr.t += dt * sp * tr.speed;
-    for (let i = tracers.length - 1; i >= 0; i--) if (tracers[i].t > 1) tracers.splice(i, 1);
+    for (const tracer of tracers) {
+      tracer.distanceMm += distanceAfterDisplayTime(
+        dt * playbackRate,
+        tracer.speedMmPerDisplaySecond,
+      );
+    }
+    for (let i = tracers.length - 1; i >= 0; i--) {
+      if (tracers[i].distanceMm > tracers[i].profile.lengthMm) tracers.splice(i, 1);
+    }
   }
   let k = 0;
-  for (const tr of tracers) {
-    if (!hemiState[tr.hemi]) continue;
-    writeFibrePoint(tr.poly, tr.t, arr, k * 3); k++;
+  for (const tracer of tracers) {
+    if (!hemiState[tracer.hemi]) continue;
+    sampleContourDistance(tracer.profile, tracer.distanceMm, { target: arr, offset: k * 3 }); k++;
   }
   trGeo.setDrawRange(0, k);
   trGeo.attributes.position.needsUpdate = true;
@@ -410,6 +431,8 @@ function loadFibres() {
       const raw = pts.map((p) => new THREE.Vector3(p[0], p[1], p[2]));
       const L = new THREE.CatmullRomCurve3(raw, false, 'centripetal').getSpacedPoints(SPLINE_N);
       const R = L.map((v) => new THREE.Vector3(-v.x, v.y, v.z));
+      opticRadiationProfiles.set(L, createContourDistanceProfile(L));
+      opticRadiationProfiles.set(R, createContourDistanceProfile(R));
       FIB.L.push(L); FIB.R.push(R);
       for (const [h, poly] of [['L', L], ['R', R]]) {
         for (let i = 0; i < poly.length - 1; i++) linePos[h].push(poly[i].x, poly[i].y, poly[i].z, poly[i + 1].x, poly[i + 1].y, poly[i + 1].z);
@@ -465,11 +488,12 @@ function loadTracts() {
       const rgb = hexRGB(tr.color);
       const capMat = new THREE.PointsMaterial({ color: new THREE.Color(Math.min(1, rgb[0] * 1.3), Math.min(1, rgb[1] * 1.3), Math.min(1, rgb[2] * 1.3)),
         size: 2.2, sizeAttenuation: false, map: SPR, transparent: true, opacity: 0.6, depthWrite: false });
-      const entry = { lines: {}, caps: {}, L: [], R: [], rgb };
+      const entry = { lines: {}, caps: {}, profiles: { L: [], R: [] }, L: [], R: [], rgb };
       for (const h of ['L', 'R']) {
         const linePos = [], capPos = [];
         for (const f of tr[h]) {
           const poly = f.map((p) => new THREE.Vector3(p[0], p[1], p[2])); entry[h].push(poly);
+          entry.profiles[h].push(createContourDistanceProfile(poly));
           for (let i = 0; i < poly.length - 1; i++) linePos.push(poly[i].x, poly[i].y, poly[i].z, poly[i + 1].x, poly[i + 1].y, poly[i + 1].z);
           const a = poly[0], b = poly[poly.length - 1]; capPos.push(a.x, a.y, a.z, b.x, b.y, b.z);   // both fibre ends
         }
@@ -513,7 +537,7 @@ function initTractImpulses(activity) {
     tractActivityById[tract.id] = tract;
     for (const hemi of ['L', 'R']) {
       const groupId = `${tract.id}:${hemi}`;
-      tractContoursByGroup[groupId] = tractsById[tract.id][hemi];
+      tractContoursByGroup[groupId] = tractsById[tract.id].profiles[hemi];
       tractImpulseStats[groupId] = { aToB: 0, bToA: 0 };
     }
   }
@@ -544,6 +568,32 @@ function initTractImpulses(activity) {
             const [id, hemi] = groupId.split(':');
             return tractsById[id].lines[hemi].visible && tractContoursByGroup[groupId].length > 0;
           });
+      },
+      get physicalTravel() {
+        const lengths = Object.values(tractContoursByGroup)
+          .flatMap((profiles) => profiles.map((profile) => profile.lengthMm));
+        const shortestLengthMm = Math.min(...lengths);
+        const longestLengthMm = Math.max(...lengths);
+        return Object.freeze({
+          unit: 'MNI mm per display second',
+          speedMmPerDisplaySecond: DIRECTED_TRAVEL_SPEED_MNI_MM_PER_DISPLAY_SECOND,
+          profileCount: lengths.length,
+          shortestLengthMm,
+          longestLengthMm,
+          shortestTransitDisplaySeconds: contourTransitDuration({ lengthMm: shortestLengthMm }),
+          longestTransitDisplaySeconds: contourTransitDuration({ lengthMm: longestLengthMm }),
+        });
+      },
+      get activeTravel() {
+        return activeTractImpulses.map((event) => Object.freeze({
+          groupId: event.groupId,
+          lengthMm: event.contourProfile.lengthMm,
+          distanceMm: distanceAfterDisplayTime(
+            tractImpulseTime - event.time,
+            event.speedMmPerDisplaySecond,
+          ),
+          speedMmPerDisplaySecond: event.speedMmPerDisplaySecond,
+        }));
       },
       get stats() { return structuredClone(tractImpulseStats); },
     };
@@ -577,10 +627,18 @@ function updateTractImpulses(dt) {
   let k = 0;
   for (const event of activeTractImpulses) {
     const [id, hemi] = event.groupId.split(':');
-    if (!tractsById[id].lines[hemi].visible || !event.contour) continue;
-    const progress = (tractImpulseTime - event.time) * event.speed;
-    const rawT = canonicalContourParameter(event.contour, tractActivityById[id].endpointA.classifier, event.aToB, progress);
-    writeFibrePoint(event.contour, rawT, arr, k * 3);
+    if (!tractsById[id].lines[hemi].visible || !event.contourProfile) continue;
+    const distanceMm = distanceAfterDisplayTime(
+      tractImpulseTime - event.time,
+      event.speedMmPerDisplaySecond,
+    );
+    const rawDistanceMm = canonicalContourDistance(
+      event.contourProfile,
+      tractActivityById[id].endpointA.classifier,
+      event.aToB,
+      distanceMm,
+    );
+    sampleContourDistance(event.contourProfile, rawDistanceMm, { target: arr, offset: k * 3 });
     const rgb = tractsById[id].rgb;
     const opacity = lessonEntityOpacities[`tract.${id}`] ?? 1;
     col[k * 3] = rgb[0] * opacity; col[k * 3 + 1] = rgb[1] * opacity; col[k * 3 + 2] = rgb[2] * opacity; k++;
@@ -714,7 +772,7 @@ function recalculateFibreFilter() {
       const mask = group[hemi];
       const groupId = `${group.id}:${hemi}`;
       tractFilterMasksByGroup[groupId] = mask;
-      tractContoursByGroup[groupId] = entry[hemi].filter((_, index) => mask[index]);
+      tractContoursByGroup[groupId] = entry.profiles[hemi].filter((_, index) => mask[index]);
       writeFilteredGeometry(entry.lines[hemi], entry.caps[hemi], entry[hemi], mask);
     }
   }
@@ -740,7 +798,7 @@ function recalculateFibreFilter() {
 
 // ---------------------------------------------------------------------------
 // State + loop
-const st = { flow: !reduce, speed: 70, phase: 0, settled: reduce };
+const st = { flow: !reduce, speed: 70, anteriorDistanceMm: 0, settled: reduce };
 if (import.meta.env.DEV) {
   window.__view.activity = {
     get state() {
@@ -753,7 +811,8 @@ if (import.meta.env.DEV) {
     },
     anterior: {
       points: Object.freeze(flows.map(({ points }) => points)),
-      get phase() { return st.phase; },
+      get distanceMm() { return st.anteriorDistanceMm; },
+      get profileLengthsMm() { return Object.freeze(flows.map(({ profile }) => profile.lengthMm)); },
     },
     opticRadiation: {
       points: opticRadiationPoints,
@@ -796,13 +855,16 @@ new ResizeObserver(resize).observe(stage);
 resize();
 
 function updateAnteriorFlow() {
-  for (const f of flows) {
+  for (const flow of flows) {
     for (let i = 0; i < NP; i++) {
-      const t = (i / NP + st.phase) % 1;
-      const p = f.curve.getPointAt(t);
-      f.pos[i * 3] = p.x; f.pos[i * 3 + 1] = p.y; f.pos[i * 3 + 2] = p.z;
+      const distanceMm = (i / NP) * flow.profile.lengthMm + st.anteriorDistanceMm;
+      sampleContourDistance(flow.profile, distanceMm, {
+        wrap: true,
+        target: flow.pos,
+        offset: i * 3,
+      });
     }
-    f.geo.attributes.position.needsUpdate = true;
+    flow.geo.attributes.position.needsUpdate = true;
   }
 }
 function animate(timestamp) {
@@ -822,7 +884,7 @@ function animate(timestamp) {
     }
   }
   if (st.flow) {
-    st.phase = (st.phase + dt * (st.speed / 70) * 0.075) % 1;
+    st.anteriorDistanceMm += distanceAfterDisplayTime(dt * (st.speed / 70));
     updateAnteriorFlow();
   }
   updateTracers(dt);
@@ -1377,13 +1439,13 @@ function reapplyLessonMaterialFactors(object) {
   }
 }
 function resetLessonActivity() {
-  st.phase = 0;
+  st.anteriorDistanceMm = 0;
   swmT = 0;
   if (FIB) initFiring();
   if (tractActivityMeta) initTractImpulses(tractActivityMeta);
 }
 function settleLessonActivity() {
-  st.phase = 0;
+  st.anteriorDistanceMm = 0;
   swmT = 0;
   tracers.length = 0;
   trGeo.setDrawRange(0, 0);

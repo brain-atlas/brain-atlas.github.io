@@ -1,3 +1,8 @@
+import {
+  DIRECTED_TRAVEL_SPEED_MNI_MM_PER_DISPLAY_SECOND,
+  distanceAfterDisplayTime,
+} from './physical-contour-travel.js';
+
 const TAU = Math.PI * 2;
 
 export const DEFAULT_ASSOCIATION_SEED = 1096043603;
@@ -13,8 +18,8 @@ export const DEFAULT_ASSOCIATION_MODEL = Object.freeze({
   maxFrequency: 0.35,
   refractory: 0.05,
   recoveryTau: 0.2,
-  minSpeed: 0.3,
-  maxSpeed: 0.48,
+  minSpeedMmPerDisplaySecond: DIRECTED_TRAVEL_SPEED_MNI_MM_PER_DISPLAY_SECOND,
+  maxSpeedMmPerDisplaySecond: DIRECTED_TRAVEL_SPEED_MNI_MM_PER_DISPLAY_SECOND,
 });
 
 export function associationModelFromManifest(manifest) {
@@ -29,8 +34,8 @@ export function associationModelFromManifest(manifest) {
     maxFrequency: model.privateModulationCyclesPerModelSecond[1],
     refractory: model.refractoryModelSeconds,
     recoveryTau: model.recoveryTauModelSeconds,
-    minSpeed: model.contourUnitsPerModelSecond[0],
-    maxSpeed: model.contourUnitsPerModelSecond[1],
+    minSpeedMmPerDisplaySecond: model.travelSpeedMniMmPerDisplaySecond[0],
+    maxSpeedMmPerDisplaySecond: model.travelSpeedMniMmPerDisplaySecond[1],
   };
 }
 
@@ -90,9 +95,11 @@ export function rawStartIsEndpointA(contour, classifier, epsilon = 1e-6) {
   return true;
 }
 
-export function canonicalContourParameter(contour, classifier, aToB, progress) {
-  const unitProgress = Math.max(0, Math.min(1, progress));
-  return rawStartIsEndpointA(contour, classifier) === aToB ? unitProgress : 1 - unitProgress;
+export function canonicalContourDistance(profile, classifier, aToB, distanceMm) {
+  const boundedDistance = Math.max(0, Math.min(profile.lengthMm, distanceMm));
+  return rawStartIsEndpointA(profile.points, classifier) === aToB
+    ? boundedDistance
+    : profile.lengthMm - boundedDistance;
 }
 
 export function createSeededRandom(seed = DEFAULT_ASSOCIATION_SEED) {
@@ -135,7 +142,10 @@ export function advanceAssociationTime(time, dt, { playing, speed = 1, reducedMo
 }
 
 function expireEvents(active, time) {
-  return active.filter((event) => (time - event.time) * event.speed <= 1);
+  return active.filter((event) => distanceAfterDisplayTime(
+    time - event.time,
+    event.speedMmPerDisplaySecond,
+  ) <= event.contourProfile.lengthMm);
 }
 
 export function updateAssociationEventPool(active, events, currentTime, {
@@ -158,7 +168,8 @@ export function updateAssociationEventPool(active, events, currentTime, {
     }
     const contours = contoursByGroup[event.groupId];
     const contourIndex = Math.min(contours.length - 1, Math.floor(event.contourUnit * contours.length));
-    nextActive.push({ ...event, contour: contours[contourIndex] });
+    const contourProfile = contours[contourIndex];
+    nextActive.push({ ...event, contourProfile });
   }
   return { active: expireEvents(nextActive, currentTime), hidden, dropped };
 }
@@ -208,7 +219,11 @@ export function createAssociationImpulseEngine({
             channelIndex: channel.channelIndex,
             aToB: sampleAToB(random, channel.probabilityAToB),
             contourUnit: random(),
-            speed: between(random, model.minSpeed, model.maxSpeed),
+            speedMmPerDisplaySecond: between(
+              random,
+              model.minSpeedMmPerDisplaySecond,
+              model.maxSpeedMmPerDisplaySecond,
+            ),
           });
         }
         nextCandidateTime += exponentialInterval(random, totalEnvelope);
