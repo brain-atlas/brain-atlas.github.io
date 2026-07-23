@@ -4,7 +4,10 @@
 large anatomical datasets stay in `public/` and load at runtime. GitHub Pages
 serves the ordinary static artifact. An optional CGO-free Go executable embeds a
 standalone-mode copy of the same reviewed artifact and serves it only on the
-workstation loopback interface.
+workstation loopback interface. A separate least-privilege Actions workflow
+cross-builds, verifies, and packages that executable for the supported desktop
+platforms; it publishes one mutable nightly channel and immutable-by-policy
+versioned releases.
 
 ## Standalone delivery boundary
 
@@ -37,6 +40,49 @@ converge on bounded `http.Server.Shutdown`. The server has no global write
 timeout because the held response represents page lifetime. This boundary stores
 no lesson, anatomy, account, or personal data and exposes no general API or
 explicit shutdown endpoint. See [`internal/standalone/SPEC.md`](../internal/standalone/SPEC.md).
+
+## Standalone release boundary
+
+`.github/workflows/standalone-binaries.yml` is independent of the Pages
+deployment workflow. Its read-only Ubuntu build job runs for pull requests,
+`main`, semantic-version tags, and manual dispatches. It stages one production
+standalone Vite tree, audits locked Node dependencies, verifies ordinary/standalone
+bundle separation, runs Go/release checks, and calls `cmd/package-standalone` to
+cross-build Linux, macOS, and Windows for amd64 and arm64 with `CGO_ENABLED=0`.
+The build job receives no release credential. It does not run the Node suite:
+seven scientific asset-regeneration tests require the recorded Darwin arm64/Nix
+byte-exact environment, so decision `brain-atlas-ek3` retains the complete
+`npm test` suite as a required local gate rather than selecting a partial Ubuntu
+subset.
+
+`internal/releasepack` owns the deterministic distribution contract. It writes
+normalized tar/gzip or ZIP archives containing one executable plus the required
+license, data-license, notice, and citation files. It records the exact source
+commit/timestamp, clean/dirty state, and Node/npm/Go versions, writes sorted
+SHA-256 checksums, and
+rejects missing, duplicate, unexpected, or mismatched targets/files. Generated
+site, binary, and release directories remain ignored; a tracked
+`internal/site/dist/.gitkeep` lets a clean checkout compile Go tests without
+weakening `internal/site.FS()`'s requirement for a real staged `index.html` at
+runtime. See [`internal/releasepack/SPEC.md`](../internal/releasepack/SPEC.md).
+
+The build job reproduces the complete bundle, compares checksums, smoke-tests the
+extracted Linux amd64 executable, and uploads the exact release directory as a
+14-day Actions artifact. Separate jobs download that immutable handoff and alone
+receive `contents: write`:
+
+- a serialized current-`main` job uploads commit-scoped assets without clobber,
+  checks GitHub's server-reported SHA-256 digests, rechecks `main`, advances the
+  `nightly` prerelease, then deletes only the previous managed nightly names;
+- a `v*` tag job requires the remote tag to resolve to the bundle commit, stages
+  a complete draft, and publishes once. Existing published stable releases are
+  read/verified only; any metadata or digest mismatch fails.
+
+`scripts/publish-standalone-release.mjs` implements both state machines with
+shell-free `gh` argument arrays. Repository-wide immutable-release enforcement
+is intentionally not enabled because it would also freeze the approved mutable
+nightly prerelease. Stable immutability is enforced by workflow behavior and
+maintainer policy. See [`docs/RELEASES.md`](RELEASES.md).
 
 ## Runtime shape
 

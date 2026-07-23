@@ -19,7 +19,10 @@
     "test": "node --test",
     "build": "vite build",
     "build:publish": "node scripts/check-publish.mjs && vite build",
+    "build:standalone:site": "node scripts/build-standalone.mjs --site-only",
     "build:standalone": "node scripts/build-standalone.mjs",
+    "build:release": "node scripts/build-standalone-release.mjs",
+    "verify:release": "go run ./cmd/package-standalone -verify-only",
     "preview": "vite preview --port 5180"
   },
   "dependencies": {
