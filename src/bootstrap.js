@@ -104,10 +104,31 @@ function setTopbarStatus(message = '') {
   status.hidden = !message;
 }
 
+let rendererPowerStatusRestore = null;
 function setModelStatus(message = '') {
   const status = byId('model-status');
+  delete status.dataset.statusOwner;
   status.textContent = message;
   status.hidden = !message;
+}
+function setRendererPowerStatus(message) {
+  const status = byId('model-status');
+  if (rendererPowerStatusRestore && status.dataset.statusOwner !== 'renderer-power') return;
+  if (!rendererPowerStatusRestore) {
+    rendererPowerStatusRestore = { textContent: status.textContent, hidden: status.hidden };
+  }
+  status.dataset.statusOwner = 'renderer-power';
+  status.textContent = message;
+  status.hidden = false;
+}
+function restoreRendererPowerStatus() {
+  const status = byId('model-status');
+  if (status.dataset.statusOwner === 'renderer-power') {
+    status.textContent = rendererPowerStatusRestore?.textContent ?? '';
+    status.hidden = rendererPowerStatusRestore?.hidden ?? true;
+    delete status.dataset.statusOwner;
+  }
+  rendererPowerStatusRestore = null;
 }
 
 function availableSessionKeys() {
@@ -1835,6 +1856,23 @@ function onRendererTransitionStateChange(isTransitioning) {
   skip.disabled = !isTransitioning || reducedMotionQuery.matches;
 }
 
+function onRendererPowerStateChange(state) {
+  if (app.dataset.state !== 'ready') return;
+  if (state.suspended) {
+    const reason = state.reason === 'document-hidden' ? 'this tab is hidden' : 'the 3D viewer is offscreen';
+    const resume = state.resumeEligible ? ' Activity will resume when the viewer is visible.' : '';
+    setRendererPowerStatus(`Viewer paused while ${reason}.${resume}`);
+    return;
+  }
+  if (!state.resumed) return;
+  restoreRendererPowerStatus();
+  byId('announcer').textContent = state.activityActive
+    ? 'Viewer activity resumed.'
+    : (state.reducedMotion
+      ? 'Viewer visible again. Activity remains paused for reduced motion.'
+      : 'Viewer visible again. Activity remains paused.');
+}
+
 function refreshRendererAdapter() {
   if (!rendererAdapterFactory) return;
   rendererAdapter?.setAnatomyIntentHandler(null);
@@ -1844,6 +1882,7 @@ function refreshRendererAdapter() {
   controller = null;
   rendererAdapter = rendererAdapterFactory(createLessonRuntimeCatalog(catalog, lesson), {
     onTransitionStateChange: onRendererTransitionStateChange,
+    onPowerStateChange: onRendererPowerStateChange,
   });
   rendererAdapter.setAnatomyIntentHandler((intent) => applyAnatomyIntent(intent));
   rendererAdapter.setInspectableHighlight(anatomySelection.previewedId);

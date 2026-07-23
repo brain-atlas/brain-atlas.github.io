@@ -168,8 +168,10 @@ test('canonical L and R edits retain semantic subgroup disclosure, focus, and sc
     await disclosure.click();
     await expect(disclosure).toHaveAttribute('aria-expanded', 'true');
 
+    const entityName = (await row.locator('.layer-entity-toggle').textContent()).trim();
     for (const hemisphere of ['L', 'R']) {
-      const pill = row.getByRole('button', { name: hemisphere, exact: true });
+      const side = hemisphere === 'L' ? 'left' : 'right';
+      const pill = row.getByRole('button', { name: `Show ${side} hemisphere for ${entityName}`, exact: true });
       await pill.focus();
       const scrollTop = await viewer.evaluate(element => element.scrollTop);
       await pill.press('Enter');
