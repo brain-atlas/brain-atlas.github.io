@@ -17,6 +17,45 @@ async function ready(page, viewport = { width: 1440, height: 900 }, path = '') {
   await page.waitForFunction(() => document.getElementById('app')?.dataset.state === 'ready');
 }
 
+function deferred() {
+  let resolve;
+  const promise = new Promise(done => { resolve = done; });
+  return { promise, resolve };
+}
+
+test('loading feedback stays inside the model box and clears when the Atlas is ready', async ({ page }) => { // Tests INV-7
+  const errors = monitor(page);
+  const atlasData = deferred();
+  const renderer = deferred();
+  await page.route('**/data/entities.json', async route => {
+    await atlasData.promise;
+    await route.continue();
+  });
+  await page.route('**/src/main.js*', async route => {
+    await renderer.promise;
+    await route.continue();
+  });
+
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto(BASE_URL);
+
+  const modelStatus = page.locator('#model-status');
+  await expect(modelStatus).toBeVisible();
+  await expect(modelStatus).toHaveText('Loading atlas data…');
+  await expect(modelStatus).toHaveAttribute('role', 'status');
+  await expect(modelStatus).toHaveAttribute('aria-live', 'polite');
+  expect(await modelStatus.evaluate(element => document.getElementById('stage').contains(element))).toBe(true);
+  await expect(page.locator('#app-status')).toBeHidden();
+
+  atlasData.resolve();
+  await expect(modelStatus).toHaveText('Loading 3D anatomy…');
+  renderer.resolve();
+  await page.waitForFunction(() => document.getElementById('app')?.dataset.state === 'ready');
+  await expect(modelStatus).toBeHidden();
+  await expect(page.locator('#app-status')).toBeHidden();
+  expect(errors).toEqual([]);
+});
+
 test('Atlas is the default top-level workspace and reuses the single viewer surface', async ({ page }) => { // Tests INV-25
   const errors = monitor(page);
   await ready(page);

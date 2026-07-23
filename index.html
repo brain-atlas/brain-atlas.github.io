@@ -19,7 +19,7 @@
         <span class="brand-title"><span id="lesson-brand-title">From retina to V1</span> <span id="lesson-status" class="lesson-status" aria-label="Lesson status: Draft" hidden>[DRAFT]</span></span>
       </a>
       <div class="topbar-actions">
-        <span id="app-status" class="app-status">Loading atlas data…</span>
+        <span id="app-status" class="app-status" hidden></span>
         <button id="back-to-atlas" class="topbar-action" type="button" hidden>Back to atlas</button>
         <div id="lesson-session-actions" class="lesson-session-actions" hidden>
           <button id="return-to-lesson" class="topbar-action return-to-lesson" type="button">Return to lesson</button>
@@ -61,6 +61,7 @@
         <div id="visual-surface" class="visual-surface" data-layout="dominant" data-visual="atlas">
           <div id="atlas-surface" class="atlas-surface">
             <div id="stage" class="stage" role="region" tabindex="-1" aria-label="Interactive 3D visual-system atlas">
+              <div id="model-status" class="model-status" role="status" aria-live="polite" aria-atomic="true">Loading atlas data…</div>
               <button id="scene-skip" class="transition-skip" type="button" hidden>Skip transition</button>
             </div>
             <section id="stage-fallback" class="stage-fallback" tabindex="-1" hidden aria-labelledby="fallback-title">

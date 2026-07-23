@@ -98,6 +98,18 @@ function node(tag, className, text) {
   return element;
 }
 
+function setTopbarStatus(message = '') {
+  const status = byId('app-status');
+  status.textContent = message;
+  status.hidden = !message;
+}
+
+function setModelStatus(message = '') {
+  const status = byId('model-status');
+  status.textContent = message;
+  status.hidden = !message;
+}
+
 function availableSessionKeys() {
   return [...localCandidatesByKey.keys(), ...inspectionBranchesByKey.keys()];
 }
@@ -1372,7 +1384,7 @@ function prepareInitialAtlasWorkspace() {
   prepareExploreChrome('global', scene, false);
   renderExploreFidelity(snapshot, []);
   renderAtlasIdentity();
-  byId('app-status').textContent = 'Loading 3D anatomy…';
+  setModelStatus('Loading 3D anatomy…');
   setExploreAvailability(false);
 }
 
@@ -1386,7 +1398,8 @@ function activateInitialAtlasRenderer() {
   rendererAdapter.syncExplorePanel(createExplorePanelModel(state.snapshot, catalog));
   state.phase = 'active';
   workspace.phase = 'atlas';
-  byId('app-status').textContent = 'Atlas ready';
+  setModelStatus();
+  setTopbarStatus();
   app.dataset.state = 'ready';
   setExploreAvailability(true);
   byId('announcer').textContent = pendingWorkspaceNotice || 'Atlas workspace ready.';
@@ -1454,7 +1467,7 @@ function beginExplore(kind, trigger = null) {
     workspace.atlas.activeSnapshot = snapshot;
     if (kind === 'global') workspace.atlas.persistentSnapshot = snapshot;
     renderAtlasIdentity();
-    byId('app-status').textContent = rendererUnavailable ? 'Atlas ready · 3D unavailable' : 'Atlas ready';
+    setTopbarStatus(canReturn && lessonSourceKind === 'local' ? 'Local lesson · not saved' : '');
     setExploreAvailability(!rendererUnavailable);
     if (canReturn) byId('return-to-lesson').focus({ preventScroll: true });
     byId('announcer').textContent = kind === 'global'
@@ -1511,7 +1524,7 @@ function exitExplore() {
     console.error('Explore return failed:', restoreError);
     showRendererFallback('The 3D renderer could not restore the lesson after Explore. The readable lesson and Model & sources remain available.');
   } else {
-    byId('app-status').textContent = lessonSourceKind === 'local' ? 'Local lesson · not saved' : 'Lesson ready';
+    setTopbarStatus(lessonSourceKind === 'local' ? 'Local lesson · not saved' : '');
     byId('announcer').textContent = 'Returned to the authored lesson scene.';
   }
 }
@@ -1682,7 +1695,7 @@ function exitLessonSession() {
     renderLessonDrawer();
     writeWorkspaceHistory('atlas', { replace: true });
     workspace.phase = rendererUnavailable ? 'fallback' : 'atlas';
-    byId('app-status').textContent = rendererUnavailable ? 'Atlas ready · 3D unavailable' : 'Atlas ready';
+    setTopbarStatus();
     setExploreAvailability(!rendererUnavailable);
     byId('announcer').textContent = 'Lesson closed. The complete Atlas is ready.';
     focusHistoryDestination(rendererUnavailable ? 'stage-fallback' : 'atlas-heading', 'atlas');
@@ -1749,9 +1762,8 @@ function showRendererFallback(message) {
   byId('viewer-controls-fieldset').disabled = true;
   byId('viewer-console').hidden = true;
   document.querySelector('.stage-hint').hidden = true;
-  byId('app-status').textContent = workspace.mode === 'atlas'
-    ? 'Atlas ready · 3D unavailable'
-    : (lessonSourceKind === 'local' ? 'Local lesson · 3D unavailable' : 'Lesson ready · 3D unavailable');
+  setModelStatus();
+  setTopbarStatus(workspace.mode === 'lesson' && lessonSourceKind === 'local' ? 'Local lesson · not saved' : '');
   workspace.phase = 'fallback';
   app.dataset.state = 'fallback';
 }
@@ -1759,12 +1771,12 @@ function showRendererFallback(message) {
 function showLessonError(error) {
   console.error(error);
   app.dataset.state = 'error';
-  byId('app-status').textContent = 'Lesson unavailable';
   const intro = byId('lesson-intro');
   intro.replaceChildren(node('p', 'eyebrow', 'Lesson error'), node('h1', '', 'This lesson could not be loaded'),
     node('p', '', 'The checked-in lesson or its catalog did not pass validation. No partial scene was activated.'));
   sceneContainer.replaceChildren();
   showRendererFallback('The 3D stage was not started because lesson validation failed.');
+  setTopbarStatus('Lesson unavailable');
 }
 
 async function fetchJson(path) {
@@ -2041,12 +2053,8 @@ function activatePreparedLesson(candidate, {
   }
   const scrollTop = resumeToken?.scrollTop ?? 0;
   pageScroll.scrollTo({ top: scrollTop, behavior: 'auto' });
-  if (app.dataset.state === 'ready') {
-    byId('app-status').textContent = sourceKind === 'local' ? 'Local lesson · not saved' : 'Lesson ready';
-  } else if (app.dataset.state === 'fallback') {
-    byId('app-status').textContent = sourceKind === 'local'
-      ? 'Local lesson · 3D unavailable'
-      : 'Lesson ready · 3D unavailable';
+  if (['ready', 'fallback'].includes(app.dataset.state)) {
+    setTopbarStatus(sourceKind === 'local' ? 'Local lesson · not saved' : '');
   }
   exposeLessonDebugState();
 }
@@ -2054,6 +2062,8 @@ function activatePreparedLesson(candidate, {
 async function start() {
   try {
     app.dataset.state = 'loading';
+    setTopbarStatus();
+    setModelStatus('Loading atlas data…');
     const [entities, fidelity, fibreFilterPresets] = await Promise.all([
       fetchJson('/data/entities.json'),
       fetchJson('/data/fidelity.json'),
@@ -2110,7 +2120,7 @@ async function start() {
       return;
     }
 
-    byId('app-status').textContent = 'Loading 3D anatomy…';
+    setModelStatus('Loading 3D anatomy…');
     try {
       const renderer = await import('./main.js');
       await renderer.viewerReady;
@@ -2123,7 +2133,8 @@ async function start() {
         createCurrentController();
         updateActivePresentation(navigation.activeIndex);
         workspace.phase = 'lesson';
-        byId('app-status').textContent = lessonSourceKind === 'local' ? 'Local lesson · not saved' : 'Lesson ready';
+        setModelStatus();
+        setTopbarStatus(lessonSourceKind === 'local' ? 'Local lesson · not saved' : '');
         app.dataset.state = 'ready';
         setExploreAvailability(true);
       }

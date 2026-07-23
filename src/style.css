@@ -41,13 +41,14 @@ button:disabled, fieldset:disabled button, fieldset:disabled input { cursor: not
 
 .topbar { position: fixed; inset: 0 0 auto; z-index: 40; min-height: var(--topbar); display: grid; grid-template-columns: minmax(240px, 1fr) minmax(180px, 1fr); align-items: center; gap: 18px; padding: 6px 20px; border-bottom: 1px solid var(--line); background: rgba(5, 12, 20, 0.96); backdrop-filter: blur(18px); }
 .brand { display: flex; align-items: baseline; gap: 13px; color: var(--text); text-decoration: none; }
-.brand-kicker, .eyebrow, .stage-kicker, .brand-title, .app-status, .scene-number, .scene-position, .viewer-console > summary, .fidelity-status-label, .status-chip, .review-date { font-family: var(--font-mono); }
+.brand-kicker, .eyebrow, .stage-kicker, .brand-title, .app-status, .model-status, .scene-number, .scene-position, .viewer-console > summary, .fidelity-status-label, .status-chip, .review-date { font-family: var(--font-mono); }
 .brand-kicker { color: var(--accent); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; white-space: nowrap; }
 .brand-title { min-width: 0; display: flex; align-items: baseline; gap: 0.45em; font-size: 0.96rem; font-weight: 500; }
 #lesson-brand-title { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .lesson-status { flex: none; color: var(--amber); font-family: var(--font-mono); font-size: 0.68rem; font-weight: 650; letter-spacing: 0.08em; }
 .lesson-status[hidden] { display: none; }
 .app-status { color: var(--dim); font-size: 0.67rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.app-status[hidden] { display: none; }
 .topbar-actions { min-width: 0; display: flex; align-items: center; justify-content: flex-end; gap: 12px; }
 .topbar-action { flex: none; min-height: 44px; padding: 6px 10px; color: #bff8f1; border-color: rgba(67,220,203,0.38); background: var(--accent-soft); font-size: 0.72rem; }
 
@@ -97,6 +98,8 @@ button:disabled, fieldset:disabled button, fieldset:disabled input { cursor: not
 .stage { position: relative; width: 100%; height: 100%; overflow: hidden; background: radial-gradient(circle at center, rgba(33, 63, 88, 0.2), transparent 62%); }
 .stage canvas, .label-layer { position: absolute; inset: 0; width: 100% !important; height: 100% !important; }
 .label-layer { pointer-events: none; }
+.model-status { position: absolute; z-index: 5; right: 12px; bottom: 12px; max-width: calc(100% - 24px); padding: 6px 8px; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; background: rgba(5,12,20,0.82); font-size: 0.6rem; letter-spacing: 0.08em; line-height: 1.4; text-transform: uppercase; pointer-events: none; }
+.model-status[hidden] { display: none; }
 .anatomy-controls { position: absolute; z-index: 7; left: 12px; bottom: 12px; display: flex; align-items: flex-end; gap: 8px; }
 .anatomy-preview { min-height: 44px; padding: 7px 10px; color: #031613; border-color: var(--accent); background: var(--accent); font-family: var(--font-mono); font-size: 0.68rem; font-weight: 650; }
 .anatomy-preview[hidden], .anatomy-browser[hidden] { display: none; }
