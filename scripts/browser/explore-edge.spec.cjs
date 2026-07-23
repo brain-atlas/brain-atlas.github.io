@@ -20,6 +20,36 @@ async function directLesson(page, viewport) {
   await ready(page, new URL('?lesson=retina-to-v1', BASE_URL).href, viewport);
 }
 
+async function disableAllVisualizations(page) {
+  const grouped = page.locator('.lyr-grpwrap > .lyr-group > input:checked');
+  for (let count = 0; await grouped.count(); count += 1) {
+    if (count > 40) throw new Error('grouped visualization controls did not converge');
+    await grouped.first().click();
+  }
+  const leaves = page.locator('label.lyr > input[data-id]:checked');
+  for (let count = 0; await leaves.count(); count += 1) {
+    if (count > 20) throw new Error('leaf visualization controls did not converge');
+    await leaves.first().click();
+  }
+}
+
+async function disableSelectedVisualizations(page) {
+  const pills = page.locator('.pill.on');
+  for (let count = 0; await pills.count(); count += 1) {
+    if (count > 200) throw new Error('hemisphere visualization controls did not converge');
+    const pill = pills.first();
+    const group = pill.locator('xpath=ancestor::div[contains(@class,"lyr-grpwrap")]');
+    const disclosure = group.locator('.lyr-disclosure');
+    if (await disclosure.getAttribute('aria-expanded') === 'false') await disclosure.click();
+    await pill.click();
+  }
+  const leaves = page.locator('label.lyr > input[data-id]:checked');
+  for (let count = 0; await leaves.count(); count += 1) {
+    if (count > 20) throw new Error('leaf visualization controls did not converge');
+    await leaves.first().click();
+  }
+}
+
 test('one renderer survives repeated scene-inspection cycles and resizes to the shared stage', async ({ page }) => {
   const errors = monitor(page);
   await directLesson(page);
@@ -87,6 +117,135 @@ test('responsive Atlas keeps exact stage aspect and usable controls', async ({ p
     await page.locator('#viewer-console > summary').click();
     await expect(page.locator('[data-explore-camera="zoom-in"]')).toBeVisible();
   }
+  expect(errors).toEqual([]);
+});
+
+test('empty Atlas visibility remains recoverable through the retained controls', async ({ page }) => { // Tests INV-47, FAIL-40
+  const errors = monitor(page);
+  await ready(page);
+  await expect(page.locator('#app')).toHaveAttribute('data-state', 'ready');
+
+  await disableAllVisualizations(page);
+
+  await expect(page.locator('#app')).toHaveAttribute('data-state', 'ready');
+  await expect(page.locator('#stage')).toBeVisible();
+  await expect(page.locator('#viewer-console')).toBeVisible();
+  await expect(page.locator('#viewer-empty-state')).toBeVisible();
+  await expect(page.locator('#viewer-empty-state')).toContainText('No visualizations selected');
+  await expect(page.locator('#fidelity-content')).toContainText('No visualizations selected');
+  expect(await page.evaluate(() => window.__lesson.exploreState.snapshot.visibility.entities)).toEqual([]);
+
+  await page.locator('#layers input[data-id="brain"]').check();
+
+  await expect(page.locator('#viewer-empty-state')).toBeHidden();
+  expect(await page.evaluate(() => window.__lesson.exploreState.snapshot.visibility.entities)).toEqual(['layer.cortex']);
+
+  await directLesson(page);
+  await page.locator('#explore-scene-trigger').click();
+  await expect(page.locator('#atlas-workspace')).toBeVisible();
+  await disableSelectedVisualizations(page);
+  await expect(page.locator('#app')).toHaveAttribute('data-state', 'ready');
+  await expect(page.locator('#viewer-empty-state')).toBeVisible();
+  await expect(page.locator('#fidelity-content')).toContainText('No visualizations selected');
+  expect(await page.evaluate(() => window.__lesson.exploreState.snapshot.visibility.entities)).toEqual([]);
+  expect(errors).toEqual([]);
+});
+
+test('canonical L and R edits retain semantic subgroup disclosure, focus, and scroll', async ({ page }) => { // Tests INV-48, FAIL-41
+  const errors = monitor(page);
+  await ready(page);
+  const viewer = page.locator('#viewer-console');
+
+  async function exercise(entityId, parentIndeterminate) {
+    const row = page.locator(`[data-entity-id="${entityId}"]`);
+    const group = row.locator('xpath=ancestor::div[contains(@class,"lyr-grpwrap")]');
+    const disclosure = group.locator('.lyr-disclosure');
+    const children = group.locator('.lyr-kids');
+    await expect(disclosure).toHaveAttribute('aria-expanded', 'false');
+    const controlsId = await disclosure.getAttribute('aria-controls');
+    expect(controlsId).toBeTruthy();
+    await expect(children).toHaveAttribute('id', controlsId);
+    await disclosure.click();
+    await expect(disclosure).toHaveAttribute('aria-expanded', 'true');
+
+    for (const hemisphere of ['L', 'R']) {
+      const pill = row.getByRole('button', { name: hemisphere, exact: true });
+      await pill.focus();
+      const scrollTop = await viewer.evaluate(element => element.scrollTop);
+      await pill.press('Enter');
+      await expect(disclosure).toHaveAttribute('aria-expanded', 'true');
+      await expect(pill).toBeFocused();
+      expect(await viewer.evaluate(element => element.scrollTop)).toBe(scrollTop);
+    }
+    const parent = group.locator('.lyr-group > input');
+    await expect(parent).not.toBeChecked();
+    expect(await parent.evaluate(input => input.indeterminate)).toBe(parentIndeterminate);
+  }
+
+  await exercise('region.lgn', false);
+  await exercise('tract.ilf', true);
+  expect(errors).toEqual([]);
+});
+
+test('closed Viewer controls return wide space to the stage and keep a compact reopen path', async ({ page }) => { // Tests INV-49, FAIL-42
+  const errors = monitor(page);
+  await ready(page);
+  await expect(page.locator('#app')).toHaveAttribute('data-state', 'ready');
+  const summary = page.locator('#viewer-console > summary');
+  await expect(summary).toHaveAttribute('aria-controls', 'viewer-controls-fieldset');
+  await expect(summary).toHaveAttribute('aria-expanded', 'true');
+  const openWidth = await page.locator('#stage').evaluate(element => element.getBoundingClientRect().width);
+
+  await summary.click();
+  await expect(page.locator('#viewer-console')).not.toHaveAttribute('open', '');
+  await expect(summary).toHaveAttribute('aria-expanded', 'false');
+  await expect(summary).toBeVisible();
+  await page.waitForFunction(() => {
+    const rect = document.getElementById('stage').getBoundingClientRect();
+    return Math.abs(window.__view.camera.aspect - rect.width / rect.height) < 1e-6;
+  });
+  const closed = await page.evaluate(() => {
+    const stage = document.getElementById('stage').getBoundingClientRect();
+    const controls = document.getElementById('viewer-console').getBoundingClientRect();
+    const stageHeader = document.querySelector('.explore-mount .stage-header').getBoundingClientRect();
+    return {
+      stageWidth: stage.width,
+      controlsWidth: controls.width,
+      controlsTop: controls.top,
+      stageHeaderBottom: stageHeader.bottom,
+      overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      aspectError: Math.abs(window.__view.camera.aspect - stage.width / stage.height),
+    };
+  });
+  expect(closed.stageWidth).toBeGreaterThan(openWidth + 300);
+  expect(closed.controlsWidth).toBeLessThan(220);
+  expect(closed.controlsTop).toBeGreaterThanOrEqual(closed.stageHeaderBottom + 8);
+  expect(closed.overflow).toBe(0);
+  expect(closed.aspectError).toBeLessThan(1e-6);
+
+  await summary.click();
+  await expect(page.locator('#viewer-console')).toHaveAttribute('open', '');
+  await expect(summary).toHaveAttribute('aria-expanded', 'true');
+  await expect(summary).toBeFocused();
+
+  await ready(page, BASE_URL, { width: 390, height: 844 });
+  await expect(page.locator('#viewer-console')).not.toHaveAttribute('open', '');
+  await expect(summary).toHaveAttribute('aria-expanded', 'false');
+  const compactClosedWidth = await page.locator('#stage').evaluate(element => element.getBoundingClientRect().width);
+  await summary.click();
+  await expect(page.locator('#viewer-console')).toHaveAttribute('open', '');
+  await expect(summary).toHaveAttribute('aria-expanded', 'true');
+  const compact = await page.evaluate(() => {
+    const stage = document.getElementById('stage').getBoundingClientRect();
+    return {
+      stageWidth: stage.width,
+      overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      aspectError: Math.abs(window.__view.camera.aspect - stage.width / stage.height),
+    };
+  });
+  expect(compact.stageWidth).toBe(compactClosedWidth);
+  expect(compact.overflow).toBe(0);
+  expect(compact.aspectError).toBeLessThan(1e-6);
   expect(errors).toEqual([]);
 });
 

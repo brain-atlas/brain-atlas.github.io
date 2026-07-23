@@ -331,14 +331,18 @@ Qualified · Low confidence**; endpoint filtering creates no new relationship re
 Reduced-motion preference makes authored camera changes
 instant, settles activity, disables Play, and removes the Skip action.
 
-The collapsed **Viewer controls** section retains Play/Pause, activity speed,
-**Cutaway**, **Tissue**, Side/Top/Back/Front, hemisphere/layer filters, endpoint-filter
-presets and custom all/touches/within/between queries, Auto-rotate, and Reset. Counts and
+The **Viewer controls** dock contains Play/Pause, activity speed, **Cutaway**,
+**Tissue**, Side/Top/Back/Front, hemisphere/layer filters, endpoint-filter presets and
+custom all/touches/within/between queries, Auto-rotate, and Reset. Closing the dock on a
+wide screen returns its space to the atlas while leaving a keyboard-accessible reopen
+control; compact screens keep the bounded stacked panel. Structure disclosures, focus,
+and scroll remain stable while L/R filters change. Selecting no visualizations is a
+valid, labelled state, and any layer can be re-enabled without reloading. Counts and
 known/unknown/ambiguous assignment quality update in an accessible status summary.
-Lesson mode keeps the fieldset disabled so panel clicks cannot bypass authored
-state. Atlas projects its active canonical snapshot into the same panel; filter and
-display changes use the same renderer adapter, and keyboard-operable Zoom/Pan actions
-supplement pointer and touch camera input. Auto-rotate stays off and hidden in Atlas.
+Lesson mode keeps the fieldset disabled so panel clicks cannot bypass authored state.
+Atlas projects its active canonical snapshot into the same panel; filter and display
+changes use the same renderer adapter, and keyboard-operable Zoom/Pan actions supplement
+pointer and touch camera input. Auto-rotate stays off and hidden in Atlas.
 Legacy fixed-anchor 3D labels are hidden in the reference lesson pending the responsive
 placement work in `brain-atlas-zmq.20`; the free viewer label layer remains available in
 Atlas.

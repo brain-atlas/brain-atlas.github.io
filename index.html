@@ -104,12 +104,13 @@
     </main>
 
     <details id="viewer-console" class="viewer-console panel">
-      <summary>Viewer controls</summary>
+      <summary aria-controls="viewer-controls-fieldset" aria-expanded="false">Viewer controls</summary>
       <fieldset id="viewer-controls-fieldset">
         <legend class="sr-only">Viewer controls</legend>
         <div class="viewer-grid">
           <section>
             <h2>Layers</h2>
+            <p id="viewer-empty-state" class="viewer-empty-state" role="status" aria-live="polite" hidden>No visualizations selected. Turn on a layer to restore the atlas.</p>
             <div id="layers" class="layer-tree"></div>
           </section>
           <section class="control-stack">

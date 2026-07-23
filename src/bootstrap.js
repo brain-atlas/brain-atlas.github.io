@@ -1290,11 +1290,23 @@ function setExploreAvailability(available) {
 function renderExploreFidelity(snapshot, includedFidelityIds) {
   syncAnatomyAvailability(snapshot);
   const fidelityIds = exploreFidelityIds(snapshot, catalog, includedFidelityIds);
+  const isEmpty = snapshot.visibility.entities.length === 0;
   byId('fidelity-context').textContent = 'Visible in Atlas';
+  if (fidelityIds.length === 0) {
+    byId('fidelity-content').replaceChildren(
+      node('p', 'fidelity-empty-state', 'No visualizations selected. Turn on a layer in Viewer controls to restore the atlas.'),
+    );
+    return;
+  }
   renderFidelityModel(createFidelityViewModel({
     fidelityIds,
     entityIds: snapshot.visibility.entities,
   }, catalog));
+  if (isEmpty) {
+    byId('fidelity-content').prepend(
+      node('p', 'fidelity-empty-state', 'No visualizations selected. The records below retain the originating lesson context; turn on a layer in Viewer controls to restore the atlas.'),
+    );
+  }
 }
 
 function moveExploreNode(element, name, mount = byId('atlas-mount')) {
@@ -1451,8 +1463,8 @@ function beginExplore(kind, trigger = null) {
     pageScroll.hidden = true;
     pageScroll.inert = true;
     byId('atlas-workspace').hidden = false;
-    rendererAdapter?.resizeToStage();
     prepareExploreChrome(kind, scene, canReturn);
+    rendererAdapter?.resizeToStage();
     if (rendererAdapter) {
       rendererAdapter.apply(snapshot);
       rendererAdapter.beginExploreCamera(snapshot.camera, { fitToStage: kind === 'global' });
@@ -1544,12 +1556,13 @@ function showPersistentAtlasState() {
   exploreState.includedFidelityIds = [];
   workspace.atlas.kind = 'global';
   workspace.atlas.activeSnapshot = snapshot;
+  prepareExploreChrome('global', scene, Boolean(workspace.lesson.token));
   if (rendererAdapter) {
+    rendererAdapter.resizeToStage();
     rendererAdapter.apply(snapshot);
     rendererAdapter.beginExploreCamera(snapshot.camera, { fitToStage: true });
     rendererAdapter.syncExplorePanel(createExplorePanelModel(snapshot, catalog));
   }
-  prepareExploreChrome('global', scene, Boolean(workspace.lesson.token));
   renderExploreFidelity(snapshot, []);
   renderAtlasIdentity();
   setExploreAvailability(!rendererUnavailable);
@@ -1683,13 +1696,13 @@ function exitLessonSession() {
   workspace.atlas.persistentSnapshot = snapshot;
 
   try {
+    prepareExploreChrome('global', scene, false);
     if (rendererAdapter) {
       rendererAdapter.resizeToStage();
       rendererAdapter.apply(snapshot);
       rendererAdapter.beginExploreCamera(snapshot.camera, { fitToStage: true });
       rendererAdapter.syncExplorePanel(createExplorePanelModel(snapshot, catalog));
     }
-    prepareExploreChrome('global', scene, false);
     renderExploreFidelity(snapshot, []);
     renderAtlasIdentity();
     renderLessonDrawer();
@@ -1736,6 +1749,11 @@ function bindLessonExit() {
 }
 
 function bindExplore() {
+  const viewer = byId('viewer-console');
+  const viewerSummary = viewer.querySelector('summary');
+  const syncViewerDisclosure = () => viewerSummary.setAttribute('aria-expanded', String(viewer.open));
+  viewer.addEventListener('toggle', syncViewerDisclosure);
+  syncViewerDisclosure();
   byId('back-to-atlas').addEventListener('click', (event) => leaveLessonForAtlas(event.currentTarget));
   byId('explore-scene-trigger').addEventListener('click', (event) => leaveLessonForAtlas(event.currentTarget));
   byId('return-to-lesson').addEventListener('click', returnToLesson);

@@ -88,7 +88,7 @@ lesson is scientifically reviewed merely because it passes the structural contra
   `scripts/browser/{home,explore}-*.spec.cjs` matrix.
 
 ## Layers and how to toggle them
-The retained panel lives in `#layers` inside `#viewer-console`. It is disabled while a lesson scene owns the display; do not bypass that state by synthesizing panel events. Atlas enables the same panel as a projection/editor of its active canonical snapshot. Its three control surfaces are:
+The retained panel lives in `#layers` inside `#viewer-console`. It is disabled while a lesson scene owns the display; do not bypass that state by synthesizing panel events. Atlas enables the same panel as a projection/editor of its active canonical snapshot. On wide screens, closing it returns the dock width to the stage and leaves its summary over the atlas as the reopen control; compact layouts keep it stacked below the stage. Canonical edits synchronize the existing controls in place, so open `.lyr-disclosure` groups, focus, and panel scroll must remain stable. `#viewer-empty-state` appears when every visualization is off; the panel must remain available so any layer can recover the view. Its three control surfaces are:
 - **Hemisphere** — `.hemi-chip` checkboxes (Left / Right), the global L/R master.
 - **Structures / White-matter tracts** — each row has **L / R pill buttons**
   (`.pill`); click a pill to toggle that side, click the name to toggle both.

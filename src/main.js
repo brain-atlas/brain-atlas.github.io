@@ -1245,14 +1245,18 @@ function buildPanel(regions, tracts, { initialize = !panelInitialized } = {}) {
     row.append(cb, sw, t); return { row, cb };
   };
   // One collapsible stream group of L/R-pill rows — used for both regions and tracts.
-  const streamBlock = (label, items, hemiMap, applyFn, rendererKind) => {
+  const streamBlock = (stream, label, items, hemiMap, applyFn, rendererKind) => {
     const wrap = document.createElement('div'); wrap.className = 'lyr-grpwrap collapsed';
+    wrap.dataset.groupId = `${rendererKind}-${stream}`;
     const head = document.createElement('div'); head.className = 'lyr lyr-group';
-    const caret = document.createElement('span'); caret.className = 'caret'; caret.textContent = '▸';
-    const cb = document.createElement('input'); cb.type = 'checkbox';
+    const cb = document.createElement('input'); cb.type = 'checkbox'; cb.setAttribute('aria-label', `Show all ${label}`);
+    const disclosure = document.createElement('button'); disclosure.type = 'button'; disclosure.className = 'lyr-disclosure';
+    const kidsId = `layer-group-${rendererKind}-${stream}`;
+    disclosure.setAttribute('aria-expanded', 'false'); disclosure.setAttribute('aria-controls', kidsId);
+    const caret = document.createElement('span'); caret.className = 'caret'; caret.textContent = '▸'; caret.setAttribute('aria-hidden', 'true');
     const t = document.createElement('span'); t.className = 'lyr-t'; t.textContent = label;
-    head.append(caret, cb, t);
-    const kids = document.createElement('div'); kids.className = 'lyr-kids';
+    disclosure.append(caret, t); head.append(cb, disclosure);
+    const kids = document.createElement('div'); kids.className = 'lyr-kids'; kids.id = kidsId;
     const syncers = [];
     for (const it of items) {
       hemiMap[it.id] = hemiMap[it.id] || { L: true, R: true };
@@ -1274,12 +1278,12 @@ function buildPanel(regions, tracts, { initialize = !panelInitialized } = {}) {
         syncStreamParent(cb, syncers, hemiMap);
       };
       for (const h of ['L', 'R']) {
-        const p = document.createElement('button'); p.type = 'button'; p.className = 'pill'; p.textContent = h;
-        p.classList.toggle('on', hemiMap[it.id][h]);
-        p.addEventListener('click', () => { hemiMap[it.id][h] = !hemiMap[it.id][h]; p.classList.toggle('on', hemiMap[it.id][h]); applyEntityState(); });
+        const p = document.createElement('button'); p.type = 'button'; p.className = 'pill'; p.textContent = h; p.dataset.hemisphere = h;
+        p.classList.toggle('on', hemiMap[it.id][h]); p.setAttribute('aria-pressed', String(hemiMap[it.id][h]));
+        p.addEventListener('click', () => { hemiMap[it.id][h] = !hemiMap[it.id][h]; p.classList.toggle('on', hemiMap[it.id][h]); p.setAttribute('aria-pressed', String(hemiMap[it.id][h])); applyEntityState(); });
         pills.append(p); pill[h] = p;
       }
-      nm.addEventListener('click', () => { const on = !(hemiMap[it.id].L || hemiMap[it.id].R); hemiMap[it.id].L = hemiMap[it.id].R = on; pill.L.classList.toggle('on', on); pill.R.classList.toggle('on', on); applyEntityState(); });
+      nm.addEventListener('click', () => { const on = !(hemiMap[it.id].L || hemiMap[it.id].R); hemiMap[it.id].L = hemiMap[it.id].R = on; for (const h of ['L', 'R']) { pill[h].classList.toggle('on', on); pill[h].setAttribute('aria-pressed', String(on)); } applyEntityState(); });
       row.append(sw, nm, pills); kids.appendChild(row);
       syncers.push({ id: it.id, pill });
     }
@@ -1288,7 +1292,7 @@ function buildPanel(regions, tracts, { initialize = !panelInitialized } = {}) {
       const commands = [];
       for (const s of syncers) {
         hemiMap[s.id].L = hemiMap[s.id].R = on;
-        s.pill.L.classList.toggle('on', on); s.pill.R.classList.toggle('on', on);
+        for (const h of ['L', 'R']) { s.pill[h].classList.toggle('on', on); s.pill[h].setAttribute('aria-pressed', String(on)); }
         const entityId = entityIdForRenderer(rendererKind, s.id);
         if (entityId) commands.push(
           { type: 'visibility.set', entity: entityId, visible: on },
@@ -1299,22 +1303,26 @@ function buildPanel(regions, tracts, { initialize = !panelInitialized } = {}) {
       dispatchExploreCommands(commands);
       cb.indeterminate = false;
     });
-    const toggle = () => { wrap.classList.toggle('collapsed'); caret.textContent = wrap.classList.contains('collapsed') ? '▸' : '▾'; };
-    caret.addEventListener('click', toggle); t.addEventListener('click', toggle);
+    disclosure.addEventListener('click', () => {
+      const expanded = wrap.classList.contains('collapsed');
+      wrap.classList.toggle('collapsed', !expanded);
+      disclosure.setAttribute('aria-expanded', String(expanded));
+      caret.textContent = expanded ? '▾' : '▸';
+    });
     syncStreamParent(cb, syncers, hemiMap);
     wrap.append(head, kids); return wrap;
   };
   const byStreamOf = (arr) => { const m = {}; for (const x of arr) (m[x.stream] ||= []).push(x); return m; };
   const streamSection = (title, arr, hemiMap, applyFn, rendererKind) => {
     const bs = byStreamOf(arr); sec(title);
-    for (const [stream, label] of STREAM_ORDER) if (bs[stream]) root.appendChild(streamBlock(label, bs[stream], hemiMap, applyFn, rendererKind));
+    for (const [stream, label] of STREAM_ORDER) if (bs[stream]) root.appendChild(streamBlock(stream, label, bs[stream], hemiMap, applyFn, rendererKind));
   };
 
   sec('Hemisphere');
   const hrow = document.createElement('div'); hrow.className = 'hemi-row';
   for (const h of ['L', 'R']) {
     const chip = document.createElement('label'); chip.className = 'hemi-chip';
-    const cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = hemiState[h];
+    const cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = hemiState[h]; cb.dataset.hemisphere = h;
     cb.addEventListener('change', () => {
       hemiState[h] = cb.checked;
       if (explorePanelModel) {
@@ -1342,8 +1350,39 @@ function buildPanel(regions, tracts, { initialize = !panelInitialized } = {}) {
   applyHemi();
 }
 
+function syncPanelControls(model) {
+  const root = $('layers');
+  for (const input of root.querySelectorAll('.hemi-chip input[data-hemisphere]')) {
+    input.checked = model.globalHemispheres[input.dataset.hemisphere];
+  }
+  for (const row of root.querySelectorAll('.lyr-child[data-entity-id]')) {
+    const entity = model.entities[row.dataset.entityId];
+    if (!entity) continue;
+    for (const pill of row.querySelectorAll('.pill[data-hemisphere]')) {
+      const on = entity[pill.dataset.hemisphere];
+      pill.classList.toggle('on', on);
+      pill.setAttribute('aria-pressed', String(on));
+    }
+  }
+  for (const group of root.querySelectorAll('.lyr-grpwrap')) {
+    const states = [...group.querySelectorAll('.lyr-child[data-entity-id]')]
+      .map((row) => model.entities[row.dataset.entityId])
+      .filter(Boolean);
+    const checkbox = group.querySelector('.lyr-group > input');
+    const allOn = states.length > 0 && states.every(({ L, R }) => L && R);
+    const allOff = states.every(({ L, R }) => !L && !R);
+    checkbox.checked = allOn;
+    checkbox.indeterminate = !allOn && !allOff;
+  }
+  for (const input of root.querySelectorAll('label.lyr > input[data-id]')) {
+    const entityId = entityIdForRenderer('layer', input.dataset.id);
+    if (entityId) input.checked = model.entities[entityId].visible;
+  }
+}
+
 function projectExplorePanel(model) {
   explorePanelModel = model;
+  $('viewer-empty-state').hidden = Object.values(model.entities).some(({ visible }) => visible);
   Object.assign(hemiState, model.globalHemispheres);
   requestedFibreFilter = model.fibreFilter;
   syncFibreFilterControls(model.fibreFilter);
@@ -1366,8 +1405,10 @@ function projectExplorePanel(model) {
   setFill($('tissue'));
   requestedLessonPlayback = model.playback;
   syncPlaybackControls();
-  if (_regions) buildPanel(_regions, tractsMeta, { initialize: false });
-  else recalculateFibreFilter();
+  if (_regions) {
+    if (!$('layers').querySelector('[data-entity-id]')) buildPanel(_regions, tractsMeta, { initialize: false });
+    syncPanelControls(model);
+  } else recalculateFibreFilter();
 }
 
 function clearExplorePanel() {
