@@ -19,8 +19,8 @@ This subsystem does **not** render Markdown, own scrolling, import files, fetch 
    supply typed YAML scene directives. Prose before the
    first fence is introduction content; prose after each fence belongs to that scene.
 4. Ajv schemas validate syntax and trust-boundary shape. Validators compile during development into checked-in CSP-safe standalone functions; the browser performs no runtime code generation. YAML and Markdown positions become plain diagnostics.
-5. Catalog checks resolve stable entity, inspectable, fidelity, visual, and camera IDs. Selection-only landmark records inherit a canonical owner entity and fidelity record without entering scene visibility IDs.
-6. Scene directives normalize into complete frozen snapshots.
+5. Catalog checks resolve stable entity, inspectable, fidelity, visual, camera, and fibre-endpoint-filter preset/selector IDs. Selection-only landmark records inherit a canonical owner entity and fidelity record without entering scene visibility IDs.
+6. Scene directives normalize into complete frozen snapshots, including one explicit endpoint-filter query independent of hemisphere and activity direction.
 7. Pure commands return new snapshots. The renderer adapter applies a complete
    snapshot through explicit bindings and verifies captured state.
 
@@ -39,6 +39,7 @@ This subsystem does **not** render Markdown, own scrolling, import files, fetch 
 - `index.js` — supported consumer entry point.
 - `public/data/entities.json` — stable scene and inspectable domain IDs to current renderer bindings plus curated anatomy and relationship evidence.
 - `public/data/tract_region_mapping.json` — generated offline evidence bound to dataset-derived catalog relationships by regression tests; it is not fetched by the browser.
+- `public/data/fibre_filter_presets.json` — strict authored endpoint-query presets loaded before the WebGL gate; generated tuple/count evidence remains in renderer data `fibre_endpoints.json`.
 - `public/data/fidelity.json` — curated geometry/activity disclosure records.
 
 ## Public interface
@@ -47,9 +48,9 @@ Import consumer APIs from `src/lesson/index.js`.
 
 | Export | Contract |
 |---|---|
-| `createLessonCatalog(entityManifest, fidelityManifest)` | Validates strict catalogs and returns frozen sorted entity/inspectable/fidelity IDs, presets, and record lookups. Inspectables derive fidelity only from their resolved owner entity; each authored undirected relationship receives one deterministic reciprocal inspector projection. |
+| `createLessonCatalog(entityManifest, fidelityManifest, fibreFilterManifest?)` | Validates strict catalogs and returns frozen sorted entity/inspectable/fidelity/fibre-filter IDs, presets, selectors, and record lookups. The optional third input defaults to no named presets for test/embedding consumers but always retains the two explicit unknown/ambiguous selectors; production supplies the checked four-preset manifest. Inspectables derive fidelity only from their resolved owner entity; each authored undirected relationship receives one deterministic reciprocal inspector projection. |
 | `parseLesson(source, catalog)` | Returns `{ ok: true, value }` or `{ ok: false, diagnostics }`; never returns partial lesson data. |
-| `normalizeSceneSnapshot(directive, catalog)` | Expands an author directive to the complete canonical v1 state. Throws `LessonContractError` on invalid shape/reference. |
+| `normalizeSceneSnapshot(directive, catalog)` | Expands a v1 author directive to the complete canonical snapshot v2 state. Throws `LessonContractError` on invalid shape/reference. |
 | `normalizeCanonicalSnapshot(snapshot, catalog)` | Revalidates exact canonical keys and semantics, then returns a new frozen snapshot. |
 | `serializeSceneSnapshot(snapshot)` | Produces deterministic JSON for canonical state. |
 | `applySceneCommand(snapshot, command, catalog)` | Validates an allowlisted command and returns new frozen state without mutating the prior snapshot. |
@@ -63,12 +64,13 @@ A diagnostic is always plain data:
 
 ## Canonical snapshot
 
-A v1 snapshot contains exactly these top-level fields:
+A canonical snapshot v2 contains exactly these top-level fields (the inert lesson-source contract remains schema v1):
 
 - `schemaVersion`
 - `camera` — position, target, and allowlisted transition
 - `visibility` — complete visible stable-entity list; omitted catalog entities are hidden
 - `hemispheres` — global L/R state and bilateral per-entity overrides
+- `fibreFilter` — complete `{ preset, mode, setA, setB }` endpoint query; `preset` is nullable, modes are all/touches-any/connects-within/unordered-connects-between, and unknown/ambiguous match only explicit special selectors
 - `cutaway` — 0–100 position corresponding to the current clip control
 - `material` — tissue opacity 0–1
 - `playback` — playing, speed, and settled state
@@ -103,6 +105,7 @@ lifecycle badge belongs to the presentation layer.
 | INV-12 | Optional `entryScene` resolves to exactly one authored scene before presentation; unknown references reject the lesson rather than falling back to scene order. | strict metadata schema + parser semantic test | A topic entry view remains explicit, portable, and independent of tutorial-specific runtime code. |
 | INV-13 | Optional lifecycle metadata accepts only `status: draft` in v1 and is preserved as frozen parsed data; absence means no lifecycle claim. | strict metadata schema + parser/reference tests | Draft content is visibly identifiable without title parsing, while untrusted lessons cannot self-assert a trusted reviewed/published state. |
 | INV-14 | Every inspectable has a unique stable ID/binding, a resolved canonical owner, owner-derived fidelity, and verified-shape HTTPS citations. Every relationship has one resolved non-self target plus strict direction, evidence class, method, status, confidence, summary, and source records. Undirected pairs are authored once and projected reciprocally; duplicate/reversed authoring fails. Child landmarks use only `landmark` renderer bindings and remain outside scene entity IDs. | catalog schema/semantics + mapping/catalog tests | Search, canvas picking, reciprocal relationship inspection, and cited details share one honest registry without creating a second visibility system or upgrading representation fidelity. |
+| INV-15 | Every canonical snapshot v2 carries one validated endpoint-filter state. Named presets resolve from the strict small catalog; custom selectors resolve only to project region IDs or explicit unknown/ambiguous classes; preset IDs cannot disagree with their frozen query. The filter describes unordered geometric endpoint membership and is independent of modeled activity direction. | catalog, scene-state, command, adapter, import, Explore, and reference-lesson tests | Lesson/Atlas/Return cannot inherit stale fibre subsets or reinterpret storage A/B as source/destination. |
 
 ## Failure modes
 
@@ -119,6 +122,7 @@ lifecycle badge belongs to the presentation layer.
 | FAIL-9 | `lesson.semantic.unknown-entry-scene` | Frontmatter `entryScene` does not match an authored scene ID | Correct the metadata or add the intended complete scene; never infer the entry view. |
 | FAIL-10 | `lesson.schema.const` at `/status` | Frontmatter claims an unsupported lifecycle value such as `reviewed` or `published` | Reject the lesson; only explicit `draft` is supported until a separately approved trusted publication model exists. |
 | FAIL-11 | `catalog.semantic.*inspectable*` | Inspectable owner/target is missing, a relationship targets itself or duplicates an authored/undirected pair, renderer binding drifts/collides, or a selection-only child is not a landmark | Fix the project-authored catalog before starting the renderer; never infer an owner, target, fidelity, relationship, or binding from a label. |
+| FAIL-12 | `catalog.semantic.*fibre-filter*` or `scene.semantic.*fibre-filter*` | Preset/selector is unresolved, mode/set shape is invalid, or a preset-labelled canonical query drifts from its catalog definition | Reject before renderer bindings run. Correct the authored preset/query; never infer regions from visible prose or silently broaden unknown/ambiguous matching. |
 
 ## Decision framework
 
@@ -126,6 +130,7 @@ lifecycle badge belongs to the presentation layer.
 |---|---|---|
 | Add a lesson field | Decide whether it is document metadata, scene wrapper data, or renderer snapshot state; update strict schema, normalizer, fixtures, and diagnostics together. Lifecycle fields must not be confused with scientific fidelity. | INV-3, INV-10, INV-13 |
 | Add a renderer control | Add one canonical axis/field and one explicit adapter binding path; never invoke DOM controls. | INV-3, INV-7 |
+| Add an endpoint-filter preset | Add it to `fibre_filter_presets.json`, resolve only region/special selector IDs, regenerate/check preset counts against `fibre_endpoints.json`, and author the stable preset ID in a scene. Keep hemisphere state separate and never describe A/B membership as polarity. | INV-15, FAIL-12 |
 | Add an entity | Add a stable prefixed ID and renderer binding; reference an existing reviewed fidelity record or add one from traceability evidence. | INV-4, INV-8 |
 | Add an inspectable | Reuse a canonical entity ID/binding or add a stable selection-only `landmark.*` child with a resolved owner. Add runtime anatomy claims/citations to core traceability and keep representation in the inherited fidelity record. Dataset-derived association relationships must match the checked offline mapping artifact, remain undirected/qualified/low-confidence, and be authored once for reciprocal projection. | INV-8, INV-14 |
 | Add or revise a lesson teaching claim | Update that lesson's `docs/lessons/*-validation.md` evidence first. Update core traceability and fidelity metadata too only when the displayed representation or its limitation changes. | scientific review |
@@ -150,6 +155,7 @@ node --test test/lesson-schema.test.js test/scene-state.test.js \
 | INV-1, INV-6, INV-9 | `test/lesson-parser.test.js` |
 | INV-2, INV-3, FAIL-6 | `test/scene-state.test.js` |
 | INV-4, INV-8, INV-14, FAIL-5, FAIL-11 | `test/catalog.test.js`, `test/anatomy-inspector.test.js`, `test/tract-region-mapping.test.js`, offline artifact drift check, and scientific review |
+| INV-15, FAIL-12 | `test/catalog.test.js`, `test/scene-state.test.js`, `test/scene-commands.test.js`, `test/renderer-adapter.test.js`, `test/fibre-endpoint-filter.test.js`, import/workspace/reference tests, validator drift, and browser adapter checks. |
 | INV-5, INV-10, INV-12, INV-13 | schema, parser, command, and adapter negative tests |
 | INV-7, FAIL-7, FAIL-8 | `test/renderer-adapter.test.js` plus structural `rg` check |
 | INV-11 | `test/generated-validators.test.js` plus CSP browser smoke |

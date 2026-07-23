@@ -49,6 +49,9 @@ def _parser() -> argparse.ArgumentParser:
     for asset in ("cortex", "regions", "association"):
         asset_parser = build_subparsers.add_parser(asset)
         _add_heavy_common_arguments(asset_parser)
+    endpoints = build_subparsers.add_parser("endpoints")
+    _add_heavy_common_arguments(endpoints)
+    endpoints.add_argument("--repo", type=Path, required=True)
 
     prepare = subparsers.add_parser("prepare", help="derive verified tracking inputs")
     prepare_subparsers = prepare.add_subparsers(dest="asset", required=True)
@@ -164,7 +167,7 @@ def _run_builder(args: argparse.Namespace, manifest: dict[str, Any]) -> dict[str
         if tree_records_sha256(obj_entries) != expected_tree["sha256"]:
             raise ContractError("generated region mesh tree differs from the checked output")
         generated = sorted(path.name for path in output_root.iterdir())
-    else:
+    elif args.asset == "association":
         from .association import build_association_from_archive
 
         output = output_root / "tracts.json"
@@ -180,6 +183,25 @@ def _run_builder(args: argparse.Namespace, manifest: dict[str, Any]) -> dict[str
         expected = _record_by_id(manifest["outputs"], "association-tracts")
         if output.stat().st_size != expected["bytes"] or sha256_file(output) != expected["sha256"]:
             raise ContractError("generated association tracts differ from the checked output")
+        generated = [output.name]
+    else:
+        from .endpoints import build_endpoint_artifact
+
+        output = output_root / "fibre_endpoints.json"
+        parameters = pipeline["parameters"]
+        region_pipeline = _record_by_id(manifest["pipelines"], "regions")
+        source_record = _record_by_id(manifest["sources"], "julich-mpm")
+        details = build_endpoint_artifact(
+            inputs["julich-mpm"],
+            args.repo,
+            output,
+            source_record=source_record,
+            region_definitions=region_pipeline["parameters"]["regions"],
+            parameters=parameters,
+        )
+        expected = _record_by_id(manifest["outputs"], "fibre-endpoints")
+        if output.stat().st_size != expected["bytes"] or sha256_file(output) != expected["sha256"]:
+            raise ContractError("generated fibre endpoint artifact differs from the checked output")
         generated = [output.name]
 
     return {

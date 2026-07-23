@@ -1,8 +1,9 @@
 # Early Vision Lesson Validation
 
 Status: current lesson-specific review record for `src/lessons/retina-to-v1.md`,
-maintained under `brain-atlas-zmq.25` with the displayed relationship limitation
-reconciled under `brain-atlas-zmq.10` (2026-07-22).
+maintained under `brain-atlas-zmq.25`, with displayed relationship limits reconciled
+under `brain-atlas-zmq.10` and endpoint-filtered cortical previews under
+`brain-atlas-zmq.21` (2026-07-22).
 
 This record owns the lesson's teaching-claim evidence, section-level scientific and
 pedagogical review, and curriculum-specific representation limits. It does not own
@@ -26,10 +27,10 @@ The scientific review found no blocking factual error in the lesson's intended s
 The lesson remains valid only with its explicit boundaries: incomplete schematic
 anterior geometry, mirrored right optic-radiation source geometry, population-atlas
 region shells, illustrative activity, only low-confidence qualified endpoint proximity
-for a subset of association-bundle/displayed-shell pairs, and unfiltered superficial
-white matter with no named-region classification. The broad white-matter context remains a
-pre-publication prototype and must be replaced under `brain-atlas-zmq.21` before
-release.
+for a subset of association-bundle/displayed-shell pairs, and categorical geometric
+endpoint filters that make no biological connection claim. The extrastriate, ventral,
+and dorsal previews now use reproducible scene presets rather than the all-fibre SWM
+population.
 
 ## Section and scene review
 
@@ -41,9 +42,9 @@ release.
 | LGN | Revised prose introduces M, P, and K channels separately, avoids one-channel/one-percept claims, and distinguishes regulated relay from passive transfer. The 3D shell does not resolve layers or channels, so this material remains prose-only with a local boundary statement. |
 | Optic radiation | The revised prose directly connects distinct temporal/parietal routes to visual-field localization and distinguishes inferior-retinal origin from the temporal-lobe course through Meyer's loop. Topographic organization, individual variability, mirrored-source limitations, and illustrative timing remain aligned. The scene shows only the independently derived left contours with a centered half-shell cortical cutaway. |
 | V1 | Revised prose separates retinotopy, cortical magnification, local feature selectivity, historical animal evidence, and clinical localization. The centered left-only view supplies anatomy, not layers, columns, cell responses, or a functional retinotopy map. |
-| Extrastriate cortex | The prose rejects a serial chain and describes graded recurrent processing. Its boundary distinguishes three claims: association geometry can support only qualified low-confidence unordered endpoint proximity for selected shell pairs; association events use a separate disclosed 50/50 direction assumption; and SWM amplitude depends partly on fibre-length structure while frequency/phase remain display choices. Neither proximity nor simultaneous display demonstrates terminations, connections, strengths, functions, or processing direction. |
-| Ventral stream preview | The shortened prose introduces object-quality and perception biases without expanding into downstream clinical or network detail. A left-only cut reduces duplicate visual load while preserving the approved anatomy set. |
-| Dorsal stream preview | The shortened prose introduces motion, spatial, and vision-for-action biases without expanding into downstream routes. A left-only cut reduces duplicate visual load while preserving the approved anatomy set. |
+| Extrastriate cortex | The prose rejects a serial chain and describes graded recurrent processing. Its boundary distinguishes four claims: inspector relationships report only qualified low-confidence unordered endpoint proximity; the scene preset reports categorical endpoint membership; association events use a separate 50/50 direction assumption; and SWM amplitude depends partly on fibre-length structure while frequency/phase remain display choices. Neither proximity, categorical assignment, nor simultaneous display demonstrates terminations, connections, strengths, functions, or processing direction. |
+| Ventral stream preview | The shortened prose introduces object-quality and perception biases without expanding into downstream clinical or network detail. A left-only cut reduces duplicate visual load; the ventral endpoint preset narrows both fibre layers without asserting a connection among shown regions. |
+| Dorsal stream preview | The shortened prose introduces motion, spatial, and vision-for-action biases without expanding into downstream routes. A left-only cut reduces duplicate visual load; the dorsal endpoint preset narrows both fibre layers without asserting a connection among shown regions. |
 | Conclusion | The new eighth scene reprises the opening whole-pathway visual and lesion prediction, summarizes the retina→chiasm→LGN→optic-radiation→V1 transformations, then identifies V2 and parts of V3 as shared early cortical stages that contribute to multiple downstream routes rather than a hard two-stream fork. It ends with retrieval and treats later ventral/dorsal biases only as a brief downstream preview. |
 
 ## Teaching-claim evidence
@@ -76,16 +77,22 @@ population limits remain part of the supported scope.
 - `cutaway: 50` is a display-only scene-frame center clip. It is not anatomical sectioning,
   resection, or a source-geometry change.
 - The extrastriate, ventral-preview, and dorsal-preview scenes show selected named tracts
-  and broad SWM as spatial context. The inspector may expose a qualified association
-  endpoint-proximity record only when the displayed sample passes the bilateral 3/5 mm
-  screen; it does not establish a termination, pairwise connection, strength, direction,
-  functional traffic, or one-region/one-function mapping. The conclusion instead returns
-  to the early retina→LGN→V1 pathway and does not show those downstream bundles.
-- The broad SWM layer has no approved named-region endpoint classification and no
-  relationship records. Its simultaneous display must not be read as U-fibres connecting
-  the highlighted shells.
-- The all-fibre SWM context cannot ship in the lesson until `brain-atlas-zmq.21`
-  supplies reproducible endpoint classification and scene-specific presets.
+  and endpoint-filtered SWM as spatial context. Their touches-any presets match 1,684,
+  1,830, and 3,180 of 17,880 contours before scene layer/hemisphere visibility. A fourth
+  integrated between-sets preset matches 327 contours but is not authored into this
+  lesson.
+- The inspector's bilateral 3/5 mm nearest-surface screen remains separate from runtime
+  categorical filtering. Runtime classes use the exact Jülich MPM: the nearest nonzero
+  label is known only when its centre lies within 2 mm and the label has a project region
+  entity; a second distinct label within a 0.5 mm distance margin is ambiguous;
+  unsupported winning labels, background, and distant endpoints are unknown. Unknown and ambiguous classes are excluded from region presets
+  unless selected explicitly.
+- The endpoint comparison uses 2009a fibre coordinates and 2009c labels in common RAS
+  millimetres without a template warp or voxel-grid equivalence. Neither method establishes
+  a termination, pairwise connection, strength, direction, functional traffic,
+  one-region/one-function mapping, named U-fibre, probability, or individual anatomy.
+  The conclusion returns to the early retina→LGN→V1 pathway and does not show those
+  downstream bundles.
 - The v1 image contract accepts declared credential-free HTTPS sources but not packaged
   repository-local image paths. The committed LGN scene therefore remains prose-only;
   adding a durable local-media contract is separate platform work.

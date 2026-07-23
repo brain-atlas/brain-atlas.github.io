@@ -197,7 +197,7 @@
           "data-derived",
           "derived"
         ],
-        "summary": "Selected and resampled bilateral ICBM-2009a RAS+ streamlines from the HCP-1065 population tractography atlas."
+        "summary": "Selected and resampled bilateral ICBM-2009a RAS+ streamlines from the HCP-1065 population tractography atlas, with unordered endpoints categorically assigned against the J\u00fclich-Brain v3.0.3 maximum-probability map for optional filtering."
       },
       "activity": {
         "statuses": [
@@ -208,13 +208,15 @@
         "direction": "modeled"
       },
       "supports": [
-        "Sparse code-like population communication can be compared along the displayed named tract contours."
+        "Sparse code-like population communication can be compared along the displayed named tract contours.",
+        "Endpoint filters can retain contours that touch or span selected displayed atlas-label sets without treating stored endpoint order as polarity."
       ],
       "assumptions": [
         "Version 1 samples a 50/50 direction per accepted event because no defensible quantitative human polarity ratio was found."
       ],
       "uncertainties": [
-        "Diffusion MRI does not measure afferent versus efferent polarity or precise synaptic endpoints."
+        "Diffusion MRI does not measure afferent versus efferent polarity or precise synaptic endpoints.",
+        "The categorical endpoint comparison overlays 2009a fibre coordinates with 2009c labels in common RAS millimetres without a template warp or a claim of voxel-grid equivalence."
       ],
       "limitations": [
         {
@@ -222,7 +224,7 @@
           "material": true
         },
         {
-          "summary": "Tractography does not establish precise cortical endpoints; the complete checked-in generator and tool manifest remains future reproducibility work.",
+          "summary": "The classifier chooses the nearest nonzero MPM label. If its centre is within 2 mm and the label has a project region entity, the endpoint is known; a second distinct label within a 0.5 mm distance margin makes it ambiguous. Unsupported winning labels, background, and distant endpoints are unknown.",
           "material": true
         },
         {
@@ -240,6 +242,10 @@
           "url": "https://doi.org/10.1089/brain.2011.0033"
         },
         {
+          "label": "J\u00fclich-Brain v3.0.3 dataset",
+          "url": "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
+        },
+        {
           "label": "Ogata thinning method",
           "url": "https://doi.org/10.1109/TIT.1981.1056305"
         }
@@ -252,6 +258,10 @@
         {
           "label": "WU-Minn HCP Open Access Data Use Terms",
           "url": "https://www.humanconnectome.org/study/hcp-young-adult/document/wu-minn-hcp-consortium-open-access-data-use-terms"
+        },
+        {
+          "label": "CC BY-NC-SA 4.0",
+          "url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
         }
       ],
       "reviewed": "2026-07-22"
@@ -263,7 +273,7 @@
           "data-derived",
           "derived"
         ],
-        "summary": "Real bilateral short contours tracked on the HCP-1065 nonlinear ICBM152-2009a FIB and filtered with an exact TemplateFlow-derived 2009c cortical ribbon in decoded RAS+ millimetres."
+        "summary": "Real bilateral short contours tracked on the HCP-1065 nonlinear ICBM152-2009a FIB, filtered with an exact TemplateFlow-derived 2009c cortical ribbon, and assigned unordered endpoint classes from the J\u00fclich-Brain v3.0.3 maximum-probability map in decoded RAS+ millimetres."
       },
       "activity": {
         "statuses": [
@@ -274,14 +284,16 @@
         "direction": "undirected"
       },
       "supports": [
-        "The static grain conveys short-fibre orientation; vibration amplitude varies with supplied local fibre-length structure."
+        "The static grain conveys short-fibre orientation; vibration amplitude varies with supplied local fibre-length structure.",
+        "Endpoint filters can retain contours that touch or span selected displayed atlas-label sets while preserving direction-neutral geometry and vibration."
       ],
       "assumptions": [
         "Frequency, phase, scale factor, margins, and amplitude bounds are display choices."
       ],
       "uncertainties": [
         "The release-companion T1 indicates the FIB's asymmetric variant, but no retained FIB build record binds it directly.",
-        "Post-processing is reproducible from the recovered intermediate; the DSI tracking run and complete tool manifest have not been replayed."
+        "Post-processing is reproducible from the recovered intermediate; the DSI tracking run and complete tool manifest have not been replayed.",
+        "The categorical endpoint comparison overlays 2009a fibre coordinates with 2009c labels in common RAS millimetres without a template warp or a claim of voxel-grid equivalence."
       ],
       "limitations": [
         {
@@ -289,7 +301,7 @@
           "material": true
         },
         {
-          "summary": "No named-region endpoint classification is approved for the broad superficial-white-matter sample, so it cannot support named U-fibre or region-to-region relationships.",
+          "summary": "The classifier chooses the nearest nonzero MPM label. If its centre is within 2 mm and the label has a project region entity, the endpoint is known; a second distinct label within a 0.5 mm distance margin makes it ambiguous. Unsupported winning labels, background, and distant endpoints are unknown. These geometric classes do not establish named U-fibres or region-to-region relationships.",
           "material": true
         }
       ],
@@ -301,12 +313,20 @@
         {
           "label": "DSI Studio method",
           "url": "https://doi.org/10.1038/s41592-025-02762-8"
+        },
+        {
+          "label": "J\u00fclich-Brain v3.0.3 dataset",
+          "url": "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
         }
       ],
       "licenses": [
         {
           "label": "WU-Minn HCP Open Access Data Use Terms",
           "url": "https://www.humanconnectome.org/study/hcp-young-adult/document/wu-minn-hcp-consortium-open-access-data-use-terms"
+        },
+        {
+          "label": "CC BY-NC-SA 4.0",
+          "url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
         }
       ],
       "reviewed": "2026-07-22"

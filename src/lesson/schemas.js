@@ -9,6 +9,7 @@ const commandValidators = {
   'visibility.set': validators.commandVisibilitySet,
   'hemispheres.set-global': validators.commandHemispheresSetGlobal,
   'hemispheres.set-entity': validators.commandHemispheresSetEntity,
+  'fibre-filter.set': validators.commandFibreFilterSet,
   'cutaway.set': validators.commandCutawaySet,
   'material.set': validators.commandMaterialSet,
   'playback.set': validators.commandPlaybackSet,
@@ -36,6 +37,10 @@ export function validateEntityCatalog(value, location) {
 
 export function validateFidelityCatalog(value, location) {
   return validate(validators.fidelityCatalog, 'catalog.fidelity', value, location);
+}
+
+export function validateFibreFilterPresetCatalog(value, location) {
+  return validate(validators.fibreFilterPresetCatalog, 'catalog.fibre-filter-presets', value, location);
 }
 
 export function validateSceneCommand(value, location) {

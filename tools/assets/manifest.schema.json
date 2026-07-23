@@ -31,16 +31,16 @@
       "minItems": 1
     },
     "tools": { "type": "array", "items": { "type": "object" }, "minItems": 1 },
-    "pipelines": { "type": "array", "items": { "type": "object" }, "minItems": 5 },
+    "pipelines": { "type": "array", "items": { "type": "object" }, "minItems": 6 },
     "outputs": {
       "type": "array",
       "items": { "$ref": "#/$defs/output" },
-      "minItems": 6
+      "minItems": 7
     },
     "rights": {
       "type": "array",
       "items": { "$ref": "#/$defs/rights" },
-      "minItems": 6
+      "minItems": 7
     },
     "limitations": { "type": "object" }
   },

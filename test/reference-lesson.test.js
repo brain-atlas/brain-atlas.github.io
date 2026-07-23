@@ -11,12 +11,13 @@ const rootFile = (path) => readFile(new URL(`../${path}`, import.meta.url), 'utf
 const json = async (path) => JSON.parse(await rootFile(path));
 
 async function loadReferenceLesson() {
-  const [source, entities, fidelity] = await Promise.all([
+  const [source, entities, fidelity, fibreFilterPresets] = await Promise.all([
     rootFile('src/lessons/retina-to-v1.md'),
     json('public/data/entities.json'),
     json('public/data/fidelity.json'),
+    json('public/data/fibre_filter_presets.json'),
   ]);
-  const catalog = createLessonCatalog(entities, fidelity);
+  const catalog = createLessonCatalog(entities, fidelity, fibreFilterPresets);
   return { source, catalog, result: parseLesson(source, catalog) };
 }
 
@@ -38,7 +39,7 @@ test('reference lesson parses with an unnumbered entry view and eight complete s
   ]);
 
   const snapshotKeys = [
-    'camera', 'controlPolicy', 'cutaway', 'hemispheres', 'material', 'playback',
+    'camera', 'controlPolicy', 'cutaway', 'fibreFilter', 'hemispheres', 'material', 'playback',
     'schemaVersion', 'selection', 'visibility', 'visual',
   ];
   for (const scene of result.value.scenes) {
@@ -126,6 +127,11 @@ test('cortical preview scenes add selected white-matter context without claiming
     ['tract.ifof', 'tract.ilf', 'tract.vof'],
     ['tract.slf1', 'tract.slf2', 'tract.slf3', 'tract.vof'],
   ];
+  const expectedFibreFilters = [
+    'fibre-filter.extrastriate',
+    'fibre-filter.ventral',
+    'fibre-filter.dorsal',
+  ];
 
   assert.deepEqual(streamScenes.map(({ id }) => id), [
     'extrastriate-branching', 'ventral-stream', 'dorsal-stream',
@@ -140,6 +146,8 @@ test('cortical preview scenes add selected white-matter context without claiming
       expectedTracts[index],
     );
     assert.equal(scene.snapshot.visibility.entities.includes('layer.swm'), true);
+    assert.equal(scene.snapshot.fibreFilter.preset, expectedFibreFilters[index]);
+    assert.equal(scene.snapshot.fibreFilter.mode, 'touches-any');
     assert.equal(scene.snapshot.playback.playing, true);
     assert.equal(scene.snapshot.playback.settled, false);
   }
@@ -149,11 +157,34 @@ test('cortical preview scenes add selected white-matter context without claiming
   }
   assert.match(streamProse, /50\/50/i);
   assert.match(streamProse, /zero-mean/i);
-  assert.match(streamProse, /not endpoint-filtered/i);
   assert.match(streamProse, /qualified.*endpoint proximity|qualified endpoint-proximity/is);
+  assert.match(streamProse, /Jülich.*maximum-probability|maximum-probability.*Jülich/is);
+  assert.match(streamProse, /unordered/i);
+  assert.match(streamProse, /unknown.*ambiguous|ambiguous.*unknown/is);
+  assert.match(streamProse, /2009a.*2009c|2009c.*2009a/is);
   assert.match(streamProse, /not.*(?:termination|connection strength)/is);
-  assert.match(streamProse, /no (?:approved )?named-region\s+(?:>\s*)?endpoint classification/i);
-  assert.match(streamProse, /do\s+(?:>\s*)?not establish|does\s+(?:>\s*)?not establish/i);
+  assert.doesNotMatch(streamProse, /not endpoint-filtered|no (?:approved )?named-region\s+(?:>\s*)?endpoint classification/i);
+});
+
+test('the authored integrated-stream preset remains audited future use rather than a new lesson scene', async () => {
+  const [{ result }, endpoints, presets] = await Promise.all([
+    loadReferenceLesson(),
+    json('public/data/fibre_endpoints.json'),
+    json('public/data/fibre_filter_presets.json'),
+  ]);
+  const preset = presets.presets.find(({ id }) => id === 'fibre-filter.integrated-stream');
+  const audit = endpoints.presets.find(({ id }) => id === preset.id);
+  assert.deepEqual(preset, {
+    id: 'fibre-filter.integrated-stream',
+    label: 'Integrated ventral–dorsal streams',
+    description: 'Contours with one geometric endpoint in the displayed ventral set and the other in the displayed dorsal set, independent of stored endpoint order.',
+    hemispherePolicy: 'inherit-scene',
+    query: preset.query,
+  });
+  assert.equal(preset.query.mode, 'connects-between');
+  assert.deepEqual(audit.included, { association: 168, swm: 159, total: 327, L: 123, R: 204 });
+  assert.deepEqual(audit.includedQuality, { known: 327, unknown: 0, ambiguous: 0 });
+  assert.equal(result.value.scenes.some(({ snapshot }) => snapshot.fibreFilter.preset === preset.id), false);
 });
 
 test('conclusion reprises the opening pathway and resolves the opening prediction', async () => {

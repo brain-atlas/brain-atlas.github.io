@@ -13,6 +13,7 @@ test('allowlisted commands update every scene-state axis without mutating prior 
     [{ type: 'visibility.set', entity: 'region.lgn', visible: false }, (s) => assert.deepEqual(s.visibility.entities, ['pathway.anterior'])],
     [{ type: 'hemispheres.set-global', L: false, R: true }, (s) => assert.deepEqual(s.hemispheres.global, { L: false, R: true })],
     [{ type: 'hemispheres.set-entity', entity: 'region.lgn', L: true, R: false }, (s) => assert.deepEqual(s.hemispheres.entities['region.lgn'], { L: true, R: false })],
+    [{ type: 'fibre-filter.set', preset: null, mode: 'connects-within', setA: ['region.lgn'], setB: [] }, (s) => assert.deepEqual(s.fibreFilter, { preset: null, mode: 'connects-within', setA: ['region.lgn'], setB: [] })],
     [{ type: 'cutaway.set', position: 75 }, (s) => assert.equal(s.cutaway.position, 75)],
     [{ type: 'material.set', tissueOpacity: 0.4 }, (s) => assert.equal(s.material.tissueOpacity, 0.4)],
     [{ type: 'playback.set', playing: false, speed: 100, settled: true }, (s) => assert.deepEqual(s.playback, { playing: false, speed: 100, settled: true })],
@@ -53,6 +54,7 @@ test('unknown commands and unknown payload keys fail before state changes', () =
     { type: 'visibility.set', entity: 'region.unknown', visible: true },
     { type: 'visibility.set', entity: 'region.unknown', visible: false },
     { type: 'visibility.set', entity: 'region.lgn', visible: 'yes' },
+    { type: 'fibre-filter.set', preset: null, mode: 'touches-any', setA: ['region.unknown'], setB: [] },
   ];
 
   for (const command of cases) {

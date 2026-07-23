@@ -1,0 +1,126 @@
+{
+  "schemaVersion": 1,
+  "specialSelectors": [
+    {
+      "id": "endpoint.unknown",
+      "label": "Unknown endpoint",
+      "description": "Endpoints outside the supported local MPM assignment or nearest to an atlas label without a project region entity."
+    },
+    {
+      "id": "endpoint.ambiguous",
+      "label": "Ambiguous endpoint",
+      "description": "Endpoints whose two nearest distinct MPM labels fall within the frozen ambiguity margin."
+    }
+  ],
+  "presets": [
+    {
+      "id": "fibre-filter.extrastriate",
+      "label": "Extrastriate cortex",
+      "description": "Contours with either geometric endpoint assigned within the displayed early and extrastriate visual-region set.",
+      "hemispherePolicy": "inherit-scene",
+      "query": {
+        "mode": "touches-any",
+        "setA": [
+          "region.v1",
+          "region.v2",
+          "region.v3v",
+          "region.v3d",
+          "region.v4v",
+          "region.v3a",
+          "region.v6",
+          "region.mt"
+        ],
+        "setB": []
+      }
+    },
+    {
+      "id": "fibre-filter.ventral",
+      "label": "Ventral visual stream",
+      "description": "Contours with either geometric endpoint assigned within the displayed ventral visual-region set.",
+      "hemispherePolicy": "inherit-scene",
+      "query": {
+        "mode": "touches-any",
+        "setA": [
+          "region.v1",
+          "region.v2",
+          "region.v3v",
+          "region.v4v",
+          "region.loa",
+          "region.lop",
+          "region.fg1",
+          "region.fg2",
+          "region.fg3",
+          "region.fg4"
+        ],
+        "setB": []
+      }
+    },
+    {
+      "id": "fibre-filter.dorsal",
+      "label": "Dorsal visual stream",
+      "description": "Contours with either geometric endpoint assigned within the displayed dorsal visual-region set.",
+      "hemispherePolicy": "inherit-scene",
+      "query": {
+        "mode": "touches-any",
+        "setA": [
+          "region.v1",
+          "region.v2",
+          "region.v3d",
+          "region.v3a",
+          "region.v6",
+          "region.mt",
+          "region.hip1",
+          "region.hip2",
+          "region.hip3",
+          "region.hip4",
+          "region.hip5",
+          "region.hip6",
+          "region.hip7",
+          "region.hip8",
+          "region.spl7a",
+          "region.spl7p",
+          "region.spl5l",
+          "region.spl5m"
+        ],
+        "setB": []
+      }
+    },
+    {
+      "id": "fibre-filter.integrated-stream",
+      "label": "Integrated ventral–dorsal streams",
+      "description": "Contours with one geometric endpoint in the displayed ventral set and the other in the displayed dorsal set, independent of stored endpoint order.",
+      "hemispherePolicy": "inherit-scene",
+      "query": {
+        "mode": "connects-between",
+        "setA": [
+          "region.v3v",
+          "region.v4v",
+          "region.loa",
+          "region.lop",
+          "region.fg1",
+          "region.fg2",
+          "region.fg3",
+          "region.fg4"
+        ],
+        "setB": [
+          "region.v3d",
+          "region.v3a",
+          "region.v6",
+          "region.mt",
+          "region.hip1",
+          "region.hip2",
+          "region.hip3",
+          "region.hip4",
+          "region.hip5",
+          "region.hip6",
+          "region.hip7",
+          "region.hip8",
+          "region.spl7a",
+          "region.spl7p",
+          "region.spl5l",
+          "region.spl5m"
+        ]
+      }
+    }
+  ]
+}

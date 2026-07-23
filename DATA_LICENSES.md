@@ -18,7 +18,8 @@ Scientific interpretation and model limitations are inventoried separately in
 | `public/models/brain_mni.glb` | MNI152NLin2009cAsym brain mask via TemplateFlow | MNI notice reproduced below |
 | `public/data/regions.json`, `public/data/regions/*.obj` | Jülich-Brain Atlas v3.0.3 maximum probability map | [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) |
 | `public/data/tracts.json` | HCP-1065 population-averaged tractography atlas | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) and WU-Minn HCP Open Access Data Use Terms |
-| `public/data/tract_activity.json` | Project-authored activity assumptions and source links; no anatomical geometry | [AGPL-3.0-only](LICENSE) |
+| `public/data/tract_activity.json`, `public/data/fibre_filter_presets.json` | Project-authored activity assumptions, source links, and endpoint-query presets; no anatomical geometry | [AGPL-3.0-only](LICENSE) |
+| `public/data/fibre_endpoints.json` | Categorical assignments combining the Jülich-Brain v3.0.3 MPM with HCP-1065 association/SWM contour endpoints | [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/), [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/), and WU-Minn HCP Open Access Data Use Terms |
 | `public/data/entities.json`, `public/data/fidelity.json` | Project-authored stable bindings and scientific-disclosure metadata; no anatomical geometry | [AGPL-3.0-only](LICENSE) |
 | `public/data/or_fibres.json`, `public/data/swm_fibres.json` | HCP-1065 population template processed with DSI Studio | WU-Minn HCP Open Access Data Use Terms |
 | `docs/assets/org-avatar.png`, `public/favicon.ico`, `public/favicon-32x32.png`, `public/apple-touch-icon.png` | Viewer-derived rendering of the MNI cortical surface and HCP-derived tracts | Source terms above; adapted artwork under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) and HCP terms |
@@ -117,6 +118,25 @@ scientific sources reviewed for each displayed bundle.
 lesson/disclosure metadata. Their stable renderer bindings, status terms, summaries,
 and source links do not relicense or add anatomy to the referenced MNI, Jülich, or
 HCP-derived assets; those assets remain governed by their source terms above.
+
+## Fibre endpoint classifications and presets
+
+`public/data/fibre_endpoints.json` is an adapted data artifact generated from the
+exact Jülich-Brain v3.0.3 maximum-probability NIfTI, `tracts.json`, and
+`swm_fibres.json`. The project classifies each stored geometric endpoint as a
+supported atlas label, ambiguous, or unknown and records method, source-grid, hash,
+distance, candidate, fibre-quality, and preset-count metadata. It redistributes no
+source NIfTI. The exact NIfTI source, citation, and CC BY-NC-SA terms are the same as
+for the region surfaces above. The association input retains CC BY-SA and WU-Minn
+HCP obligations; the SWM input retains the WU-Minn HCP terms. The combined artifact
+therefore remains noncommercial,
+requires attribution and ShareAlike treatment, and remains subject to the WU-Minn
+HCP terms.
+
+`public/data/fibre_filter_presets.json` is project-authored query metadata distributed
+under AGPL-3.0-only. Its region IDs refer to the adapted data but add no geometry. The
+runtime's all/touches/within/between subsets are views of the combined source data and
+do not change the underlying licenses or establish anatomical connectivity.
 
 ## HCP-1065-template-derived fibres
 

@@ -13,6 +13,27 @@ export const TEST_CATALOG = {
     'fidelity.julich-regions',
     'fidelity.association-tracts',
   ],
+  fibreFilterSelectorIds: [
+    'endpoint.ambiguous',
+    'endpoint.unknown',
+    'region.dlpfc',
+    'region.lgn',
+    'region.spl7a',
+  ],
+  fibreFilterPresetIds: ['fibre-filter.test'],
+  fibreFilterPresetsById: {
+    'fibre-filter.test': {
+      id: 'fibre-filter.test',
+      label: 'Test preset',
+      description: 'Test endpoint filter preset.',
+      hemispherePolicy: 'inherit-scene',
+      query: {
+        mode: 'touches-any',
+        setA: ['region.lgn'],
+        setB: [],
+      },
+    },
+  },
   cameraPresets: {
     dorsal: { position: [120, 260, 80], target: [0, 0, 0] },
     home: { position: [200, 120, 300], target: [0, 0, 0] },

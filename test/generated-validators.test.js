@@ -12,10 +12,12 @@ test('checked-in lesson validators are CSP-safe standalone functions', async () 
     source('src/lesson/schemas.js'),
   ]);
 
-  assert.equal(Object.keys(validators).length, 15);
+  assert.equal(Object.keys(validators).length, 17);
   assert.match(generated, /CSP-safe: schemas compile during development/);
   assert.doesNotMatch(generated, /\bnew Function\b|\beval\s*\(|\brequire\s*\(/);
   assert.doesNotMatch(runtimeSchemas, /from ['"]ajv['"]|\bnew Ajv\b/);
   assert.equal(typeof validators.lessonMetadata, 'function');
   assert.equal(typeof validators.commandSceneReplace, 'function');
+  assert.equal(typeof validators.commandFibreFilterSet, 'function');
+  assert.equal(typeof validators.fibreFilterPresetCatalog, 'function');
 });

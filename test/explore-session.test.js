@@ -22,6 +22,23 @@ const CATALOG = {
   ],
   visualIds: ['atlas'],
   fidelityIds: ['fidelity.anterior', 'fidelity.cortex', 'fidelity.regions'],
+  fibreFilterPresetIds: ['fibre-filter.test'],
+  fibreFilterSelectorIds: ['endpoint.ambiguous', 'endpoint.unknown', 'region.dlpfc', 'region.lgn'],
+  fibreFilterPresetsById: {
+    'fibre-filter.test': {
+      id: 'fibre-filter.test',
+      label: 'Test regions',
+      description: 'Fibres touching either test region.',
+      hemispherePolicy: 'inherit-scene',
+      query: { mode: 'touches-any', setA: ['region.dlpfc', 'region.lgn'], setB: [] },
+    },
+  },
+  fibreFilterSelectorsById: {
+    'endpoint.ambiguous': { id: 'endpoint.ambiguous', label: 'Ambiguous endpoint', description: 'Ambiguous.' },
+    'endpoint.unknown': { id: 'endpoint.unknown', label: 'Unknown endpoint', description: 'Unknown.' },
+    'region.dlpfc': { id: 'region.dlpfc', label: 'DLPFC', description: 'Displayed atlas region: DLPFC.' },
+    'region.lgn': { id: 'region.lgn', label: 'LGN', description: 'Displayed atlas region: LGN.' },
+  },
   cameraPresets: {
     home: { position: [210, 75, -195], target: [0, 0, 0] },
     lateral: { position: [300, 15, 0], target: [0, 0, 0] },
@@ -61,6 +78,7 @@ function authoredSnapshot() {
     },
     show: ['pathway.anterior', 'region.lgn'],
     hemispheres: { entities: { 'region.lgn': { L: true, R: false } } },
+    fibreFilter: 'fibre-filter.test',
     cutaway: 22,
     tissueOpacity: 0.31,
     playback: { playing: false, speed: 55, settled: true },
@@ -85,6 +103,7 @@ test('scene Explore preserves effective state but uses the rendered camera and f
   });
   assert.deepEqual(result.visibility, authored.visibility);
   assert.deepEqual(result.hemispheres, authored.hemispheres);
+  assert.deepEqual(result.fibreFilter, authored.fibreFilter);
   assert.deepEqual(result.cutaway, authored.cutaway);
   assert.deepEqual(result.material, authored.material);
   assert.deepEqual(result.playback, authored.playback);
@@ -109,6 +128,7 @@ test('global Explore derives one complete default atlas snapshot', () => { // Te
     'layer.cortex', 'pathway.anterior', 'region.dlpfc', 'region.lgn',
   ]);
   assert.deepEqual(result.hemispheres, { global: { L: true, R: true }, entities: {} });
+  assert.deepEqual(result.fibreFilter, { preset: null, mode: 'all', setA: [], setB: [] });
   assert.deepEqual(result.cutaway, { position: 0 });
   assert.deepEqual(result.material, { tissueOpacity: 0.16 });
   assert.deepEqual(result.playback, { playing: true, speed: 70, settled: false });
@@ -125,6 +145,7 @@ test('Explore commands synchronize the rendered camera before applying a batch',
     { type: 'visibility.set', entity: 'region.dlpfc', visible: true },
     { type: 'material.set', tissueOpacity: 0.42 },
     { type: 'playback.set', playing: true, speed: 90, settled: false },
+    { type: 'fibre-filter.set', preset: null, mode: 'connects-between', setA: ['region.lgn'], setB: ['region.dlpfc'] },
   ], latestCamera, CATALOG);
 
   assert.deepEqual(result.camera, {
@@ -134,6 +155,12 @@ test('Explore commands synchronize the rendered camera before applying a batch',
   assert.deepEqual(result.visibility.entities, ['pathway.anterior', 'region.dlpfc', 'region.lgn']);
   assert.deepEqual(result.material, { tissueOpacity: 0.42 });
   assert.deepEqual(result.playback, { playing: true, speed: 90, settled: false });
+  assert.deepEqual(result.fibreFilter, {
+    preset: null,
+    mode: 'connects-between',
+    setA: ['region.lgn'],
+    setB: ['region.dlpfc'],
+  });
   assert.deepEqual(start.material, { tissueOpacity: 0.31 });
 });
 
@@ -165,6 +192,14 @@ test('panel projection uses stable entity IDs and truthful visibility/hemisphere
     renderer: { kind: 'layer', id: 'brain' },
   });
   assert.deepEqual(model.playback, snapshot.playback);
+  assert.deepEqual(model.fibreFilter, snapshot.fibreFilter);
+  assert.deepEqual(model.fibreFilterPresets, [CATALOG.fibreFilterPresetsById['fibre-filter.test']]);
+  assert.deepEqual(model.fibreFilterSelectors.map(({ id, label }) => ({ id, label })), [
+    { id: 'endpoint.ambiguous', label: 'Ambiguous endpoint' },
+    { id: 'endpoint.unknown', label: 'Unknown endpoint' },
+    { id: 'region.dlpfc', label: 'DLPFC' },
+    { id: 'region.lgn', label: 'LGN' },
+  ]);
   assert.equal(Object.isFrozen(model.entities['region.lgn']), true);
 });
 

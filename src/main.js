@@ -14,6 +14,14 @@ import {
 } from './activity/association-impulses.js';
 import { createSwmVibration, vibrationContourParameter } from './activity/swm-vibration.js';
 import { createFrameDeltaReader } from './activity/frame-time.js';
+import {
+  ALL_FIBRE_FILTER,
+  createFibreEndpointIndex,
+  filterFibreEndpoints,
+  formatFibreFilterSummary,
+  writeFilteredEndpointPositions,
+  writeFilteredLineSegments,
+} from './fibre-endpoint-filter.js';
 import { createRendererAdapter } from './lesson/index.js';
 import { createCameraTransition, sampleCameraTransition } from './ui/camera-transition.js';
 import { createVisibilityTransition, sampleVisibilityTransition } from './ui/visibility-transition.js';
@@ -213,6 +221,7 @@ function applyTractMesh(id) {
   }
 }
 function applyHemi() {
+  recalculateFibreFilter();
   for (const id in regionsById) applyRegionMesh(id);
   for (const id in tractsById) applyTractMesh(id);
   for (const h of ['L', 'R']) {
@@ -429,12 +438,25 @@ function loadFibres() {
 // direction is sampled per event from disclosed metadata, never array order.
 const tractGroup = new THREE.Group(); mniGroup.add(tractGroup);
 let tractsMeta = null, tractActivityMeta = null, _regions = null;
+const fibreEndpointIndexPromise = fetch('/data/fibre_endpoints.json')
+  .then((response) => {
+    if (!response.ok) throw new Error(`fibre endpoint data request failed (${response.status})`);
+    return response.json();
+  })
+  .then(createFibreEndpointIndex);
+let fibreEndpointIndex = null;
+let requestedFibreFilter = ALL_FIBRE_FILTER;
+let fibreFilterResult = null;
+let fibreFilterLastRebuildMs = null;
+const tractFilterMasksByGroup = {};
 function hexRGB(hex) { const n = parseInt(hex.replace('#', ''), 16); return [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255]; }
 function loadTracts() {
   Promise.all([
     fetch('/data/tracts.json').then((r) => r.json()),
     fetch('/data/tract_activity.json').then((r) => r.json()),
-  ]).then(([{ tracts }, activity]) => {
+    fibreEndpointIndexPromise,
+  ]).then(([{ tracts }, activity, endpointIndex]) => {
+    fibreEndpointIndex = endpointIndex;
     tractsMeta = tracts;
     tractActivityMeta = activity;
     for (const tr of tracts) {
@@ -452,16 +474,17 @@ function loadTracts() {
           const a = poly[0], b = poly[poly.length - 1]; capPos.push(a.x, a.y, a.z, b.x, b.y, b.z);   // both fibre ends
         }
         const vis = hemiState[h] && tractHemi[tr.id][h];
-        const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(linePos, 3));
+        const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(linePos, 3).setUsage(THREE.DynamicDrawUsage));
         const lines = new THREE.LineSegments(g, mat); lines.userData = { tractId: tr.id, hemi: h }; lines.visible = vis;
         tractGroup.add(lines); entry.lines[h] = lines;
-        const cg = new THREE.BufferGeometry(); cg.setAttribute('position', new THREE.Float32BufferAttribute(capPos, 3));
+        const cg = new THREE.BufferGeometry(); cg.setAttribute('position', new THREE.Float32BufferAttribute(capPos, 3).setUsage(THREE.DynamicDrawUsage));
         const caps = new THREE.Points(cg, capMat); caps.userData = { tractId: tr.id, hemi: h }; caps.visible = vis;
         tractGroup.add(caps); entry.caps[h] = caps;
       }
       tractsById[tr.id] = entry;
     }
     initTractImpulses(activity);
+    recalculateFibreFilter();
     if (_regions) buildPanel(_regions, tractsMeta);   // rebuild the panel with the tracts section
     markViewerReady('tracts');
   }).catch((e) => { console.warn('tract load failed:', e); failViewerReady(e); });
@@ -506,12 +529,20 @@ function initTractImpulses(activity) {
       points: tractImpulsePoints,
       get modelTime() { return tractImpulseTime; },
       get activeCount() { return activeTractImpulses.length; },
+      get eligibleRenderedGroups() {
+        return Object.keys(tractContoursByGroup)
+          .filter((groupId) => {
+            const [id, hemi] = groupId.split(':');
+            return tractsById[id].lines[hemi].visible && tractContoursByGroup[groupId].length > 0;
+          })
+          .sort();
+      },
       get renderedGroups() {
         return activeTractImpulses
           .map((event) => event.groupId)
           .filter((groupId) => {
             const [id, hemi] = groupId.split(':');
-            return tractsById[id].lines[hemi].visible;
+            return tractsById[id].lines[hemi].visible && tractContoursByGroup[groupId].length > 0;
           });
       },
       get stats() { return structuredClone(tractImpulseStats); },
@@ -536,7 +567,7 @@ function updateTractImpulses(dt) {
     contoursByGroup: tractContoursByGroup,
     isVisible: (groupId) => {
       const [id, hemi] = groupId.split(':');
-      return tractsById[id].lines[hemi].visible;
+      return tractsById[id].lines[hemi].visible && tractContoursByGroup[groupId].length > 0;
     },
   });
   activeTractImpulses = reduce ? [] : pool.active;
@@ -546,7 +577,7 @@ function updateTractImpulses(dt) {
   let k = 0;
   for (const event of activeTractImpulses) {
     const [id, hemi] = event.groupId.split(':');
-    if (!tractsById[id].lines[hemi].visible) continue;
+    if (!tractsById[id].lines[hemi].visible || !event.contour) continue;
     const progress = (tractImpulseTime - event.time) * event.speed;
     const rawT = canonicalContourParameter(event.contour, tractActivityById[id].endpointA.classifier, event.aToB, progress);
     writeFibrePoint(event.contour, rawT, arr, k * 3);
@@ -574,6 +605,8 @@ function updateTractImpulses(dt) {
 // no mirroring).
 const swmGroup = new THREE.Group(); mniGroup.add(swmGroup);
 const SWM = { L: [], R: [] };
+const swmSourceIndices = { L: [], R: [] };
+const swmFilterMasks = { L: new Uint8Array(0), R: new Uint8Array(0) };
 const swmLines = { L: null, R: null };
 const swmDots = []; let swmT = 0;
 let swmLoadStarted = false;
@@ -597,7 +630,11 @@ if (import.meta.env.DEV) {
 function loadSwm() {
   if (swmLoadStarted) return;
   swmLoadStarted = true;
-  fetch('/data/swm_fibres.json').then((r) => r.json()).then((data) => {
+  Promise.all([
+    fetch('/data/swm_fibres.json').then((r) => r.json()),
+    fibreEndpointIndexPromise,
+  ]).then(([data, endpointIndex]) => {
+    fibreEndpointIndex = endpointIndex;
     const linePos = { L: [], R: [] };
     const lloc = data.lloc, lens = data.len;   // baked local-mean length + own length (mm)
     data.fibres.forEach((f, idx) => {
@@ -605,13 +642,14 @@ function loadSwm() {
       let mx = 0; for (const v of poly) mx += v.x; mx /= poly.length;
       const h = mx >= 0 ? 'R' : 'L';                     // +x = MNI right hemisphere
       SWM[h].push(poly);
+      swmSourceIndices[h].push(idx);
       for (let i = 0; i < poly.length - 1; i++) linePos[h].push(poly[i].x, poly[i].y, poly[i].z, poly[i + 1].x, poly[i + 1].y, poly[i + 1].z);
       // One vibrating dot per fibre. AMPLITUDE (arc fraction) is set so the dot's
       // physical swing ≈ 0.5 × the LOCAL-MEAN fibre length here — longer bundles
       // vibrate wider (structure). Home is sampled from the amplitude-safe interval,
       // and random phase prevents coherent travel without endpoint clipping.
       const Lown = (lens && lens[idx]) || 25, Ll = (lloc && lloc[idx]) || Lown;
-      swmDots.push({ poly, hemi: h, ...createSwmVibration({
+      swmDots.push({ poly, hemi: h, sourceIndex: idx, ...createSwmVibration({
         ownLength: Lown,
         localMeanLength: Ll,
       }) });
@@ -621,9 +659,10 @@ function loadSwm() {
     // surface and the amber/cyan directed flows. Overlap builds up where dense.
     const grainMat = new THREE.LineBasicMaterial({ color: 0x9a90c0, transparent: true, opacity: 0.08, blending: THREE.AdditiveBlending, depthWrite: false });
     for (const h of ['L', 'R']) {
-      const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(linePos[h], 3));
+      const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(linePos[h], 3).setUsage(THREE.DynamicDrawUsage));
       const lines = new THREE.LineSegments(g, grainMat); lines.visible = hemiState[h]; swmGroup.add(lines); swmLines[h] = lines;
     }
+    recalculateFibreFilter();
     reapplyLessonMaterialFactors(swmGroup);
   }).catch((e) => console.warn('swm load failed:', e));
 }
@@ -633,12 +672,70 @@ function updateSwm(dt) {
   if (st.flow && !reduce && !st.settled) swmT += dt * (st.speed / 70);
   let k = 0;
   for (const d of swmDots) {
-    if (!hemiState[d.hemi]) continue;
+    if (!hemiState[d.hemi] || !fibreFilterResult?.swm[d.sourceIndex]) continue;
     const t = (reduce || st.settled) ? d.home : vibrationContourParameter(d, swmT);   // bounded vibration ALONG the contour
     writeFibrePoint(d.poly, t, arr, k * 3); k++;
   }
   swmGeo.setDrawRange(0, k);
   swmGeo.attributes.position.needsUpdate = true;
+}
+
+function writeFilteredGeometry(lines, caps, polylines, mask) {
+  if (!lines || !caps) return;
+  const lineAttribute = lines.geometry.attributes.position;
+  const capAttribute = caps.geometry.attributes.position;
+  const lineVertices = writeFilteredLineSegments(polylines, mask, lineAttribute.array);
+  const capPoints = writeFilteredEndpointPositions(polylines, mask, capAttribute.array);
+  lines.geometry.setDrawRange(0, lineVertices);
+  caps.geometry.setDrawRange(0, capPoints);
+  lineAttribute.needsUpdate = true;
+  capAttribute.needsUpdate = true;
+}
+
+function updateFibreFilterStatus() {
+  const status = document.getElementById('fibre-filter-summary');
+  if (!status) return;
+  status.textContent = fibreFilterResult
+    ? formatFibreFilterSummary(fibreFilterResult)
+    : 'Endpoint filter data are loading.';
+}
+
+function recalculateFibreFilter() {
+  if (!fibreEndpointIndex) {
+    updateFibreFilterStatus();
+    return;
+  }
+  const startedAt = performance.now();
+  fibreFilterResult = filterFibreEndpoints(fibreEndpointIndex, requestedFibreFilter, hemiState);
+  for (const group of fibreFilterResult.association) {
+    const entry = tractsById[group.id];
+    if (!entry) continue;
+    for (const hemi of ['L', 'R']) {
+      const mask = group[hemi];
+      const groupId = `${group.id}:${hemi}`;
+      tractFilterMasksByGroup[groupId] = mask;
+      tractContoursByGroup[groupId] = entry[hemi].filter((_, index) => mask[index]);
+      writeFilteredGeometry(entry.lines[hemi], entry.caps[hemi], entry[hemi], mask);
+    }
+  }
+  for (const hemi of ['L', 'R']) {
+    const mask = new Uint8Array(SWM[hemi].length);
+    for (let index = 0; index < mask.length; index++) {
+      mask[index] = fibreFilterResult.swm[swmSourceIndices[hemi][index]];
+    }
+    swmFilterMasks[hemi] = mask;
+    if (swmLines[hemi]) {
+      const attribute = swmLines[hemi].geometry.attributes.position;
+      const vertexCount = writeFilteredLineSegments(SWM[hemi], mask, attribute.array);
+      swmLines[hemi].geometry.setDrawRange(0, vertexCount);
+      attribute.needsUpdate = true;
+    }
+  }
+  activeTractImpulses = [];
+  tractImpulseGeo.setDrawRange(0, 0);
+  updateFibreFilterStatus();
+  syncFibreFilterControls(requestedFibreFilter);
+  fibreFilterLastRebuildMs = performance.now() - startedAt;
 }
 
 // ---------------------------------------------------------------------------
@@ -745,6 +842,99 @@ let exploreCommandHandler = null;
 let explorePanelModel = null;
 let exploreResetCamera = null;
 let rendererEntityIds = new Map();
+let fibreFilterControlCatalog = null;
+let fibreFilterControlsConfigured = false;
+function selectedOptionValues(select) {
+  return [...select.selectedOptions].map(({ value }) => value);
+}
+function firstRegionOption(select, exclude = new Set()) {
+  return [...select.options].find(({ value }) => value.startsWith('region.') && !exclude.has(value)) ?? null;
+}
+function syncFibreFilterControls(query) {
+  if (!fibreFilterControlCatalog) return;
+  const preset = $('fibre-filter-preset');
+  const mode = $('fibre-filter-mode');
+  const setA = $('fibre-filter-set-a');
+  const setB = $('fibre-filter-set-b');
+  preset.value = query.preset ?? (query.mode === 'all' ? 'all' : 'custom');
+  mode.value = query.mode;
+  const selectedA = new Set(query.setA);
+  const selectedB = new Set(query.setB);
+  for (const option of setA.options) option.selected = selectedA.has(option.value);
+  for (const option of setB.options) option.selected = selectedB.has(option.value);
+  const needsSets = query.mode !== 'all';
+  $('fibre-filter-set-a-wrap').hidden = !needsSets;
+  $('fibre-filter-set-b-wrap').hidden = query.mode !== 'connects-between';
+  $('fibre-filter-selection-help').hidden = !needsSets;
+}
+function dispatchCustomFibreFilter() {
+  const mode = $('fibre-filter-mode').value;
+  const setA = mode === 'all' ? [] : selectedOptionValues($('fibre-filter-set-a'));
+  const setB = mode === 'connects-between' ? selectedOptionValues($('fibre-filter-set-b')) : [];
+  if (mode !== 'all' && setA.length === 0) {
+    $('fibre-filter-summary').textContent = 'Select at least one endpoint region in set A.';
+    return;
+  }
+  if (mode === 'connects-between' && setB.length === 0) {
+    $('fibre-filter-summary').textContent = 'Select at least one endpoint region in set B.';
+    return;
+  }
+  $('fibre-filter-preset').value = mode === 'all' ? 'all' : 'custom';
+  dispatchExploreCommands([{ type: 'fibre-filter.set', preset: null, mode, setA, setB }]);
+}
+function configureFibreFilterControls(catalog) {
+  fibreFilterControlCatalog = catalog;
+  const preset = $('fibre-filter-preset');
+  preset.replaceChildren(
+    new Option('All classified fibres', 'all'),
+    ...catalog.fibreFilterPresetIds.map((id) => new Option(catalog.fibreFilterPresetsById[id].label, id)),
+    new Option('Custom query', 'custom'),
+  );
+  const selectors = catalog.fibreFilterSelectorIds
+    .map((id) => catalog.fibreFilterSelectorsById[id])
+    .sort((a, b) => {
+      const aSpecial = a.id.startsWith('endpoint.');
+      const bSpecial = b.id.startsWith('endpoint.');
+      return aSpecial === bSpecial ? a.label.localeCompare(b.label) : (aSpecial ? 1 : -1);
+    });
+  for (const id of ['fibre-filter-set-a', 'fibre-filter-set-b']) {
+    $(id).replaceChildren(...selectors.map((selector) => new Option(selector.label, selector.id)));
+  }
+  if (fibreFilterControlsConfigured) return;
+  fibreFilterControlsConfigured = true;
+  preset.addEventListener('change', () => {
+    if (preset.value === 'custom') return;
+    if (preset.value === 'all') {
+      dispatchExploreCommands([{ type: 'fibre-filter.set', ...ALL_FIBRE_FILTER }]);
+      return;
+    }
+    const authored = fibreFilterControlCatalog.fibreFilterPresetsById[preset.value];
+    dispatchExploreCommands([{
+      type: 'fibre-filter.set',
+      preset: authored.id,
+      mode: authored.query.mode,
+      setA: authored.query.setA,
+      setB: authored.query.setB,
+    }]);
+  });
+  $('fibre-filter-mode').addEventListener('change', () => {
+    const mode = $('fibre-filter-mode').value;
+    if (mode !== 'all' && selectedOptionValues($('fibre-filter-set-a')).length === 0) {
+      const option = firstRegionOption($('fibre-filter-set-a'));
+      if (option) option.selected = true;
+    }
+    if (mode === 'connects-between' && selectedOptionValues($('fibre-filter-set-b')).length === 0) {
+      const option = firstRegionOption($('fibre-filter-set-b'), new Set(selectedOptionValues($('fibre-filter-set-a'))));
+      if (option) option.selected = true;
+    }
+    $('fibre-filter-set-a-wrap').hidden = mode === 'all';
+    $('fibre-filter-set-b-wrap').hidden = mode !== 'connects-between';
+    $('fibre-filter-selection-help').hidden = mode === 'all';
+    dispatchCustomFibreFilter();
+  });
+  $('fibre-filter-set-a').addEventListener('change', dispatchCustomFibreFilter);
+  $('fibre-filter-set-b').addEventListener('change', dispatchCustomFibreFilter);
+}
 function dispatchExploreCommands(commands) {
   if (!exploreCommandHandler) return false;
   exploreCommandHandler(commands);
@@ -1093,6 +1283,8 @@ function buildPanel(regions, tracts, { initialize = !panelInitialized } = {}) {
 function projectExplorePanel(model) {
   explorePanelModel = model;
   Object.assign(hemiState, model.globalHemispheres);
+  requestedFibreFilter = model.fibreFilter;
+  syncFibreFilterControls(model.fibreFilter);
   sceneState.visible.clear();
   for (const entity of Object.values(model.entities)) {
     const { kind, id } = entity.renderer;
@@ -1111,8 +1303,9 @@ function projectExplorePanel(model) {
   $('tissueV').textContent = $('tissue').value;
   setFill($('tissue'));
   requestedLessonPlayback = model.playback;
-  applyLessonPlaybackRequest();
+  syncPlaybackControls();
   if (_regions) buildPanel(_regions, tractsMeta, { initialize: false });
+  else recalculateFibreFilter();
 }
 
 function clearExplorePanel() {
@@ -1199,13 +1392,13 @@ function settleLessonActivity() {
   updateAnteriorFlow();
   updateSwm(0);
 }
-function applyLessonPlaybackRequest() {
+function applyLessonPlaybackRequest({ resume = false } = {}) {
   if (requestedLessonPlayback) {
     st.speed = requestedLessonPlayback.speed;
     st.settled = reduce || requestedLessonPlayback.settled;
     st.flow = !st.settled && requestedLessonPlayback.playing;
     if (st.settled) settleLessonActivity();
-    else if (st.flow) resetLessonActivity();
+    else if (st.flow && !resume) resetLessonActivity();
   }
   syncPlaybackControls();
 }
@@ -1222,6 +1415,7 @@ function syncPlaybackControls() {
 
 export function createLessonRendererAdapter(catalog, { onTransitionStateChange = () => {} } = {}) {
   configureAnatomyInspector(catalog);
+  configureFibreFilterControls(catalog);
   controls.autoRotate = false;
   controls.enableDamping = false;
   controls.update();
@@ -1233,8 +1427,25 @@ export function createLessonRendererAdapter(catalog, { onTransitionStateChange =
       get visibilityTransitioning() { return Boolean(lessonVisibilityTransition); },
       get cameraTransitioning() { return Boolean(lessonCameraTransition); },
     };
+    window.__view.fibreFilter = {
+      get query() { return structuredClone(requestedFibreFilter); },
+      get summary() { return fibreFilterResult ? structuredClone(fibreFilterResult.summary) : null; },
+      get lastRebuildMs() { return fibreFilterLastRebuildMs; },
+      get selectedAssociationContours() {
+        return Object.values(tractFilterMasksByGroup)
+          .reduce((sum, mask) => sum + mask.reduce((count, value) => count + value, 0), 0);
+      },
+      get eligibleAssociationContours() {
+        return Object.values(tractContoursByGroup).reduce((sum, contours) => sum + contours.length, 0);
+      },
+      get selectedSwmContours() {
+        return swmFilterMasks.L.reduce((sum, value) => sum + value, 0)
+          + swmFilterMasks.R.reduce((sum, value) => sum + value, 0);
+      },
+      get renderedSwmDots() { return swmGeo.drawRange.count; },
+    };
   }
-  let captured = { schemaVersion: 1 };
+  let captured = { schemaVersion: 2 };
   const remember = (axis, value) => { captured = { ...captured, [axis]: value }; };
   const entityIds = Object.keys(catalog.entitiesById);
   function applyVisibilitySample(sample) {
@@ -1312,6 +1523,12 @@ export function createLessonRendererAdapter(catalog, { onTransitionStateChange =
       }
       applyHemi();
     },
+    setFibreFilter(value) {
+      remember('fibreFilter', value);
+      requestedFibreFilter = value;
+      syncFibreFilterControls(value);
+      recalculateFibreFilter();
+    },
     setCutaway(value) {
       remember('cutaway', value);
       clipPlane.constant = 80 - (value.position / 100) * 160;
@@ -1329,8 +1546,14 @@ export function createLessonRendererAdapter(catalog, { onTransitionStateChange =
     },
     setPlayback(value) {
       remember('playback', value);
+      const resume = requestedLessonPlayback
+        && !requestedLessonPlayback.playing
+        && !requestedLessonPlayback.settled
+        && value.playing
+        && !value.settled
+        && requestedLessonPlayback.speed === value.speed;
       requestedLessonPlayback = value;
-      applyLessonPlaybackRequest();
+      applyLessonPlaybackRequest({ resume });
     },
     setSelection(value) {
       remember('selection', value);

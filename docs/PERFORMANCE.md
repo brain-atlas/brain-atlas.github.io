@@ -12,8 +12,11 @@ The WebGL gate keeps Three.js and anatomical assets out of no-WebGL sessions. Af
 - cortical GLB;
 - optic-radiation JSON;
 - the 21 kB region manifest;
-- association-tract geometry and activity metadata; and
+- association-tract geometry and activity metadata;
+- the compact endpoint-classification tuples used by association and SWM queries; and
 - the renderer bundle.
+
+The lesson shell also loads the small authored endpoint-filter preset catalog with the entity and fidelity catalogs before the WebGL gate. The 476 kB uncompressed endpoint tuple artifact loads only after that gate; association readiness waits for its validated runtime index, and lazy SWM loading reuses the same index. Neither file contains atlas voxels or adds a runtime transform.
 
 The first canonical visibility snapshot starts independently packaged optional geometry:
 
@@ -34,21 +37,21 @@ The checked profile runs the static production preview in system Chromium with:
 - 4× CPU throttling; and
 - 10 Mbit/s download, 5 Mbit/s upload, and 80 ms latency.
 
-The host was an Apple M3 Max with 128 GiB RAM running Chromium 150.0.7871.46. Three fresh runs used separate browser contexts. Values below show the median and range where the runs varied.
+The host was an Apple M3 Max with 128 GiB RAM running Chromium 150.0.7871.46. Two fresh post-endpoint-filter runs used separate browser contexts. Values below show the median or range where the runs varied.
 
 | Measure | Direct checked lesson | Complete Atlas Home |
 |---|---:|---:|
-| App ready | 2.273 s (2.262–2.290) | 2.289 s (2.262–2.290) |
-| Requested assets settled | 3.789 s (3.782–3.807) | 13.091 s (13.051–13.099) |
-| Encoded anatomical/catalog bytes | 2,565,565 | 14,679,519 |
-| Resource requests | 16 | 103 |
-| JS heap after settling | 67.4 MiB (66.8–67.6) | 109.9 MiB (109.6–113.5) |
-| Long tasks | 5 | 5 |
-| Longest task | 238–254 ms | 249–260 ms |
-| 2 s frame sample, p95 interval | 9.2 ms | 9.2–9.4 ms |
+| App ready | 2.376 s | 2.438 s (2.429–2.446) |
+| Requested assets settled | 3.793 s (3.792–3.794) | 13.122 s (13.116–13.127) |
+| Encoded anatomical/catalog bytes | 2,664,097 | 14,778,051 |
+| Resource requests | 18 | 105 |
+| JS heap after settling | 56.9 MiB (56.6–57.2) | 100.7 MiB (100.5–100.9) |
+| Long tasks | 5 | 5–6 |
+| Longest task | 209–212 ms | 265–271 ms |
+| 2 s frame sample, p95 interval | 9.2 ms | 9.2 ms |
 | Canvas pixel ratio | 2 | 2 |
 
-Demand loading reduced the direct lesson's initial encoded anatomical/catalog transfer by **82.5%** relative to complete Atlas Home. App-ready time stayed similar because the shared renderer, cortex, optic radiation, and monolithic tract data remain eager. The larger Atlas transfer and parsing work continued after the app exposed its semantic shell.
+Demand loading reduced the direct lesson's initial encoded anatomical/catalog transfer by **82.0%** relative to complete Atlas Home. App-ready time stayed similar because the shared renderer, cortex, optic radiation, monolithic tract data, and compact endpoint index remain eager after the WebGL gate. The larger Atlas transfer and parsing work continued after the app exposed its semantic shell.
 
 The frame sample shows that this host kept scheduling animation under the stated throttle after assets settled. It does **not** measure a phone GPU, battery use, thermal throttling, mobile Safari, or a cellular radio. Long tasks above 200 ms remain visible during initial parsing. Atlas Home also retains the full 14.7 MB encoded anatomical/catalog payload and continuous render loop.
 
@@ -83,4 +86,4 @@ PLAYWRIGHT_EXECUTABLE_PATH="/Applications/Chromium.app/Contents/MacOS/Chromium" 
   scripts/browser/performance.spec.cjs --repeat-each=3
 ```
 
-The profile records full JSON as a Playwright attachment and prints one `MOBILE_PERFORMANCE_PROFILE` line per run. Timing values are evidence, not fixed CI budgets. The test enforces only successful loading, clean requests/console output, the pixel-ratio cap, direct-lesson asset deferral, and freedom from catastrophic frame starvation.
+The profile records full JSON as a Playwright attachment and prints one `MOBILE_PERFORMANCE_PROFILE` line per run. Timing values are evidence, not fixed CI budgets. The representative comparison uses Chromium's default rendering backend; do not force ANGLE SwiftShader, which measures software rasterization rather than this host profile. The test enforces only successful loading, clean requests/console output, the pixel-ratio cap, direct-lesson asset deferral, and freedom from catastrophic frame starvation.

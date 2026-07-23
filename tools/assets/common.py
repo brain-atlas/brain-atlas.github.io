@@ -594,11 +594,95 @@ def verify_current(repo: Path, manifest: dict[str, Any]) -> dict[str, Any]:
     if len(swm.get("len", [])) != 15000 or len(swm.get("lloc", [])) != 15000:
         raise ContractError("SWM length arrays do not match n")
 
+    fibre_endpoints = load_json(repo / "public/data/fibre_endpoints.json")
+    endpoint_counts = fibre_endpoints.get("counts", {})
+    endpoint_association = fibre_endpoints.get("association", [])
+    endpoint_swm = fibre_endpoints.get("swm", {})
+    endpoint_quality = endpoint_counts.get("fibreQuality")
+    if fibre_endpoints.get("schemaVersion") != 1 or endpoint_counts != {
+        "associationFibres": 2880,
+        "swmFibres": 15000,
+        "endpoints": 35760,
+        "fibreQuality": endpoint_quality,
+    }:
+        raise ContractError("fibre endpoint counts differ from the versioned contract")
+    if not isinstance(endpoint_quality, dict) or set(endpoint_quality) != {"known", "unknown", "ambiguous"}:
+        raise ContractError("fibre endpoint quality counts differ from the versioned contract")
+    if any(not isinstance(value, int) or value < 0 for value in endpoint_quality.values()):
+        raise ContractError("fibre endpoint quality counts must be nonnegative integers")
+    if sum(endpoint_quality.values()) != 17880:
+        raise ContractError("fibre endpoint quality counts do not cover every fibre")
+    if len(endpoint_association) != 8 or any(
+        len(tract.get(hemisphere, [])) != 180
+        for tract in endpoint_association
+        for hemisphere in ("L", "R")
+    ):
+        raise ContractError("association endpoint groups differ from the fibre input")
+    endpoint_pairs = [
+        pair
+        for tract in endpoint_association
+        for hemisphere in ("L", "R")
+        for pair in tract[hemisphere]
+    ]
+    endpoint_pairs.extend(endpoint_swm.get("endpoints", []))
+    if len(endpoint_swm.get("endpoints", [])) != 15000 or len(endpoint_swm.get("hemispheres", "")) != 15000:
+        raise ContractError("SWM endpoint records differ from the fibre input")
+    if set(endpoint_swm["hemispheres"]) - {"L", "R"}:
+        raise ContractError("SWM endpoint hemispheres contain an invalid value")
+    statuses = fibre_endpoints.get("statuses", [])
+    entities = fibre_endpoints.get("entities", [])
+    candidate_sets = fibre_endpoints.get("candidateSets", [])
+    if len(statuses) != 5 or len(entities) != 46 or not candidate_sets or len(endpoint_pairs) != 17880:
+        raise ContractError("fibre endpoint tables differ from the versioned contract")
+    for pair in endpoint_pairs:
+        if not isinstance(pair, list) or len(pair) != 2:
+            raise ContractError("fibre endpoint pair must contain stored geometry ends A and B")
+        for endpoint in pair:
+            if not isinstance(endpoint, list) or len(endpoint) != 4 or any(
+                not isinstance(value, int) for value in endpoint
+            ):
+                raise ContractError("compact fibre endpoint record is malformed")
+            status_index, entity_index, candidate_index, distance_hundredths = endpoint
+            if not 0 <= status_index < len(statuses) or not 0 <= entity_index < len(entities):
+                raise ContractError("compact fibre endpoint table index is out of range")
+            if not 0 <= candidate_index < len(candidate_sets) or distance_hundredths < 0:
+                raise ContractError("compact fibre endpoint candidate or distance is invalid")
+    preset_audits = fibre_endpoints.get("presets", [])
+    if len(preset_audits) != 4:
+        raise ContractError("fibre endpoint artifact must contain four preset audits")
+    for audit in preset_audits:
+        if not isinstance(audit, dict) or set(audit) != {
+            "id", "included", "includedQuality", "populationQuality"
+        }:
+            raise ContractError("fibre endpoint preset audit has an invalid shape")
+        included = audit["included"]
+        included_quality = audit["includedQuality"]
+        population_quality = audit["populationQuality"]
+        if not isinstance(included, dict) or set(included) != {"association", "swm", "total", "L", "R"}:
+            raise ContractError("fibre endpoint preset included counts have an invalid shape")
+        if any(not isinstance(value, int) or value < 0 for value in included.values()):
+            raise ContractError("fibre endpoint preset included counts must be nonnegative integers")
+        if included["association"] + included["swm"] != included["total"] or included["L"] + included["R"] != included["total"]:
+            raise ContractError("fibre endpoint preset included counts do not balance")
+        for quality_counts, expected_total in (
+            (included_quality, included["total"]),
+            (population_quality, 17880),
+        ):
+            if not isinstance(quality_counts, dict) or set(quality_counts) != {"known", "unknown", "ambiguous"}:
+                raise ContractError("fibre endpoint preset quality counts have an invalid shape")
+            if any(not isinstance(value, int) or value < 0 for value in quality_counts.values()):
+                raise ContractError("fibre endpoint preset quality counts must be nonnegative integers")
+            if sum(quality_counts.values()) != expected_total:
+                raise ContractError("fibre endpoint preset quality counts do not balance")
+        if population_quality != endpoint_quality:
+            raise ContractError("fibre endpoint preset population quality counts drifted")
+
     return {
         "verifiedOutputs": verified,
         "structures": {
             "association": {"fibres": 2880, "groups": 16, "pointsPerFibre": 40, "tracts": 8},
             "corticalShell": {"container": "glTF", "version": 2},
+            "fibreEndpoints": {"associationFibres": 2880, "endpoints": 35760, "presets": 4, "swmFibres": 15000},
             "opticRadiation": {"fibres": 220, "pointsPerFibre": 64, "runtimeMirroredRight": True},
             "regions": {"meshes": 90, "regions": 45},
             "swm": {"fibres": 15000, "lengths": 15000, "localLengths": 15000, "pointsPerFibre": 8},

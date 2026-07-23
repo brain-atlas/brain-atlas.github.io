@@ -181,9 +181,9 @@ Use `src/lessons/retina-to-v1.md` as the reference example:
 - the V1 view uses an oblique source-to-destination angle and emphasizes the tract and
   endpoint regions so arriving events remain visible; and
 - cortical-stream views fit highlighted atlas regions and selected named tracts while
-  excluding cortex and broad SWM from framing calculations. The current all-fibre SWM
-  display is a pre-publication prototype pending endpoint-based pruning, not a
-  publication model.
+  excluding cortex and the SWM envelope from framing calculations. Their checked
+  endpoint presets narrow both fibre layers but make no termination, connection, or
+  direction claim.
 
 For any materially revised shot, record the teaching-geometry set, authored camera and
 target, projected wide/compact bounds, clipping result, motion visibility, and a visual

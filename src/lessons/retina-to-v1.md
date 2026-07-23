@@ -353,6 +353,7 @@ show:
   - region.mt
   - layer.swm
   - tract.vof
+fibreFilter: fibre-filter.extrastriate
 fidelity:
   - fidelity.cortex
   - fidelity.julich-regions
@@ -392,17 +393,19 @@ dorsal networks.
 > of the scene? Relate your answer to both localization and object structure.
 
 > **Scene boundaries and limitations:** The shells show population-atlas locations.
-> Named long bundles have a qualified endpoint proximity record only when sampled,
-> unordered endpoints passed the conservative bilateral surface-distance screen. That
-> low-confidence observation does not establish an exact termination, pairwise
-> connectivity, connection strength, direction, processing order, or functional response.
-> Bright tract events instead use a seeded display model with a disclosed 50/50 direction
-> assumption. The broad superficial-white-matter grain has no approved named-region
-> endpoint classification and is not endpoint-filtered, so its fibres must not be read as
-> connections among the regions in this scene. Its vibration is analytically zero-mean:
-> amplitude varies with a local-to-own fibre-length ratio, while frequency and phase are
-> display choices. The tract and superficial-fibre shapes come from tractography; neither
-> animation is measured neural activity.
+> Named long bundles have a qualified endpoint-proximity record only when sampled,
+> unordered endpoints passed the conservative bilateral surface-distance screen. The
+> scene preset separately keeps contours that touch at least one shown-region label after
+> categorical assignment against the Jülich maximum-probability map. A nearest nonzero
+> label outside 2 mm or without a project region is unknown; a second label within a
+> 0.5 mm distance margin is ambiguous. Both classes stay excluded unless selected
+> explicitly. This common-RAS comparison combines
+> 2009a fibre data with 2009c region labels without a template warp. It does not establish
+> grid equivalence, exact termination, pairwise connectivity, connection strength,
+> direction, processing order, or functional response. Bright tract events use a seeded
+> display model with a disclosed 50/50 direction assumption. Superficial-fibre vibration
+> is analytically zero-mean: amplitude varies with a local-to-own fibre-length ratio, while
+> frequency and phase are display choices. Both animations remain illustrative.
 
 ```atlas-scene
 id: ventral-stream
@@ -428,6 +431,7 @@ show:
   - tract.ilf
   - tract.ifof
   - tract.vof
+fibreFilter: fibre-filter.ventral
 fidelity:
   - fidelity.cortex
   - fidelity.julich-regions
@@ -492,6 +496,7 @@ show:
   - tract.slf2
   - tract.slf3
   - tract.vof
+fibreFilter: fibre-filter.dorsal
 fidelity:
   - fidelity.cortex
   - fidelity.julich-regions

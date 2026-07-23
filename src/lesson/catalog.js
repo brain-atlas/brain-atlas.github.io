@@ -1,6 +1,27 @@
 import { createDiagnostic, throwContractDiagnostics } from './diagnostics.js';
 import { deepFreeze } from './scene-state.js';
-import { validateEntityCatalog, validateFidelityCatalog } from './schemas.js';
+import {
+  validateEntityCatalog,
+  validateFidelityCatalog,
+  validateFibreFilterPresetCatalog,
+} from './schemas.js';
+
+const EMPTY_FIBRE_FILTER_PRESETS = Object.freeze({
+  schemaVersion: 1,
+  specialSelectors: Object.freeze([
+    Object.freeze({
+      id: 'endpoint.unknown',
+      label: 'Unknown endpoint',
+      description: 'Endpoint without a supported region assignment.',
+    }),
+    Object.freeze({
+      id: 'endpoint.ambiguous',
+      label: 'Ambiguous endpoint',
+      description: 'Endpoint with an ambiguous region assignment.',
+    }),
+  ]),
+  presets: Object.freeze([]),
+});
 
 function duplicateDiagnostics(records, scope) {
   const diagnostics = [];
@@ -19,7 +40,7 @@ function duplicateDiagnostics(records, scope) {
   return diagnostics;
 }
 
-function semanticDiagnostics(entityManifest, fidelityManifest) {
+function semanticDiagnostics(entityManifest, fidelityManifest, fibreFilterManifest) {
   const diagnostics = [
     ...duplicateDiagnostics(entityManifest.entities, 'entity'),
     ...duplicateDiagnostics(entityManifest.inspectables, 'inspectable'),
@@ -31,6 +52,53 @@ function semanticDiagnostics(entityManifest, fidelityManifest) {
   const rendererBindings = new Set();
   const inspectableBindings = new Set();
   const undirectedPairs = new Set();
+  const regionEntityIds = new Set(
+    entityManifest.entities.filter(({ type }) => type === 'region').map(({ id }) => id),
+  );
+  const expectedSpecialSelectors = ['endpoint.unknown', 'endpoint.ambiguous'];
+  const specialSelectorIds = fibreFilterManifest.specialSelectors.map(({ id }) => id);
+  if (specialSelectorIds.join('\0') !== expectedSpecialSelectors.join('\0')) {
+    diagnostics.push(createDiagnostic(
+      'catalog.semantic.fibre-filter-special-selectors',
+      'fibre endpoint special selectors must be endpoint.unknown then endpoint.ambiguous',
+      { path: '/specialSelectors' },
+    ));
+  }
+  const allowedFibreSelectors = new Set([...regionEntityIds, ...expectedSpecialSelectors]);
+  const presetIds = new Set();
+  fibreFilterManifest.presets.forEach((preset, presetIndex) => {
+    const presetPath = `/presets/${presetIndex}`;
+    if (presetIds.has(preset.id)) {
+      diagnostics.push(createDiagnostic(
+        'catalog.semantic.duplicate-fibre-filter-preset',
+        `duplicate fibre filter preset ID: ${preset.id}`,
+        { path: `${presetPath}/id` },
+      ));
+    }
+    presetIds.add(preset.id);
+    for (const setName of ['setA', 'setB']) {
+      preset.query[setName].forEach((selector, selectorIndex) => {
+        if (!allowedFibreSelectors.has(selector)) {
+          diagnostics.push(createDiagnostic(
+            'catalog.semantic.unknown-fibre-filter-selector',
+            `unknown fibre filter selector: ${selector}`,
+            { path: `${presetPath}/query/${setName}/${selectorIndex}` },
+          ));
+        }
+      });
+    }
+    const { mode, setA, setB } = preset.query;
+    const invalidSets = mode === 'all' ? setA.length || setB.length
+      : mode === 'touches-any' || mode === 'connects-within' ? !setA.length || setB.length
+        : !setA.length || !setB.length;
+    if (invalidSets) {
+      diagnostics.push(createDiagnostic(
+        'catalog.semantic.invalid-fibre-filter-query',
+        `fibre filter preset ${preset.id} has invalid selector sets for ${mode}`,
+        { path: `${presetPath}/query` },
+      ));
+    }
+  });
 
   entityManifest.entities.forEach((entity, index) => {
     if (!fidelityIds.has(entity.fidelity)) {
@@ -137,12 +205,20 @@ function sortedObject(entries) {
   return Object.fromEntries([...entries].sort(([a], [b]) => a.localeCompare(b)));
 }
 
-export function createLessonCatalog(entityManifest, fidelityManifest) {
+export function createLessonCatalog(
+  entityManifest,
+  fidelityManifest,
+  fibreFilterManifest = EMPTY_FIBRE_FILTER_PRESETS,
+) {
   throwContractDiagnostics('entity catalog schema is invalid', validateEntityCatalog(entityManifest));
   throwContractDiagnostics('fidelity catalog schema is invalid', validateFidelityCatalog(fidelityManifest));
   throwContractDiagnostics(
+    'fibre filter preset catalog schema is invalid',
+    validateFibreFilterPresetCatalog(fibreFilterManifest),
+  );
+  throwContractDiagnostics(
     'lesson catalog references are invalid',
-    semanticDiagnostics(entityManifest, fidelityManifest),
+    semanticDiagnostics(entityManifest, fidelityManifest, fibreFilterManifest),
   );
 
   const entities = [...entityManifest.entities]
@@ -152,6 +228,24 @@ export function createLessonCatalog(entityManifest, fidelityManifest) {
     .sort((a, b) => a.id.localeCompare(b.id))
     .map((record) => structuredClone(record));
   const entitiesById = sortedObject(entities.map((entity) => [entity.id, entity]));
+  const fibreFilterPresets = [...fibreFilterManifest.presets]
+    .sort((a, b) => a.id.localeCompare(b.id))
+    .map((preset) => ({
+      ...structuredClone(preset),
+      query: {
+        ...structuredClone(preset.query),
+        setA: [...preset.query.setA].sort((a, b) => a.localeCompare(b)),
+        setB: [...preset.query.setB].sort((a, b) => a.localeCompare(b)),
+      },
+    }));
+  const fibreFilterSelectors = [
+    ...fibreFilterManifest.specialSelectors.map((selector) => structuredClone(selector)),
+    ...entities.filter(({ type }) => type === 'region').map(({ id, label }) => ({
+      id,
+      label,
+      description: `Displayed atlas region: ${label}.`,
+    })),
+  ].sort((a, b) => a.id.localeCompare(b.id));
   const mutableInspectables = [...entityManifest.inspectables]
     .sort((a, b) => a.id.localeCompare(b.id))
     .map((inspectable) => ({
@@ -184,12 +278,20 @@ export function createLessonCatalog(entityManifest, fidelityManifest) {
     entityIds: entities.map(({ id }) => id),
     inspectableIds: inspectables.map(({ id }) => id),
     fidelityIds: fidelityRecords.map(({ id }) => id),
+    fibreFilterPresetIds: fibreFilterPresets.map(({ id }) => id),
+    fibreFilterSelectorIds: fibreFilterSelectors.map(({ id }) => id),
     visualIds: ['atlas'],
     cameraPresets: sortedObject(
       Object.entries(entityManifest.cameraPresets)
         .map(([id, camera]) => [id, structuredClone(camera)]),
     ),
     entitiesById,
+    fibreFilterPresetsById: sortedObject(
+      fibreFilterPresets.map((preset) => [preset.id, preset]),
+    ),
+    fibreFilterSelectorsById: sortedObject(
+      fibreFilterSelectors.map((selector) => [selector.id, selector]),
+    ),
     inspectablesById: sortedObject(inspectables.map((inspectable) => [inspectable.id, inspectable])),
     fidelityById: sortedObject(fidelityRecords.map((record) => [record.id, record])),
   });

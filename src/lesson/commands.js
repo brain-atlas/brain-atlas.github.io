@@ -12,6 +12,7 @@ function directiveFromSnapshot(snapshot) {
     camera: structuredClone(snapshot.camera),
     show: [...snapshot.visibility.entities],
     hemispheres: structuredClone(snapshot.hemispheres),
+    fibreFilter: structuredClone(snapshot.fibreFilter),
     cutaway: snapshot.cutaway.position,
     tissueOpacity: snapshot.material.tissueOpacity,
     playback: structuredClone(snapshot.playback),
@@ -53,6 +54,14 @@ export function applySceneCommand(snapshot, command, catalog) {
       break;
     case 'hemispheres.set-entity':
       next.hemispheres.entities[command.entity] = { L: command.L, R: command.R };
+      break;
+    case 'fibre-filter.set':
+      next.fibreFilter = {
+        preset: command.preset,
+        mode: command.mode,
+        setA: [...command.setA],
+        setB: [...command.setB],
+      };
       break;
     case 'cutaway.set':
       next.cutaway = command.position;

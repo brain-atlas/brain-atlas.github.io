@@ -2054,11 +2054,12 @@ function activatePreparedLesson(candidate, {
 async function start() {
   try {
     app.dataset.state = 'loading';
-    const [entities, fidelity] = await Promise.all([
+    const [entities, fidelity, fibreFilterPresets] = await Promise.all([
       fetchJson('/data/entities.json'),
       fetchJson('/data/fidelity.json'),
+      fetchJson('/data/fibre_filter_presets.json'),
     ]);
-    catalog = createLessonCatalog(entities, fidelity);
+    catalog = createLessonCatalog(entities, fidelity, fibreFilterPresets);
     const prepared = validateLessonImport(lessonSource, catalog);
     if (!prepared.ok) throw new Error(`reference lesson failed validation: ${JSON.stringify(prepared.diagnostics)}`);
     referenceCandidate = prepared.value;

@@ -276,12 +276,20 @@
         "kind": "layer",
         "id": "swm"
       },
-      "description": "The displayed superficial-white-matter layer is a broad sample of short bilateral tractography contours. It has no approved named-region endpoint classification and must not be read as named U-fibre or region-to-region connections.",
+      "description": "The displayed superficial-white-matter layer is a broad sample of short bilateral tractography contours. The viewer can subset contours by unordered geometric endpoint assignments to selected J\u00fclich maximum-probability labels, but those assignments do not establish named U-fibres, biological terminations, or region-to-region connections.",
       "relationships": [],
       "sources": [
         {
           "label": "HCP-1065 fibre template",
           "url": "https://brain.labsolver.org/hcp_template.html"
+        },
+        {
+          "label": "J\u00fclich-Brain probabilistic cytoarchitectonic atlas",
+          "url": "https://doi.org/10.1126/science.abb4588"
+        },
+        {
+          "label": "J\u00fclich-Brain v3.0.3 dataset",
+          "url": "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8"
         },
         {
           "label": "Yeh et al. 2021 \u2014 streamline termination and node-assignment limits",

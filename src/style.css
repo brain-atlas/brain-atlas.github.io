@@ -149,6 +149,13 @@ button.on, button[aria-expanded="true"] { color: #031613; border-color: var(--ac
 .viewer-grid h2 { margin: 0 0 12px; color: var(--muted); font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; }
 .viewer-policy-note { margin: 0; padding: 10px 18px; border-top: 1px solid var(--line); color: var(--dim); font-size: 0.75rem; }
 .control-stack { display: grid; align-content: start; gap: 10px; }
+.fibre-filter-controls { display: grid; gap: 7px; margin-bottom: 4px; padding: 12px; border: 1px solid var(--line); border-radius: 4px; background: rgba(5, 15, 24, 0.45); }
+.fibre-filter-controls h3 { margin: 0 0 2px; color: var(--muted); font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; }
+.fibre-filter-controls label { color: var(--muted); font-size: 0.7rem; }
+.fibre-filter-controls select { width: 100%; min-height: 36px; padding: 6px 8px; color: var(--text); border: 1px solid var(--line-strong); border-radius: 3px; background: #091622; }
+.fibre-filter-controls select[multiple] { min-height: 122px; }
+.fibre-filter-summary, .control-help { margin: 0; color: var(--dim); font-size: 0.68rem; line-height: 1.45; }
+.fibre-filter-summary { color: var(--muted); }
 .play { width: 100%; display: flex; justify-content: center; gap: 8px; }
 .glyph { font-family: monospace; }
 .row { min-height: 34px; display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 0.75rem; }

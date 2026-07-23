@@ -14,6 +14,7 @@ async function manifests() {
     json('../public/data/fidelity.json'),
     json('../public/data/regions.json'),
     json('../public/data/tracts.json'),
+    json('../public/data/fibre_filter_presets.json'),
   ]);
 }
 
@@ -34,6 +35,37 @@ test('current entity catalog binds every region and tract manifest ID exactly on
   assert.equal(new Set(catalog.entityIds).size, catalog.entityIds.length);
   assert.ok(catalog.entityIds.every((id) => /^(layer|pathway|region|tract)\./.test(id)));
   assert.equal(Object.isFrozen(catalog), true);
+});
+
+test('catalog validates and freezes the four endpoint-filter presets against region selectors', async () => {
+  const [entities, fidelity, , , presets] = await manifests();
+  const catalog = createLessonCatalog(entities, fidelity, presets);
+
+  assert.deepEqual(catalog.fibreFilterPresetIds, [
+    'fibre-filter.dorsal',
+    'fibre-filter.extrastriate',
+    'fibre-filter.integrated-stream',
+    'fibre-filter.ventral',
+  ]);
+  assert.deepEqual(catalog.fibreFilterSelectorIds.slice(0, 2), [
+    'endpoint.ambiguous',
+    'endpoint.unknown',
+  ]);
+  assert.equal(catalog.fibreFilterPresetsById['fibre-filter.integrated-stream'].query.mode, 'connects-between');
+  assert.equal(Object.isFrozen(catalog.fibreFilterPresetsById['fibre-filter.ventral'].query.setA), true);
+
+  const unknown = structuredClone(presets);
+  unknown.presets[0].query.setA[0] = 'region.missing';
+  assert.throws(
+    () => createLessonCatalog(entities, fidelity, unknown),
+    (error) => error.diagnostics.some(({ code }) => code === 'catalog.semantic.unknown-fibre-filter-selector'),
+  );
+  const nonRegion = structuredClone(presets);
+  nonRegion.presets[0].query.setA[0] = 'tract.ilf';
+  assert.throws(
+    () => createLessonCatalog(entities, fidelity, nonRegion),
+    (error) => error.diagnostics.some(({ code }) => code === 'catalog.semantic.unknown-fibre-filter-selector'),
+  );
 });
 
 test('catalog exposes the approved visual-pathway and relationship inspectables', async () => { // Tests INV-35

@@ -8,6 +8,7 @@ export const RENDERER_BINDING_ORDER = Object.freeze([
   'setCamera',
   'setVisibility',
   'setHemispheres',
+  'setFibreFilter',
   'setCutaway',
   'setMaterial',
   'setPlayback',
@@ -36,6 +37,7 @@ export function createRendererAdapter(bindings, catalog) {
     bindings.setCamera(next.camera);
     bindings.setVisibility(next.visibility);
     bindings.setHemispheres(next.hemispheres);
+    bindings.setFibreFilter(next.fibreFilter);
     bindings.setCutaway(next.cutaway);
     bindings.setMaterial(next.material);
     bindings.setPlayback(next.playback);

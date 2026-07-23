@@ -81,6 +81,13 @@ export function createExplorePanelModel(snapshot, catalog) {
     cutaway: source.cutaway,
     material: source.material,
     playback: source.playback,
+    fibreFilter: source.fibreFilter,
+    fibreFilterPresets: Object.freeze(catalog.fibreFilterPresetIds.map(
+      (id) => catalog.fibreFilterPresetsById[id],
+    )),
+    fibreFilterSelectors: Object.freeze(catalog.fibreFilterSelectorIds.map(
+      (id) => catalog.fibreFilterSelectorsById[id],
+    )),
   });
 }
 

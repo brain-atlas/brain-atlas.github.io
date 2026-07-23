@@ -113,6 +113,32 @@
           </section>
           <section class="control-stack">
             <h2>Display</h2>
+            <div id="fibre-filter-controls" class="fibre-filter-controls">
+              <h3>Fibre endpoints</h3>
+              <label for="fibre-filter-preset">Preset</label>
+              <select id="fibre-filter-preset">
+                <option value="all">All classified fibres</option>
+                <option value="custom">Custom query</option>
+              </select>
+              <label for="fibre-filter-mode">Query mode</label>
+              <select id="fibre-filter-mode">
+                <option value="all">All fibres</option>
+                <option value="touches-any">Touches any selected region</option>
+                <option value="connects-within">Both ends within selected regions</option>
+                <option value="connects-between">One endpoint in each region set</option>
+              </select>
+              <div id="fibre-filter-set-a-wrap">
+                <label for="fibre-filter-set-a">Region set A</label>
+                <select id="fibre-filter-set-a" multiple size="6" aria-describedby="fibre-filter-selection-help"></select>
+              </div>
+              <div id="fibre-filter-set-b-wrap" hidden>
+                <label for="fibre-filter-set-b">Region set B</label>
+                <select id="fibre-filter-set-b" multiple size="6" aria-describedby="fibre-filter-selection-help"></select>
+              </div>
+              <p id="fibre-filter-selection-help" class="control-help">Use Ctrl or Command to select more than one region.</p>
+              <p id="fibre-filter-summary" class="fibre-filter-summary" role="status" aria-live="polite">Endpoint filter data are loading.</p>
+              <p class="control-help">Endpoints are assigned geometrically to displayed atlas regions. This does not show measured connectivity or direction. Unknown and ambiguous endpoints match only when you select them.</p>
+            </div>
             <button id="play" class="play on" type="button"><span class="glyph" id="playGlyph">❚❚</span><span id="playTxt">Pause activity</span></button>
             <label class="row" for="speed"><span class="lbl">Activity speed</span><input id="speed" type="range" min="15" max="160" value="70"><span class="val" id="speedV">70</span></label>
             <label class="row" for="clip"><span class="lbl">Cutaway</span><input id="clip" type="range" min="0" max="100" value="0"><span class="val" id="clipV">0%</span></label>

@@ -42,7 +42,10 @@ For `npm run build && npm run preview`, set `PRODUCTION_PREVIEW=1` and run
 `scripts/browser/home-production.spec.cjs`; those checks require production debug hooks
 to be absent.
 
-Set `HEADED=1` for visual review. `animation-continuity.spec.cjs` audits every playing
+Set `HEADED=1` for visual review. `fibre-endpoint-filter.spec.cjs` verifies accessible
+preset/custom controls, all/within/touches/unordered-between semantics, explicit
+unknown/ambiguous handling, L/R inheritance, canonical Atlas projection, count summaries,
+coherent association/SWM geometry/activity masks, and the development `lastRebuildMs` diagnostic against the 120 ms bound. `animation-continuity.spec.cjs` audits every playing
 entry/instructional view after camera settlement in wide and compact layouts, including
 model clocks, draw ranges/checksums, in-frame motion, V1-proximal optic events and caps,
 selected association groups, and distinct Skip/Pause/Play/reduced-motion semantics.

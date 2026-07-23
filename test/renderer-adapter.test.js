@@ -10,6 +10,7 @@ const ORDER = [
   'setCamera',
   'setVisibility',
   'setHemispheres',
+  'setFibreFilter',
   'setCutaway',
   'setMaterial',
   'setPlayback',
@@ -40,6 +41,7 @@ test('one adapter applies every canonical snapshot axis in deterministic order',
   assert.deepEqual(calls[0][1], SNAPSHOT.camera);
   assert.deepEqual(calls[1][1], SNAPSHOT.visibility);
   assert.deepEqual(calls[2][1], SNAPSHOT.hemispheres);
+  assert.deepEqual(calls[3][1], SNAPSHOT.fibreFilter);
   assert.deepEqual(calls.at(-2)[1], SNAPSHOT.controlPolicy);
   assert.deepEqual(result, SNAPSHOT);
   assert.equal(Object.isFrozen(result), true);
@@ -57,13 +59,13 @@ test('adapter capture returns normalized frozen plain state', () => {
 
 test('incomplete bindings fail when creating the adapter', () => {
   const { bindings } = fakeBindings();
-  delete bindings.setSelection;
+  delete bindings.setFibreFilter;
 
   assert.throws(
     () => createRendererAdapter(bindings, TEST_CATALOG),
     (error) => {
       assert.equal(error.diagnostics[0].code, 'renderer.adapter.missing-binding');
-      assert.equal(error.diagnostics[0].path, '/setSelection');
+      assert.equal(error.diagnostics[0].path, '/setFibreFilter');
       return true;
     },
   );

@@ -2,7 +2,7 @@
 
 ## Purpose
 
-`tools/assets/` reproducibly prepares and regenerates the cortical shell, Jülich region meshes, and named association tracts shipped by Brain Atlas. For optic radiation and superficial white matter, it exactly prepares inputs and reproduces current JSON from registered recovered TrackVis intermediates; it does not claim deterministic upstream DSI retracking. Runtime coordinate semantics remain unchanged.
+`tools/assets/` reproducibly prepares and regenerates the cortical shell, Jülich region meshes, named association tracts, and volumetric per-contour endpoint classifications shipped by Brain Atlas. For optic radiation and superficial white matter, it exactly prepares inputs and reproduces current JSON from registered recovered TrackVis intermediates; it does not claim deterministic upstream DSI retracking. Endpoint classification consumes those exact checked display contours plus the original categorical Jülich MPM and changes no geometry. Runtime coordinate semantics remain unchanged.
 
 This subsystem is offline-only. It never downloads implicitly, launches DSI Studio, writes into `public/`, adds a runtime transform, or treats streamline order as biological polarity. Exact source identities, parameters, licenses/terms, rights determinations, intermediates, outputs, and limitations live in `manifest.json`.
 
@@ -13,7 +13,8 @@ This subsystem is offline-only. It never downloads implicitly, launches DSI Stud
 3. Every external input is selected by manifest ID and canonical filename, then byte-counted and SHA-256 checked before parsing.
 4. Builders write into explicit new empty output directories.
 5. Outputs are compared by frozen byte, tree, decoded-geometry, payload, and structural contracts.
-6. Optic-radiation and SWM tracking are exceptional human-run DSI replays. Agent code only prepares inputs, prints a hash-checking shell script, and validates returned artifacts.
+6. Endpoint classification maps the two stored geometric ends of each checked association/SWM contour to the nearest local nonzero volumetric MPM label in common RAS world millimetres, retaining known, ambiguous, and unknown outcomes without inferring polarity.
+7. Optic-radiation and SWM tracking are exceptional human-run DSI replays. Agent code only prepares inputs, prints a hash-checking shell script, and validates returned artifacts.
 
 **Key files**
 
@@ -22,7 +23,7 @@ This subsystem is offline-only. It never downloads implicitly, launches DSI Stud
 - `requirements.in` / `requirements.lock` — direct pins and hash-complete resolution.
 - `cli.py` — argument parsing and command dispatch.
 - `common.py` — hashes, safety checks, serializers, environment preflight, and shared numerical primitives.
-- `cortex.py`, `regions.py`, `association.py`, `optic_radiation.py`, `swm.py` — asset-specific offline algorithms.
+- `cortex.py`, `regions.py`, `association.py`, `endpoints.py`, `optic_radiation.py`, `swm.py` — asset-specific offline algorithms.
 - `test/asset-pipeline.test.js` — independent contract and integration checks.
 
 ## Public interface
@@ -42,6 +43,7 @@ uv run --python 3.13.1 --offline \
 | `build cortex` | Generate the cortical GLB from the exact TemplateFlow brain mask. |
 | `build regions` | Generate 90 OBJ files and `regions.json` from the exact Jülich MPM. |
 | `build association` | Generate `tracts.json` from the complete exact HCP-1065 archive. |
+| `build endpoints` | Generate `fibre_endpoints.json` from the exact categorical Jülich MPM plus hash-frozen checked association/SWM/catalog/preset inputs. The command requires explicit `--inputs`, `--repo`, and new empty `--output`; it never writes into `public/`. |
 | `prepare optic-radiation` | Generate exact V1/LGN binary NIfTIs. |
 | `dsi-command optic-radiation` | Print, but never execute, the exact OR replay wrapper. |
 | `postprocess optic-radiation` | Produce current left-only OR JSON from a verified TrackVis intermediate. |
@@ -68,6 +70,7 @@ All commands fail closed with a nonzero status. JSON reports contain no raw thir
 | INV-10 | Generated outputs never replace checked assets automatically. Any divergence follows the frozen replay classes and Beads gates. | CLI design and review. |
 | INV-11 | The numerical algorithms and equality predicates are fixed before manual replay and may not be relaxed after observing output. | This spec, review, Git/Beads history. |
 | INV-12 | Runtime remains one proper transform. OR JSON contains 220 left fibres; `src/main.js` supplies the disclosed right `x → -x` mirror without changing fibre/point order. | Current-output/runtime structural tests. |
+| INV-13 | Endpoint classification uses the original Jülich v3.0.3 categorical MPM, exact checked displayed fibre order, and one frozen 2.0 mm nearest-nonzero/0.5 mm distinct-label ambiguity rule in RAS world millimetres. It emits only stable project region IDs or explicit ambiguous/unknown status; stored endpoint A/B is unordered geometry, probability is unavailable, and no streamline polarity, termination, connection strength, shared voxel grid, or template warp is inferred. | Synthetic classifier tests, exact generation, artifact/current-output validation, preset-count drift tests, and scientific review. |
 
 ## Equality contracts
 
@@ -128,6 +131,7 @@ Literal fixtures cover empty, regular file, file symlink, directory symlink, non
 ## Writer contracts
 
 - **compact fibre JSON:** CPython 3.13.1 `json.dumps`, UTF-8, `ensure_ascii=False`, `allow_nan=False`, insertion-order keys, separators `(', ', ': ')`, no trailing newline.
+- **compact endpoint JSON:** CPython 3.13.1 `json.dumps`, UTF-8, `ensure_ascii=False`, `allow_nan=False`, insertion-order keys, separators `(',', ':')`, no trailing newline. Entity/status/candidate tables are indexed by fixed four-integer endpoint tuples; each fibre stores exactly two tuples in source array order. Every preset audit balances included association/SWM/L/R totals, included known/unknown/ambiguous fibre quality, and full-population quality.
 - **`regions.json`:** UTF-8, `ensure_ascii=True` (matching the current file's `\\u2192` escapes), `allow_nan=False`, insertion order, `indent=1`, LF, no trailing newline.
 - **OBJ:** array order; `v {x:.1f} {y:.1f} {z:.1f}\n`, then one-indexed `f {a} {b} {c}\n`; final newline.
 - **NIfTI:** fresh little-endian `Nifti1Image(uint8_array, affine)`, no copied header/extensions; `set_sform(affine, code=4)` then `set_qform(affine, code=4)`; nibabel 5.4.2 default deterministic gzip writer.
@@ -163,6 +167,12 @@ Manifest label order; right label is left + 1000. Float32 equality mask, constan
 ### Association
 
 Archive/tract/hemisphere order comes from the manifest. One `np.random.default_rng(0)` spans all 16 groups. Select `rng.permutation(count)[:min(180,count)]`, resample to 40 points, reverse only when resampled first y > last y, and Python-round coordinates to one decimal. The reversal is non-biological storage history.
+
+### Fibre endpoints
+
+Load the exact categorical MPM with matching nonzero qform/sform and use its selected affine to transform every nonzero voxel centre into RAS world millimetres. Build one `cKDTree` over those centres. For each displayed, rounded contour endpoint, find the nearest nonzero centre and the minimum distance for every distinct label within 2.5 mm. The endpoint is outside support when the nearest centre exceeds 2.0 mm; it is ambiguous when a second distinct label is within 0.5 mm of the nearest label distance; it is unknown when the winning label has no project region entity. Otherwise it is known-direct when nearest-grid sampling gives the same label and known-nearest for the local fallback. Unsupported labels are never coerced to supported entities. Distances are rounded to integer hundredths of a millimetre; the categorical MPM supplies no probability.
+
+Association traversal is manifest tract order, then L/R, then checked fibre order. SWM order is unchanged and hemisphere remains the sign of mean contour x, matching runtime. Preset geometry and selected/population quality counts are computed from the separately hash-frozen authored preset catalog. `touches-any` accepts either stored endpoint, `connects-within` requires both in one set, and `connects-between` is symmetric under A/B reversal. Unknown and ambiguous classes match only their explicit special selectors.
 
 ### Optic radiation
 
@@ -207,6 +217,7 @@ Raw outputs/logs stay outside Git. Their owner-only durable archive is `~/.local
 | FAIL-8 | Generated checked asset differs | Algorithm/environment/source drift | Preserve current asset; diagnose with independent metrics; never auto-replace. |
 | FAIL-9 | OR output contains right fibres | Pipeline/runtime boundary drift | Reject; JSON remains left-only and runtime mirror stays disclosed. |
 | FAIL-10 | Streamline order described as polarity | Scientific overclaim | Correct metadata/docs; order is storage only. |
+| FAIL-11 | MPM forms/hash/labels differ, a repository input drifts, a point is nonfinite, or assignment exceeds/is tied within the frozen local rule | Coordinate/provenance ambiguity | Stop before output. Preserve unknown/ambiguous status where the frozen rule applies; never fit geometry, widen thresholds after viewing, or coerce unsupported labels. |
 
 ## Testing
 
@@ -215,6 +226,7 @@ Raw outputs/logs stay outside Git. Their owner-only durable archive is `~/.local
 | INV-1–4 | `node --test test/asset-pipeline.test.js` contract and literal hashes. |
 | INV-5–6 | Temporary-root and environment-tree positive/negative fixtures. |
 | INV-7, INV-12 | Manifest, NIfTI/TRK checks, current output hashes, runtime static checks, browser determinant/mirror metrics. |
+| INV-13, FAIL-11 | `test/fibre-endpoint-assets.test.js`, exact `build endpoints` regeneration, current-output structure checks, query/preset integrity tests, and scientific review. |
 | INV-8 | Static import/call scan plus exact command/wrapper fixtures; DSI is user-run only. |
 | INV-9 | Serializer fixtures and byte-exact generator replay. |
 | INV-10–11 | CLI tests, Beads evidence, and scientific review. |

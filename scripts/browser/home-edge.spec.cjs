@@ -129,7 +129,7 @@ test('no-WebGL Atlas retains lessons, sources, import, and semantic return witho
 
 test('renderer import failure leaves Atlas navigation and readable lessons available', async ({ page }) => { // Tests FAIL-29
   const errors = monitor(page);
-  await page.route('**/src/main.js', route => route.abort());
+  await page.route('**/src/main.js*', route => route.abort());
   await open(page, { states: ['fallback'] });
 
   await expect(page.locator('#atlas-workspace')).toBeVisible();

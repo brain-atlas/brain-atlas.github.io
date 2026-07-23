@@ -299,8 +299,43 @@ assignment gives 7,220 left and 7,780 right fibres. `len` spans 8.0–55.0 mm
 endpoint passed the dilated-ribbon test. Rounding displacement is at most 0.0854 mm.
 World-coordinate distance from each actual rounded endpoint to the undilated
 `GM>0.40` voxel-center set has median 0.600 mm, 95th percentile 1.315 mm, and
-maximum 1.631 mm. This criterion does not establish histological U-fibre identity
-or named cortical endpoints.
+maximum 1.631 mm. This ribbon criterion does not establish histological U-fibre
+identity or named cortical endpoints.
+
+### Categorical endpoint assignment — `fibre_endpoints.json`
+
+The checked endpoint builder consumes the exact 335,280-byte Jülich-Brain v3.0.3
+MPM (`SHA-256 3af71c8d467db42d8561115164e0f365b942dfaa3568740ce62846fa3a201aff`)
+and the hash-frozen association/SWM arrays, region/entity catalogs, and preset
+catalog. The source MPM has shape `193×229×193`, qform/sform code 1, and affine:
+
+```text
+[ 1  0  0  -96 ]
+[ 0  1  0 -132 ]
+[ 0  0  1  -78 ]
+[ 0  0  0    1 ]
+```
+
+For each stored first/last contour point, the builder queries nonzero MPM voxel
+centres in RAS millimetres. A supported winning label is known when the endpoint
+hits it directly or its nearest nonzero centre lies within 2 mm. A second distinct
+label within 0.5 mm of the winning distance makes the endpoint ambiguous.
+Unsupported winning labels, background, and distances beyond 2 mm remain unknown.
+No supported label is substituted for a nearer unsupported label. The categorical
+MPM supplies no probability.
+
+The artifact preserves source order for 35,760 endpoints: 14,397 are known-direct,
+401 known-nearest, 8,673 unknown-unsupported-label, 7,025 unknown-outside-support,
+and 5,264 ambiguous. At fibre level, where either ambiguous endpoint dominates and
+otherwise either unknown endpoint dominates, 4,916 fibres are known, 8,213 unknown,
+and 4,751 ambiguous. It records each preset's included geometry and quality counts.
+`tools/assets/SPEC.md` defines the exact algorithm and compact tuple contract.
+
+This assignment compares 2009a fibre coordinates with 2009c labels in common RAS
+millimetres. It applies no template warp, runtime transform, grid-index copy, or
+marker fit. Stored endpoint A/B remains an unordered geometric pair. The labels and
+queries do not prove terminations, connections, strengths, probabilities, functions,
+directions, or individual anatomy.
 
 ## Why no template conversion or regeneration was applied
 
@@ -317,9 +352,10 @@ recovered lineage and violate the one-transform invariant. Regenerating contours
 a 2009c voxel lattice would add interpolation choices without evidence of an
 anatomical warp to correct. The honest statement is: **decoded 2009a fibre-frame
 RAS+ coordinates overlaid with 2009c surfaces in the shared RAS-millimetre world
-frame, with the FIB variant evidence limit disclosed**. The offline endpoint-proximity
-screen in `TRACT_REGION_MAPPING.md` uses that common world without changing it; a
-nearest-shell distance is not evidence that the two releases share a voxel grid.
+frame, with the FIB variant evidence limit disclosed**. The offline nearest-shell
+screen and categorical MPM assignment in `TRACT_REGION_MAPPING.md` use that common
+world without changing it; neither a distance nor a label is evidence that the two
+releases share a voxel grid.
 
 ## Remaining limitations and work owners
 
@@ -335,11 +371,11 @@ nearest-shell distance is not evidence that the two releases share a voxel grid.
   direct FIB-to-companion-T1 build binding remains unavailable.
 - Right optic-radiation mirroring remains a material limitation owned by
   `brain-atlas-yum.7`.
-- Association endpoint-region meaning remains limited by tractography, the selected
-  display sample, the incomplete displayed-region candidate set, and mixed-release
-  common-world comparison. `TRACT_REGION_MAPPING.md` records the implemented
-  low-confidence bilateral proximity screen and removed arrow labels;
-  `brain-atlas-zmq.21` owns per-fibre endpoint classification and scene filtering.
+- Association and SWM endpoint-region meaning remains limited by tractography,
+  categorical MPM uncertainty, unsupported labels, the selected display samples, and
+  mixed-release common-world comparison. `TRACT_REGION_MAPPING.md` separates the
+  low-confidence bilateral inspector screen from the implemented per-fibre categorical
+  filtering method.
 - Tractography does not establish biological polarity. Association direction remains
   the separately disclosed 50/50 modeled fallback.
 

@@ -1033,6 +1033,46 @@
       }
     },
     {
+      "id": "endpoints",
+      "sourceIds": [
+        "julich-mpm"
+      ],
+      "parameters": {
+        "maxDistanceMm": 2.0,
+        "ambiguityMarginMm": 0.5,
+        "atlasKind": "categorical-maximum-probability-map",
+        "probability": "unavailable",
+        "endpointSemantics": "unordered-geometry-not-polarity",
+        "repositoryInputs": [
+          {
+            "path": "public/data/tracts.json",
+            "bytes": 2425216,
+            "sha256": "568d8848a6dfe4cb859d9c7ec8e572a90cf0d71d0b7c741c4a1e1e2e4471b213"
+          },
+          {
+            "path": "public/data/swm_fibres.json",
+            "bytes": 2758578,
+            "sha256": "81529a410c9053731416124e346dce21e85d96c85fb8b3bad151735a4b1f81fb"
+          },
+          {
+            "path": "public/data/regions.json",
+            "bytes": 21337,
+            "sha256": "d7aeaa5cc16d58d949485ee7447b39067113166516064f8cd32bbcfbf7f2dc0b"
+          },
+          {
+            "path": "public/data/entities.json",
+            "bytes": 74121,
+            "sha256": "56c32db37cdae116e8e0947008a4f938aca3d0d9cffa8bbc96c7eba4b5be1480"
+          },
+          {
+            "path": "public/data/fibre_filter_presets.json",
+            "bytes": 3472,
+            "sha256": "ca360a16c8c2321294a8c596fd78d9f0fdae80d160f7fcdaf95ac46e550c36a5"
+          }
+        ]
+      }
+    },
+    {
       "id": "optic-radiation",
       "sourceIds": [
         "hcp1065-fib",
@@ -1203,6 +1243,27 @@
         "lloc",
         "fibres"
       ]
+    },
+    {
+      "id": "fibre-endpoints",
+      "path": "public/data/fibre_endpoints.json",
+      "bytes": 476050,
+      "sha256": "b1c358023ab239dbf574f9de68cf5d1e018e08bb6d827b62779297b6642caa26",
+      "pipelineId": "endpoints",
+      "autoReplacePublicAsset": false,
+      "keyOrder": [
+        "schemaVersion",
+        "space",
+        "method",
+        "inputs",
+        "statuses",
+        "entities",
+        "candidateSets",
+        "counts",
+        "presets",
+        "association",
+        "swm"
+      ]
     }
   ],
   "rights": [
@@ -1335,6 +1396,35 @@
       "reviewer": "Brain Atlas provenance audit",
       "reviewedOn": "2026-07-22",
       "notLegalAdvice": true
+    },
+    {
+      "outputId": "fibre-endpoints",
+      "sourceIds": [
+        "julich-mpm",
+        "hcp1065-tract-archive",
+        "hcp1065-fib",
+        "templateflow-gm",
+        "templateflow-wm"
+      ],
+      "determination": "combined derived endpoint assignments permitted for noncommercial distribution under Jülich CC BY-NC-SA 4.0, HCP atlas/template terms, association CC BY-SA 4.0, and TemplateFlow source terms",
+      "blocking": false,
+      "obligations": [
+        "Jülich attribution, identify modifications, noncommercial use, and ShareAlike",
+        "association atlas attribution and ShareAlike",
+        "HCP acknowledgment, citations, and use/redistribution restrictions",
+        "TemplateFlow attribution and MNI notice",
+        "retain mixed-template and endpoint-method limitations"
+      ],
+      "evidence": [
+        "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8",
+        "https://brain.labsolver.org/hcp_trk_atlas.html",
+        "https://www.humanconnectome.org/study/hcp-young-adult/document/wu-minn-hcp-consortium-open-access-data-use-terms",
+        "https://github.com/templateflow/tpl-MNI152NLin2009cAsym",
+        "DATA_LICENSES.md"
+      ],
+      "reviewer": "Brain Atlas provenance audit",
+      "reviewedOn": "2026-07-22",
+      "notLegalAdvice": true
     }
   ],
   "limitations": {
@@ -1365,6 +1455,7 @@
       "replacementAuthorized": false,
       "legacyCloseoutDecision": "brain-atlas-3ct",
       "deterministicRetrackingOwner": "brain-atlas-yum.13"
-    }
+    },
+    "endpointClassification": "categorical Jülich MPM assignment of displayed rounded geometric endpoints in common RAS world coordinates; not a template warp, voxel-grid equivalence, termination, connection, polarity, probability, or individual-anatomy claim"
   }
 }

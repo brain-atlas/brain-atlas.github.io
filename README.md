@@ -100,8 +100,10 @@ fitting and applies one runtime transform. Only the anterior eye → chiasm → 
 segment is schematic. The cited anatomy inspector separates literature-curated,
 schematic, and displayed-dataset relationships. Association links are only
 undirected, low-confidence endpoint proximity for the checked display sample—not
-terminations, strengths, functions, or input/output direction. See “What's real vs
-schematic” and the scientific traceability inventory below.
+terminations, strengths, functions, or input/output direction. A separate categorical
+endpoint filter can subset association and superficial fibres by displayed Jülich labels;
+it makes no connectivity or polarity claim. See “What's real vs schematic” and the
+scientific traceability inventory below.
 
 ### Loading and mobile limits
 
@@ -251,11 +253,13 @@ view that keeps schematic incoming context plus the optic-radiation path and V1
 destination in frame. The optic-radiation, V1, ventral, and dorsal scenes use a
 centered half-shell cortical cut and hide right-hemisphere objects to reduce duplicate visual load;
 directed LGN→V1 motion remains visible on the independently derived left contours. The
-three cortical preview scenes currently add selected named bundles and the broad SWM/U-
-fibre layer as a **pre-publication prototype**: long-tract impulses use the disclosed
-50/50 direction assumption, SWM uses zero-mean vibration, and neither display proves
-exact endpoints among the highlighted regions. Endpoint-classified scene pruning under
-`brain-atlas-zmq.21` must replace the broad SWM prototype before publication.
+three cortical preview scenes add selected named bundles and endpoint-filtered SWM/U-
+fibre subsets. Extrastriate, ventral, and dorsal presets match 1,684, 1,830, and 3,180
+of 17,880 classified contours before scene layer and hemisphere visibility applies.
+The filter tests unordered geometric endpoint membership against displayed Jülich labels;
+it does not prove terminations or connections among highlighted regions. Long-tract
+impulses still use the disclosed 50/50 direction assumption, and SWM keeps zero-mean
+vibration.
 Fixed-position Previous/Next actions traverse the same sequence and can return to that
 entry view. One
 3D stage is shared throughout. The browser root remains fixed; the named, keyboard-
@@ -323,13 +327,15 @@ and canonical viewer-filter editing. Use **Inspect anatomy** for an equivalent n
 currently visible reviewed canvas target; focus previews, and activation opens the same
 cited detail view. Relationship details show direction, source class, method, status,
 confidence, and sources. Association records always say **Undirected · Displayed dataset ·
-Qualified · Low confidence**; superficial white matter intentionally has no named-region
-relationship. Reduced-motion preference makes authored camera changes
+Qualified · Low confidence**; endpoint filtering creates no new relationship records.
+Reduced-motion preference makes authored camera changes
 instant, settles activity, disables Play, and removes the Skip action.
 
 The collapsed **Viewer controls** section retains Play/Pause, activity speed,
-**Cutaway**, **Tissue**, Side/Top/Back/Front, hemisphere/layer filters, Auto-rotate,
-and Reset. Lesson mode keeps the fieldset disabled so panel clicks cannot bypass authored
+**Cutaway**, **Tissue**, Side/Top/Back/Front, hemisphere/layer filters, endpoint-filter
+presets and custom all/touches/within/between queries, Auto-rotate, and Reset. Counts and
+known/unknown/ambiguous assignment quality update in an accessible status summary.
+Lesson mode keeps the fieldset disabled so panel clicks cannot bypass authored
 state. Atlas projects its active canonical snapshot into the same panel; filter and
 display changes use the same renderer adapter, and keyboard-operable Zoom/Pan actions
 supplement pointer and touch camera input. Auto-rotate stays off and hidden in Atlas.
@@ -366,6 +372,15 @@ overall anatomy reads correctly**:
   around fixed homes on real bilateral contours. Amplitude derives from local
   fibre-length structure, random phase prevents coherent travel, and no endpoint
   clipping biases the contour-parameter mean or assigns a travel direction.
+- **Geometric endpoint classes:** `fibre_endpoints.json` assigns both stored ends of
+  every association and SWM contour to a supported Jülich MPM label, an explicit
+  ambiguous class, or an explicit unknown class. The classifier chooses the nearest
+  nonzero MPM label. If its centre is within 2 mm and the label has a project region
+  entity, the endpoint is known; a second label within a 0.5 mm distance margin makes
+  it ambiguous. The 2009a fibres and 2009c labels share
+  RAS millimetres but no template warp or voxel-grid equivalence. Filters preserve
+  unordered geometry and cannot establish polarity, termination, connectivity,
+  strength, function, probability, or individual anatomy.
 - **Mirrored:** the right optic radiation is a sagittal mirror of the left until
   independently generated right-side streamlines replace it. Region,
   association-tract, and superficial-WM geometry are real bilateral data.
@@ -489,6 +504,11 @@ Principal sources:
 - Region shells (`public/data/regions/*.obj`): adapted from the
   **Jülich-Brain v3.0.3** maximum probability map by extracting regions and
   converting volumetric labels to simplified surface meshes.
+- Fibre endpoint classes (`public/data/fibre_endpoints.json`): deterministically
+  generated from the same exact Jülich MPM plus the checked association/SWM order and
+  preset catalog. The source NIfTI is hash-verified during offline generation and is
+  not redistributed. `public/data/fibre_filter_presets.json` defines four strict
+  unordered geometric queries; three are used by the reference lesson.
 - Rendering: [three.js](https://threejs.org/) (MIT).
 
 The checked offline tooling never downloads sources implicitly or overwrites
@@ -524,6 +544,8 @@ meshes, optic-radiation streamlines, association tracts, and superficial
 white-matter fibres. The biologically directed visual pathway retains one-way
 travel; every named long association tract uses disclosed stochastic 50/50
 population impulses; superficial U-fibres retain direction-neutral vibration.
+Atlas and lesson scenes can filter association/SWM lines, endpoints, and eligible
+activity through one categorical unordered-endpoint query without adding a transform.
 
 See [`docs/FUTURE_FEATURES.md`](docs/FUTURE_FEATURES.md) for researched future
 directions and [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the current

@@ -29,7 +29,19 @@ async function waitForExpectedActivity(page, expected) {
   await page.waitForFunction(({ anterior, optic, association, swm }) => {
     const activity = window.__view.activity;
     if (anterior && activity.anterior.points.length === 0) return false;
-    if (optic && activity.opticRadiation.activeCount < 1) return false;
+    if (optic) {
+      const radiation = activity.opticRadiation;
+      if (radiation.activeCount < 1) return false;
+      const attribute = radiation.points.geometry.attributes.position;
+      const count = Math.min(radiation.points.geometry.drawRange.count, attribute.count);
+      const point = new window.__view.THREE.Vector3();
+      let hasTracerNearV1 = false;
+      for (let index = 0; index < count && !hasTracerNearV1; index++) {
+        point.fromBufferAttribute(attribute, index);
+        hasTracerNearV1 = radiation.v1Endpoints.some(endpoint => point.distanceTo(endpoint) <= 18);
+      }
+      if (!hasTracerNearV1) return false;
+    }
     if (association && window.__view.association.points.geometry.drawRange.count < 1) return false;
     if (swm && window.__view.swm.points.geometry.drawRange.count < 1) return false;
     return true;
@@ -96,6 +108,7 @@ async function activitySample(page) {
       association: {
         modelTime: window.__view.association.modelTime,
         activeCount: window.__view.association.activeCount,
+        eligibleGroups: window.__view.association.eligibleRenderedGroups,
         renderedGroups: [...new Set(window.__view.association.renderedGroups)].sort(),
         points: summarize([window.__view.association.points]),
       },
@@ -144,7 +157,9 @@ for (const [label, viewport] of Object.entries({
         expect(after.association.points.inFrame).toBeGreaterThan(0);
         expect(after.association.points.opacity).toBeGreaterThan(0.5);
         expect(after.association.points.colorEnergy).toBeGreaterThan(0);
-        expect(after.association.renderedGroups).toEqual(expected.groups);
+        expect(after.association.eligibleGroups).toEqual(expected.groups);
+        expect(after.association.renderedGroups.length).toBeGreaterThan(0);
+        expect(after.association.renderedGroups.every(group => expected.groups.includes(group))).toBe(true);
       }
       if (expected.swm) {
         expect(after.swm.modelTime).toBeGreaterThan(before.swm.modelTime);

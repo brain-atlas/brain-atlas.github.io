@@ -8,7 +8,8 @@ The links describe only the checked web assets:
 
 - `public/data/tracts.json`: a deterministic display sample of 180 streamlines per tract and hemisphere from the HCP-1065 population-averaged tractography atlas;
 - `public/data/regions.json` and `public/data/regions/*.obj`: 45 bilateral displayed shells derived from the Jülich-Brain v3.0.3 maximum-probability map; and
-- `public/data/tract_region_mapping.json`: the complete generated endpoint-proximity result consumed by regression tests, not a runtime coordinate transform.
+- `public/data/tract_region_mapping.json`: the complete generated endpoint-proximity result consumed by regression tests, not a runtime coordinate transform; and
+- `public/data/fibre_endpoints.json`: a separate categorical endpoint artifact for runtime association/SWM filtering. It does not author inspector relationships.
 
 Association relationships are always `undirected`, `displayed-dataset`, `qualified`, and `low` confidence. Streamline array order is ignored. Literature-curated functional or directional statements remain separate from these display-derived records.
 
@@ -28,7 +29,7 @@ These papers constrain interpretation. They do not validate the project threshol
 
 Association fibres retain decoded **ICBM 2009a Nonlinear Asymmetric RAS+ world millimetres**. Region shells are authored in **MNI152NLin2009cAsym RAS+ world millimetres**. No 2009a→2009c warp or per-dataset fit was applied. The offline screen uses the documented common world coordinates while preserving the mixed-release distinction. It does not claim voxel-index equivalence.
 
-The one runtime `sceneFromMni` matrix remains unchanged. Endpoint proximity is computed offline before runtime and adds no transform.
+The one runtime `sceneFromMni` matrix remains unchanged. Endpoint proximity and categorical endpoint assignment are computed offline and add no transform.
 
 ## Reproducible method
 
@@ -125,11 +126,30 @@ The previous region display names embedded tract arrows. An arrow could imply bo
 
 The established eye→chiasm→LGN→V1 pathway uses separate `literature-curated` or `schematic-teaching` records. The inspector displays evidence class, method, status, confidence, and relationship-specific sources rather than presenting every link as equally measured.
 
+## Runtime categorical endpoint filter: separate method and claim
+
+`tools/assets/endpoints.py` classifies the stored first and last points of all 2,880 association and 15,000 SWM contours against the exact Jülich-Brain v3.0.3 categorical MPM. This is independent of the nearest-decimated-surface inspector method above.
+
+For each endpoint, the classifier finds nonzero MPM voxel centres in RAS millimetres and chooses the nearest label. The endpoint is known only when that centre lies within 2 mm and the label has a project region entity. A second distinct label within 0.5 mm of the nearest distance makes the endpoint ambiguous. Unsupported winning labels, background, and points beyond the support boundary remain unknown. The categorical MPM provides no probability. Stored A/B order is ignored by every query.
+
+The generated artifact freezes tuple order, source/grid/hash metadata, endpoint status, distance, candidate labels, fibre quality, and four preset audits:
+
+| Preset | Mode | Association | SWM | Total | Known / unknown / ambiguous |
+|---|---|---:|---:|---:|---:|
+| Extrastriate | touches any | 683 | 1,001 | 1,684 | 1,162 / 148 / 374 |
+| Ventral | touches any | 693 | 1,137 | 1,830 | 1,266 / 150 / 414 |
+| Dorsal | touches any | 1,178 | 2,002 | 3,180 | 1,986 / 514 / 680 |
+| Integrated ventral–dorsal | unordered between sets | 168 | 159 | 327 | 327 / 0 / 0 |
+
+Counts precede scene layer and hemisphere visibility. `touches-any` may retain a contour whose other endpoint is unknown, ambiguous, or outside the selected set. `connects-within` requires both endpoints in one set. `connects-between` requires one endpoint in each set, independent of order. Unknown and ambiguous endpoints match only explicit special selectors. Runtime lines, caps, eligible association-event contours, SWM grain, and SWM dots share the resulting mask.
+
+This categorical comparison overlays 2009a fibre coordinates with 2009c MPM labels in common RAS millimetres without a template warp. It does not claim voxel-grid equivalence, biological termination, pairwise connectivity, strength, probability, function, direction, or individual anatomy. It creates no inspector relationship records.
+
 ## Optic radiation and superficial white matter
 
-The optic radiation remains a biologically directed LGN→V1 projection supported by literature and its existing tractography/fidelity record. This mapping pass does not reinterpret it as an undirected association bundle.
+The optic radiation remains a biologically directed LGN→V1 projection supported by literature and its existing tractography/fidelity record. The runtime endpoint artifact excludes it and does not reinterpret it as an undirected association bundle.
 
-Superficial white matter is deliberately excluded. The broad 15,000-contour sample has no approved named-region endpoint classification. It remains inspectable so users can see that limitation, but it has no relationship records. Proximity alone would not justify naming individual contours as U-fibres connecting displayed region pairs. Endpoint-filtered subsets remain separate work under `brain-atlas-zmq.21`.
+Superficial white matter remains inspectable and has no relationship records. Its categorical endpoint classes support geometric subset queries only; they do not name individual contours as U-fibres connecting displayed region pairs.
 
 ## Limitations
 
@@ -140,4 +160,6 @@ Superficial white matter is deliberately excluded. The broad 15,000-contour samp
 5. Diffusion tractography has termination, false-positive/false-negative, and gyral biases. Passing the screen does not prove a connection; failing it does not prove absence.
 6. The bilateral curation rule can hide real lateralization and can retain relations with unequal left/right counts.
 7. No array order, endpoint coordinate order, or animation direction is treated as measured polarity.
-8. Functional input/output claims require separate literature evidence and are not generated by this pipeline.
+8. Functional input/output claims require separate literature evidence and are not generated by either pipeline.
+9. Categorical MPM assignment suppresses source probability and individual variability; known, unknown, and ambiguous are method classes, not biological confidence estimates.
+10. Runtime count summaries cover the endpoint-query population after global hemisphere masking, not every separately hidden layer or tract.

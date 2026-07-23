@@ -342,8 +342,9 @@ def build_artifact(repo: Path) -> dict[str, Any]:
             "entity": "layer.swm",
             "status": "not-mapped",
             "reason": (
-                "The broad superficial-white-matter sample has no approved named-region endpoint "
-                "classification; proximity must not be presented as named U-fibre connectivity."
+                "The separate categorical endpoint artifact supports runtime filtering only; this "
+                "surface-proximity pass does not map SWM, and neither method establishes named "
+                "U-fibre connectivity."
             ),
         }],
         "limitations": [

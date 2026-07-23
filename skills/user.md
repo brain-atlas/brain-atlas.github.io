@@ -17,7 +17,7 @@ It is a heavy WebGL page — prefer the static preview when inspecting; HMR relo
 can churn the GPU context.
 
 ## The development-only debug hook
-In development mode, `src/main.js` exposes `window.__view` with camera, controls, scene, Three.js, named activity diagnostics, and `inspector` pick/highlight diagnostics. `src/bootstrap.js` also exposes `window.__lesson`, containing the frozen lesson/catalog and getters for navigation/controller state. Use them to frame, freeze, navigate, and introspect from browser automation or the console. Their `import.meta.env.DEV` guards remove both hooks from production builds.
+In development mode, `src/main.js` exposes `window.__view` with camera, controls, scene, Three.js, named activity diagnostics, endpoint-filter query/count/mask diagnostics, and `inspector` pick/highlight diagnostics. `src/bootstrap.js` also exposes `window.__lesson`, containing the frozen lesson/catalog and getters for navigation/controller state. Use them to frame, freeze, navigate, and introspect from browser automation or the console. Their `import.meta.env.DEV` guards remove both hooks from production builds.
 
 ## Driving it with the Playwright MCP
 - `browser_navigate` to the URL, then `browser_console_messages(level:"error")` to
@@ -34,7 +34,7 @@ In development mode, `src/main.js` exposes `window.__view` with camera, controls
 - Open `#anatomy-browser` to reach every currently available seeded canvas target by semantic button. Focus previews the same highlight/short label as hover; activate a button or `#anatomy-preview` for cited details. In development, `window.__view.inspector.candidateIds`, `.highlightedId`, and `.pickAt(clientX, clientY)` expose stable-ID diagnostics. Compact details inert the app and trap focus; no-WebGL retains the list and details while `window.__view` is intentionally absent.
 - Lesson `#back-to-atlas`, the brand link, browser Back, and stage `#explore-scene-trigger` all enter the same temporary Atlas branch from the actual lesson camera and complete canonical filters; the persistent global snapshot remains unchanged. `#return-to-lesson` restores the saved source, scene, selected visual, canonical state, rendered camera, exact lesson-surface position, and focus. `#exit-lesson` instead clears resume/session state and resets the complete default Atlas; a local lesson first opens `#lesson-exit-dialog`. `window.__lesson.exploreState` reports `{ phase, kind, snapshot }`; `window.__lesson.workspaceState` exposes development-only mode/token diagnostics. There must still be exactly one canvas.
 - To check display aspect, compare `window.__view.camera.aspect` with `document.querySelector('#stage canvas').getBoundingClientRect().width / height`. They should match to floating-point precision; the MNI group (`matrixAutoUpdate === false`) must retain equal basis lengths and positive determinant.
-- To distinguish stopped activity from sparse, occluded, clipped, or dimmed activity, inspect `window.__view.activity.state`, `.anterior.phase`, `.opticRadiation.modelTime`, `.opticRadiation.activeCount`, named point geometries, `window.__view.association`, and `window.__view.swm`. Run `scripts/browser/animation-continuity.spec.cjs` in Firefox and Chromium; it waits for every authored camera to settle, then checks model clocks, point checksums/draw ranges, in-frame events, optic-radiation endpoint proximity and cap visibility, selected tract groups, stable camera pose, and the distinct Skip/Pause/Play/reduced-motion semantics.
+- To distinguish stopped activity from sparse, filtered, occluded, clipped, or dimmed activity, inspect `window.__view.activity.state`, `.anterior.phase`, `.opticRadiation.modelTime`, `.opticRadiation.activeCount`, named point geometries, `window.__view.association`, `window.__view.swm`, and `window.__view.fibreFilter`. The latter reports the canonical query, selected/population quality summary, selected/eligible association contours, selected SWM contours, rendered SWM dots, and `lastRebuildMs` for the most recent query-plus-geometry rebuild. Run `scripts/browser/animation-continuity.spec.cjs` in Firefox and Chromium; it waits for every authored camera to settle, then checks model clocks, point checksums/draw ranges, in-frame events, optic-radiation endpoint proximity and cap visibility, selected tract groups, stable camera pose, and the distinct Skip/Pause/Play/reduced-motion semantics.
 - Force the readable renderer-free path with `?no-webgl=1`; verify that no `main`/Three.js resource loads. Imported supplementary images remain available as semantic figures in this path.
 
 ## Opening a local lesson
@@ -73,6 +73,9 @@ lesson is scientifically reviewed merely because it passes the structural contra
   expect a second renderer or context.
 - Viewer-panel edits update `window.__lesson.exploreState.snapshot` through canonical
   commands. Move the camera, then change a filter and verify the pose does not snap.
+  Endpoint controls offer the four authored presets plus custom all/touches/within/
+  unordered-between modes. Region selectors also expose explicit unknown and ambiguous
+  classes; these classes never match a region selector implicitly.
   `[data-explore-camera]` buttons provide keyboard Zoom/Pan; Reset returns to the entry
   pose. Auto-rotate remains hidden and off.
 - **Return to lesson** discards lesson-derived Atlas edits and preserves global Atlas
@@ -92,6 +95,10 @@ The retained panel lives in `#layers` inside `#viewer-console`. It is disabled w
 - **Pathways / Scene** — plain checkboxes carrying `dataset.id`: `or` (optic
   radiation), `swm` (superficial fibres), `anterior` (anterior pathway), `brain`
   (cortical surface), `labels`.
+- **Fibre endpoints** — `#fibre-filter-preset`, `#fibre-filter-mode`, and the two
+  multi-select region sets. `#fibre-filter-summary` announces matched association/SWM
+  counts and known/unknown/ambiguous fibre quality. Counts precede separately hidden
+  layer/tract visibility but include global L/R masking.
 
 Enable a leaf layer:
 ```js
@@ -117,7 +124,7 @@ Lesson/import: `#lesson-import-trigger`, `#lesson-import-dialog`, `#lesson-impor
 
 Atlas camera: `[data-explore-camera]` Zoom/Pan buttons and `#reset`.
 
-Retained viewer panel: `#play` play/pause activity · `#speed` activity speed · `#clip` cutaway (near-hemisphere clip plane) · `#tissue` surface opacity · `[data-view]` camera presets (`lateral` / `top` / `post` / `ant`) · `#spin` auto-rotate outside canonical Atlas control · `#reset` Atlas or scene-inspection entry view.
+Retained viewer panel: `#fibre-filter-preset` / `#fibre-filter-mode` / `#fibre-filter-set-a` / `#fibre-filter-set-b` unordered endpoint query · `#play` play/pause activity · `#speed` activity speed · `#clip` cutaway (near-hemisphere clip plane) · `#tissue` surface opacity · `[data-view]` camera presets (`lateral` / `top` / `post` / `ant`) · `#spin` auto-rotate outside canonical Atlas control · `#reset` Atlas or scene-inspection entry view.
 
 ## What each layer honestly represents
 Describe layers by what the data supports (this mirrors the honesty rule in
@@ -131,7 +138,8 @@ Describe layers by what the data supports (this mirrors the honesty rule in
 - **Superficial fibres** (`swm`, violet) — REAL cortico-cortical short-fibre
   ORIENTATION as a static grain; dots follow independently phased, bounded
   sinusoids around fixed contour homes with **no net direction** (none is
-  measured). Swing width ∝ local fibre length.
+  measured). Swing width ∝ local fibre length. Categorical Jülich endpoint filters
+  narrow the geometric sample; they do not establish named U-fibres or connections.
 - **Anterior pathway** (`anterior`) — SCHEMATIC eye→chiasm→LGN and its flow dots.
 - **Structures** — Jülich-Brain MPM region shells (real bilateral, fresnel
   outlines).

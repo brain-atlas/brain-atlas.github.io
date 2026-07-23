@@ -18,6 +18,33 @@ const hemisphereFilter = {
   },
 };
 
+const fibreFilterMode = { enum: ['all', 'touches-any', 'connects-within', 'connects-between'] };
+const fibreFilterSelectors = {
+  type: 'array',
+  uniqueItems: true,
+  items: stableId,
+};
+const fibreFilterQueryProperties = {
+  mode: fibreFilterMode,
+  setA: fibreFilterSelectors,
+  setB: fibreFilterSelectors,
+};
+const fibreFilterQuerySchema = {
+  type: 'object',
+  additionalProperties: false,
+  required: ['mode', 'setA', 'setB'],
+  properties: fibreFilterQueryProperties,
+};
+const fibreFilterStateSchema = {
+  type: 'object',
+  additionalProperties: false,
+  required: ['preset', 'mode', 'setA', 'setB'],
+  properties: {
+    preset: { anyOf: [stableId, { type: 'null' }] },
+    ...fibreFilterQueryProperties,
+  },
+};
+
 const visualSchema = {
   type: 'object',
   additionalProperties: false,
@@ -233,6 +260,43 @@ const sourceRecord = {
   },
 };
 
+export const fibreFilterPresetCatalogSchema = {
+  type: 'object',
+  additionalProperties: false,
+  required: ['schemaVersion', 'specialSelectors', 'presets'],
+  properties: {
+    schemaVersion: { const: LESSON_SCHEMA_VERSION },
+    specialSelectors: {
+      type: 'array',
+      items: {
+        type: 'object',
+        additionalProperties: false,
+        required: ['id', 'label', 'description'],
+        properties: {
+          id: stableId,
+          label: nonEmptyText,
+          description: nonEmptyText,
+        },
+      },
+    },
+    presets: {
+      type: 'array',
+      items: {
+        type: 'object',
+        additionalProperties: false,
+        required: ['id', 'label', 'description', 'hemispherePolicy', 'query'],
+        properties: {
+          id: stableId,
+          label: nonEmptyText,
+          description: nonEmptyText,
+          hemispherePolicy: { const: 'inherit-scene' },
+          query: fibreFilterQuerySchema,
+        },
+      },
+    },
+  },
+};
+
 export const fidelityCatalogSchema = {
   type: 'object',
   additionalProperties: false,
@@ -313,6 +377,9 @@ export const sceneDirectiveSchema = {
         },
       },
     },
+    fibreFilter: {
+      oneOf: [stableId, fibreFilterStateSchema],
+    },
     cutaway: { type: 'number', minimum: 0, maximum: 100 },
     tissueOpacity: { type: 'number', minimum: 0, maximum: 1 },
     playback: {
@@ -355,6 +422,7 @@ const commandProperties = {
   'visibility.set': { entity: stableId, visible: { type: 'boolean' } },
   'hemispheres.set-global': { L: { type: 'boolean' }, R: { type: 'boolean' } },
   'hemispheres.set-entity': { entity: stableId, L: { type: 'boolean' }, R: { type: 'boolean' } },
+  'fibre-filter.set': fibreFilterStateSchema.properties,
   'cutaway.set': { position: { type: 'number', minimum: 0, maximum: 100 } },
   'material.set': { tissueOpacity: { type: 'number', minimum: 0, maximum: 1 } },
   'playback.set': {

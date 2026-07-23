@@ -17,7 +17,7 @@ test('minimal author scene normalizes to a complete canonical snapshot', () => {
   const snapshot = normalizeSceneSnapshot(MINIMAL_SCENE, TEST_CATALOG);
 
   assert.deepEqual(snapshot, {
-    schemaVersion: 1,
+    schemaVersion: 2,
     camera: {
       position: [300, 15, 0],
       target: [0, 0, 0],
@@ -30,6 +30,7 @@ test('minimal author scene normalizes to a complete canonical snapshot', () => {
       global: { L: true, R: true },
       entities: {},
     },
+    fibreFilter: { preset: null, mode: 'all', setA: [], setB: [] },
     cutaway: { position: 0 },
     material: { tissueOpacity: 0.16 },
     playback: { playing: true, speed: 70, settled: false },
@@ -55,6 +56,7 @@ test('normalization expands explicit fields, sorts IDs, and freezes every level'
         'region.lgn': { L: true, R: true },
       },
     },
+    fibreFilter: 'fibre-filter.test',
     cutaway: 42,
     tissueOpacity: 0.35,
     playback: { playing: false, speed: 90, settled: true },
@@ -71,8 +73,33 @@ test('normalization expands explicit fields, sorts IDs, and freezes every level'
   assert.deepEqual(snapshot.visibility.entities, ['pathway.anterior', 'tract.ilf']);
   assert.deepEqual(Object.keys(snapshot.hemispheres.entities), ['region.lgn', 'tract.ilf']);
   assert.deepEqual(snapshot.selection.emphasized, ['pathway.anterior', 'tract.ilf']);
+  assert.deepEqual(snapshot.fibreFilter, {
+    preset: 'fibre-filter.test',
+    mode: 'touches-any',
+    setA: ['region.lgn'],
+    setB: [],
+  });
   assertDeepFrozen(snapshot);
   assert.throws(() => snapshot.visibility.entities.push('region.lgn'), TypeError);
+});
+
+test('custom endpoint filters normalize unordered selectors into complete state', () => {
+  const snapshot = normalizeSceneSnapshot({
+    ...MINIMAL_SCENE,
+    fibreFilter: {
+      preset: null,
+      mode: 'connects-between',
+      setA: ['region.lgn', 'endpoint.unknown'],
+      setB: ['region.spl7a', 'endpoint.ambiguous'],
+    },
+  }, TEST_CATALOG);
+
+  assert.deepEqual(snapshot.fibreFilter, {
+    preset: null,
+    mode: 'connects-between',
+    setA: ['endpoint.unknown', 'region.lgn'],
+    setB: ['endpoint.ambiguous', 'region.spl7a'],
+  });
 });
 
 test('snapshots round-trip through deterministic JSON serialization', () => {
@@ -107,6 +134,8 @@ test('per-entity hemisphere overrides require bilateral catalog capability', () 
 test('unknown entities, visuals, and camera presets fail with semantic diagnostics', () => {
   const cases = [
     [{ ...MINIMAL_SCENE, show: ['region.unknown'] }, 'scene.semantic.unknown-entity', '/show/0'],
+    [{ ...MINIMAL_SCENE, fibreFilter: 'fibre-filter.missing' }, 'scene.semantic.unknown-fibre-filter-preset', '/fibreFilter'],
+    [{ ...MINIMAL_SCENE, fibreFilter: { preset: null, mode: 'touches-any', setA: ['region.unknown'], setB: [] } }, 'scene.semantic.unknown-fibre-filter-selector', '/fibreFilter/setA/0'],
     [{ ...MINIMAL_SCENE, visual: 'unknown-visual' }, 'scene.semantic.unknown-visual', '/visual'],
     [{ ...MINIMAL_SCENE, camera: 'unknown-camera' }, 'scene.semantic.unknown-camera', '/camera'],
     [{ ...MINIMAL_SCENE, selection: { selected: 'region.unknown' } }, 'scene.semantic.unknown-entity', '/selection/selected'],

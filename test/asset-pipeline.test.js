@@ -56,6 +56,7 @@ const REQUIRED_PHASE_ONE_FILES = [
   '../tools/assets/__main__.py',
   '../tools/assets/cli.py',
   '../tools/assets/common.py',
+  '../tools/assets/endpoints.py',
 ];
 
 test('phase-one asset pipeline contract is checked in as one focused package', () => { // Tests INV-1
@@ -111,11 +112,16 @@ test('manifest inventories every source, pipeline, output, coordinate contract, 
 
   assert.deepEqual(
     manifest.pipelines.map(({ id }) => id),
-    ['cortex', 'regions', 'association', 'optic-radiation', 'swm'],
+    ['cortex', 'regions', 'association', 'endpoints', 'optic-radiation', 'swm'],
   );
+  const endpointPipeline = manifest.pipelines.find(({ id }) => id === 'endpoints');
+  assert.deepEqual(endpointPipeline.sourceIds, ['julich-mpm']);
+  assert.equal(endpointPipeline.parameters.maxDistanceMm, 2);
+  assert.equal(endpointPipeline.parameters.ambiguityMarginMm, 0.5);
+  assert.equal(endpointPipeline.parameters.endpointSemantics, 'unordered-geometry-not-polarity');
   assert.deepEqual(
     manifest.outputs.map(({ id }) => id),
-    ['cortical-shell', 'region-manifest', 'region-mesh-tree', 'association-tracts', 'optic-radiation', 'swm'],
+    ['cortical-shell', 'region-manifest', 'region-mesh-tree', 'association-tracts', 'optic-radiation', 'swm', 'fibre-endpoints'],
   );
   for (const output of manifest.outputs) {
     assert.match(output.sha256, /^[0-9a-f]{64}$/, `${output.id}.sha256`);
@@ -177,9 +183,9 @@ test('lightweight CLI validates the manifest and exact checked outputs without n
     schemaVersion: 1,
     sources: 8,
     intermediates: 6,
-    pipelines: 5,
-    outputs: 6,
-    rights: 6,
+    pipelines: 6,
+    outputs: 7,
+    rights: 7,
     status: 'ok',
   });
 
@@ -190,11 +196,12 @@ test('lightweight CLI validates the manifest and exact checked outputs without n
   assert.equal(current.status, 'ok');
   assert.deepEqual(current.verifiedOutputs, [
     'cortical-shell', 'region-manifest', 'region-mesh-tree',
-    'association-tracts', 'optic-radiation', 'swm',
+    'association-tracts', 'optic-radiation', 'swm', 'fibre-endpoints',
   ]);
   assert.deepEqual(current.structures, {
     association: { fibres: 2880, groups: 16, pointsPerFibre: 40, tracts: 8 },
     corticalShell: { container: 'glTF', version: 2 },
+    fibreEndpoints: { associationFibres: 2880, endpoints: 35760, presets: 4, swmFibres: 15000 },
     opticRadiation: { fibres: 220, pointsPerFibre: 64, runtimeMirroredRight: true },
     regions: { meshes: 90, regions: 45 },
     swm: { fibres: 15000, lengths: 15000, localLengths: 15000, pointsPerFibre: 8 },
@@ -364,11 +371,12 @@ print(json.dumps({
 });
 
 test('builder CLI exposes explicit input and empty-output roots for each asset', () => { // Tests INV-1; Tests INV-5
-  for (const asset of ['cortex', 'regions', 'association']) {
+  for (const asset of ['cortex', 'regions', 'association', 'endpoints']) {
     const result = runAssetCli('build', asset, '--help');
     assert.equal(result.status, 0, `${asset}: ${result.stderr}`);
     assert.match(result.stdout, /--inputs INPUTS/);
     assert.match(result.stdout, /--output OUTPUT/);
+    if (asset === 'endpoints') assert.match(result.stdout, /--repo REPO/);
   }
 });
 

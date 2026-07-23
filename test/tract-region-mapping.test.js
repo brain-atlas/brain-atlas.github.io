@@ -100,7 +100,7 @@ test('mapping artifact records every displayed region and only robust bilateral 
   }
 });
 
-test('runtime catalog projects exactly the robust mapping set and an unmapped SWM record', () => {
+test('runtime catalog projects exactly the robust inspector mapping set without SWM relationships', () => {
   const mapping = loadMapping();
   const entities = loadJson(entitiesUrl);
   const authoredRelations = entities.inspectables.flatMap((inspectable) => (
@@ -134,7 +134,8 @@ test('runtime catalog projects exactly the robust mapping set and an unmapped SW
   );
   const swm = entities.inspectables.find(({ id }) => id === 'layer.swm');
   assert.deepEqual(swm.relationships, []);
-  assert.match(swm.description, /not mapped|no (?:approved )?named-region/i);
+  assert.match(swm.description, /unordered geometric endpoint assignments/i);
+  assert.match(swm.description, /do not establish named U-fibres.*region-to-region connections/i);
 });
 
 test('reviewed arrow labels are removed and fidelity preserves endpoint and SWM limits', () => {
@@ -153,7 +154,9 @@ test('reviewed arrow labels are removed and fidelity preserves endpoint and SWM 
   const association = fidelity.records.find(({ id }) => id === 'fidelity.association-tracts');
   const swm = fidelity.records.find(({ id }) => id === 'fidelity.superficial-white-matter');
   assert.match(association.limitations.map(({ summary }) => summary).join(' '), /endpoint proximity/i);
-  assert.match(swm.limitations.map(({ summary }) => summary).join(' '), /named-region|endpoint classification/i);
+  const swmLimitations = swm.limitations.map(({ summary }) => summary).join(' ');
+  assert.match(swmLimitations, /nearest nonzero MPM label/i);
+  assert.match(swmLimitations, /do not establish named U-fibres.*region-to-region relationships/i);
 });
 
 test('legacy arrow-label hypotheses receive explicit robust, sensitive, or rejected outcomes', () => {
