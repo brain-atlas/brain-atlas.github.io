@@ -81,6 +81,44 @@ test('compact workspaces and modal surfaces pass serious automated accessibility
   expect(errors).toEqual([]);
 });
 
+test('inactive lesson prose retains full text opacity', async ({ page }) => { // Tests INV-50
+  const errors = monitor(page);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto(new URL('?lesson=retina-to-v1', BASE_URL).href);
+  await page.waitForFunction(() => document.getElementById('app')?.dataset.state === 'ready');
+
+  const inactiveSceneOpacity = await page.locator('.lesson-scene:not(.is-active)').first()
+    .evaluate(element => Number.parseFloat(getComputedStyle(element).opacity));
+  expect(inactiveSceneOpacity).toBe(1);
+  expect(errors).toEqual([]);
+});
+
+test('retained layer controls expose entity-specific keyboard toggles', async ({ page }) => { // Tests INV-50
+  const errors = monitor(page);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto(BASE_URL);
+  await page.waitForFunction(() => document.getElementById('app')?.dataset.state === 'ready');
+  if (!await page.locator('#viewer-console').getAttribute('open')) {
+    await page.locator('#viewer-console > summary').click();
+  }
+  await page.locator('.lyr-disclosure').first().click();
+  const row = page.locator('.lyr-kids .lyr-child').first();
+  const entityName = (await row.locator('.lyr-t').textContent()).trim();
+  const hemispheres = row.locator('.pill');
+  await expect(hemispheres.nth(0)).toHaveAttribute('aria-label', `Show left hemisphere for ${entityName}`);
+  await expect(hemispheres.nth(1)).toHaveAttribute('aria-label', `Show right hemisphere for ${entityName}`);
+
+  const entityToggle = row.locator('button.lyr-t');
+  await expect(entityToggle).toHaveAttribute('aria-label', `Show ${entityName} in both hemispheres`);
+  await expect(entityToggle).toHaveAttribute('aria-pressed', 'true');
+  await entityToggle.focus();
+  await page.keyboard.press('Enter');
+  await expect(entityToggle).toHaveAttribute('aria-pressed', 'false');
+  await expect(hemispheres.nth(0)).toHaveAttribute('aria-pressed', 'false');
+  await expect(hemispheres.nth(1)).toHaveAttribute('aria-pressed', 'false');
+  expect(errors).toEqual([]);
+});
+
 test('compact keyboard journey preserves modal containment, announcements, and reciprocal focus', async ({ page }) => { // Tests INV-10, INV-22, INV-30, INV-41, INV-42
   const errors = monitor(page);
   await page.setViewportSize({ width: 390, height: 844 });
