@@ -324,7 +324,7 @@ button.layer-entity-toggle:hover:not(:disabled) { color: var(--text); border-col
 
 .reduced-motion #scene-skip { display: none; }
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.001ms !important; animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; }
+  .page-scroll { scroll-behavior: auto; }
 }
 
 @media (max-width: 980px) {

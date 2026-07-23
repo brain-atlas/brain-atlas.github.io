@@ -93,6 +93,52 @@ test('inactive lesson prose retains full text opacity', async ({ page }) => { //
   expect(errors).toEqual([]);
 });
 
+test('reduced motion suppresses spatial travel without erasing state feedback', async ({ page }) => { // Tests INV-53, FAIL-46
+  const errors = monitor(page);
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto(new URL('?lesson=retina-to-v1', BASE_URL).href);
+  await page.waitForFunction(() => document.getElementById('app')?.dataset.state === 'ready');
+
+  const motion = await page.evaluate(() => {
+    const reducedSelectors = [];
+    const visit = (rules, inReducedMotion = false) => {
+      for (const rule of rules) {
+        const reduced = inReducedMotion || (
+          rule instanceof CSSMediaRule
+          && rule.conditionText.includes('prefers-reduced-motion')
+          && rule.conditionText.includes('reduce')
+        );
+        if (reduced && rule.selectorText) reducedSelectors.push(rule.selectorText);
+        if ('cssRules' in rule && rule.cssRules.length) visit(rule.cssRules, reduced);
+      }
+    };
+    const feedbackTransitions = (element) => {
+      const style = getComputedStyle(element);
+      const properties = style.transitionProperty.split(',').map((value) => value.trim());
+      const durations = style.transitionDuration.split(',').map((value) => parseFloat(value));
+      return Object.fromEntries(properties.map((property, index) => [property, durations[index % durations.length]]));
+    };
+    for (const sheet of document.styleSheets) visit(sheet.cssRules);
+    return {
+      reducedSelectors,
+      scrollBehavior: getComputedStyle(document.getElementById('page-scroll')).scrollBehavior,
+      sceneTransitions: feedbackTransitions(document.querySelector('.scene-number')),
+      buttonTransitions: feedbackTransitions(document.getElementById('back-to-atlas')),
+    };
+  });
+
+  expect(motion.reducedSelectors).toEqual(['.page-scroll']);
+  expect(motion.scrollBehavior).toBe('auto');
+  for (const transitions of [motion.sceneTransitions, motion.buttonTransitions]) {
+    for (const property of ['color', 'border-color', 'background']) {
+      expect(transitions[property]).toBeGreaterThanOrEqual(0.15);
+    }
+  }
+  await expect(page.locator('#play')).toBeDisabled();
+  expect(await page.evaluate(() => window.__view.activity.state.playing)).toBe(false);
+  expect(errors).toEqual([]);
+});
+
 test('retained layer controls expose entity-specific keyboard toggles', async ({ page }) => { // Tests INV-50
   const errors = monitor(page);
   await page.setViewportSize({ width: 390, height: 844 });
