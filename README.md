@@ -174,7 +174,7 @@ src/lesson/          versioned lesson parsing, catalogs, scene state, and adapte
 src/lessons/         checked-in Obsidian-style lesson content
 src/ui/              renderer-independent presentation, workspace, scroll, and camera models
 src/pathways.js      schematic anterior-pathway control points
-src/style.css        responsive editorial scientific-instrument UI
+src/style.css        responsive editorial UI and semantic interface theme tokens
 test/                 focused Node tests for extracted pure behavior
 scripts/browser/      replayable Firefox/Chromium UX, accessibility, and performance checks
 .github/workflows/standalone-binaries.yml  artifact/nightly/stable release gates

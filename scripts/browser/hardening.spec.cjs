@@ -139,6 +139,62 @@ test('reduced motion suppresses spatial travel without erasing state feedback', 
   expect(errors).toEqual([]);
 });
 
+test('interface colors resolve through semantic root theme tokens', async ({ page }) => { // Tests INV-54, FAIL-47
+  const errors = monitor(page);
+  await page.goto(BASE_URL);
+  await page.waitForFunction(() => document.getElementById('app')?.dataset.state === 'ready');
+
+  const theme = await page.evaluate(() => {
+    const readableSheets = [...document.styleSheets].flatMap((sheet) => {
+      try { return [{ sheet, rules: sheet.cssRules }]; } catch { return []; }
+    });
+    const themed = readableSheets.find(({ sheet }) => sheet.ownerNode?.dataset?.viteDevId?.endsWith('/src/style.css'))
+      ?? readableSheets.find(({ rules }) => [...rules].some((rule) => (
+        rule instanceof CSSStyleRule
+        && rule.selectorText === ':root'
+        && rule.style.getPropertyValue('--bg')
+      )));
+    if (!themed) return { literals: [{ selector: 'missing', property: 'theme', value: 'src/style.css' }], tokens: {} };
+
+    const literals = [];
+    const literalColor = /(?:#[0-9a-f]{3,8}\b|\b(?:rgba?|hsla?|hwb|lab|lch|oklab|oklch|color|color-mix|light-dark)\s*\(|\btransparent\b)/i;
+    const visit = (rules) => {
+      for (const rule of rules) {
+        if (rule instanceof CSSStyleRule) {
+          for (const property of rule.style) {
+            if (rule.selectorText === ':root' && property.startsWith('--')) continue;
+            const value = rule.style.getPropertyValue(property);
+            const unthemed = value.replace(/--[a-z0-9_-]+/gi, '');
+            const colorBearing = /(?:^|-)color$|^background(?:-|$)|^border(?:-|$)|^outline(?:-|$)|shadow$|^(?:fill|stroke|filter)$|^text-decoration(?:-|$)|^column-rule(?:-|$)/.test(property);
+            const namedColor = (colorBearing || property.startsWith('--')) && (unthemed.match(/\b[a-z][a-z0-9-]*\b/gi) ?? [])
+              .some((token) => !['currentcolor', 'inherit', 'initial', 'unset', 'revert'].includes(token.toLowerCase())
+                && CSS.supports('color', token));
+            if (literalColor.test(unthemed) || namedColor) {
+              literals.push({ selector: rule.selectorText, property, value });
+            }
+          }
+        }
+        if ('cssRules' in rule && rule.cssRules.length) visit(rule.cssRules);
+      }
+    };
+    visit(themed.rules);
+    const rootRule = [...themed.rules].find((rule) => rule instanceof CSSStyleRule && rule.selectorText === ':root');
+    const required = [
+      '--text-on-accent', '--text-accent', '--surface-panel', '--surface-overlay', '--surface-clear',
+      '--control-surface', '--accent-border', '--danger-border', '--backdrop', '--shadow-color',
+      '--fallback-surface-start', '--fallback-surface-end', '--image-fallback-start', '--image-fallback-end',
+    ];
+    return {
+      literals,
+      tokens: Object.fromEntries(required.map((name) => [name, rootRule.style.getPropertyValue(name).trim()])),
+    };
+  });
+
+  expect(theme.literals).toEqual([]);
+  expect(Object.values(theme.tokens).every(Boolean)).toBe(true);
+  expect(errors).toEqual([]);
+});
+
 test('retained layer controls expose entity-specific keyboard toggles', async ({ page }) => { // Tests INV-50
   const errors = monitor(page);
   await page.setViewportSize({ width: 390, height: 844 });
