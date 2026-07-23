@@ -128,4 +128,6 @@ test('every reusable action is GitHub-owned and pinned while workflow avoids des
   assert.equal(source.includes('pull_request_target'), false);
   assert.equal(source.includes('sudo '), false);
   assert.equal(source.includes('git push'), false);
+  assert.doesNotMatch(source, /\brg\b/, 'GitHub Ubuntu runners do not guarantee ripgrep');
+  assert.match(source, /grep -l '_brain-atlas\/lifecycle'/);
 });

@@ -46,7 +46,7 @@ jobs:
         run: |
           set -euo pipefail
           npm run build:publish
-          if rg -n '__view|__lesson|_brain-atlas/lifecycle|standalone/lifecycle' dist/assets/*.js; then
+          if grep -nE '__view|__lesson|_brain-atlas/lifecycle|standalone/lifecycle' dist/assets/*.js; then
             echo 'ordinary publication contains debug or standalone lifecycle code' >&2
             exit 1
           fi
@@ -60,8 +60,8 @@ jobs:
         run: |
           set -euo pipefail
           npm run build:standalone:site
-          rg -l '_brain-atlas/lifecycle' internal/site/dist/standalone-assets/*.js >/dev/null
-          if rg -n '__view|__lesson' internal/site/dist/standalone-assets/*.js; then
+          grep -l '_brain-atlas/lifecycle' internal/site/dist/standalone-assets/*.js >/dev/null
+          if grep -nE '__view|__lesson' internal/site/dist/standalone-assets/*.js; then
             echo 'standalone production artifact contains development hooks' >&2
             exit 1
           fi
