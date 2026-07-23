@@ -332,7 +332,9 @@ cited detail view. Relationship details show direction, source class, method, st
 confidence, and sources. Association records always say **Undirected · Displayed dataset ·
 Qualified · Low confidence**; endpoint filtering creates no new relationship records.
 Reduced-motion preference makes authored camera changes
-instant, settles activity, disables Play, and removes the Skip action. The renderer also
+instant, settles activity, disables Play, removes the Skip action, and replaces smooth page
+travel with immediate scrolling. Brief color, border, and background transitions remain as
+non-spatial state feedback rather than being erased by a blanket CSS override. The renderer also
 suspends draws and model clocks while the tab is hidden or the 3D stage is fully
 offscreen, preserving explicit Play/Pause intent; visible paused or settled views redraw
 only when controls, state, layout, or assets change.
