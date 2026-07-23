@@ -181,10 +181,13 @@ export async function publishNightly(bundle, client) {
   const canonical = !release.draft && tagCommit === bundle.commit && release.targetCommitish === bundle.commit && obsolete.length === 0;
   if (canonical) return { status: 'unchanged' };
 
-  if (tagCommit !== bundle.commit) await client.moveTag('nightly', bundle.commit);
   if (release.draft) {
+    if (tagCommit !== null && tagCommit !== bundle.commit) {
+      throw new Error('existing nightly draft conflicts with a different nightly tag');
+    }
     await client.publish({ tag: 'nightly', sha: bundle.commit, title, body, prerelease: true, latest: false });
   } else {
+    if (tagCommit !== bundle.commit) await client.moveTag('nightly', bundle.commit);
     await client.edit({ tag: 'nightly', sha: bundle.commit, title, body, prerelease: true, latest: false });
   }
   await verifyNightlyPromotion(client, bundle);
@@ -341,6 +344,49 @@ export function ghUploadArguments(repo, tag, assets) {
   return ['release', 'upload', tag, ...assets.map(({ path }) => path), '--repo', repo];
 }
 
+export function ghViewReleaseArguments(repo, tag) {
+  return [
+    'release', 'view', tag, '--repo', repo, '--json',
+    'databaseId,tagName,isDraft,isPrerelease,targetCommitish,name,assets',
+  ];
+}
+
+export function normalizeGhRelease(release) {
+  if (!Number.isSafeInteger(release?.databaseId) || release.databaseId <= 0
+      || typeof release.tagName !== 'string'
+      || typeof release.isDraft !== 'boolean'
+      || typeof release.isPrerelease !== 'boolean'
+      || typeof release.targetCommitish !== 'string'
+      || typeof release.name !== 'string'
+      || !Array.isArray(release.assets)) {
+    throw new Error('invalid GitHub CLI release response');
+  }
+  return {
+    id: release.databaseId,
+    tag: release.tagName,
+    draft: release.isDraft,
+    prerelease: release.isPrerelease,
+    latest: false,
+    targetCommitish: release.targetCommitish,
+    name: release.name,
+    assets: release.assets.map((asset) => ({
+      id: releaseAssetDatabaseID(asset.apiUrl),
+      name: asset.name,
+      size: asset.size,
+      digest: asset.digest,
+    })),
+  };
+}
+
+function releaseAssetDatabaseID(apiUrl) {
+  const match = typeof apiUrl === 'string'
+    ? apiUrl.match(/^https:\/\/api\.github\.com\/repos\/[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+\/releases\/assets\/([1-9]\d*)$/)
+    : null;
+  const id = match ? Number(match[1]) : Number.NaN;
+  if (!Number.isSafeInteger(id)) throw new Error('release asset API URL does not contain a numeric database ID');
+  return id;
+}
+
 class GhClient {
   constructor(repo) {
     this.repo = repo;
@@ -351,21 +397,8 @@ class GhClient {
   }
 
   async getRelease(tag) {
-    const result = this.#spawn(['api', `repos/${this.repo}/releases/tags/${tag}`], { allow404: true });
-    if (result === null) return null;
-    const release = JSON.parse(result);
-    return {
-      id: release.id,
-      tag: release.tag_name,
-      draft: release.draft,
-      prerelease: release.prerelease,
-      latest: false,
-      targetCommitish: release.target_commitish,
-      name: release.name,
-      assets: release.assets.map((asset) => ({
-        id: asset.id, name: asset.name, size: asset.size, digest: asset.digest,
-      })),
-    };
+    const result = this.#spawn(ghViewReleaseArguments(this.repo, tag), { allow404: true });
+    return result === null ? null : normalizeGhRelease(JSON.parse(result));
   }
 
   async resolveTag(tag) {
@@ -461,7 +494,6 @@ class DryRunClient {
   async resolveTag(tag) { this.actions.push({ action: 'resolve-tag', tag }); return this.tags.get(tag) ?? this.sha; }
   async createDraft(options) {
     this.actions.push({ action: 'create-draft', tag: options.tag, assets: options.assets.map(({ name }) => name) });
-    this.tags.set(options.tag, options.sha);
     this.release = {
       id: 1, tag: options.tag, draft: true, prerelease: options.prerelease, latest: options.latest,
       targetCommitish: options.sha, name: options.title,
@@ -471,7 +503,11 @@ class DryRunClient {
   async upload(_tag, assets) { this.actions.push({ action: 'upload', assets: assets.map(({ name }) => name) }); }
   async moveTag(tag, sha) { this.actions.push({ action: 'move-tag', tag, sha }); this.tags.set(tag, sha); }
   async edit(options) { this.actions.push({ action: 'edit-release', tag: options.tag }); }
-  async publish(options) { this.actions.push({ action: 'publish-release', tag: options.tag }); this.release.draft = false; }
+  async publish(options) {
+    this.actions.push({ action: 'publish-release', tag: options.tag });
+    this.tags.set(options.tag, options.sha);
+    this.release.draft = false;
+  }
   async deleteAsset(id) { this.actions.push({ action: 'delete-asset', id }); }
 }
 

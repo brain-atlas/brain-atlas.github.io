@@ -8,7 +8,9 @@ import test from 'node:test';
 import {
   ghCreateDraftArguments,
   ghUploadArguments,
+  ghViewReleaseArguments,
   loadBundle,
+  normalizeGhRelease,
   parseArguments,
   publishNightly,
   publishStable,
@@ -62,6 +64,57 @@ test('gh publication arguments preserve draft safety, tag verification, and no-c
   const upload = ghUploadArguments('brain-atlas/brain-atlas.github.io', 'nightly', assets);
   assert.equal(upload.includes('--clobber'), false);
   assert.deepEqual(upload.slice(0, 3), ['release', 'upload', 'nightly']);
+});
+
+test('gh release discovery uses the draft-aware CLI view instead of the published-only REST endpoint', () => {
+  assert.deepEqual(ghViewReleaseArguments('brain-atlas/brain-atlas.github.io', 'nightly'), [
+    'release', 'view', 'nightly', '--repo', 'brain-atlas/brain-atlas.github.io', '--json',
+    'databaseId,tagName,isDraft,isPrerelease,targetCommitish,name,assets',
+  ]);
+});
+
+test('normalizeGhRelease preserves draft metadata and numeric asset IDs from GitHub CLI output', () => {
+  const digest = `sha256:${'a'.repeat(64)}`;
+  const release = normalizeGhRelease({
+    databaseId: 358424022,
+    tagName: 'nightly',
+    isDraft: true,
+    isPrerelease: true,
+    targetCommitish: SHA,
+    name: 'Brain Atlas nightly 1234567890ab',
+    assets: [{
+      apiUrl: 'https://api.github.com/repos/brain-atlas/brain-atlas.github.io/releases/assets/486664781',
+      name: 'brain-atlas-nightly-1234567890ab-SHA256SUMS',
+      size: 823,
+      digest,
+    }],
+  });
+
+  assert.deepEqual(release, {
+    id: 358424022,
+    tag: 'nightly',
+    draft: true,
+    prerelease: true,
+    latest: false,
+    targetCommitish: SHA,
+    name: 'Brain Atlas nightly 1234567890ab',
+    assets: [{
+      id: 486664781,
+      name: 'brain-atlas-nightly-1234567890ab-SHA256SUMS',
+      size: 823,
+      digest,
+    }],
+  });
+
+  assert.throws(() => normalizeGhRelease({
+    databaseId: 1,
+    tagName: 'nightly',
+    isDraft: true,
+    isPrerelease: true,
+    targetCommitish: SHA,
+    name: 'Nightly',
+    assets: [{ apiUrl: 'https://api.github.com/releases/assets/not-numeric', name: 'asset', size: 1, digest }],
+  }), /numeric database ID/);
 });
 
 test('loadBundle verifies checksums and returns every upload asset', async () => {
@@ -134,6 +187,54 @@ test('nightly first publication verifies a draft before making it public', async
   assert.equal(client.release.latest, false);
   assert.equal(client.release.assets.length, 8);
   assert.deepEqual(client.mutations(), ['createDraft', 'publish']);
+});
+
+test('nightly retry publishes a verified complete draft before its Git tag exists', async () => {
+  const bundle = fakeBundle('nightly-1234567890ab', SHA);
+  const release = remoteRelease('nightly', SHA, bundle.assets, {
+    draft: true,
+    name: 'Brain Atlas nightly 1234567890ab',
+  });
+  const client = new FakeClient({ main: SHA, release });
+
+  const result = await publishNightly(bundle, client);
+
+  assert.equal(result.status, 'updated');
+  assert.equal(client.release.draft, false);
+  assert.equal(client.tags.nightly, SHA);
+  assert.deepEqual(client.mutations(), ['publish']);
+});
+
+test('nightly retry promotes new assets over a complete stale draft without moving a missing tag', async () => {
+  const oldBundle = fakeBundle('nightly-aaaaaaaaaaaa', OLD_SHA);
+  const release = remoteRelease('nightly', OLD_SHA, oldBundle.assets, {
+    draft: true,
+    name: 'Brain Atlas nightly aaaaaaaaaaaa',
+  });
+  const client = new FakeClient({ main: SHA, release });
+  const next = fakeBundle('nightly-1234567890ab', SHA);
+
+  const result = await publishNightly(next, client);
+
+  assert.equal(result.status, 'updated');
+  assert.equal(client.release.draft, false);
+  assert.equal(client.release.targetCommitish, SHA);
+  assert.equal(client.tags.nightly, SHA);
+  assert.equal(client.release.assets.some(({ name }) => name.includes('nightly-aaaaaaaaaaaa')), false);
+  assert.deepEqual(client.mutations(), [
+    'upload', 'publish',
+    'deleteAsset', 'deleteAsset', 'deleteAsset', 'deleteAsset',
+    'deleteAsset', 'deleteAsset', 'deleteAsset', 'deleteAsset',
+  ]);
+});
+
+test('nightly retry refuses a draft that conflicts with an existing tag', async () => {
+  const bundle = fakeBundle('nightly-1234567890ab', SHA);
+  const release = remoteRelease('nightly', SHA, bundle.assets, { draft: true });
+  const client = new FakeClient({ main: SHA, release, tags: { nightly: OLD_SHA } });
+
+  await assert.rejects(() => publishNightly(bundle, client), /draft conflicts/);
+  assert.deepEqual(client.mutations(), []);
 });
 
 test('stale nightly build exits without any release mutation', async () => {
@@ -338,7 +439,6 @@ class FakeClient {
 
   async createDraft({ tag, sha, prerelease, latest, assets }) {
     this.log.push('createDraft');
-    this.tags[tag] = sha;
     this.release = remoteRelease(tag, sha, assets, { draft: true, prerelease, latest, assets: remoteAssets(assets) });
   }
 
@@ -370,7 +470,7 @@ class FakeClient {
     this.release.targetCommitish = sha;
     this.release.prerelease = prerelease;
     this.release.latest = latest;
-    if (this.tagAfterPublish) this.tags[tag] = this.tagAfterPublish;
+    this.tags[tag] = this.tagAfterPublish ?? sha;
   }
 
   async deleteAsset(id) {
