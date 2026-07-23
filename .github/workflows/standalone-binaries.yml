@@ -196,6 +196,7 @@ jobs:
           set -euo pipefail
           node scripts/publish-standalone-release.mjs \
             --channel nightly \
+            --tag nightly \
             --assets release \
             --repo "$GITHUB_REPOSITORY" \
             --sha "$GITHUB_SHA"
