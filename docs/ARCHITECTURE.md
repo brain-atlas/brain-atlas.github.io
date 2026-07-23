@@ -1,6 +1,42 @@
 # Architecture
 
-`brain-atlas` is a static Three.js application. Vite bundles the UI and renderer; large anatomical datasets stay in `public/` and load at runtime.
+`brain-atlas` is a static Three.js application. Vite bundles the UI and renderer;
+large anatomical datasets stay in `public/` and load at runtime. GitHub Pages
+serves the ordinary static artifact. An optional CGO-free Go executable embeds a
+standalone-mode copy of the same reviewed artifact and serves it only on the
+workstation loopback interface.
+
+## Standalone delivery boundary
+
+`npm run build:standalone` runs the existing publication guard, enables a
+conditional Vite HTML plugin, writes the complete artifact under
+`internal/site/dist/`, and compiles `cmd/brain-atlas` with `CGO_ENABLED=0`. The
+plugin adds only `src/standalone/lifecycle.js` and writes generated chunks under
+`standalone-assets/`; ordinary production/Pages output keeps `assets/` and
+contains neither that module nor its endpoint marker. `internal/site/embed.go`
+requires embedded `index.html`, so a supported binary never falls back to files
+beside the executable.
+
+`internal/standalone` owns the local process boundary. It validates a
+loopback-only address, listens on an OS-assigned port by default, prints the
+actual URL, and optionally hands that URL to the platform default browser without
+a shell. Browser-launch failure leaves the printed URL usable. The HTTP handler
+serves GET/HEAD static files with explicit model/data MIME types, requires
+revalidation for every embedded response so fixed ports cannot retain an older
+executable's code, adds response security headers, and returns 404 instead of
+inventing an SPA fallback.
+
+The root response sets a process-random `HttpOnly; SameSite=Strict` session
+cookie. The standalone browser module uses that cookie on one held same-origin
+GET to `/_brain-atlas/lifecycle`. An authenticated stream joins a
+concurrency-safe page count until request cancellation. Automatic shutdown arms
+only after the first valid page, waits ten seconds after the last page leaves,
+and cancels stale timers when a page reconnects; `-stay-open` disables this
+trigger. SIGINT/SIGTERM and lifecycle expiry cancel active request contexts and
+converge on bounded `http.Server.Shutdown`. The server has no global write
+timeout because the held response represents page lifetime. This boundary stores
+no lesson, anatomy, account, or personal data and exposes no general API or
+explicit shutdown endpoint. See [`internal/standalone/SPEC.md`](../internal/standalone/SPEC.md).
 
 ## Runtime shape
 

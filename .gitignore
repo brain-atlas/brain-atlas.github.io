@@ -1,5 +1,8 @@
 node_modules/
 dist/
+build/
+internal/site/dist/*
+!internal/site/dist/.gitkeep
 .direnv/
 .envrc.local
 *.log

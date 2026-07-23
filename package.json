@@ -19,6 +19,7 @@
     "test": "node --test",
     "build": "vite build",
     "build:publish": "node scripts/check-publish.mjs && vite build",
+    "build:standalone": "node scripts/build-standalone.mjs",
     "preview": "vite preview --port 5180"
   },
   "dependencies": {

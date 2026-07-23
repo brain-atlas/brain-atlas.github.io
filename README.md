@@ -28,14 +28,14 @@ The dev environment is a Nix flake wired through direnv (matching the sibling
 project). From this directory:
 
 ```bash
-direnv allow      # loads the flake: Node 22 + git, then runs `npm install`
+direnv allow      # loads the flake: Node 22 + Go + git, then runs `npm install`
 npm run dev       # Vite dev server → http://localhost:5180
 ```
 
 Without direnv:
 
 ```bash
-nix develop       # or just have Node 22 on PATH
+nix develop       # or have Node 22 and Go 1.23+ on PATH
 npm install
 npm run dev
 ```
@@ -69,6 +69,39 @@ For GitHub Pages or any public deployment, build from a clean checkout with
 `npm run build:publish`. Vite copies every file under `public/`; the publication
 check prevents untracked experiments with unknown provenance from entering the
 published `dist/` directory.
+
+### Standalone workstation binary
+
+Build one executable containing the reviewed Vite page, anatomical assets,
+licenses, and notices:
+
+```bash
+npm run build:standalone
+./build/brain-atlas           # Windows: .\\build\\brain-atlas.exe
+```
+
+The build script runs the publication guard, emits a standalone-only Vite bundle,
+and compiles it with `CGO_ENABLED=0`. Node and Go are build-time requirements;
+the resulting executable needs neither Node nor adjacent asset files. Set `GOOS`
+and `GOARCH` before the npm command to cross-compile with the installed Go
+toolchain.
+
+At runtime the executable:
+
+- listens on an OS-assigned `127.0.0.1` port and rejects non-loopback `-addr`
+  values;
+- prints the URL and asks the operating system to open the default browser;
+- exits ten seconds after the last authenticated Brain Atlas page disconnects,
+  while allowing reloads or another tab to reconnect; and
+- still accepts Ctrl+C or SIGTERM for immediate graceful shutdown.
+
+Use `-no-open` to copy the printed URL yourself, `-stay-open` to run until
+interrupted, or `-shutdown-grace 30s` to change the reconnect window. If browser
+launch fails, the server remains available at the printed URL and does not arm
+automatic shutdown until a page connects. The binary is a local web launcher,
+not a native WebView or network server; it is not signed or notarized by this
+build. Imported lessons may still contact the supplementary HTTPS image hosts
+shown in their activation preview.
 
 ## Coordinate handling
 
@@ -109,9 +142,13 @@ and interpretation limits without adding a runtime transform.
 ## Layout
 
 ```
-flake.nix            Nix devShell (Node 22 + git); blocks bare `nix develop`
+flake.nix            Nix devShell (Node 22 + Go + git); blocks bare `nix develop`
 .envrc / .envrc.d/   direnv: `use flake`, then npm install on entry
 index.html           semantic Atlas/Lesson shell, drawer, shared stage, and viewer controls
+cmd/brain-atlas/     standalone executable flags and process lifecycle
+internal/site/       standalone Vite embed boundary
+internal/standalone/ loopback HTTP, browser handoff, and tab-lifecycle shutdown
+src/standalone/      standalone-only browser lifecycle client
 src/bootstrap.js     workspace/history, lesson/import, navigation, disclosure, and fallback
 src/main.js          lazy Three.js scene, data loading, activity, adapter, and panel bridge
 src/activity/        renderer-independent seeded impulse, vibration, and timing math
