@@ -33,6 +33,7 @@ scientific catalogs, authored lesson state, or anatomical coordinates.
 10. Explore helpers derive either a scene snapshot with the actual rendered camera or the complete-atlas default, apply allowlisted command batches only after synchronizing that camera, project truthful panel state by stable entity ID, include the canonical endpoint-filter query plus catalog presets/selectors, and resolve fidelity records from visible entities plus approved context records. The retained DOM controls synchronize in place, an empty visibility list receives explicit Atlas-only presentation, and the responsive dock may collapse without changing canonical state.
 11. Workspace helpers project checked drawer records, validate static-safe query/history intent, synchronize persistent Atlas cameras, and create complete lesson-resume or lesson-derived Atlas tokens. Bootstrap alone owns candidate maps, History API effects, DOM moves, transition epochs, and explicit lesson closeout.
 12. Anatomy-inspector helpers filter strict inspectables through canonical owner visibility/hemispheres, compose anatomy explanations with owner fidelity, reduce input-equivalent transient selection state, reject drags as taps, and normalize exact canvas coordinates without importing Three.js or the DOM.
+13. Viewer-power helpers derive automatic suspension and continuous-frame eligibility from document/stage observability, requested playback, settled state, and reduced motion. They deliberately accept no interaction-idle timer. `src/main.js` alone owns DOM observers, frame invalidation, transition-clock shifting, and renderer/model execution.
 
 **Key files:**
 
@@ -48,6 +49,7 @@ scientific catalogs, authored lesson state, or anatomical coordinates.
 - `markdown-view-model.js` — allowlisted semantic Markdown plain data.
 - `fidelity-view-model.js` — scene fidelity status/detail projection.
 - `anatomy-inspector.js` — inspectable availability/detail projection, modality state, tap threshold, exact-canvas NDC, and nearest-hit choice.
+- `viewer-power.js` — pure observability/playback power policy and continuous-frame decision.
 - `src/bootstrap.js` — DOM consumer, WebGL gate, focus, scrolling, responsive disclosure.
 - `src/main.js#createLessonRendererAdapter` — the only concrete Three.js consumer.
 
@@ -86,6 +88,7 @@ scientific catalogs, authored lesson state, or anatomical coordinates.
 | `createAnatomySelectionState()` / `applyAnatomySelectionIntent(state, intent)` | bootstrap/tests | Frozen transient hover/focus/touch/details state. Preview is nonsticky; touch stages; explicit activation alone opens details. |
 | `anatomyTapIntent(input)` | main/tests | Distinguishes a bounded tap from orbit/scroll drag movement. |
 | `anatomyPointerNdc(input)` / `nearestAnatomyHit(hits)` | main/tests | Converts the exact renderer-canvas rectangle to NDC and deterministically selects the nearest hit. |
+| `deriveViewerPowerState(input)` / `needsContinuousViewerFrames(input)` | main/tests | Preserve requested playback while deriving hidden/offscreen suspension, reduced-motion-safe resume eligibility, active model clocks, and whether another renderer frame is justified. Unknown interaction-idle inputs fail. |
 
 ## Invariants
 
@@ -141,6 +144,7 @@ scientific catalogs, authored lesson state, or anatomical coordinates.
 | INV-48 | Catalog-bound layer-panel topology stays mounted across canonical edits. Stable semantic subgroup buttons own `aria-expanded`/`aria-controls`; projections update L/R, leaf, and parent states in place while preserving expansion, logical focus, and panel scroll. | `scripts/browser/explore-edge.spec.cjs` repeated region/tract keyboard toggles | Filter truth remains canonical without converting every edit into a destructive DOM navigation event. |
 | INV-49 | Viewer controls are a nonmodal wide dock when open. Closing removes its grid track, returns the width to the one stage, and overlays only its semantic reopen summary; compact layouts retain a bounded stacked panel. The existing stage observer updates camera aspect without resetting state. | `scripts/browser/explore-edge.spec.cjs` wide/compact disclosure and aspect checks | Collapse serves the primary spatial task without duplicating controls, renderer state, or canvas ownership. |
 | INV-50 | Numbered lesson prose remains fully opaque whether or not its scene is active; the rail and scene number carry current-position emphasis. Every retained layer row exposes entity-specific L/R names plus one keyboard-operable combined-hemisphere toggle whose pressed state synchronizes with canonical projection. | `scripts/browser/hardening.spec.cjs` contrast and retained-control checks | Reading order cannot reduce prose below WCAG contrast, and repeated hemisphere controls remain distinguishable and operable without a pointer. |
+| INV-51 | Hidden documents and fully offscreen stages automatically suspend renderer draws and all model clocks without changing explicit Play/Pause intent. Returning visibility resumes only requested, non-settled playback and never overrides reduced motion. Visible paused/settled views render only on invalidation; active playback, authored transitions, damping/input, and auto-rotate retain continuous frames. Power status uses explicit ownership and cannot clear another model-status producer. No interaction-idle timer classifies passive reading. | `test/viewer-power.test.js` + `scripts/browser/power-rendering.spec.cjs` clock/render/status checks | Unobserved or unchanged views do not spend continuous CPU/GPU budget, while user intent, lesson timing, assistive-technology reading, status ownership, and visible interaction remain predictable. |
 
 ## Failure Modes
 
@@ -189,6 +193,7 @@ scientific catalogs, authored lesson state, or anatomical coordinates.
 | FAIL-41 | An L/R edit collapses its subgroup, drops focus, or moves panel scroll | Canonical panel projection rebuilt the complete `#layers` subtree with every group closed | Build after stable catalog binding, then synchronize controls in place and leave disclosure/focus/scroll as DOM presentation state. |
 | FAIL-42 | Closing Viewer controls leaves a full-height blank sidebar or distorts the stage | Native details hid content while the workspace retained a fixed second grid track, or resizing bypassed the stage observer | Remove the wide grid track in the closed state, overlay only the reopen summary, retain compact stacking, and verify exact camera aspect. |
 | FAIL-43 | Upcoming lesson prose is faded or a screen reader announces many context-free “L”/“R” controls | Scene-level opacity de-emphasizes readable content, or layer buttons omit entity context/use a pointer-only text shortcut | Keep prose opacity at one; use rail/number styling for active emphasis; expose entity-specific button names and synchronize semantic pressed state in place. |
+| FAIL-44 | Hidden/offscreen activity advances, a paused view keeps drawing, returning visibility overrides Pause/reduced motion or jumps an authored transition, or power notifications clear another status | The unconditional frame loop survived, suspension mutated requested playback, the first resumed delta included hidden time, transition start times stayed wall-clock based, or resume cleared the shared status without checking ownership | Measure initial visibility, consume the latest queued intersection, cancel scheduled frames on suspension, preserve canonical/requested playback, zero the first resumed delta, shift active transition clocks, invalidate from resize/controls/assets/state, and restore power status only while it still owns the surface. |
 
 ## Decision Framework
 
@@ -212,7 +217,8 @@ node --test test/scene-navigation.test.js test/lesson-scene-controller.test.js \
   test/markdown-view-model.test.js test/fidelity-view-model.test.js \
   test/lesson-presentation.test.js test/reference-lesson.test.js \
   test/explore-session.test.js test/workspace-session.test.js \
-  test/anatomy-inspector.test.js test/fibre-endpoint-filter.test.js
+  test/anatomy-inspector.test.js test/fibre-endpoint-filter.test.js \
+  test/viewer-power.test.js
 ```
 
 | Spec item | Verification |
@@ -238,6 +244,7 @@ node --test test/scene-navigation.test.js test/lesson-scene-controller.test.js \
 | INV-46, FAIL-39 | `test/fibre-endpoint-filter.test.js`, `test/explore-session.test.js`, `test/reference-lesson.test.js`, and `scripts/browser/fibre-endpoint-filter.spec.cjs` in Firefox/Chromium |
 | INV-47–INV-49, FAIL-40–FAIL-42 | `scripts/browser/explore-edge.spec.cjs` empty recovery, retained keyboard disclosure/focus/scroll, and wide/compact dock/aspect checks in Firefox/Chromium |
 | INV-50, FAIL-43 | `scripts/browser/hardening.spec.cjs` full-opacity lesson prose plus entity-specific keyboard layer toggles in Chromium/Firefox |
+| INV-51, FAIL-44 | `test/viewer-power.test.js` + `scripts/browser/power-rendering.spec.cjs` hidden/offscreen, explicit Pause, reduced-motion, model-clock, render-count, and accessible-status checks |
 
 Full repository verification remains `npm test && npm run build:publish` plus
 wide, compact, reduced-motion, no-WebGL, accessibility, production-hook, and mobile-profile browser checks.

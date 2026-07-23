@@ -332,7 +332,10 @@ cited detail view. Relationship details show direction, source class, method, st
 confidence, and sources. Association records always say **Undirected · Displayed dataset ·
 Qualified · Low confidence**; endpoint filtering creates no new relationship records.
 Reduced-motion preference makes authored camera changes
-instant, settles activity, disables Play, and removes the Skip action.
+instant, settles activity, disables Play, and removes the Skip action. The renderer also
+suspends draws and model clocks while the tab is hidden or the 3D stage is fully
+offscreen, preserving explicit Play/Pause intent; visible paused or settled views redraw
+only when controls, state, layout, or assets change.
 
 The **Viewer controls** dock contains Play/Pause, activity speed, **Cutaway**,
 **Tissue**, Side/Top/Back/Front, hemisphere/layer filters, endpoint-filter presets and

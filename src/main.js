@@ -33,6 +33,12 @@ import { createRendererAdapter } from './lesson/index.js';
 import { createCameraTransition, sampleCameraTransition } from './ui/camera-transition.js';
 import { createVisibilityTransition, sampleVisibilityTransition } from './ui/visibility-transition.js';
 import {
+  deriveViewerPowerState,
+  latestStageIntersection,
+  needsContinuousViewerFrames,
+  rectIntersectsViewport,
+} from './ui/viewer-power.js';
+import {
   anatomyPointerNdc,
   anatomyTapIntent,
   nearestAnatomyHit,
@@ -46,6 +52,8 @@ rendererReducedMotionQuery.addEventListener('change', ({ matches }) => {
   reduce = matches;
   if (matches) controls.autoRotate = false;
   applyLessonPlaybackRequest();
+  notifyViewerPowerState();
+  requestViewerRender();
 });
 
 const viewerReadyParts = new Set();
@@ -134,6 +142,7 @@ function loadBrain() {
     });
     brainGroup.add(g.scene);
     reapplyLessonMaterialFactors(brainGroup);
+    requestViewerRender();
   }, undefined, (e) => console.warn('brain load failed:', e));
 }
 
@@ -218,14 +227,18 @@ function applyRegionMesh(id) {
   if (grp) {
     grp.visible = lessonAllows('region', id);
     grp.traverse((n) => { if (n.isMesh && n.userData && n.userData.hemi) n.visible = hemiState[n.userData.hemi] && rh[n.userData.hemi]; });
+    requestViewerRender();
   }
 }
 function applyTractMesh(id) {
   const t = tractsById[id], th = tractHemi[id] || { L: true, R: true };
-  if (t) for (const h of ['L', 'R']) {
-    const vis = lessonAllows('tract', id) && hemiState[h] && th[h];
-    if (t.lines[h]) t.lines[h].visible = vis;
-    if (t.caps && t.caps[h]) t.caps[h].visible = vis;
+  if (t) {
+    for (const h of ['L', 'R']) {
+      const vis = lessonAllows('tract', id) && hemiState[h] && th[h];
+      if (t.lines[h]) t.lines[h].visible = vis;
+      if (t.caps && t.caps[h]) t.caps[h].visible = vis;
+    }
+    requestViewerRender();
   }
 }
 function applyHemi() {
@@ -399,10 +412,10 @@ function generateFiring(dtWall) {
   simT = target;
 }
 
-function updateTracers(dt) {
+function updateTracers(dt, playing = st.flow) {
   if (!FIB) return;
   const playbackRate = st.speed / 70, arr = trGeo.attributes.position.array;
-  if (st.flow) {
+  if (playing) {
     generateFiring(dt);
     for (const tracer of tracers) {
       tracer.distanceMm += distanceAfterDisplayTime(
@@ -454,6 +467,7 @@ function loadFibres() {
     }
     initFiring();          // build per-fibre firing states now that FIB is populated
     reapplyLessonMaterialFactors(fibreGroup);
+    requestViewerRender();
   }).catch((e) => console.warn('fibres load failed:', e));
 }
 
@@ -603,10 +617,10 @@ function initTractImpulses(activity) {
     };
   }
 }
-function updateTractImpulses(dt) {
+function updateTractImpulses(dt, playing = st.flow) {
   if (!tractImpulseEngine) { tractImpulseGeo.setDrawRange(0, 0); return; }
   const nextTime = advanceAssociationTime(tractImpulseTime, dt, {
-    playing: st.flow,
+    playing,
     speed: st.speed / 70,
     reducedMotion: reduce,
   });
@@ -730,10 +744,10 @@ function loadSwm() {
     reapplyLessonMaterialFactors(swmGroup);
   }).catch((e) => console.warn('swm load failed:', e));
 }
-function updateSwm(dt) {
+function updateSwm(dt, playing = st.flow) {
   if (!swmDots.length || !swmGroup.visible) { swmGeo.setDrawRange(0, 0); return; }
   const arr = swmGeo.attributes.position.array;
-  if (st.flow && !reduce && !st.settled) swmT += dt * (st.speed / 70);
+  if (playing && !reduce && !st.settled) swmT += dt * (st.speed / 70);
   let k = 0;
   for (const d of swmDots) {
     if (!hemiState[d.hemi] || !fibreFilterResult?.swm[d.sourceIndex]) continue;
@@ -800,6 +814,7 @@ function recalculateFibreFilter() {
   updateFibreFilterStatus();
   syncFibreFilterControls(requestedFibreFilter);
   fibreFilterLastRebuildMs = performance.now() - startedAt;
+  requestViewerRender();
 }
 
 // ---------------------------------------------------------------------------
@@ -808,8 +823,11 @@ const st = { flow: !reduce, speed: 70, anteriorDistanceMm: 0, settled: reduce };
 if (import.meta.env.DEV) {
   window.__view.activity = {
     get state() {
+      const power = currentViewerPowerState();
       return Object.freeze({
-        playing: st.flow && !st.settled,
+        playing: power.activityActive,
+        requestedPlaying: st.flow && !st.settled,
+        powerSuspended: power.suspended,
         settled: st.settled,
         reducedMotion: reduce,
         speed: st.speed,
@@ -842,10 +860,63 @@ let updateLessonVisibility = () => {};
 let lessonControlMode = 'explore';
 let lessonTransitionStateChange = () => {};
 let lessonTransitioning = false;
+let viewerPowerStateChange = () => {};
+let viewerDocumentVisible = !document.hidden;
+let viewerStageVisible = rectIntersectsViewport(stage.getBoundingClientRect(), {
+  width: window.innerWidth,
+  height: window.innerHeight,
+});
+let viewerSuspendedAt = null;
+let skipNextFrameDelta = true;
+let viewerFrameRequest = null;
+let viewerFrameCount = 0;
+let viewerRenderCount = 0;
 function setLessonTransitioning(value) {
   if (lessonTransitioning === value) return;
   lessonTransitioning = value;
   lessonTransitionStateChange(value);
+}
+function currentViewerPowerState() {
+  return deriveViewerPowerState({
+    documentVisible: viewerDocumentVisible,
+    stageVisible: viewerStageVisible,
+    requestedPlaying: st.flow,
+    settled: st.settled,
+    reducedMotion: reduce,
+  });
+}
+function shiftTransitionAfterSuspension(transition, suspendedAt, resumedAt) {
+  if (!transition) return transition;
+  const pausedMs = Math.max(0, resumedAt - Math.max(suspendedAt, transition.startTime));
+  return Object.freeze({ ...transition, startTime: transition.startTime + pausedMs });
+}
+function notifyViewerPowerState(extra = {}) {
+  viewerPowerStateChange(Object.freeze({ ...currentViewerPowerState(), ...extra }));
+}
+function updateViewerVisibility(patch) {
+  const previous = currentViewerPowerState();
+  if (typeof patch.documentVisible === 'boolean') viewerDocumentVisible = patch.documentVisible;
+  if (typeof patch.stageVisible === 'boolean') viewerStageVisible = patch.stageVisible;
+  const next = currentViewerPowerState();
+  const now = performance.now();
+  if (!previous.suspended && next.suspended) {
+    viewerSuspendedAt = now;
+    if (viewerFrameRequest !== null) cancelAnimationFrame(viewerFrameRequest);
+    viewerFrameRequest = null;
+  } else if (previous.suspended && !next.suspended) {
+    lessonCameraTransition = shiftTransitionAfterSuspension(lessonCameraTransition, viewerSuspendedAt ?? now, now);
+    lessonVisibilityTransition = shiftTransitionAfterSuspension(lessonVisibilityTransition, viewerSuspendedAt ?? now, now);
+    viewerSuspendedAt = null;
+    skipNextFrameDelta = true;
+  }
+  if (previous.suspended !== next.suspended || previous.reason !== next.reason) {
+    notifyViewerPowerState({ resumed: previous.suspended && !next.suspended });
+  }
+  if (!next.suspended) requestViewerRender();
+}
+function requestViewerRender() {
+  if (currentViewerPowerState().suspended || viewerFrameRequest !== null) return;
+  viewerFrameRequest = requestAnimationFrame(animate);
 }
 
 function resize() {
@@ -855,10 +926,26 @@ function resize() {
   camera.updateProjectionMatrix();
   renderer.setSize(width, height);
   labelRenderer.setSize(width, height);
+  requestViewerRender();
 }
 window.addEventListener('resize', resize);
+document.addEventListener('visibilitychange', () => {
+  updateViewerVisibility({ documentVisible: !document.hidden });
+});
+new IntersectionObserver((entries) => {
+  updateViewerVisibility({ stageVisible: latestStageIntersection(entries, stage) });
+}, { threshold: 0 }).observe(stage);
 new ResizeObserver(resize).observe(stage);
+controls.addEventListener('change', requestViewerRender);
 resize();
+
+if (import.meta.env.DEV) {
+  window.__view.power = {
+    get state() { return currentViewerPowerState(); },
+    get frameCount() { return viewerFrameCount; },
+    get renderCount() { return viewerRenderCount; },
+  };
+}
 
 function updateAnteriorFlow() {
   for (const flow of flows) {
@@ -874,7 +961,13 @@ function updateAnteriorFlow() {
   }
 }
 function animate(timestamp) {
-  const dt = readFrameDelta(timestamp);
+  viewerFrameRequest = null;
+  viewerFrameCount++;
+  const powerState = currentViewerPowerState();
+  if (powerState.suspended) return;
+  const measuredDelta = readFrameDelta(timestamp);
+  const dt = skipNextFrameDelta ? 0 : measuredDelta;
+  skipNextFrameDelta = false;
   let cameraTransitioning = false;
   updateLessonVisibility(timestamp);
   if (lessonCameraTransition) {
@@ -889,17 +982,25 @@ function animate(timestamp) {
       setLessonTransitioning(false);
     }
   }
-  if (st.flow) {
+  if (powerState.activityActive) {
     st.anteriorDistanceMm += distanceAfterDisplayTime(dt * (st.speed / 70));
     updateAnteriorFlow();
   }
-  updateTracers(dt);
-  updateTractImpulses(dt);
-  updateSwm(dt);
-  if (!cameraTransitioning) controls.update();
+  updateTracers(dt, powerState.activityActive);
+  updateTractImpulses(dt, powerState.activityActive);
+  updateSwm(dt, powerState.activityActive);
+  const controlsChanged = cameraTransitioning ? false : Boolean(controls.update());
   renderer.render(scene, camera);
   labelRenderer.render(scene, camera);
-  requestAnimationFrame(animate);
+  viewerRenderCount++;
+  const nextPowerState = currentViewerPowerState();
+  if (needsContinuousViewerFrames({
+    powerState: nextPowerState,
+    cameraTransitioning: Boolean(lessonCameraTransition),
+    visibilityTransitioning: Boolean(lessonVisibilityTransition),
+    autoRotate: controls.autoRotate,
+    controlsChanged,
+  })) requestViewerRender();
 }
 
 // ---------------------------------------------------------------------------
@@ -1143,6 +1244,7 @@ function setInspectableHighlight(id) {
   apply(highlightedInspectableId, false);
   highlightedInspectableId = id;
   apply(highlightedInspectableId, true);
+  requestViewerRender();
 }
 
 function configureAnatomyInspector(catalog) {
@@ -1177,6 +1279,8 @@ $('play').addEventListener('click', () => {
   $('play').classList.toggle('on', st.flow);
   $('playGlyph').textContent = st.flow ? '❚❚' : '▶';
   $('playTxt').textContent = st.flow ? 'Pause activity' : 'Play activity';
+  notifyViewerPowerState();
+  requestViewerRender();
 });
 if (reduce) {
   $('play').disabled = true;
@@ -1203,6 +1307,7 @@ $('clip').addEventListener('input', (event) => {
     return;
   }
   clipPlane.constant = 80 - (event.target.value / 100) * 160; $('clipV').textContent = event.target.value + '%'; setFill(event.target);
+  requestViewerRender();
 });
 $('tissue').addEventListener('input', (event) => {
   if (explorePanelModel) {
@@ -1210,10 +1315,12 @@ $('tissue').addEventListener('input', (event) => {
     return;
   }
   brainMat.opacity = event.target.value / 100; $('tissueV').textContent = event.target.value; setFill(event.target);
+  requestViewerRender();
 });
 $('spin').addEventListener('click', () => {
   if (exploreCommandHandler) return;
   controls.autoRotate = !controls.autoRotate; $('spin').classList.toggle('on', controls.autoRotate);
+  requestViewerRender();
 });
 
 // ---- Scene-state + layer toggle panel (built once the region manifest loads) --
@@ -1222,7 +1329,7 @@ $('spin').addEventListener('click', () => {
 // parent checkbox toggles its whole subtree.
 const sceneState = { visible: new Set() };
 const layerObjs = {};
-function setLayer(id, on) { const o = layerObjs[id]; if (o) o.visible = on; if (on) sceneState.visible.add(id); else sceneState.visible.delete(id); }
+function setLayer(id, on) { const o = layerObjs[id]; if (o) o.visible = on; if (on) sceneState.visible.add(id); else sceneState.visible.delete(id); requestViewerRender(); }
 function syncStreamParent(cb, syncers, hemiMap) {
   let allOn = true, allOff = true;
   for (const s of syncers) { const rh = hemiMap[s.id]; if (!(rh.L && rh.R)) allOn = false; if (rh.L || rh.R) allOff = false; }
@@ -1532,7 +1639,10 @@ function syncPlaybackControls() {
   setFill($('speed'));
 }
 
-export function createLessonRendererAdapter(catalog, { onTransitionStateChange = () => {} } = {}) {
+export function createLessonRendererAdapter(catalog, {
+  onTransitionStateChange = () => {},
+  onPowerStateChange = () => {},
+} = {}) {
   configureAnatomyInspector(catalog);
   configureFibreFilterControls(catalog);
   controls.autoRotate = false;
@@ -1540,6 +1650,8 @@ export function createLessonRendererAdapter(catalog, { onTransitionStateChange =
   controls.update();
   lessonTransitionStateChange = onTransitionStateChange;
   lessonTransitionStateChange(lessonTransitioning);
+  viewerPowerStateChange = onPowerStateChange;
+  notifyViewerPowerState();
   if (import.meta.env.DEV) {
     window.__view.lesson = {
       get visibilityOpacities() { return structuredClone(lessonEntityOpacities); },
@@ -1706,7 +1818,12 @@ export function createLessonRendererAdapter(catalog, { onTransitionStateChange =
     entity.id,
   ]));
   return Object.freeze({
-    apply: adapter.apply,
+    apply(snapshot) {
+      const result = adapter.apply(snapshot);
+      notifyViewerPowerState();
+      requestViewerRender();
+      return result;
+    },
     capture: adapter.capture,
     captureRenderedCamera() {
       return {
@@ -1803,4 +1920,4 @@ loadBrain();
 loadFibres();
 loadRegions();
 loadTracts();
-requestAnimationFrame(animate);
+requestViewerRender();
