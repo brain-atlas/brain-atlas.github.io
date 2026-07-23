@@ -43,6 +43,9 @@ test('release, architecture, security, and subsystem docs describe both channels
     assert.ok(releases.includes(phrase), `release documentation missing ${phrase}`);
   }
   assert.match(architecture, /## Standalone release boundary/);
+  assert.match(releases, /draft-aware `gh release view`/);
+  assert.match(architecture, /published-only REST lookup/);
+  assert.match(security, /draft-aware release discovery/);
   assert.match(security, /L-7[\s\S]*server-reported[\s\S]*Stable/);
   assert.match(spec, /## Invariants[\s\S]*INV-8/);
   assert.match(manifest, /internal\/releasepack\/SPEC\.md/);

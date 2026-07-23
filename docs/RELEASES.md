@@ -79,20 +79,26 @@ and the extracted Linux smoke test.
 
 A separate serialized job receives `contents: write` only after a successful
 `main` build. [`scripts/publish-standalone-release.mjs`](../scripts/publish-standalone-release.mjs)
-performs the publication state machine with shell-free `gh` argument arrays.
+performs the publication state machine with shell-free `gh` argument arrays. It
+uses draft-aware `gh release view` discovery because GitHub's REST by-tag
+endpoint returns published releases only; a pending draft is resolved to its
+release database ID before its metadata and assets are checked.
 
 1. Validate the downloaded artifact's exact inventory, checksums, provenance,
    clean source state, source commit, and target labels.
 2. Require the source commit to equal the repository's current `main`. A stale
    run exits without promotion.
-3. Upload new assets under commit-scoped names. Matching names are accepted only
-   when GitHub's reported size and `sha256:` digest match. The publisher never
-   uses `--clobber`.
-4. Re-check current `main`, then move only the `nightly` tag and update the
-   prerelease title/body. Re-read the tag, release, digests, and current `main`;
-   any concurrent change fails before cleanup.
-5. Delete only prior assets that match the project's complete managed-nightly
-   naming pattern. Unknown assets and all stable assets remain untouched.
+3. Discover either the published channel or its pending draft, then upload new
+   assets under commit-scoped names. Matching names are accepted only when
+   GitHub's reported size and `sha256:` digest match. The publisher never uses
+   `--clobber`.
+4. Re-check current `main`. Publish a verified draft at the approved commit,
+   allowing GitHub to create its previously missing tag; otherwise move only the
+   existing `nightly` tag and update the published prerelease title/body.
+5. Re-read the tag, release, digests, and current `main`; any concurrent change
+   fails before cleanup. Delete only prior assets that match the project's
+   complete managed-nightly naming pattern. Unknown assets and all stable assets
+   remain untouched.
 
 If an upload fails, the previous set remains available. A partially uploaded
 candidate remains visibly commit-labeled. If promotion succeeds but cleanup

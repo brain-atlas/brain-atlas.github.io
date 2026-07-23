@@ -71,9 +71,11 @@ extracted Linux amd64 executable, and uploads the exact release directory as a
 14-day Actions artifact. Separate jobs download that immutable handoff and alone
 receive `contents: write`:
 
-- a serialized current-`main` job uploads commit-scoped assets without clobber,
-  checks GitHub's server-reported SHA-256 digests, rechecks `main`, advances the
-  `nightly` prerelease, then deletes only the previous managed nightly names;
+- a serialized current-`main` job uses GitHub CLI's draft-aware release lookup
+  rather than the published-only REST lookup, uploads commit-scoped assets
+  without clobber, checks GitHub's server-reported SHA-256 digests, rechecks
+  `main`, publishes or advances the `nightly` prerelease, then deletes only the
+  previous managed nightly names;
 - a `v*` tag job requires the remote tag to resolve to the bundle commit, stages
   a complete draft, and publishes once. Existing published stable releases are
   read/verified only; any metadata or digest mismatch fails.

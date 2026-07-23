@@ -125,10 +125,12 @@ or relaxing the standalone loopback/authentication boundary.
   Each archive contains the executable and reviewed notice files; exact
   provenance records commit, timestamp, clean/dirty source state, toolchains,
   targets, sizes, and digests; sorted SHA-256 checksums cover all six archives.
-- Nightly uploads commit-scoped names without `--clobber`, verifies GitHub's
-  server-reported size/digest, rechecks current `main` before promotion, and
-  re-reads tag/release/main state before cleanup, and cleans only complete
-  managed-nightly names after the new set is usable. Stable publication verifies
+- Nightly uses draft-aware release discovery so a verified pending draft cannot
+  be mistaken for an absent channel by GitHub's published-only REST endpoint. It
+  uploads commit-scoped names without `--clobber`, verifies GitHub's
+  server-reported size/digest, rechecks current `main` before promotion, rereads
+  tag/release/main state before cleanup, and cleans only complete managed-nightly
+  names after the new set is usable. Stable publication verifies
   the pre-existing version tag, validates a complete draft, and re-resolves the
   tag after publication. Published releases are read-only; any retry or final
   state mismatch fails visibly.
