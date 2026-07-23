@@ -108,6 +108,8 @@ test('nightly and stable jobs alone receive write permission and consume the bui
 
   assert.match(nightly.if, /github\.event_name == 'push'/);
   assert.match(nightly.if, /refs\/heads\/main/);
+  const nightlyPublish = nightly.steps.find(({ run }) => run?.includes('publish-standalone-release.mjs'));
+  assert.match(nightlyPublish.run, /--tag nightly/);
   assert.equal(nightly.concurrency.group, 'standalone-nightly');
   assert.equal(nightly.concurrency['cancel-in-progress'], false);
   assert.match(stable.if, /startsWith\(github\.ref, 'refs\/tags\/v'\)/);
