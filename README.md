@@ -245,21 +245,24 @@ and representation dependencies are recorded separately in
 The optional Draft marker was removed after explicit human review; under v1, absence of
 `status` makes no machine-readable reviewed or published claim. `src/bootstrap.js` parses
 the lesson through the same contract used for local content. An unnumbered topic entry
-view filters the atlas to the relevant visual-system structures before scrolling
-activates eight instructional scenes centered on retina-to-V1 processing, followed by
-brief ventral/dorsal previews and an early-vision conclusion that reprises the opening
-pathway and lesion prediction. The LGN scene uses an authored LGN-dominant oblique
-view that keeps schematic incoming context plus the optic-radiation path and V1
-destination in frame. The optic-radiation, V1, ventral, and dorsal scenes use a
-centered half-shell cortical cut and hide right-hemisphere objects to reduce duplicate visual load;
-directed LGN→V1 motion remains visible on the independently derived left contours. The
-three cortical preview scenes add selected named bundles and endpoint-filtered SWM/U-
-fibre subsets. Extrastriate, ventral, and dorsal presets match 1,684, 1,830, and 3,180
-of 17,880 classified contours before scene layer and hemisphere visibility applies.
-The filter tests unordered geometric endpoint membership against displayed Jülich labels;
-it does not prove terminations or connections among highlighted regions. Long-tract
-impulses still use the disclosed 50/50 direction assumption, and SWM keeps zero-mean
-vibration.
+adds V2, V3v, V3d, and the 794 superficial contours that touch the shared early-region
+set before scrolling activates eight instructional scenes. The conclusion exactly
+reprises that opening snapshot and lesion prediction. The LGN scene uses an authored
+oblique view that keeps schematic incoming context, the optic radiation, V1, and 22
+superficial contours with at least one unordered geometric endpoint assigned to LGN in
+frame. The optic-radiation, V1, ventral, and dorsal
+scenes use a centered half-shell cortical cut and hide right-hemisphere objects to reduce
+duplicate visual load; directed LGN→V1 motion remains visible on the independently
+derived left contours.
+
+V1 and the three cortical-stream scenes add endpoint-filtered SWM and every named tract
+group with a nonzero match under each scene's endpoint and hemisphere policy. The
+shared-early query selects 445 association and 794 superficial contours bilaterally;
+the left-only V1, ventral, and dorsal views select 138/259, 381/511, and 559/940
+association/superficial contours. The filter tests unordered geometric endpoint
+membership against displayed Jülich labels; it does not prove termination or connection
+among highlighted regions. Long-tract impulses still use the disclosed 50/50 direction
+assumption, and SWM keeps zero-mean vibration.
 Fixed-position Previous/Next actions traverse the same sequence and can return to that
 entry view. One
 3D stage is shared throughout. The browser root remains fixed; the named, keyboard-

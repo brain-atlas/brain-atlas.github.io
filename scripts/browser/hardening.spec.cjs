@@ -196,7 +196,7 @@ test('compact and 200%-equivalent lesson layouts contain panels without root scr
   expect(errors).toEqual([]);
 });
 
-test('direct lesson entry defers independently packaged assets outside its active view', async ({ page }) => { // Tests INV-45
+test('direct lesson entry loads active filtered SWM once and defers later-region assets', async ({ page }) => { // Tests INV-45
   const errors = monitor(page);
   const requests = [];
   const active = new Set();
@@ -220,7 +220,13 @@ test('direct lesson entry defers independently packaged assets outside its activ
   expect(requests).toContain('/data/regions/lgn_R.obj');
   expect(requests).toContain('/data/regions/v1_L.obj');
   expect(requests).toContain('/data/regions/v1_R.obj');
-  expect(requests).not.toContain('/data/swm_fibres.json');
+  expect(requests).toContain('/data/regions/v2_L.obj');
+  expect(requests).toContain('/data/regions/v2_R.obj');
+  expect(requests).toContain('/data/regions/v3v_L.obj');
+  expect(requests).toContain('/data/regions/v3v_R.obj');
+  expect(requests).toContain('/data/regions/v3d_L.obj');
+  expect(requests).toContain('/data/regions/v3d_R.obj');
+  expect(requests.filter(path => path === '/data/swm_fibres.json')).toHaveLength(1);
   expect(requests.some(path => path.startsWith('/data/regions/fg4_'))).toBe(false);
 
   for (let index = 0; index <= 4; index++) {

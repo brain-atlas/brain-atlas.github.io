@@ -42,15 +42,25 @@ camera:
   transition: { kind: ease, durationMs: 900 }
 show:
   - layer.cortex
+  - layer.swm
   - pathway.anterior
   - pathway.optic-radiation
   - region.lgn
   - region.v1
+  - region.v2
+  - region.v3v
+  - region.v3d
+fibreFilter:
+  preset: null
+  mode: touches-any
+  setA: [region.v1, region.v2, region.v3d, region.v3v]
+  setB: []
 fidelity:
   - fidelity.cortex
   - fidelity.julich-regions
   - fidelity.anterior-pathway
   - fidelity.optic-radiation
+  - fidelity.superficial-white-matter
 cutaway: 24
 tissueOpacity: 0.14
 playback:
@@ -59,7 +69,7 @@ playback:
   settled: false
 selection:
   selected: null
-  emphasized: [pathway.anterior, pathway.optic-radiation, region.lgn, region.v1]
+  emphasized: [layer.swm, pathway.anterior, pathway.optic-radiation, region.lgn, region.v1, region.v2, region.v3v, region.v3d]
   strength: 0.5
 controls:
   mode: look
@@ -71,9 +81,15 @@ layout: dominant
 Signals from the two eyes travel through paired optic nerves and meet at the optic
 chiasm. After partial crossing, each optic tract carries the opposite visual hemifield
 from both eyes to the LGN on the same side of the brain. The optic radiation then
-continues from each LGN to V1 in that hemisphere, around the calcarine sulcus. Along
-this route, the system preserves an orderly map of visual space while transforming how
-the information is encoded.
+continues from each LGN to V1 in that hemisphere, around the calcarine sulcus. V2,
+ventral V3, and dorsal V3 continue the shared early cortical route before later
+processing develops stronger ventral and dorsal biases.
+
+The pale superficial contours in this overview have at least one unordered geometric
+endpoint assigned to V1, V2, V3v, or V3d. Their simultaneous display with these atlas
+shells supplies spatial context; it does not establish biological terminations or
+connections. Along the early visual route, the system preserves an orderly map of
+visual space while transforming how the information is encoded.
 
 ```atlas-scene
 id: nasal-crossing
@@ -146,12 +162,18 @@ camera:
   position: [-51, 17, -46]
   target: [-18, -8, 32]
   transition: { kind: ease, durationMs: 900 }
-show: [layer.cortex, pathway.anterior, pathway.optic-radiation, region.lgn, region.v1]
+show: [layer.cortex, layer.swm, pathway.anterior, pathway.optic-radiation, region.lgn, region.v1]
+fibreFilter:
+  preset: null
+  mode: touches-any
+  setA: [region.lgn]
+  setB: []
 fidelity:
+  - fidelity.anterior-pathway
   - fidelity.cortex
   - fidelity.julich-regions
-  - fidelity.anterior-pathway
   - fidelity.optic-radiation
+  - fidelity.superficial-white-matter
 cutaway: 42
 tissueOpacity: 0.11
 playback:
@@ -160,7 +182,7 @@ playback:
   settled: false
 selection:
   selected: region.lgn
-  emphasized: [region.lgn, region.v1, pathway.anterior, pathway.optic-radiation]
+  emphasized: [layer.swm, region.lgn, region.v1, pathway.anterior, pathway.optic-radiation]
   strength: 0.9
 controls:
   mode: look
@@ -200,9 +222,12 @@ the spatial organization needed by cortex.
 
 > **Scene limitations and boundaries:** This view keeps incoming schematic pathway
 > context, the population-atlas LGN source, the optic-radiation trajectory, and the V1
-> destination in frame. It does not resolve LGN layers, parallel channels, synapses, or
-> measured firing. The anterior segment is schematic, the right optic radiation is
-> mirrored from the left, and all displayed timing is illustrative.
+> destination in frame. The endpoint query also retains 22 superficial contours with
+> at least one unordered geometric endpoint assigned to LGN. This categorical
+> assignment does not turn those contours into a measured LGN projection or establish
+> biological termination. The view does not resolve LGN layers, parallel channels,
+> synapses, or measured firing. The anterior segment is schematic, the right optic
+> radiation is mirrored from the left, and all displayed timing is illustrative.
 
 ```atlas-scene
 id: optic-radiation
@@ -271,8 +296,25 @@ camera:
   position: [95, 55, 95]
   target: [0, -5, 45]
   transition: { kind: ease, durationMs: 900 }
-show: [layer.cortex, pathway.optic-radiation, region.lgn, region.v1]
-fidelity: [fidelity.julich-regions, fidelity.optic-radiation]
+show:
+  - layer.cortex
+  - layer.swm
+  - pathway.optic-radiation
+  - region.lgn
+  - region.v1
+  - tract.ilf
+  - tract.ifof
+fibreFilter:
+  preset: null
+  mode: touches-any
+  setA: [region.v1]
+  setB: []
+fidelity:
+  - fidelity.association-tracts
+  - fidelity.cortex
+  - fidelity.julich-regions
+  - fidelity.optic-radiation
+  - fidelity.superficial-white-matter
 hemispheres:
   global: { L: true, R: false }
 cutaway: 50
@@ -283,7 +325,7 @@ playback:
   settled: false
 selection:
   selected: region.v1
-  emphasized: [pathway.optic-radiation, region.lgn, region.v1]
+  emphasized: [layer.swm, pathway.optic-radiation, region.lgn, region.v1, tract.ilf, tract.ifof]
   strength: 0.95
 controls:
   mode: look
@@ -331,7 +373,12 @@ visual space from both eyes. The same model distinguishes four common lesion pat
 
 > **Scene boundaries and limitations:** The V1 shells are population-atlas boundaries,
 > not an individual's cortex or a map of eccentricity, polar angle, layers, columns, or
-> cell responses. Event timing remains illustrative rather than measured physiology.
+> cell responses. The added superficial contours and ILF/IFOF samples each have at least
+> one unordered geometric endpoint assigned to V1. That assignment does not establish
+> biological termination, connection strength, or travel direction. Association-tract
+> events use the disclosed 50/50 modeled direction assumption; superficial dots vibrate
+> with zero mean and no net travel. All event timing remains illustrative rather than
+> measured physiology.
 
 ```atlas-scene
 id: extrastriate-branching
@@ -352,8 +399,14 @@ show:
   - region.v6
   - region.mt
   - layer.swm
+  - tract.ilf
+  - tract.ifof
   - tract.vof
-fibreFilter: fibre-filter.extrastriate
+fibreFilter:
+  preset: null
+  mode: touches-any
+  setA: [region.v1, region.v2, region.v3d, region.v3v]
+  setB: []
 fidelity:
   - fidelity.cortex
   - fidelity.julich-regions
@@ -367,7 +420,7 @@ playback:
   settled: false
 selection:
   selected: region.v2
-  emphasized: [region.v1, region.v2, region.v3v, region.v3d, region.v4v, region.v3a, region.v6, region.mt, tract.vof]
+  emphasized: [region.v1, region.v2, region.v3v, region.v3d, region.v4v, region.v3a, region.v6, region.mt, tract.ilf, tract.ifof, tract.vof]
   strength: 0.78
 controls:
   mode: look
@@ -395,11 +448,11 @@ dorsal networks.
 > **Scene boundaries and limitations:** The shells show population-atlas locations.
 > Named long bundles have a qualified endpoint-proximity record only when sampled,
 > unordered endpoints passed the conservative bilateral surface-distance screen. The
-> scene preset separately keeps contours that touch at least one shown-region label after
-> categorical assignment against the Jülich maximum-probability map. A nearest nonzero
-> label outside 2 mm or without a project region is unknown; a second label within a
-> 0.5 mm distance margin is ambiguous. Both classes stay excluded unless selected
-> explicitly. This common-RAS comparison combines
+> scene query separately keeps every displayed contour with at least one unordered
+> geometric endpoint assigned to V1, V2, V3d, or V3v against the Jülich
+> maximum-probability map. A nearest nonzero label outside 2 mm or without a project
+> region is unknown; a second label within a 0.5 mm distance margin is ambiguous. Both
+> classes stay excluded unless selected explicitly. This common-RAS comparison combines
 > 2009a fibre data with 2009c region labels without a template warp. It does not establish
 > grid equivalence, exact termination, pairwise connectivity, connection strength,
 > direction, processing order, or functional response. Bright tract events use a seeded
@@ -457,11 +510,17 @@ layout: detail
 ## Preview: the ventral stream
 
 The ventral stream extends from occipital visual cortex toward lateral occipital and
-ventral temporal cortex. Across this network, processing increasingly supports stable
-descriptions of **object quality**---shape, surface, color, and category---even when an
-object changes position, size, viewpoint, or illumination. “What” is useful shorthand,
-but **vision for perception** better captures the stream's role in identifying and
-describing what is seen.
+ventral temporal cortex. This scene highlights V1, V2, V3v, V4v, LOA, LOp, and
+fusiform areas FG1 through FG4. Its left-hemisphere filter retains 381 association and
+511 superficial contours with at least one unordered geometric endpoint assigned to
+that area set. The shells identify the queried areas; they do not prove that a contour
+terminates there or connects two displayed regions.
+
+Across this network, processing increasingly supports stable descriptions of **object
+quality**---shape, surface, color, and category---even when an object changes position,
+size, viewpoint, or illumination. “What” is useful shorthand, but **vision for
+perception** better captures the stream's role in identifying and describing what is
+seen.
 
 ```atlas-scene
 id: dorsal-stream
@@ -492,10 +551,13 @@ show:
   - region.spl5l
   - region.spl5m
   - layer.swm
+  - tract.ilf
+  - tract.ifof
   - tract.slf1
   - tract.slf2
   - tract.slf3
   - tract.vof
+  - tract.mdlf
 fibreFilter: fibre-filter.dorsal
 fidelity:
   - fidelity.cortex
@@ -512,7 +574,7 @@ playback:
   settled: false
 selection:
   selected: region.mt
-  emphasized: [region.v3d, region.v3a, region.v6, region.mt, region.hip1, region.hip2, region.hip3, region.hip4, region.hip5, region.hip6, region.hip7, region.hip8, region.spl7a, region.spl7p, region.spl5l, region.spl5m, tract.slf1, tract.slf2, tract.slf3, tract.vof]
+  emphasized: [region.v3d, region.v3a, region.v6, region.mt, region.hip1, region.hip2, region.hip3, region.hip4, region.hip5, region.hip6, region.hip7, region.hip8, region.spl7a, region.spl7p, region.spl5l, region.spl5m, tract.ilf, tract.ifof, tract.slf1, tract.slf2, tract.slf3, tract.vof, tract.mdlf]
   strength: 0.84
 controls:
   mode: look
@@ -522,11 +584,17 @@ layout: detail
 ## Preview: the dorsal stream
 
 The dorsal stream extends from occipital visual cortex toward posterior parietal
-cortex. Different parts of the network contribute different information. MT/V5 is
-strongly involved in motion and binocular-disparity processing. V3A and V6 contribute
-to motion, depth, and wide-field spatial analysis. Intraparietal and superior parietal
-regions help convert visual information into forms useful for attention, eye movements,
-reaching, and grasping.
+cortex. This scene highlights V1, V2, V3d, V3A, V6, MT/V5, the intraparietal areas,
+and the superior parietal areas. Its left-hemisphere filter retains 559 association and
+940 superficial contours with at least one unordered geometric endpoint assigned to
+that area set. The shells identify the queried areas; they do not prove that a contour
+terminates there or connects two displayed regions.
+
+Different parts of the network contribute different information. MT/V5 is strongly
+involved in motion and binocular-disparity processing. V3A and V6 contribute to motion,
+depth, and wide-field spatial analysis. Intraparietal and superior parietal regions help
+convert visual information into forms useful for attention, eye movements, reaching,
+and grasping.
 
 “Where” captures spatial analysis, but **vision for action** describes the larger
 problem. Reaching for an object requires the brain to continually relate the target to
@@ -543,15 +611,25 @@ camera:
   transition: { kind: ease, durationMs: 900 }
 show:
   - layer.cortex
+  - layer.swm
   - pathway.anterior
   - pathway.optic-radiation
   - region.lgn
   - region.v1
+  - region.v2
+  - region.v3v
+  - region.v3d
+fibreFilter:
+  preset: null
+  mode: touches-any
+  setA: [region.v1, region.v2, region.v3d, region.v3v]
+  setB: []
 fidelity:
   - fidelity.cortex
   - fidelity.julich-regions
   - fidelity.anterior-pathway
   - fidelity.optic-radiation
+  - fidelity.superficial-white-matter
 cutaway: 24
 tissueOpacity: 0.14
 playback:
@@ -560,8 +638,8 @@ playback:
   settled: false
 selection:
   selected: null
-  emphasized: [pathway.anterior, pathway.optic-radiation, region.lgn, region.v1]
-  strength: 0.7
+  emphasized: [layer.swm, pathway.anterior, pathway.optic-radiation, region.lgn, region.v1, region.v2, region.v3v, region.v3d]
+  strength: 0.5
 controls:
   mode: look
 layout: dominant
@@ -599,8 +677,11 @@ them.
 > looking back. At each stage, name one feature that is preserved and one transformation
 > that occurs.
 
-> **Scene limitations and boundaries:** This closing view reprises the mixed-fidelity
-> whole pathway. The cortical and region meshes are population-atlas anatomy; the left
-> optic radiation is population tractography and the displayed right side is mirrored;
-> the anterior eye-to-LGN segment is schematic. All moving-event timing remains
+> **Scene limitations and boundaries:** This closing view exactly reprises the opening
+> mixed-fidelity scene. The cortical and region meshes are population-atlas anatomy; the
+> left optic radiation is population tractography and the displayed right side is
+> mirrored; the anterior eye-to-LGN segment is schematic. The superficial contours have
+> at least one unordered geometric endpoint assigned to V1, V2, V3v, or V3d. They show
+> spatial context rather than measured termination or connectivity, and their dots have
+> zero-mean vibration rather than directed travel. All moving-event timing remains
 > illustrative rather than measured physiology.

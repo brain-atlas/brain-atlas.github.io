@@ -1,8 +1,8 @@
 # Runtime performance
 
-**Last measured:** 2026-07-22
+**Last measured:** 2026-07-23
 
-**Tracking:** `brain-atlas-zmq.9`
+**Tracking:** `brain-atlas-zmq.9`; re-profiled for `brain-atlas-zmq.31`
 **Profile:** `scripts/browser/performance.spec.cjs`
 
 ## Loading policy
@@ -23,7 +23,7 @@ The first canonical visibility snapshot starts independently packaged optional g
 - each bilateral region OBJ pair loads once, when its stable region ID first becomes visible; and
 - the 2.8 MB SWM JSON loads once, when `layer.swm` first becomes visible.
 
-Atlas Home's authored default shows every region and SWM, so it still requests the complete set. A direct `?lesson=retina-to-v1` entry initially needs only cortex, optic radiation, LGN, and V1. Later cortical scenes request their additional regions and SWM through the same canonical visibility binding. This policy changes request timing only; it adds no renderer, filter path, coordinate transform, or scientific claim.
+Atlas Home's authored default shows every region and SWM, so it still requests the complete set. A direct `?lesson=retina-to-v1` entry now needs cortex, optic radiation, LGN, V1, V2, V3v, V3d, and SWM because the topic overview displays the shared-early endpoint subset. Later scenes request only their additional regions through the same canonical visibility binding. This policy changes request timing only; it adds no renderer, filter path, coordinate transform, or scientific claim.
 
 The 2.4 MB `tracts.json` file contains both panel metadata and all association geometry. It remains eager because safe deferral would require a new generated metadata asset and an asset-pipeline change. Packaging region text meshes into one indexed binary GLB also remains future work.
 
@@ -37,23 +37,23 @@ The checked profile runs the static production preview in system Chromium with:
 - 4× CPU throttling; and
 - 10 Mbit/s download, 5 Mbit/s upload, and 80 ms latency.
 
-The host was an Apple M3 Max with 128 GiB RAM running Chromium 150.0.7871.46. Two fresh post-endpoint-filter runs used separate browser contexts. Values below show the median or range where the runs varied.
+The host was an Apple M3 Max with 128 GiB RAM running Chromium 150.0.7871.46. Three fresh post-lesson-filter runs used separate browser contexts. Values below show the median and range where the runs varied.
 
 | Measure | Direct checked lesson | Complete Atlas Home |
 |---|---:|---:|
-| App ready | 2.376 s | 2.438 s (2.429–2.446) |
-| Requested assets settled | 3.793 s (3.792–3.794) | 13.122 s (13.116–13.127) |
-| Encoded anatomical/catalog bytes | 2,664,097 | 14,778,051 |
-| Resource requests | 18 | 105 |
-| JS heap after settling | 56.9 MiB (56.6–57.2) | 100.7 MiB (100.5–100.9) |
-| Long tasks | 5 | 5–6 |
-| Longest task | 209–212 ms | 265–271 ms |
-| 2 s frame sample, p95 interval | 9.2 ms | 9.2 ms |
+| App ready | 2.562 s (2.559–2.578) | 2.619 s (2.618–2.631) |
+| Requested assets settled | 5.287 s (5.206–5.287) | 13.129 s (13.125–13.133) |
+| Encoded anatomical/catalog bytes | 4,386,491 | 14,778,300 |
+| Resource requests | 25 | 105 |
+| JS heap after settling | 96.5 MiB (87.3–98.7) | 157.5 MiB (139.7–162.9) |
+| Long tasks | 6 | 6 |
+| Longest task | 312 ms (309–323) | 376 ms (373–384) |
+| 2 s frame sample, p95 interval | 9.2 ms (9.2–9.3) | 9.3 ms (9.2–16.7) |
 | Canvas pixel ratio | 2 | 2 |
 
-Demand loading reduced the direct lesson's initial encoded anatomical/catalog transfer by **82.0%** relative to complete Atlas Home. App-ready time stayed similar because the shared renderer, cortex, optic radiation, monolithic tract data, and compact endpoint index remain eager after the WebGL gate. The larger Atlas transfer and parsing work continued after the app exposed its semantic shell.
+Demand loading reduced the direct lesson's initial encoded anatomical/catalog transfer by **70.3%** relative to complete Atlas Home. The direct entry now pays for the active shared-early SWM and V2/V3 shells, so it transfers 1.72 MB more than the earlier V1-only entry measurement. App-ready time remains close to Atlas Home because the shared renderer, cortex, optic radiation, monolithic tract data, and compact endpoint index load eagerly after the WebGL gate. The larger Atlas transfer and parsing work continues after the app exposes its semantic shell.
 
-The frame sample shows that this host kept scheduling animation under the stated throttle after assets settled. It does **not** measure a phone GPU, battery use, thermal throttling, mobile Safari, or a cellular radio. Long tasks above 200 ms remain visible during initial parsing. Atlas Home also retains the full 14.7 MB encoded anatomical/catalog payload and continuous render loop.
+The frame sample shows that this host kept scheduling animation under the stated throttle after assets settled. It does **not** measure a phone GPU, battery use, thermal throttling, mobile Safari, or a cellular radio. Long tasks above 300 ms remain visible during initial parsing. Atlas Home also retains the full 14.7 MB encoded anatomical/catalog payload and continuous render loop.
 
 ## Deferred device limits
 

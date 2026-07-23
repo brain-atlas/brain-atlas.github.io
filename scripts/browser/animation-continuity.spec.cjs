@@ -2,15 +2,15 @@ const { test, expect } = require('@playwright/test');
 
 const BASE_URL = process.env.BRAIN_ATLAS_URL ?? 'http://127.0.0.1:5199/';
 const PLAYING_VIEWS = [
-  { index: -1, id: 'orientation', anterior: true, optic: true },
+  { index: -1, id: 'orientation', anterior: true, optic: true, swm: true },
   { index: 0, id: 'nasal-crossing', anterior: true },
-  { index: 1, id: 'lgn-relay', anterior: true, optic: true },
+  { index: 1, id: 'lgn-relay', anterior: true, optic: true, swm: true },
   { index: 2, id: 'optic-radiation', optic: true },
-  { index: 3, id: 'v1-arrival', optic: true },
-  { index: 4, id: 'extrastriate-branching', association: true, swm: true, groups: ['vof:L', 'vof:R'] },
+  { index: 3, id: 'v1-arrival', optic: true, association: true, swm: true, groups: ['ifof:L', 'ilf:L'] },
+  { index: 4, id: 'extrastriate-branching', association: true, swm: true, groups: ['ifof:L', 'ifof:R', 'ilf:L', 'ilf:R', 'vof:L', 'vof:R'] },
   { index: 5, id: 'ventral-stream', association: true, swm: true, groups: ['ifof:L', 'ilf:L', 'vof:L'] },
-  { index: 6, id: 'dorsal-stream', association: true, swm: true, groups: ['slf1:L', 'slf2:L', 'slf3:L', 'vof:L'] },
-  { index: 7, id: 'conclusion', anterior: true, optic: true },
+  { index: 6, id: 'dorsal-stream', association: true, swm: true, groups: ['ifof:L', 'ilf:L', 'mdlf:L', 'slf1:L', 'slf2:L', 'slf3:L', 'vof:L'] },
+  { index: 7, id: 'conclusion', anterior: true, optic: true, swm: true },
 ];
 
 async function ready(page, viewport) {
@@ -175,7 +175,10 @@ test('actual short and long association contours share physical speed but have d
   await ready(page, { width: 1440, height: 900 });
   for (let index = 0; index <= 4; index++) await page.locator('#scene-next').click();
   await waitForSettledCamera(page, 4);
-  await waitForExpectedActivity(page, { association: true, groups: ['vof:L', 'vof:R'] });
+  await waitForExpectedActivity(page, {
+    association: true,
+    groups: ['ifof:L', 'ifof:R', 'ilf:L', 'ilf:R', 'vof:L', 'vof:R'],
+  });
   await page.waitForFunction(() => window.__view.association?.physicalTravel?.profileCount > 1);
   await page.waitForFunction(() => {
     const active = window.__view.association.activeTravel;
