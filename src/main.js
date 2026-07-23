@@ -1365,13 +1365,15 @@ function buildPanel(regions, tracts, { initialize = !panelInitialized } = {}) {
     const wrap = document.createElement('div'); wrap.className = 'lyr-grpwrap collapsed';
     wrap.dataset.groupId = `${rendererKind}-${stream}`;
     const head = document.createElement('div'); head.className = 'lyr lyr-group';
+    const checkboxTarget = document.createElement('label'); checkboxTarget.className = 'layer-checkbox-target';
     const cb = document.createElement('input'); cb.type = 'checkbox'; cb.setAttribute('aria-label', `Show all ${label}`);
+    checkboxTarget.append(cb);
     const disclosure = document.createElement('button'); disclosure.type = 'button'; disclosure.className = 'lyr-disclosure';
     const kidsId = `layer-group-${rendererKind}-${stream}`;
     disclosure.setAttribute('aria-expanded', 'false'); disclosure.setAttribute('aria-controls', kidsId);
     const caret = document.createElement('span'); caret.className = 'caret'; caret.textContent = '▸'; caret.setAttribute('aria-hidden', 'true');
     const t = document.createElement('span'); t.className = 'lyr-t'; t.textContent = label;
-    disclosure.append(caret, t); head.append(cb, disclosure);
+    disclosure.append(caret, t); head.append(checkboxTarget, disclosure);
     const kids = document.createElement('div'); kids.className = 'lyr-kids'; kids.id = kidsId;
     const syncers = [];
     for (const it of items) {
@@ -1491,7 +1493,7 @@ function syncPanelControls(model) {
     const states = [...group.querySelectorAll('.lyr-child[data-entity-id]')]
       .map((row) => model.entities[row.dataset.entityId])
       .filter(Boolean);
-    const checkbox = group.querySelector('.lyr-group > input');
+    const checkbox = group.querySelector('.lyr-group input[type="checkbox"]');
     const allOn = states.length > 0 && states.every(({ L, R }) => L && R);
     const allOff = states.every(({ L, R }) => !L && !R);
     checkbox.checked = allOn;

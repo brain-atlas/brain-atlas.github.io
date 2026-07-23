@@ -57,8 +57,9 @@ camera and filters, compact Return/Exit controls, checked/local closeout and def
 every canonical viewer axis, semantic and pointer camera controls, exact Return, repeated
 one-canvas cycles, stage aspect, compact and short-wide layouts, live reduced motion,
 no-WebGL, and renderer-import failure. `hardening.spec.cjs` adds settled-state axe scans,
-keyboard focus/announcement traversal, 44 px camera targets, 200%-equivalent layout checks,
-and canonical visibility-driven asset requests. `power-rendering.spec.cjs` uses the
+keyboard focus/announcement traversal, a complete expanded-Viewer inventory of 44 px
+effective targets, 200%-equivalent layout checks, and canonical visibility-driven asset
+requests. `power-rendering.spec.cjs` uses the
 development diagnostics to verify hidden/offscreen suspension, explicit Pause, reduced
 motion, accessible status, frozen model clocks, and event-driven paused render counts.
 The Chromium run also injects real touch input to verify Lesson scrolling versus Atlas

@@ -21,7 +21,7 @@ async function directLesson(page, viewport) {
 }
 
 async function disableAllVisualizations(page) {
-  const grouped = page.locator('.lyr-grpwrap > .lyr-group > input:checked');
+  const grouped = page.locator('.lyr-grpwrap > .lyr-group input:checked');
   for (let count = 0; await grouped.count(); count += 1) {
     if (count > 40) throw new Error('grouped visualization controls did not converge');
     await grouped.first().click();
@@ -179,7 +179,7 @@ test('canonical L and R edits retain semantic subgroup disclosure, focus, and sc
       await expect(pill).toBeFocused();
       expect(await viewer.evaluate(element => element.scrollTop)).toBe(scrollTop);
     }
-    const parent = group.locator('.lyr-group > input');
+    const parent = group.locator('.lyr-group input[type="checkbox"]');
     await expect(parent).not.toBeChecked();
     expect(await parent.evaluate(input => input.indeterminate)).toBe(parentIndeterminate);
   }
