@@ -94,6 +94,113 @@ test('inactive lesson prose retains full text opacity', async ({ page }) => { //
   expect(errors).toEqual([]);
 });
 
+test('semantic typography roles stay distinct without downloaded font assets', async ({ page }) => { // Tests INV-59, FAIL-52
+  const errors = monitor(page);
+  await page.goto(new URL('?lesson=retina-to-v1', BASE_URL).href);
+  await page.waitForFunction(() => document.getElementById('app')?.dataset.state === 'ready');
+
+  const typography = await page.evaluate(() => {
+    const root = getComputedStyle(document.documentElement);
+    const requiredTokens = [
+      '--type-display-size', '--type-display-leading', '--type-display-tracking',
+      '--type-headline-size', '--type-headline-leading', '--type-headline-tracking',
+      '--type-title-size', '--type-body-size', '--type-body-leading',
+      '--type-support-size', '--type-control-size', '--type-label-size', '--type-micro-size',
+    ];
+    const eyebrow = getComputedStyle(document.querySelector('.lesson-drawer .eyebrow'));
+    const sceneNumber = getComputedStyle(document.querySelector('.scene-number'));
+    const value = getComputedStyle(document.querySelector('.val'));
+    return {
+      tokens: Object.fromEntries(requiredTokens.map((name) => [name, root.getPropertyValue(name).trim()])),
+      eyebrow: {
+        fontFamily: eyebrow.fontFamily,
+        fontSize: parseFloat(eyebrow.fontSize),
+        fontWeight: Number.parseInt(eyebrow.fontWeight, 10),
+        letterSpacing: eyebrow.letterSpacing,
+        textTransform: eyebrow.textTransform,
+      },
+      numericVariants: [sceneNumber.fontVariantNumeric, value.fontVariantNumeric],
+      fontResources: performance.getEntriesByType('resource')
+        .filter(({ name }) => /\\.(?:woff2?|ttf|otf)(?:\\?|$)/i.test(name))
+        .map(({ name }) => name),
+    };
+  });
+
+  expect(Object.values(typography.tokens).every(Boolean)).toBe(true);
+  expect(typography.eyebrow.fontFamily.toLowerCase()).toContain('mono');
+  expect(typography.eyebrow.fontSize).toBeLessThanOrEqual(12);
+  expect(typography.eyebrow.fontWeight).toBeGreaterThanOrEqual(600);
+  expect(typography.eyebrow.letterSpacing).not.toBe('normal');
+  expect(typography.eyebrow.textTransform).toBe('uppercase');
+  for (const variant of typography.numericVariants) expect(variant).toContain('tabular-nums');
+  expect(typography.fontResources).toEqual([]);
+  expect(errors).toEqual([]);
+});
+
+test('lesson prose keeps a readable size, measure, and display rhythm', async ({ page }) => { // Tests INV-59, FAIL-52
+  const errors = monitor(page);
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.goto(new URL('?lesson=retina-to-v1', BASE_URL).href);
+  await page.waitForFunction(() => document.getElementById('app')?.dataset.state === 'ready');
+
+  const wide = await page.evaluate(() => {
+    const paragraph = document.querySelector('.scene-copy p');
+    const paragraphStyle = getComputedStyle(paragraph);
+    const probe = document.createElement('span');
+    probe.style.cssText = `position: fixed; visibility: hidden; display: block; width: 1ch; font: ${paragraphStyle.font}`;
+    document.body.append(probe);
+    const measure = paragraph.getBoundingClientRect().width / probe.getBoundingClientRect().width;
+    probe.remove();
+    const display = getComputedStyle(document.querySelector('.lesson-intro h1'));
+    return {
+      measure,
+      displayTrackingEm: parseFloat(display.letterSpacing) / parseFloat(display.fontSize),
+    };
+  });
+  expect(wide.measure).toBeGreaterThanOrEqual(45);
+  expect(wide.measure).toBeLessThanOrEqual(65);
+  expect(wide.displayTrackingEm).toBeGreaterThanOrEqual(-0.04);
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  const compact = await page.evaluate(() => ['p', 'li', 'blockquote'].map((tag) => {
+    const style = getComputedStyle(document.querySelector(`.scene-copy ${tag}`));
+    return { tag, fontSize: parseFloat(style.fontSize), lineHeight: parseFloat(style.lineHeight) };
+  }));
+  expect(compact.every(({ fontSize }) => fontSize >= 16)).toBe(true);
+  expect(new Set(compact.map(({ fontSize }) => fontSize)).size).toBe(1);
+  expect(new Set(compact.map(({ lineHeight }) => lineHeight)).size).toBe(1);
+  expect(errors).toEqual([]);
+});
+
+test('long lesson and stage headings wrap without horizontal overflow', async ({ page }) => { // Tests INV-59, FAIL-52
+  const errors = monitor(page);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto(new URL('?lesson=retina-to-v1', BASE_URL).href);
+  await page.waitForFunction(() => document.getElementById('app')?.dataset.state === 'ready');
+
+  const stress = await page.evaluate(() => {
+    const inspect = (selector, text) => {
+      const element = document.querySelector(selector);
+      element.textContent = text;
+      const style = getComputedStyle(element);
+      return {
+        overflowWrap: style.overflowWrap,
+        overflow: element.scrollWidth > element.clientWidth + 1,
+      };
+    };
+    return {
+      lesson: inspect('.lesson-intro h1', 'NeuroanatomischeSignalverarbeitungImKontralateralenGesichtsfeld'),
+      stage: inspect('.stage-header h2', 'KontralateraleGesichtsfeldverarbeitungUndSignalweiterleitung'),
+      documentOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
+    };
+  });
+
+  expect(stress.lesson).toEqual({ overflowWrap: 'anywhere', overflow: false });
+  expect(stress.stage).toEqual({ overflowWrap: 'anywhere', overflow: false });
+  expect(stress.documentOverflow).toBe(false);
+  expect(errors).toEqual([]);
+});
+
 test('reduced motion suppresses spatial travel without erasing state feedback', async ({ page }) => { // Tests INV-53, FAIL-46
   const errors = monitor(page);
   await page.emulateMedia({ reducedMotion: 'reduce' });

@@ -177,7 +177,7 @@ src/lesson/          versioned lesson parsing, catalogs, scene state, and adapte
 src/lessons/         checked-in Obsidian-style lesson content
 src/ui/              renderer-independent presentation, workspace, scroll, and camera models
 src/pathways.js      schematic anterior-pathway control points
-src/style.css        responsive editorial UI and semantic interface theme tokens
+src/style.css        responsive editorial UI plus semantic interface color and typography tokens
 test/                 focused Node tests for extracted pure behavior
 scripts/browser/      replayable Firefox/Chromium UX, accessibility, and performance checks
 .github/workflows/standalone-binaries.yml  artifact/nightly/stable release gates
@@ -270,10 +270,12 @@ Fixed-position Previous/Next actions traverse the same sequence and can return t
 entry view. One
 3D stage is shared throughout. The browser root remains fixed; the named, keyboard-
 focusable `#page-scroll` region is the sole vertical lesson surface and retains the
-native scrollbar. Wide layouts pair the reading rail with a pinned stage, compact
-layouts use a shorter pinned stage plus a bottom transport bar, and 601–950 px-tall
-wide layouts reduce canvas height to preserve the complete model box and a 20 px lower
-gutter. Very short viewports retain the normal-flow fallback.
+native scrollbar. Wide layouts pair a roughly 45–65ch reading rail with a still-dominant pinned stage,
+compact layouts keep lesson prose at the 1rem body floor while using a shorter pinned
+stage plus a bottom transport bar, and 601–950 px-tall wide layouts reduce canvas height
+to preserve the complete model box and a 20 px lower gutter. Long localized or scientific
+headings wrap instead of creating horizontal travel; changing instrument values use
+tabular numerals. Very short viewports retain the normal-flow fallback.
 Changed source/destination filters remain eligible while their anatomy cross-fades
 during the first half of a quintic-eased transition. The scene header owns scene
 identity and progress. The persistent **Model & sources** control opens the sole
