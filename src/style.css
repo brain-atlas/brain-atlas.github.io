@@ -294,7 +294,7 @@ button.layer-entity-toggle:hover:not(:disabled) { color: var(--text); border-col
 .import-body > label:not(.import-file) { color: var(--text); font-size: 0.78rem; font-weight: 600; }
 .import-file { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px; border: 1px solid var(--line); background: var(--surface-soft); color: var(--muted); font-size: 0.78rem; }
 .import-file input { min-width: 0; max-width: 62%; color: var(--muted); font-size: 0.72rem; }
-.import-file input::file-selector-button { min-height: 36px; margin-right: 10px; padding: 6px 10px; color: var(--text); border: 1px solid var(--line-strong); border-radius: 4px; background: var(--control-surface-strong); cursor: pointer; }
+.import-file input::file-selector-button { min-height: 44px; margin-right: 10px; padding: 6px 10px; color: var(--text); border: 1px solid var(--line-strong); border-radius: 4px; background: var(--control-surface-strong); cursor: pointer; }
 #lesson-import-source { width: 100%; min-height: 260px; resize: vertical; padding: 12px; color: var(--text-input); border: 1px solid var(--line-strong); border-radius: 4px; background: var(--bg-deep); font-family: var(--font-mono); font-size: 0.76rem; line-height: 1.55; tab-size: 2; }
 .import-privacy { color: var(--dim) !important; font-size: 0.74rem; }
 .import-result { min-height: 62px; padding: 12px; border: 1px solid var(--line); background: var(--surface-soft); }
@@ -357,7 +357,7 @@ button.layer-entity-toggle:hover:not(:disabled) { color: var(--text); border-col
 .fidelity-panel[hidden] { display: none; }
 .fidelity-panel > header { position: sticky; top: 0; z-index: 2; min-height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 14px 18px; border-bottom: 1px solid var(--line); background: var(--surface-overlay-header); backdrop-filter: blur(14px); }
 .fidelity-panel h2 { margin: 4px 0 0; font-size: 1.1rem; }
-#fidelity-close { width: 36px; padding: 0; font-size: 1.4rem; }
+#fidelity-close { width: 44px; padding: 0; font-size: 1.4rem; }
 .fidelity-content { padding: 16px 18px 48px; }
 .fidelity-empty-state { margin: 0; color: var(--muted); font-size: 0.82rem; line-height: 1.58; }
 .fidelity-statuses { display: grid; gap: 8px; margin-bottom: 18px; padding-bottom: 18px; border-bottom: 1px solid var(--line); }

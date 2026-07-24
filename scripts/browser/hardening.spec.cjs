@@ -317,6 +317,25 @@ test('compact Atlas exposes 44 CSS pixel effective Viewer targets', async ({ pag
   expect(errors).toEqual([]);
 });
 
+test('model panel close and import picker match the 44 pixel control floor', async ({ page }) => { // Tests INV-55, FAIL-48
+  const errors = monitor(page);
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.goto(BASE_URL);
+  await page.waitForFunction(() => document.getElementById('app')?.dataset.state === 'ready');
+
+  await page.locator('#model-sources-trigger').click();
+  const close = await page.locator('#fidelity-close').boundingBox();
+  expect(close.width).toBeGreaterThanOrEqual(44);
+  expect(close.height).toBeGreaterThanOrEqual(44);
+  await page.locator('#fidelity-close').click();
+
+  await page.locator('#lesson-import-trigger').click();
+  const picker = await page.locator('#lesson-import-file').boundingBox();
+  expect(picker.width).toBeGreaterThanOrEqual(44);
+  expect(picker.height).toBeGreaterThanOrEqual(44);
+  expect(errors).toEqual([]);
+});
+
 test('compact and 200%-equivalent lesson layouts contain panels without root scroll or overlap', async ({ page }) => { // Tests INV-10, INV-13, INV-15
   const errors = monitor(page);
   for (const viewport of [

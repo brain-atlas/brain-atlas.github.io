@@ -344,7 +344,8 @@ The **Viewer controls** dock contains Play/Pause, activity speed, **Cutaway**,
 custom all/touches/within/between queries, Auto-rotate, and Reset. Closing the dock on a
 wide screen returns its space to the atlas while leaving a keyboard-accessible reopen
 control; compact screens keep the bounded stacked panel. Viewer actions, filters,
-ranges, and label-backed checkboxes expose at least 44×44 CSS-pixel effective targets.
+ranges, label-backed checkboxes, panel close actions, and the local-file picker expose at
+least 44×44 CSS-pixel effective targets.
 Structure disclosures, focus, and scroll remain stable while L/R filters change. Every structure row names its L/R
 controls in context and provides a keyboard-operable combined-hemisphere toggle.
 Selecting no visualizations is a
