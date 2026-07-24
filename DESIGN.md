@@ -25,14 +25,20 @@ typography:
     fontFamily: "ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
     fontSize: "clamp(2.5rem, 5vw, 5.3rem)"
     fontWeight: 700
-    lineHeight: 0.96
-    letterSpacing: "-0.055em"
+    lineHeight: 0.98
+    letterSpacing: "-0.04em"
+  display-compact:
+    fontFamily: "ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+    fontSize: "clamp(2.5rem, 14vw, 4.2rem)"
+    fontWeight: 700
+    lineHeight: 0.98
+    letterSpacing: "-0.04em"
   headline:
     fontFamily: "ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
     fontSize: "clamp(1.7rem, 3vw, 2.65rem)"
     fontWeight: 700
-    lineHeight: 1.08
-    letterSpacing: "-0.035em"
+    lineHeight: 1.1
+    letterSpacing: "-0.03em"
   title:
     fontFamily: "ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
     fontSize: "1.2rem"
@@ -45,29 +51,29 @@ typography:
     lineHeight: 1.75
   body-small:
     fontFamily: "ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
-    fontSize: "0.78rem"
+    fontSize: "0.8125rem"
     fontWeight: 400
-    lineHeight: 1.55
+    lineHeight: 1.58
   field:
     fontFamily: "ui-monospace, 'SFMono-Regular', Consolas, 'Liberation Mono', monospace"
-    fontSize: "0.76rem"
+    fontSize: "0.75rem"
     fontWeight: 400
     lineHeight: 1.55
   label:
     fontFamily: "ui-monospace, 'SFMono-Regular', Consolas, 'Liberation Mono', monospace"
-    fontSize: "0.68rem"
+    fontSize: "0.6875rem"
     fontWeight: 600
     lineHeight: 1.4
     letterSpacing: "0.1em"
   micro-label:
     fontFamily: "ui-monospace, 'SFMono-Regular', Consolas, 'Liberation Mono', monospace"
-    fontSize: "0.61rem"
+    fontSize: "0.625rem"
     fontWeight: 400
     lineHeight: 1.4
-    letterSpacing: "0.15em"
+    letterSpacing: "0.12em"
   status-chip:
     fontFamily: "ui-monospace, 'SFMono-Regular', Consolas, 'Liberation Mono', monospace"
-    fontSize: "0.57rem"
+    fontSize: "0.625rem"
     fontWeight: 400
     lineHeight: 1.4
 rounded:
@@ -183,23 +189,23 @@ The palette pairs near-black blue surfaces with cool pale text and a small set o
 **Character:** The sans-serif voice is editorial, direct, and highly readable. Monospace labels create the cadence of scientific instrumentation without turning lesson prose into a terminal interface.
 
 ### Hierarchy
-- **Display** (bold, fluid 2.5–5.3rem, 0.96 line height): Lesson openings and the strongest narrative orientation.
-- **Headline** (bold, fluid 1.7–2.65rem, 1.08 line height): Scene titles and major conceptual transitions.
+- **Display** (bold, fluid 2.5–5.3rem wide and 2.5–4.2rem compact, 0.98 line height, −0.04em tracking): Lesson openings and the strongest narrative orientation.
+- **Headline** (bold, fluid 1.7–2.65rem, 1.1 line height, −0.03em tracking): Scene titles and major conceptual transitions.
 - **Title** (semibold, 1.2rem, 1.2 line height): Drawer, dialog, and panel headings.
-- **Body** (regular, 1rem, 1.75 line height): Lesson prose; reading columns stay near 640–720px rather than spanning the viewport.
-- **Small Body** (regular, 0.78rem, 1.55 line height): Supporting card copy and compact panel explanation.
-- **Field** (regular monospace, 0.76rem, 1.55 line height): Structured lesson source and data-entry content.
-- **Label** (semibold monospace, 0.68rem, 0.1em tracking): Eyebrows, status, metadata, control groups, and scientific context.
-- **Micro Label** (regular monospace, 0.61rem, 0.15em tracking): Stage kickers and highly compact orientation text.
-- **Status Chip** (regular monospace, 0.57rem): Fidelity and state chips that accompany a nearby full-text heading.
+- **Body** (regular, 1rem, 1.75 line height): Lesson prose; wide and zoom-equivalent reading lines stay near 45–65ch, while compact screens use their natural available measure without shrinking below 1rem.
+- **Small Body** (regular, 0.8125rem, 1.58 line height): Supporting card copy and compact panel explanation.
+- **Field** (regular monospace, 0.75rem, 1.55 line height): Structured lesson source and data-entry content.
+- **Label** (semibold monospace, 0.6875rem, 0.1em tracking): Eyebrows, status, metadata, control groups, and scientific context.
+- **Micro Label** (regular monospace, 0.625rem, 0.12em tracking): Stage kickers and highly compact orientation text.
+- **Status Chip** (regular monospace, 0.625rem): Fidelity and state chips that accompany a nearby full-text heading.
 
 **The Two-Voice Rule.** Use sans serif for explanation and interaction. Use monospace for status, metadata, measurement, and compact orientation labels.
 
-**The Readability Before Atmosphere Rule.** Never dim inactive lesson prose; express active scene state through rails, borders, and numbered markers.
+**The Readability Before Atmosphere Rule.** Never dim inactive lesson prose; express active scene state through rails, borders, and numbered markers. Keep compact lesson prose at 1rem, balance narrative headings, allow long localized or scientific labels to wrap safely, and use tabular numerals for changing instrument values.
 
 ## Layout
 
-The system uses one responsive spatial model. Wide lesson views place a reading column beside a sticky atlas stage inside a centered container capped near 1480px. Atlas Home gives the renderer the flexible field and assigns a 320–380px control rail. At 980px and below, both experiences become single-column; the stage moves above lesson prose, and Viewer controls stack below or collapse. At 700px and below, navigation becomes compact, lesson transport docks to the safe-area-aware bottom edge, drawers become bottom sheets, and side inspectors become full-width sheets.
+The system uses one responsive spatial model. Wide lesson views place a 45–65ch reading column beside a still-dominant sticky atlas stage inside a centered container capped near 1480px. Atlas Home gives the renderer the flexible field and assigns a 320–380px control rail. At 980px and below, both experiences become single-column; the stage moves above lesson prose, and Viewer controls stack below or collapse. At 700px and below, navigation becomes compact, lesson transport docks to the safe-area-aware bottom edge, drawers become bottom sheets, and side inspectors become full-width sheets.
 
 Spacing follows an observed 4, 8, 12, 16, 20, and 28px rhythm, with larger fluid gaps reserved for the lesson-stage composition. Reading scenes use viewport-relative vertical space to create deliberate pacing. The named `page-scroll` surface owns lesson scrolling; root document overflow remains contained.
 
@@ -271,7 +277,7 @@ Components are precise, tactile, and restrained. Their state changes are visible
 - **Do** let anatomy and evidence remain the brightest, most consequential content.
 - **Do** use Neural Cyan only for focus, selection, links, and primary actions.
 - **Do** preserve 44 by 44 CSS-pixel targets for standalone controls and navigation.
-- **Do** use monospace for status and metadata while keeping explanation in the sans-serif reading voice.
+- **Do** use monospace for status and metadata while keeping explanation in the sans-serif reading voice; use tabular numerals for changing values and progress.
 - **Do** adapt side panels into bottom sheets and keep lesson transport safe-area-aware on compact screens.
 - **Do** respect reduced-motion preference by stopping spatial travel while retaining useful color and border feedback.
 
@@ -281,4 +287,4 @@ Components are precise, tactile, and restrained. Their state changes are visible
 - **Don't** add another canvas, renderer, runtime coordinate transform, or competing control system.
 - **Don't** cover the 3D stage with decorative badges, gradients, or persistent status chrome.
 - **Don't** round every panel, lift every card, or use shadows without an overlap or modality reason.
-- **Don't** dim lesson prose to show scene state or suppress all transitions under reduced motion.
+- **Don't** dim or shrink compact lesson prose to show hierarchy, clip long dynamic headings, or suppress all transitions under reduced motion.

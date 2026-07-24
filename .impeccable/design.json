@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-07-24T01:41:56Z",
+  "generatedAt": "2026-07-24T02:06:22Z",
   "title": "Design System: Brain Atlas",
   "extensions": {
     "colorMeta": {
@@ -280,6 +280,10 @@
         "displayName": "Display",
         "purpose": "Lesson openings and strongest narrative orientation."
       },
+      "display-compact": {
+        "displayName": "Compact Display",
+        "purpose": "Lesson openings on compact viewports without sacrificing hierarchy."
+      },
       "headline": {
         "displayName": "Headline",
         "purpose": "Scene titles and major conceptual transitions."
@@ -404,7 +408,7 @@
       "refersTo": "card-lesson",
       "description": "A compact guided-learning entry with title, supporting copy, and metadata.",
       "html": "<article class=\"ds-lesson-card\"><span class=\"ds-card-kicker\">GUIDED LESSON</span><h3>From retina to V1</h3><p>Follow the visual pathway through the atlas.</p></article>",
-      "css": ".ds-lesson-card { display: grid; gap: 12px; padding: 16px; color: var(--text); border: 1px solid var(--line-strong); border-radius: 6px; background: var(--surface-soft); } .ds-lesson-card h3, .ds-lesson-card p { margin: 0; } .ds-lesson-card p { color: var(--muted); font-size: 0.78rem; line-height: 1.55; } .ds-card-kicker { color: var(--accent); font-family: var(--font-mono); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.12em; }"
+      "css": ".ds-lesson-card { display: grid; gap: 12px; padding: 16px; color: var(--text); border: 1px solid var(--line-strong); border-radius: 6px; background: var(--surface-soft); } .ds-lesson-card h3, .ds-lesson-card p { margin: 0; } .ds-lesson-card p { color: var(--muted); font-size: 0.8125rem; line-height: 1.58; } .ds-card-kicker { color: var(--accent); font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.12em; }"
     },
     {
       "name": "Dark Text Field",
@@ -412,7 +416,7 @@
       "refersTo": "field-dark",
       "description": "A high-contrast source or data-entry field within a dark panel.",
       "html": "<label class=\"ds-field-label\" for=\"ds-source\">LESSON MARKDOWN</label><textarea class=\"ds-field\" id=\"ds-source\" rows=\"3\">title: Visual pathway</textarea>",
-      "css": ".ds-field-label { display: block; margin-bottom: 8px; color: var(--text); font-size: 0.78rem; font-weight: 600; } .ds-field { width: 100%; min-height: 96px; padding: 12px; color: var(--text-input); border: 1px solid var(--line-strong); border-radius: 4px; background: var(--bg-deep); font-family: var(--font-mono); font-size: 0.76rem; line-height: 1.55; resize: vertical; } .ds-field:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }"
+      "css": ".ds-field-label { display: block; margin-bottom: 8px; color: var(--text); font-size: 0.8125rem; font-weight: 600; } .ds-field { width: 100%; min-height: 96px; padding: 12px; color: var(--text-input); border: 1px solid var(--line-strong); border-radius: 4px; background: var(--bg-deep); font-family: var(--font-mono); font-size: 0.75rem; line-height: 1.55; resize: vertical; } .ds-field:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }"
     },
     {
       "name": "Fidelity Status Chip",
@@ -420,7 +424,7 @@
       "refersTo": "chip-status",
       "description": "A compact factual label for geometry or activity fidelity.",
       "html": "<span class=\"ds-status-chip\">ATLAS-DERIVED</span>",
-      "css": ".ds-status-chip { display: inline-flex; padding: 4px 7px; color: var(--text-chip); border: 1px solid var(--line-strong); border-radius: 999px; font-family: var(--font-mono); font-size: 0.57rem; letter-spacing: 0.04em; }"
+      "css": ".ds-status-chip { display: inline-flex; padding: 4px 7px; color: var(--text-chip); border: 1px solid var(--line-strong); border-radius: 999px; font-family: var(--font-mono); font-size: 0.625rem; font-variant-numeric: tabular-nums; letter-spacing: 0.04em; }"
     },
     {
       "name": "Brand Navigation",
@@ -428,7 +432,7 @@
       "refersTo": "nav-brand",
       "description": "The compact top-bar home link with an instrumental kicker and current title.",
       "html": "<a class=\"ds-brand\" href=\"#\"><span class=\"ds-brand-kicker\">BRAIN ATLAS</span><span>From retina to V1</span></a>",
-      "css": ".ds-brand { min-width: 44px; min-height: 44px; display: inline-flex; align-items: center; gap: 13px; color: var(--text); text-decoration: none; } .ds-brand-kicker { color: var(--accent); font-family: var(--font-mono); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.18em; } .ds-brand:hover { color: var(--text-link-hover); } .ds-brand:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }"
+      "css": ".ds-brand { min-width: 44px; min-height: 44px; display: inline-flex; align-items: center; gap: 13px; color: var(--text); text-decoration: none; } .ds-brand-kicker { color: var(--accent); font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.18em; } .ds-brand:hover { color: var(--text-link-hover); } .ds-brand:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }"
     },
     {
       "name": "Atlas Stage Header",
@@ -436,7 +440,7 @@
       "refersTo": "panel-stage",
       "description": "The factual frame above the shared anatomical viewport.",
       "html": "<header class=\"ds-stage-header\"><div><p>CURRENT SCENE</p><h2>Signals reach primary visual cortex</h2></div><button type=\"button\">MODEL &amp; SOURCES</button></header>",
-      "css": ".ds-stage-header { min-height: 68px; display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 12px 16px; color: var(--text); border: 1px solid var(--line-strong); background: var(--surface-stage); } .ds-stage-header p { margin: 0 0 3px; color: var(--dim); font-family: var(--font-mono); font-size: 0.61rem; letter-spacing: 0.15em; } .ds-stage-header h2 { margin: 0; font-size: 1.02rem; } .ds-stage-header button { min-height: 44px; padding: 8px 12px; color: var(--text-accent); border: 1px solid var(--accent-border); border-radius: 4px; background: var(--accent-soft); } .ds-stage-header button:hover { color: var(--text); border-color: var(--accent); } .ds-stage-header button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }"
+      "css": ".ds-stage-header { min-height: 68px; display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 12px 16px; color: var(--text); border: 1px solid var(--line-strong); background: var(--surface-stage); } .ds-stage-header p { margin: 0 0 3px; color: var(--dim); font-family: var(--font-mono); font-size: 0.625rem; line-height: 1.4; letter-spacing: 0.12em; } .ds-stage-header h2 { margin: 0; font-size: 1.02rem; } .ds-stage-header button { min-height: 44px; padding: 8px 12px; color: var(--text-accent); border: 1px solid var(--accent-border); border-radius: 4px; background: var(--accent-soft); } .ds-stage-header button:hover { color: var(--text); border-color: var(--accent); } .ds-stage-header button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }"
     }
   ],
   "narrative": {
@@ -467,7 +471,7 @@
       },
       {
         "name": "The Readability Before Atmosphere Rule",
-        "body": "Never dim inactive lesson prose; express active scene state through rails, borders, and numbered markers.",
+        "body": "Never dim inactive lesson prose; express active scene state through rails, borders, and numbered markers. Keep compact lesson prose at 1rem, balance narrative headings, allow long localized or scientific labels to wrap safely, and use tabular numerals for changing instrument values.",
         "section": "typography"
       },
       {
@@ -495,7 +499,7 @@
       "Do let anatomy and evidence remain the brightest, most consequential content.",
       "Do use Neural Cyan only for focus, selection, links, and primary actions.",
       "Do preserve 44 by 44 CSS-pixel targets for standalone controls and navigation.",
-      "Do use monospace for status and metadata while keeping explanation in the sans-serif reading voice.",
+      "Do use monospace for status and metadata while keeping explanation in the sans-serif reading voice; use tabular numerals for changing values and progress.",
       "Do adapt side panels into bottom sheets and keep lesson transport safe-area-aware on compact screens.",
       "Do respect reduced-motion preference by stopping spatial travel while retaining useful color and border feedback."
     ],
@@ -505,7 +509,7 @@
       "Don't add another canvas, renderer, runtime coordinate transform, or competing control system.",
       "Don't cover the 3D stage with decorative badges, gradients, or persistent status chrome.",
       "Don't round every panel, lift every card, or use shadows without an overlap or modality reason.",
-      "Don't dim lesson prose to show scene state or suppress all transitions under reduced motion."
+      "Don't dim or shrink compact lesson prose to show hierarchy, clip long dynamic headings, or suppress all transitions under reduced motion."
     ]
   }
 }
