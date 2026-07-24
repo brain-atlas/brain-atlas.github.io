@@ -410,6 +410,16 @@ function renderVisualSelector() {
   selector.replaceChildren(fragment);
 }
 
+function createSupplementaryImage() {
+  const image = node('img', 'supplementary-image');
+  image.id = 'supplementary-image';
+  image.loading = 'lazy';
+  image.decoding = 'async';
+  image.referrerPolicy = 'no-referrer';
+  byId('supplementary-image-frame').prepend(image);
+  return image;
+}
+
 function showLessonVisual(visualId, layout, { announce = false } = {}) {
   const visual = visualId === 'atlas'
     ? null
@@ -433,7 +443,7 @@ function showLessonVisual(visualId, layout, { announce = false } = {}) {
   }
 
   if (visual) {
-    const image = byId('supplementary-image');
+    const image = byId('supplementary-image') || createSupplementaryImage();
     const failure = byId('supplementary-image-failure');
     image.alt = visual.alt;
     byId('supplementary-image-alt').textContent = visual.alt;
@@ -458,6 +468,8 @@ function showLessonVisual(visualId, layout, { announce = false } = {}) {
       figure.dataset.state = 'loading';
       image.src = visual.src;
     }
+  } else {
+    resetSupplementaryImage();
   }
 
   if (announce) {
@@ -467,11 +479,12 @@ function showLessonVisual(visualId, layout, { announce = false } = {}) {
 
 function resetSupplementaryImage() {
   const image = byId('supplementary-image');
-  image.onload = null;
-  image.onerror = null;
-  image.removeAttribute('src');
-  delete image.dataset.src;
-  image.hidden = false;
+  if (image) {
+    image.onload = null;
+    image.onerror = null;
+    image.removeAttribute('src');
+    image.remove();
+  }
   byId('supplementary-image-failure').hidden = true;
   delete byId('supplementary-visual').dataset.state;
 }
@@ -479,9 +492,7 @@ function resetSupplementaryImage() {
 function retrySupplementaryImage() {
   const visual = lesson.visuals.find(({ id }) => id === selectedVisualId);
   if (!visual) return;
-  const image = byId('supplementary-image');
-  image.removeAttribute('src');
-  delete image.dataset.src;
+  resetSupplementaryImage();
   showLessonVisual(visual.id, byId('visual-surface').dataset.layout);
 }
 

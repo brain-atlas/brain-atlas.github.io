@@ -1,5 +1,6 @@
 const { test, expect } = require('@playwright/test');
 const fs = require('fs');
+const path = require('path');
 
 const BASE_URL = process.env.BRAIN_ATLAS_URL ?? 'http://127.0.0.1:5199/';
 const AXE_SOURCE = fs.readFileSync(require.resolve('axe-core/axe.min.js'), 'utf8');
@@ -420,6 +421,56 @@ test('compact and 200%-equivalent lesson layouts contain panels without root scr
     await page.evaluate(() => { document.getElementById('page-scroll').scrollTop = 300; });
     expect(await page.evaluate(() => [scrollX, scrollY])).toEqual([0, 0]);
   }
+  expect(errors).toEqual([]);
+});
+
+test('supplementary image DOM exists only while a validated visual is active', async ({ page }) => { // Tests INV-58
+  const errors = monitor(page);
+  const source = fs.readFileSync(path.join(__dirname, '../../test/fixtures/lessons/visual-field-crossing.md'), 'utf8');
+  let attempts = 0;
+  await page.route('https://example.org/retinotopy.png', async route => {
+    attempts++;
+    if (attempts === 1) {
+      await route.fulfill({ status: 200, contentType: 'image/png', body: Buffer.alloc(0) });
+      return;
+    }
+    await route.fulfill({
+      status: 200,
+      contentType: 'image/png',
+      body: Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=', 'base64'),
+    });
+  });
+
+  await page.goto(BASE_URL);
+  await page.waitForFunction(() => document.getElementById('app')?.dataset.state === 'ready');
+  expect(await page.locator('#supplementary-image').count()).toBe(0);
+
+  await page.locator('#lesson-import-trigger').click();
+  await page.locator('#lesson-import-source').fill(source);
+  await page.locator('#lesson-import-validate').click();
+  await expect(page.locator('#lesson-import-open')).toBeEnabled();
+  await page.locator('#lesson-import-open').click();
+  await page.waitForFunction(() => window.__lesson?.controllerState?.activeIndex === 0);
+  expect(await page.locator('#supplementary-image').count()).toBe(0);
+
+  await page.locator('#scene-next').click();
+  await page.waitForFunction(() => window.__lesson?.controllerState?.activeIndex === 1);
+  const image = page.locator('#supplementary-image');
+  await expect(image).toHaveCount(1);
+  await expect(image).toHaveAttribute('alt', 'Diagram showing nasal and temporal retinal fields');
+  await expect(image).toHaveAttribute('loading', 'lazy');
+  await expect(image).toHaveAttribute('decoding', 'async');
+  await expect(image).toHaveAttribute('referrerpolicy', 'no-referrer');
+  await expect(page.locator('#supplementary-image-failure')).toBeVisible();
+
+  await page.locator('#supplementary-image-retry').click();
+  await expect(page.locator('#supplementary-visual')).toHaveAttribute('data-state', 'loaded');
+  await expect(image).toBeVisible();
+  expect(attempts).toBe(2);
+
+  await page.locator('#scene-previous').click();
+  await page.waitForFunction(() => window.__lesson?.controllerState?.activeIndex === 0);
+  expect(await page.locator('#supplementary-image').count()).toBe(0);
   expect(errors).toEqual([]);
 });
 

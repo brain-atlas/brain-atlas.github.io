@@ -310,9 +310,11 @@ Validation is non-destructive and uses the same strict contract as the checked-i
 the preview reports title, Draft state, scene/image counts, and external image hosts before
 **Open lesson** is enabled. Explicit opening replaces the current lesson in memory through
 the same controller and renderer adapter. It does not upload, save, or persist the source,
-and reload returns to Atlas without restoring local source. Declared HTTPS supplementary images begin
-loading only after opening. They remain semantic DOM figures—not WebGL textures—with alt
-text, caption, credit, source link, no-referrer loading, and an accessible retry state.
+and reload returns to Atlas without restoring local source. A declared HTTPS
+supplementary image element is created only while its validated visual is active, after
+opening; switching back to the atlas removes it. It remains a semantic DOM figure—not a
+WebGL texture—with alt text, caption, credit, source link, no-referrer loading, and an
+accessible retry state.
 V1 accepts credential-free HTTPS image sources only; packaged repository-relative lesson
 images are not yet part of the contract. Scripts, styles, frames, raw HTML, unsafe URL
 schemes, arbitrary fetches, and undeclared images remain forbidden.
