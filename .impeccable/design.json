@@ -1,0 +1,511 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-24T01:41:56Z",
+  "title": "Design System: Brain Atlas",
+  "extensions": {
+    "colorMeta": {
+      "anatomical-night": {
+        "role": "neutral",
+        "displayName": "Anatomical Night",
+        "canonical": "#081019",
+        "tonalRamp": [
+          "oklch(15% 0.023 251.7)",
+          "oklch(26% 0.023 251.7)",
+          "oklch(38% 0.023 251.7)",
+          "oklch(50% 0.023 251.7)",
+          "oklch(62% 0.023 251.7)",
+          "oklch(74% 0.023 251.7)",
+          "oklch(86% 0.023 251.7)",
+          "oklch(95% 0.023 251.7)"
+        ]
+      },
+      "deep-night": {
+        "role": "neutral",
+        "displayName": "Deep Night",
+        "canonical": "#050a10",
+        "tonalRamp": [
+          "oklch(15% 0.016 248.9)",
+          "oklch(26% 0.016 248.9)",
+          "oklch(38% 0.016 248.9)",
+          "oklch(50% 0.016 248.9)",
+          "oklch(62% 0.016 248.9)",
+          "oklch(74% 0.016 248.9)",
+          "oklch(86% 0.016 248.9)",
+          "oklch(95% 0.016 248.9)"
+        ]
+      },
+      "panel-night": {
+        "role": "neutral",
+        "displayName": "Panel Night",
+        "canonical": "#071019",
+        "tonalRamp": [
+          "oklch(15% 0.024 248.6)",
+          "oklch(26% 0.024 248.6)",
+          "oklch(38% 0.024 248.6)",
+          "oklch(50% 0.024 248.6)",
+          "oklch(62% 0.024 248.6)",
+          "oklch(74% 0.024 248.6)",
+          "oklch(86% 0.024 248.6)",
+          "oklch(95% 0.024 248.6)"
+        ]
+      },
+      "select-night": {
+        "role": "neutral",
+        "displayName": "Select Night",
+        "canonical": "#091622",
+        "tonalRamp": [
+          "oklch(15% 0.031 247.8)",
+          "oklch(26% 0.031 247.8)",
+          "oklch(38% 0.031 247.8)",
+          "oklch(50% 0.031 247.8)",
+          "oklch(62% 0.031 247.8)",
+          "oklch(74% 0.031 247.8)",
+          "oklch(86% 0.031 247.8)",
+          "oklch(95% 0.031 247.8)"
+        ]
+      },
+      "cortical-white": {
+        "role": "neutral",
+        "displayName": "Cortical White",
+        "canonical": "#edf4fb",
+        "tonalRamp": [
+          "oklch(15% 0.012 248.0)",
+          "oklch(26% 0.012 248.0)",
+          "oklch(38% 0.012 248.0)",
+          "oklch(50% 0.012 248.0)",
+          "oklch(62% 0.012 248.0)",
+          "oklch(74% 0.012 248.0)",
+          "oklch(86% 0.012 248.0)",
+          "oklch(95% 0.012 248.0)"
+        ]
+      },
+      "quiet-blue": {
+        "role": "neutral",
+        "displayName": "Quiet Blue",
+        "canonical": "#9db0c4",
+        "tonalRamp": [
+          "oklch(15% 0.036 249.7)",
+          "oklch(26% 0.036 249.7)",
+          "oklch(38% 0.036 249.7)",
+          "oklch(50% 0.036 249.7)",
+          "oklch(62% 0.036 249.7)",
+          "oklch(74% 0.036 249.7)",
+          "oklch(86% 0.036 249.7)",
+          "oklch(95% 0.036 249.7)"
+        ]
+      },
+      "dim-blue": {
+        "role": "neutral",
+        "displayName": "Dim Blue",
+        "canonical": "#6f8296",
+        "tonalRamp": [
+          "oklch(15% 0.038 249.8)",
+          "oklch(26% 0.038 249.8)",
+          "oklch(38% 0.038 249.8)",
+          "oklch(50% 0.038 249.8)",
+          "oklch(62% 0.038 249.8)",
+          "oklch(74% 0.038 249.8)",
+          "oklch(86% 0.038 249.8)",
+          "oklch(95% 0.038 249.8)"
+        ]
+      },
+      "neural-cyan": {
+        "role": "primary",
+        "displayName": "Neural Cyan",
+        "canonical": "#43dccb",
+        "tonalRamp": [
+          "oklch(15% 0.128 184.2)",
+          "oklch(26% 0.128 184.2)",
+          "oklch(38% 0.128 184.2)",
+          "oklch(50% 0.128 184.2)",
+          "oklch(62% 0.128 184.2)",
+          "oklch(74% 0.128 184.2)",
+          "oklch(86% 0.128 184.2)",
+          "oklch(95% 0.128 184.2)"
+        ]
+      },
+      "neural-cyan-soft": {
+        "role": "primary",
+        "displayName": "Neural Cyan Veil",
+        "canonical": "rgba(67, 220, 203, 0.13)",
+        "tonalRamp": [
+          "oklch(15% 0.128 184.2 / 0.13)",
+          "oklch(26% 0.128 184.2 / 0.13)",
+          "oklch(38% 0.128 184.2 / 0.13)",
+          "oklch(50% 0.128 184.2 / 0.13)",
+          "oklch(62% 0.128 184.2 / 0.13)",
+          "oklch(74% 0.128 184.2 / 0.13)",
+          "oklch(86% 0.128 184.2 / 0.13)",
+          "oklch(95% 0.128 184.2 / 0.13)"
+        ]
+      },
+      "signal-amber": {
+        "role": "tertiary",
+        "displayName": "Signal Amber",
+        "canonical": "#ffb060",
+        "tonalRamp": [
+          "oklch(15% 0.133 64.3)",
+          "oklch(26% 0.133 64.3)",
+          "oklch(38% 0.133 64.3)",
+          "oklch(50% 0.133 64.3)",
+          "oklch(62% 0.133 64.3)",
+          "oklch(74% 0.133 64.3)",
+          "oklch(86% 0.133 64.3)",
+          "oklch(95% 0.133 64.3)"
+        ]
+      },
+      "activity-violet": {
+        "role": "secondary",
+        "displayName": "Activity Violet",
+        "canonical": "#c45cff",
+        "tonalRamp": [
+          "oklch(15% 0.239 310.9)",
+          "oklch(26% 0.239 310.9)",
+          "oklch(38% 0.239 310.9)",
+          "oklch(50% 0.239 310.9)",
+          "oklch(62% 0.239 310.9)",
+          "oklch(74% 0.239 310.9)",
+          "oklch(86% 0.239 310.9)",
+          "oklch(95% 0.239 310.9)"
+        ]
+      },
+      "caution-coral": {
+        "role": "tertiary",
+        "displayName": "Caution Coral",
+        "canonical": "#ff8b83",
+        "tonalRamp": [
+          "oklch(15% 0.142 25.1)",
+          "oklch(26% 0.142 25.1)",
+          "oklch(38% 0.142 25.1)",
+          "oklch(50% 0.142 25.1)",
+          "oklch(62% 0.142 25.1)",
+          "oklch(74% 0.142 25.1)",
+          "oklch(86% 0.142 25.1)",
+          "oklch(95% 0.142 25.1)"
+        ]
+      },
+      "structural-line": {
+        "role": "neutral",
+        "displayName": "Structural Line",
+        "canonical": "rgba(148, 181, 215, 0.17)",
+        "tonalRamp": [
+          "oklch(15% 0.061 249.4 / 0.17)",
+          "oklch(26% 0.061 249.4 / 0.17)",
+          "oklch(38% 0.061 249.4 / 0.17)",
+          "oklch(50% 0.061 249.4 / 0.17)",
+          "oklch(62% 0.061 249.4 / 0.17)",
+          "oklch(74% 0.061 249.4 / 0.17)",
+          "oklch(86% 0.061 249.4 / 0.17)",
+          "oklch(95% 0.061 249.4 / 0.17)"
+        ]
+      },
+      "structural-line-strong": {
+        "role": "neutral",
+        "displayName": "Structural Line Strong",
+        "canonical": "rgba(148, 181, 215, 0.34)",
+        "tonalRamp": [
+          "oklch(15% 0.061 249.4 / 0.34)",
+          "oklch(26% 0.061 249.4 / 0.34)",
+          "oklch(38% 0.061 249.4 / 0.34)",
+          "oklch(50% 0.061 249.4 / 0.34)",
+          "oklch(62% 0.061 249.4 / 0.34)",
+          "oklch(74% 0.061 249.4 / 0.34)",
+          "oklch(86% 0.061 249.4 / 0.34)",
+          "oklch(95% 0.061 249.4 / 0.34)"
+        ]
+      },
+      "control-surface": {
+        "role": "neutral",
+        "displayName": "Control Surface",
+        "canonical": "rgba(19, 34, 50, 0.78)",
+        "tonalRamp": [
+          "oklch(15% 0.037 251.0 / 0.78)",
+          "oklch(26% 0.037 251.0 / 0.78)",
+          "oklch(38% 0.037 251.0 / 0.78)",
+          "oklch(50% 0.037 251.0 / 0.78)",
+          "oklch(62% 0.037 251.0 / 0.78)",
+          "oklch(74% 0.037 251.0 / 0.78)",
+          "oklch(86% 0.037 251.0 / 0.78)",
+          "oklch(95% 0.037 251.0 / 0.78)"
+        ]
+      },
+      "control-surface-hover": {
+        "role": "neutral",
+        "displayName": "Control Surface Hover",
+        "canonical": "rgba(25, 46, 63, 0.92)",
+        "tonalRamp": [
+          "oklch(15% 0.042 237.0 / 0.92)",
+          "oklch(26% 0.042 237.0 / 0.92)",
+          "oklch(38% 0.042 237.0 / 0.92)",
+          "oklch(50% 0.042 237.0 / 0.92)",
+          "oklch(62% 0.042 237.0 / 0.92)",
+          "oklch(74% 0.042 237.0 / 0.92)",
+          "oklch(86% 0.042 237.0 / 0.92)",
+          "oklch(95% 0.042 237.0 / 0.92)"
+        ]
+      },
+      "soft-surface": {
+        "role": "neutral",
+        "displayName": "Soft Surface",
+        "canonical": "rgba(17, 31, 47, 0.78)",
+        "tonalRamp": [
+          "oklch(15% 0.037 252.6 / 0.78)",
+          "oklch(26% 0.037 252.6 / 0.78)",
+          "oklch(38% 0.037 252.6 / 0.78)",
+          "oklch(50% 0.037 252.6 / 0.78)",
+          "oklch(62% 0.037 252.6 / 0.78)",
+          "oklch(74% 0.037 252.6 / 0.78)",
+          "oklch(86% 0.037 252.6 / 0.78)",
+          "oklch(95% 0.037 252.6 / 0.78)"
+        ]
+      },
+      "stage-surface": {
+        "role": "neutral",
+        "displayName": "Stage Surface",
+        "canonical": "rgba(6, 14, 23, 0.82)",
+        "tonalRamp": [
+          "oklch(15% 0.023 250.5 / 0.82)",
+          "oklch(26% 0.023 250.5 / 0.82)",
+          "oklch(38% 0.023 250.5 / 0.82)",
+          "oklch(50% 0.023 250.5 / 0.82)",
+          "oklch(62% 0.023 250.5 / 0.82)",
+          "oklch(74% 0.023 250.5 / 0.82)",
+          "oklch(86% 0.023 250.5 / 0.82)",
+          "oklch(95% 0.023 250.5 / 0.82)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Lesson openings and strongest narrative orientation."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Scene titles and major conceptual transitions."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Drawer, dialog, and panel headings."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Readable lesson explanation and supporting interface prose."
+      },
+      "body-small": {
+        "displayName": "Small Body",
+        "purpose": "Supporting card copy and compact panel explanation."
+      },
+      "field": {
+        "displayName": "Field",
+        "purpose": "Structured lesson source and data-entry content."
+      },
+      "label": {
+        "displayName": "Instrument Label",
+        "purpose": "Status, metadata, measurement, and compact orientation."
+      },
+      "micro-label": {
+        "displayName": "Micro Label",
+        "purpose": "Stage kickers and highly compact orientation text."
+      },
+      "status-chip": {
+        "displayName": "Status Chip",
+        "purpose": "Fidelity and state chips paired with nearby context."
+      }
+    },
+    "shadows": [
+      {
+        "name": "stage-lift",
+        "value": "0 28px 80px rgba(0, 0, 0, 0.28)",
+        "purpose": "Separate the sticky lesson stage from the reading field."
+      },
+      {
+        "name": "popover-lift",
+        "value": "0 14px 48px rgba(0, 0, 0, 0.48)",
+        "purpose": "Raise compact transient menus close to their trigger."
+      },
+      {
+        "name": "side-panel-lift",
+        "value": "-24px 0 70px rgba(0, 0, 0, 0.44)",
+        "purpose": "Separate right-edge inspectors and source panels."
+      },
+      {
+        "name": "drawer-depth",
+        "value": "-28px 0 100px rgba(0, 0, 0, 0.62)",
+        "purpose": "Establish the lesson drawer as a modal layer."
+      },
+      {
+        "name": "dialog-depth",
+        "value": "0 28px 100px rgba(0, 0, 0, 0.72)",
+        "purpose": "Reserve the strongest elevation for blocking dialogs."
+      },
+      {
+        "name": "mobile-sheet-depth",
+        "value": "0 -24px 80px rgba(0, 0, 0, 0.68)",
+        "purpose": "Lift compact bottom sheets above the stage."
+      }
+    ],
+    "motion": [
+      {
+        "name": "control-feedback",
+        "value": "150ms ease",
+        "purpose": "Color, border, and background feedback for controls."
+      },
+      {
+        "name": "scene-feedback",
+        "value": "180ms ease",
+        "purpose": "Color, border, and background feedback for lesson scene markers."
+      },
+      {
+        "name": "lesson-scroll",
+        "value": "smooth; auto under prefers-reduced-motion",
+        "purpose": "Guide ordinary lesson navigation without forcing spatial motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "narrowest",
+        "value": "350px"
+      },
+      {
+        "name": "compact",
+        "value": "390px"
+      },
+      {
+        "name": "mobile",
+        "value": "700px"
+      },
+      {
+        "name": "stacked",
+        "value": "980px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Default Control Button",
+      "kind": "button",
+      "refersTo": "button-default",
+      "description": "The restrained baseline action for controls and secondary choices.",
+      "html": "<button class=\"ds-btn-default\" type=\"button\">VIEW SOURCES</button>",
+      "css": ".ds-btn-default { min-height: 44px; padding: 8px 12px; color: var(--muted); border: 1px solid var(--line-strong); border-radius: 4px; background: var(--control-surface); font: inherit; cursor: pointer; transition: color 150ms, border-color 150ms, background 150ms; } .ds-btn-default:hover { color: var(--text); border-color: var(--accent-border-strong); background: var(--control-surface-hover); } .ds-btn-default:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }"
+    },
+    {
+      "name": "Accent Action Button",
+      "kind": "button",
+      "refersTo": "button-accent",
+      "description": "A decisive primary action or selected control state.",
+      "html": "<button class=\"ds-btn-accent\" type=\"button\">EXPLORE SCENE</button>",
+      "css": ".ds-btn-accent { min-height: 44px; padding: 8px 12px; color: var(--text-on-accent); border: 1px solid var(--accent); border-radius: 4px; background: var(--accent); font: inherit; font-weight: 600; cursor: pointer; transition: color 150ms, border-color 150ms, background 150ms; } .ds-btn-accent:hover { color: var(--text-on-accent-strong); background: var(--text-link-hover); } .ds-btn-accent:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }"
+    },
+    {
+      "name": "Lesson Card",
+      "kind": "card",
+      "refersTo": "card-lesson",
+      "description": "A compact guided-learning entry with title, supporting copy, and metadata.",
+      "html": "<article class=\"ds-lesson-card\"><span class=\"ds-card-kicker\">GUIDED LESSON</span><h3>From retina to V1</h3><p>Follow the visual pathway through the atlas.</p></article>",
+      "css": ".ds-lesson-card { display: grid; gap: 12px; padding: 16px; color: var(--text); border: 1px solid var(--line-strong); border-radius: 6px; background: var(--surface-soft); } .ds-lesson-card h3, .ds-lesson-card p { margin: 0; } .ds-lesson-card p { color: var(--muted); font-size: 0.78rem; line-height: 1.55; } .ds-card-kicker { color: var(--accent); font-family: var(--font-mono); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.12em; }"
+    },
+    {
+      "name": "Dark Text Field",
+      "kind": "input",
+      "refersTo": "field-dark",
+      "description": "A high-contrast source or data-entry field within a dark panel.",
+      "html": "<label class=\"ds-field-label\" for=\"ds-source\">LESSON MARKDOWN</label><textarea class=\"ds-field\" id=\"ds-source\" rows=\"3\">title: Visual pathway</textarea>",
+      "css": ".ds-field-label { display: block; margin-bottom: 8px; color: var(--text); font-size: 0.78rem; font-weight: 600; } .ds-field { width: 100%; min-height: 96px; padding: 12px; color: var(--text-input); border: 1px solid var(--line-strong); border-radius: 4px; background: var(--bg-deep); font-family: var(--font-mono); font-size: 0.76rem; line-height: 1.55; resize: vertical; } .ds-field:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }"
+    },
+    {
+      "name": "Fidelity Status Chip",
+      "kind": "chip",
+      "refersTo": "chip-status",
+      "description": "A compact factual label for geometry or activity fidelity.",
+      "html": "<span class=\"ds-status-chip\">ATLAS-DERIVED</span>",
+      "css": ".ds-status-chip { display: inline-flex; padding: 4px 7px; color: var(--text-chip); border: 1px solid var(--line-strong); border-radius: 999px; font-family: var(--font-mono); font-size: 0.57rem; letter-spacing: 0.04em; }"
+    },
+    {
+      "name": "Brand Navigation",
+      "kind": "nav",
+      "refersTo": "nav-brand",
+      "description": "The compact top-bar home link with an instrumental kicker and current title.",
+      "html": "<a class=\"ds-brand\" href=\"#\"><span class=\"ds-brand-kicker\">BRAIN ATLAS</span><span>From retina to V1</span></a>",
+      "css": ".ds-brand { min-width: 44px; min-height: 44px; display: inline-flex; align-items: center; gap: 13px; color: var(--text); text-decoration: none; } .ds-brand-kicker { color: var(--accent); font-family: var(--font-mono); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.18em; } .ds-brand:hover { color: var(--text-link-hover); } .ds-brand:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }"
+    },
+    {
+      "name": "Atlas Stage Header",
+      "kind": "custom",
+      "refersTo": "panel-stage",
+      "description": "The factual frame above the shared anatomical viewport.",
+      "html": "<header class=\"ds-stage-header\"><div><p>CURRENT SCENE</p><h2>Signals reach primary visual cortex</h2></div><button type=\"button\">MODEL &amp; SOURCES</button></header>",
+      "css": ".ds-stage-header { min-height: 68px; display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 12px 16px; color: var(--text); border: 1px solid var(--line-strong); background: var(--surface-stage); } .ds-stage-header p { margin: 0 0 3px; color: var(--dim); font-family: var(--font-mono); font-size: 0.61rem; letter-spacing: 0.15em; } .ds-stage-header h2 { margin: 0; font-size: 1.02rem; } .ds-stage-header button { min-height: 44px; padding: 8px 12px; color: var(--text-accent); border: 1px solid var(--accent-border); border-radius: 4px; background: var(--accent-soft); } .ds-stage-header button:hover { color: var(--text); border-color: var(--accent); } .ds-stage-header button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Luminous Anatomy Lab",
+    "overview": "Brain Atlas is a precise, immersive, evidence-led workspace. Anatomical structure remains the primary visual artifact; the interface surrounds it with dark, quiet instrumentation and clear editorial guidance. Luminous signals indicate state and meaning rather than supplying decoration.\n\nThe system balances two modes without changing identity: a focused scientific console for operating the atlas and a spacious reading surface for guided lessons. Layered glass, fine borders, and structural shadows establish depth while restrained typography and compact controls preserve attention for anatomy and evidence. It explicitly rejects both the generic bright SaaS dashboard and decorative neon science-fiction spectacle.",
+    "keyCharacteristics": [
+      "Anatomical Night surfaces frame the rendered model without competing with it.",
+      "Neural Cyan marks focus, selection, and primary action with disciplined rarity.",
+      "Editorial lesson typography pairs with compact monospace instrumentation.",
+      "Controls look compact but retain at least 44 by 44 CSS-pixel interaction targets.",
+      "Scientific and rendering colors remain owned by data and renderer metadata, not the interface theme."
+    ],
+    "rules": [
+      {
+        "name": "The Signal, Not Spectacle Rule",
+        "body": "Use Neural Cyan to communicate focus, selection, or action. Do not spread it across large decorative areas.",
+        "section": "colors"
+      },
+      {
+        "name": "The Scientific Color Sovereignty Rule",
+        "body": "Interface tokens never recolor anatomical regions, tract identities, activity channels, or other scientific encodings owned by renderer data.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two-Voice Rule",
+        "body": "Use sans serif for explanation and interaction. Use monospace for status, metadata, measurement, and compact orientation labels.",
+        "section": "typography"
+      },
+      {
+        "name": "The Readability Before Atmosphere Rule",
+        "body": "Never dim inactive lesson prose; express active scene state through rails, borders, and numbered markers.",
+        "section": "typography"
+      },
+      {
+        "name": "The One Stage Rule",
+        "body": "Reparent and resize the existing stage across modes; never recreate the canvas, renderer, visual system, or control model.",
+        "section": "layout"
+      },
+      {
+        "name": "The Effective Target Rule",
+        "body": "Every standalone interaction provides at least a 44 by 44 CSS-pixel target. Inline scientific citations remain ordinary inline links so prose rhythm is not distorted.",
+        "section": "layout"
+      },
+      {
+        "name": "The Structural Shadow Rule",
+        "body": "Shadows explain overlap and modality. Never use them as ornamental glow around routine cards.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Restrained Radius Rule",
+        "body": "Increase radius with elevation and mobility, not with importance. Do not turn every container into a rounded card.",
+        "section": "shapes"
+      }
+    ],
+    "dos": [
+      "Do let anatomy and evidence remain the brightest, most consequential content.",
+      "Do use Neural Cyan only for focus, selection, links, and primary actions.",
+      "Do preserve 44 by 44 CSS-pixel targets for standalone controls and navigation.",
+      "Do use monospace for status and metadata while keeping explanation in the sans-serif reading voice.",
+      "Do adapt side panels into bottom sheets and keep lesson transport safe-area-aware on compact screens.",
+      "Do respect reduced-motion preference by stopping spatial travel while retaining useful color and border feedback."
+    ],
+    "donts": [
+      "Don't drift toward a bright generic SaaS dashboard or a decorative neon science-fiction spectacle.",
+      "Don't reuse interface tokens for anatomical, tract, activity, or fidelity colors whose meaning comes from data.",
+      "Don't add another canvas, renderer, runtime coordinate transform, or competing control system.",
+      "Don't cover the 3D stage with decorative badges, gradients, or persistent status chrome.",
+      "Don't round every panel, lift every card, or use shadows without an overlap or modality reason.",
+      "Don't dim lesson prose to show scene state or suppress all transitions under reduced motion."
+    ]
+  }
+}
