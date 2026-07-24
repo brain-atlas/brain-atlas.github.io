@@ -4,6 +4,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 import { ANT_PATHS, LANDMARKS, SPHERES } from './pathways.js';
+import { assertTractMetadataMatches } from './tract-metadata.js';
 import {
   advanceAssociationTime,
   associationGroupsFromManifest,
@@ -233,8 +234,9 @@ function applyRegionMesh(id) {
 function applyTractMesh(id) {
   const t = tractsById[id], th = tractHemi[id] || { L: true, R: true };
   if (t) {
+    t.group.visible = lessonAllows('tract', id);
     for (const h of ['L', 'R']) {
-      const vis = lessonAllows('tract', id) && hemiState[h] && th[h];
+      const vis = hemiState[h] && th[h];
       if (t.lines[h]) t.lines[h].visible = vis;
       if (t.caps && t.caps[h]) t.caps[h].visible = vis;
     }
@@ -476,7 +478,8 @@ function loadFibres() {
 // modeled stochastic code-like impulses. Diffusion MRI supplies no polarity, so
 // direction is sampled per event from disclosed metadata, never array order.
 const tractGroup = new THREE.Group(); mniGroup.add(tractGroup);
-let tractsMeta = null, tractActivityMeta = null, _regions = null;
+let tractMetadata = null, tractsMeta = null, tractActivityMeta = null, _regions = null;
+let tractGeometryLoad = null;
 const fibreEndpointIndexPromise = fetch('/data/fibre_endpoints.json')
   .then((response) => {
     if (!response.ok) throw new Error(`fibre endpoint data request failed (${response.status})`);
@@ -489,22 +492,46 @@ let fibreFilterResult = null;
 let fibreFilterLastRebuildMs = null;
 const tractFilterMasksByGroup = {};
 function hexRGB(hex) { const n = parseInt(hex.replace('#', ''), 16); return [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255]; }
+function loadTractMetadata() {
+  fetch('/data/tracts_metadata.json').then((response) => {
+    if (!response.ok) throw new Error(`tract metadata request failed (${response.status})`);
+    return response.json();
+  }).then((metadata) => {
+    if (metadata.schemaVersion !== 1 || !Array.isArray(metadata.tracts)) throw new Error('unsupported tract metadata');
+    tractMetadata = metadata;
+    tractsMeta = metadata.tracts;
+    for (const tract of tractsMeta) {
+      tractHemi[tract.id] = tractHemi[tract.id] || { L: true, R: true };
+      const group = new THREE.Group();
+      group.userData = { id: tract.id, name: tract.name, stream: tract.stream };
+      tractGroup.add(group);
+      tractsById[tract.id] = { group, lines: {}, caps: {}, profiles: { L: [], R: [] }, L: [], R: [], rgb: null };
+    }
+    if (_regions) buildPanel(_regions, tractsMeta);
+    markViewerReady('tracts');
+  }).catch((e) => { console.warn('tract metadata load failed:', e); failViewerReady(e); });
+}
 function loadTracts() {
-  Promise.all([
-    fetch('/data/tracts.json').then((r) => r.json()),
+  if (tractGeometryLoad) return tractGeometryLoad;
+  tractGeometryLoad = Promise.all([
+    fetch('/data/tracts.json').then((response) => {
+      if (!response.ok) throw new Error(`tract geometry request failed (${response.status})`);
+      return response.json();
+    }),
     fetch('/data/tract_activity.json').then((r) => r.json()),
     fibreEndpointIndexPromise,
-  ]).then(([{ tracts }, activity, endpointIndex]) => {
+  ]).then(([tractSource, activity, endpointIndex]) => {
+    assertTractMetadataMatches(tractSource, tractMetadata);
+    const { tracts } = tractSource;
     fibreEndpointIndex = endpointIndex;
-    tractsMeta = tracts;
     tractActivityMeta = activity;
     for (const tr of tracts) {
-      tractHemi[tr.id] = tractHemi[tr.id] || { L: true, R: true };
       const mat = new THREE.LineBasicMaterial({ color: tr.color, transparent: true, opacity: 0.06, blending: THREE.AdditiveBlending, depthWrite: false });
       const rgb = hexRGB(tr.color);
       const capMat = new THREE.PointsMaterial({ color: new THREE.Color(Math.min(1, rgb[0] * 1.3), Math.min(1, rgb[1] * 1.3), Math.min(1, rgb[2] * 1.3)),
         size: 2.2, sizeAttenuation: false, map: SPR, transparent: true, opacity: 0.6, depthWrite: false });
-      const entry = { lines: {}, caps: {}, profiles: { L: [], R: [] }, L: [], R: [], rgb };
+      const entry = tractsById[tr.id];
+      entry.rgb = rgb;
       for (const h of ['L', 'R']) {
         const linePos = [], capPos = [];
         for (const f of tr[h]) {
@@ -516,18 +543,19 @@ function loadTracts() {
         const vis = hemiState[h] && tractHemi[tr.id][h];
         const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(linePos, 3).setUsage(THREE.DynamicDrawUsage));
         const lines = new THREE.LineSegments(g, mat); lines.userData = { tractId: tr.id, hemi: h }; lines.visible = vis;
-        tractGroup.add(lines); entry.lines[h] = lines;
+        entry.group.add(lines); entry.lines[h] = lines;
         const cg = new THREE.BufferGeometry(); cg.setAttribute('position', new THREE.Float32BufferAttribute(capPos, 3).setUsage(THREE.DynamicDrawUsage));
         const caps = new THREE.Points(cg, capMat); caps.userData = { tractId: tr.id, hemi: h }; caps.visible = vis;
-        tractGroup.add(caps); entry.caps[h] = caps;
+        entry.group.add(caps); entry.caps[h] = caps;
       }
-      tractsById[tr.id] = entry;
     }
     initTractImpulses(activity);
     recalculateFibreFilter();
-    if (_regions) buildPanel(_regions, tractsMeta);   // rebuild the panel with the tracts section
-    markViewerReady('tracts');
-  }).catch((e) => { console.warn('tract load failed:', e); failViewerReady(e); });
+    reapplyLessonMaterialFactors(tractGroup);
+    for (const id in tractsById) applyTractMesh(id);
+    requestViewerRender();
+  }).catch((e) => { console.warn('tract geometry load failed:', e); });
+  return tractGeometryLoad;
 }
 
 const MAX_TRACT_IMPULSES = 520;
@@ -796,6 +824,10 @@ function recalculateFibreFilter() {
       const mask = group[hemi];
       const groupId = `${group.id}:${hemi}`;
       tractFilterMasksByGroup[groupId] = mask;
+      if (!entry.lines[hemi]) {
+        tractContoursByGroup[groupId] = [];
+        continue;
+      }
       tractContoursByGroup[groupId] = entry.profiles[hemi].filter((_, index) => mask[index]);
       writeFilteredGeometry(entry.lines[hemi], entry.caps[hemi], entry[hemi], mask);
     }
@@ -1557,7 +1589,7 @@ function lessonRendererObjects(entity) {
   if (kind === 'region') return [regionsById[id]].filter(Boolean);
   if (kind === 'tract') {
     const tract = tractsById[id];
-    return tract ? [...Object.values(tract.lines), ...Object.values(tract.caps)].filter(Boolean) : [];
+    return tract ? [tract.group] : [];
   }
   return [];
 }
@@ -1567,6 +1599,7 @@ function ensureVisibilityAssets(entityIds, catalog) {
     const { kind, id } = entity.renderer;
     if (kind === 'layer' && id === 'swm') loadSwm();
     if (kind === 'region') loadRegionMeshes(regionMetadataById[id]);
+    if (kind === 'tract') loadTracts();
   }
 }
 function applyLessonMaterialOpacity(material) {
@@ -1925,5 +1958,5 @@ updateAnteriorFlow();
 loadBrain();
 loadFibres();
 loadRegions();
-loadTracts();
+loadTractMetadata();
 requestViewerRender();

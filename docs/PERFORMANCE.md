@@ -12,7 +12,7 @@ The WebGL gate keeps Three.js and anatomical assets out of no-WebGL sessions. Af
 - cortical GLB;
 - optic-radiation JSON;
 - the 21 kB region manifest;
-- association-tract geometry and activity metadata;
+- the checked 1.4 kB geometry-free association metadata projection used by readiness and the Viewer panel;
 - the compact endpoint-classification tuples used by association and SWM queries; and
 - the renderer bundle.
 
@@ -20,12 +20,13 @@ The lesson shell also loads the small authored endpoint-filter preset catalog wi
 
 The first canonical visibility snapshot starts independently packaged optional geometry:
 
-- each bilateral region OBJ pair loads once, when its stable region ID first becomes visible; and
-- the 2.8 MB SWM JSON loads once, when `layer.swm` first becomes visible.
+- each bilateral region OBJ pair loads once, when its stable region ID first becomes visible;
+- the 2.8 MB SWM JSON loads once, when `layer.swm` first becomes visible; and
+- the unchanged 2.4 MB `tracts.json`, association activity metadata, and endpoint-backed event pools load once when any named association tract first becomes visible.
 
-Atlas Home's authored default shows every region and SWM, so it still requests the complete set. A direct `?lesson=retina-to-v1` entry now needs cortex, optic radiation, LGN, V1, V2, V3v, V3d, and SWM because the topic overview displays the shared-early endpoint subset. Later scenes request only their additional regions through the same canonical visibility binding. This policy changes request timing only; it adds no renderer, filter path, coordinate transform, or scientific claim.
+`public/data/tracts_metadata.json` is the exact geometry-free projection of `space`, `source`, and each tract's `id`, `name`, `stream`, `color`, and point count. `src/tract-metadata.js` owns projection and runtime matching, `scripts/project-tract-metadata.mjs` deterministically prints the projection, and `test/tract-metadata.test.js` rejects source, space, or record drift from `tracts.json` before geometry can bind. Placeholder tract groups retain canonical visibility, hemisphere, selection, and inspection state while geometry is absent, so late children inherit the current material factors rather than creating another state path.
 
-The 2.4 MB `tracts.json` file contains both panel metadata and all association geometry. It remains eager because safe deferral would require a new generated metadata asset and an asset-pipeline change. Packaging region text meshes into one indexed binary GLB also remains future work.
+Atlas Home's authored default shows every region, tract, and SWM, so it still requests the complete set immediately after the first canonical snapshot. A direct `?lesson=retina-to-v1` entry needs cortex, optic radiation, LGN, V1, V2, V3v, V3d, and SWM because the topic overview displays the shared-early endpoint subset, but it does not request association geometry until the first downstream scene shows ILF/IFOF. Later scenes request only their additional regions through the same canonical visibility binding. This policy changes request timing only; it adds no renderer, filter path, coordinate transform, geometry change, or scientific claim. Packaging region text meshes into one indexed binary GLB remains future work.
 
 ## Runtime render policy
 
@@ -47,17 +48,17 @@ The host was an Apple M3 Max with 128 GiB RAM running Chromium 150.0.7871.46. Th
 
 | Measure | Direct checked lesson | Complete Atlas Home |
 |---|---:|---:|
-| App ready | 2.562 s (2.559–2.578) | 2.619 s (2.618–2.631) |
-| Requested assets settled | 5.287 s (5.206–5.287) | 13.129 s (13.125–13.133) |
-| Encoded anatomical/catalog bytes | 4,386,491 | 14,778,300 |
-| Resource requests | 25 | 105 |
-| JS heap after settling | 96.5 MiB (87.3–98.7) | 157.5 MiB (139.7–162.9) |
-| Long tasks | 6 | 6 |
-| Longest task | 312 ms (309–323) | 376 ms (373–384) |
-| 2 s frame sample, p95 interval | 9.2 ms (9.2–9.3) | 9.3 ms (9.2–16.7) |
+| App ready | 1.052 s (1.049–1.064) | 1.076 s (1.070–1.095) |
+| Requested assets settled | 4.682 s (4.677–4.703) | 13.177 s (13.163–13.198) |
+| Encoded anatomical/catalog bytes | 3,732,455 | 14,778,767 |
+| Resource requests | 24 | 106 |
+| JS heap after settling | 76.5 MiB (47.6–76.7) | 113.2 MiB (107.8–132.6) |
+| Long tasks | 5 (4–5) | 6 |
+| Longest task | 213 ms (213–214) | 232 ms (222–235) |
+| 2 s frame sample, p95 interval | 9.3 ms (9.2–9.3) | 9.3 ms (9.2–9.3) |
 | Canvas pixel ratio | 2 | 2 |
 
-Demand loading reduced the direct lesson's initial encoded anatomical/catalog transfer by **70.3%** relative to complete Atlas Home. The direct entry now pays for the active shared-early SWM and V2/V3 shells, so it transfers 1.72 MB more than the earlier V1-only entry measurement. App-ready time remains close to Atlas Home because the shared renderer, cortex, optic radiation, monolithic tract data, and compact endpoint index load eagerly after the WebGL gate. The larger Atlas transfer and parsing work continues after the app exposes its semantic shell.
+Demand loading reduced the direct lesson's initial encoded anatomical/catalog transfer by **74.7%** relative to complete Atlas Home. The direct entry still pays for the active shared-early SWM and V2/V3 shells, but deferring the compressed association payload removes 654 kB of initial transfer and, more importantly on this profile, its main-thread geometry construction. App-ready time fell from the prior 2.562 s direct/2.619 s Atlas measurement to about 1.05/1.08 s because readiness now needs only the checked tract metadata projection; complete Atlas geometry continues loading after the semantic shell is ready. The Atlas settled transfer is intentionally unchanged apart from the 1.4 kB projection because its authored default shows every tract.
 
 The frame sample shows that this host kept scheduling active animation under the stated throttle after assets settled. It does **not** measure a phone GPU, battery use, thermal throttling, mobile Safari, or a cellular radio. Long tasks above 300 ms remain visible during initial parsing. Atlas Home also retains the full 14.7 MB encoded anatomical/catalog payload; its authored active/auto-rotate states still render continuously until paused, settled, hidden, or offscreen.
 

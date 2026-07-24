@@ -17,7 +17,7 @@ Scientific interpretation and model limitations are inventoried separately in
 |---|---|---|
 | `public/models/brain_mni.glb` | MNI152NLin2009cAsym brain mask via TemplateFlow | MNI notice reproduced below |
 | `public/data/regions.json`, `public/data/regions/*.obj` | Jülich-Brain Atlas v3.0.3 maximum probability map | [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) |
-| `public/data/tracts.json` | HCP-1065 population-averaged tractography atlas | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) and WU-Minn HCP Open Access Data Use Terms |
+| `public/data/tracts.json`, `public/data/tracts_metadata.json` | HCP-1065 population-averaged tractography atlas and its geometry-free runtime projection | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) and WU-Minn HCP Open Access Data Use Terms |
 | `public/data/tract_activity.json`, `public/data/fibre_filter_presets.json` | Project-authored activity assumptions, source links, and endpoint-query presets; no anatomical geometry | [AGPL-3.0-only](LICENSE) |
 | `public/data/fibre_endpoints.json` | Categorical assignments combining the Jülich-Brain v3.0.3 MPM with HCP-1065 association/SWM contour endpoints | [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/), [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/), and WU-Minn HCP Open Access Data Use Terms |
 | `public/data/entities.json`, `public/data/fidelity.json` | Project-authored stable bindings and scientific-disclosure metadata; no anatomical geometry | [AGPL-3.0-only](LICENSE) |
@@ -92,9 +92,12 @@ No endorsement by the atlas authors or EBRAINS is implied.
 
 `public/data/tracts.json` contains selected, range-extracted, and resampled
 streamlines from the **HCP-1065 Population-Averaged Tractography Atlas** release
-`hcp1065`. The source and retained world coordinates are ICBM 2009a Nonlinear
-Asymmetric, RAS+ millimetres; no 2009a→2009c point conversion was applied. These
-files are modified data, not the original atlas distribution.
+`hcp1065`. `public/data/tracts_metadata.json` is a geometry-free projection of that
+file's source/space fields and each displayed tract's identity, presentation group,
+color, and point count; it retains the same attribution and terms. The source and
+retained world coordinates are ICBM 2009a Nonlinear Asymmetric, RAS+ millimetres;
+no 2009a→2009c point conversion was applied. These files are modified data, not the
+original atlas distribution.
 
 Source and citation:
 

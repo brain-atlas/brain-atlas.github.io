@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "space": {
+    "template": "ICBM 2009a Nonlinear Asymmetric",
+    "templateVariantEvidence": "direct source record",
+    "coordinateConvention": "RAS+",
+    "units": "mm",
+    "templateConversion": "none; decoded source RAS+ frame retained through resampling"
+  },
+  "source": "HCP-1065 Population-Averaged Tractography Atlas, release hcp1065; selected and resampled bilateral association bundles",
+  "tracts": [
+    {
+      "id": "ilf",
+      "name": "ILF",
+      "stream": "ventral",
+      "color": "#ff9d5c",
+      "np": 40
+    },
+    {
+      "id": "ifof",
+      "name": "IFOF",
+      "stream": "ventral",
+      "color": "#ff7a45",
+      "np": 40
+    },
+    {
+      "id": "slf1",
+      "name": "SLF I",
+      "stream": "dorsal",
+      "color": "#5ec8e0",
+      "np": 40
+    },
+    {
+      "id": "slf2",
+      "name": "SLF II",
+      "stream": "dorsal",
+      "color": "#4aa8ff",
+      "np": 40
+    },
+    {
+      "id": "slf3",
+      "name": "SLF III",
+      "stream": "dorsal",
+      "color": "#6e9cff",
+      "np": 40
+    },
+    {
+      "id": "vof",
+      "name": "VOF",
+      "stream": "dorsal",
+      "color": "#59d0c0",
+      "np": 40
+    },
+    {
+      "id": "af",
+      "name": "Arcuate",
+      "stream": "dorsal",
+      "color": "#9d8bff",
+      "np": 40
+    },
+    {
+      "id": "mdlf",
+      "name": "MdLF",
+      "stream": "dorsal",
+      "color": "#3fd0b0",
+      "np": 40
+    }
+  ]
+}
