@@ -336,6 +336,44 @@ test('model panel close and import picker match the 44 pixel control floor', asy
   expect(errors).toEqual([]);
 });
 
+test('standalone navigation links meet the 44 pixel target floor without inflating inline citations', async ({ page }) => { // Tests INV-57
+  const errors = monitor(page);
+  for (const viewport of [
+    { width: 390, height: 844 },
+    { width: 1440, height: 1000 },
+  ]) {
+    await page.setViewportSize(viewport);
+    await page.goto(new URL('?lesson=retina-to-v1', BASE_URL).href);
+    await page.waitForFunction(() => document.getElementById('app')?.dataset.state === 'ready');
+
+    const assertTarget = async (locator, label) => {
+      const box = await locator.boundingBox();
+      expect(box, `${label} should be rendered`).not.toBeNull();
+      expect(box.width, `${label} width`).toBeGreaterThanOrEqual(44);
+      expect(box.height, `${label} height`).toBeGreaterThanOrEqual(44);
+    };
+
+    await assertTarget(page.locator('.brand'), 'topbar brand');
+    const skip = page.locator('.skip-link');
+    await skip.focus();
+    await assertTarget(skip, 'focused skip link');
+    await page.locator('#lesson-title').focus();
+
+    const footerLinks = page.locator('.site-footer nav a:visible');
+    expect(await footerLinks.count()).toBeGreaterThan(0);
+    for (let index = 0; index < await footerLinks.count(); index++) {
+      await assertTarget(footerLinks.nth(index), `footer link ${index + 1}`);
+    }
+
+    await page.locator('#model-sources-trigger').click();
+    const citation = page.locator('#fidelity-content a').first();
+    expect(await citation.count()).toBe(1);
+    expect(await citation.evaluate(element => getComputedStyle(element).display)).toBe('inline');
+    await page.locator('#fidelity-close').click();
+  }
+  expect(errors).toEqual([]);
+});
+
 test('compact and 200%-equivalent lesson layouts contain panels without root scroll or overlap', async ({ page }) => { // Tests INV-10, INV-13, INV-15
   const errors = monitor(page);
   for (const viewport of [

@@ -58,7 +58,8 @@ every canonical viewer axis, semantic and pointer camera controls, exact Return,
 one-canvas cycles, stage aspect, compact and short-wide layouts, live reduced motion,
 no-WebGL, and renderer-import failure. `hardening.spec.cjs` adds settled-state axe scans,
 keyboard focus/announcement traversal, a complete expanded-Viewer inventory of 44 px
-effective targets (including shared panel-close and import controls), selective reduced-motion
+effective targets (including shared panel-close, import, brand, skip, and standalone footer
+navigation controls without inflating inline citations), selective reduced-motion
 CSS and settled-playback checks, parsed semantic theme-token coverage, 200%-equivalent layout
 checks, and canonical visibility-driven asset requests—including tract metadata readiness,
 tract-hidden lesson deferral, first-visible geometry loading, and complete Atlas loading. `power-rendering.spec.cjs` uses the
