@@ -555,7 +555,11 @@ function initTractImpulses(activity) {
     tractActivityById[tract.id] = tract;
     for (const hemi of ['L', 'R']) {
       const groupId = `${tract.id}:${hemi}`;
-      tractContoursByGroup[groupId] = tractsById[tract.id].profiles[hemi];
+      const profiles = tractsById[tract.id].profiles[hemi];
+      const mask = tractFilterMasksByGroup[groupId];
+      tractContoursByGroup[groupId] = mask
+        ? profiles.filter((_, index) => mask[index])
+        : profiles;
       tractImpulseStats[groupId] = { aToB: 0, bToA: 0 };
     }
   }
