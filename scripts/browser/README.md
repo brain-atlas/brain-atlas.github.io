@@ -61,7 +61,8 @@ keyboard focus/announcement traversal, a complete expanded-Viewer inventory of 4
 effective targets (including shared panel-close, import, brand, skip, and standalone footer
 navigation controls without inflating inline citations), selective reduced-motion
 CSS and settled-playback checks, parsed semantic theme-token coverage, 200%-equivalent layout
-checks, and canonical visibility-driven asset requests—including tract metadata readiness,
+checks, supplementary-image creation/error/retry/removal lifecycle, and canonical
+visibility-driven asset requests—including tract metadata readiness,
 tract-hidden lesson deferral, first-visible geometry loading, and complete Atlas loading. `power-rendering.spec.cjs` uses the
 development diagnostics to verify hidden/offscreen suspension, explicit Pause, reduced
 motion, accessible status, frozen model clocks, and event-driven paused render counts.
