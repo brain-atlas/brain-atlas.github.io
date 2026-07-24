@@ -173,6 +173,17 @@ The output has 2,880 fibres (180 × 8 × 2), each with 40 points; bounds are
 negative mean x and all 1,440 right fibres have positive mean x. These checks do
 not prove cortical endpoints, tract names, or functional relationships.
 
+**Runtime metadata projection.** `public/data/tracts_metadata.json` contains no
+coordinates. `src/tract-metadata.js` defines the projection and runtime match;
+`scripts/project-tract-metadata.mjs` copies only the parent file's `space`/`source`
+fields and each ordered tract's `id`, `name`, `stream`, `color`, and point count so
+the renderer can defer geometry while retaining panel topology.
+`test/tract-metadata.test.js` checks exact structural equality to the current parent;
+the checked projection SHA-256 is
+`9b4f1811522ce473e0c8ea69c1ab58b3d9a699ae8ed6c9f599cd5539832fafa9`.
+It adds no coordinate transform, geometry, direction, or scientific claim and
+inherits the parent asset's terms.
+
 ### Left optic radiation — `or_fibres.json`
 
 **Source masks.** The exact Jülich-Brain v3.0.3 left probability maps were the

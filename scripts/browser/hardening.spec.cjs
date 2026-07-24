@@ -416,6 +416,8 @@ test('direct lesson entry loads active filtered SWM once and defers later-region
   expect(requests).toContain('/data/regions/v3d_L.obj');
   expect(requests).toContain('/data/regions/v3d_R.obj');
   expect(requests.filter(path => path === '/data/swm_fibres.json')).toHaveLength(1);
+  expect(requests.filter(path => path === '/data/tracts.json')).toHaveLength(0);
+  expect(requests.filter(path => path === '/data/tracts_metadata.json')).toHaveLength(1);
   expect(requests.some(path => path.startsWith('/data/regions/fg4_'))).toBe(false);
 
   for (let index = 0; index <= 4; index++) {
@@ -426,6 +428,7 @@ test('direct lesson entry loads active filtered SWM once and defers later-region
   await waitForQuietRequests(page, active);
 
   expect(requests.filter(path => path === '/data/swm_fibres.json')).toHaveLength(1);
+  expect(requests.filter(path => path === '/data/tracts.json')).toHaveLength(1);
   expect(requests.filter(path => path === '/data/regions/v2_L.obj')).toHaveLength(1);
   expect(requests.filter(path => path === '/data/regions/v2_R.obj')).toHaveLength(1);
   expect(requests.some(path => path.startsWith('/data/regions/fg4_'))).toBe(false);
@@ -450,6 +453,8 @@ test('Atlas Home still requests the complete authored default asset set', async 
   await waitForQuietRequests(page, active);
 
   expect(requests.filter(path => path === '/data/swm_fibres.json')).toHaveLength(1);
+  expect(requests.filter(path => path === '/data/tracts_metadata.json')).toHaveLength(1);
+  expect(requests.filter(path => path === '/data/tracts.json')).toHaveLength(1);
   expect(requests.filter(path => path === '/data/regions/fg4_L.obj')).toHaveLength(1);
   expect(requests.filter(path => path === '/data/regions/fg4_R.obj')).toHaveLength(1);
   expect(errors).toEqual([]);

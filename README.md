@@ -109,12 +109,15 @@ scientific traceability inventory below.
 
 No-WebGL sessions load neither Three.js nor anatomical geometry. After the WebGL gate,
 Atlas Home requests the complete authored dataset. A direct checked lesson loads only
-the region meshes in its active view and defers SWM until a later scene requests it;
-each deferred asset loads at most once through the canonical visibility path.
-`tracts.json` remains eager because it combines association geometry with panel metadata.
+the region meshes and independently packaged fibre layers in its active view; each
+deferred asset loads at most once through the canonical visibility path. A checked 1.4 kB
+projection supplies association names, grouping, colors, and point counts for readiness
+and the Viewer panel. The unchanged `tracts.json` geometry and activity metadata load
+only when a canonical snapshot first makes a named tract visible; Atlas Home requests
+them immediately because its authored default is complete.
 
 A throttled 390×844 Chromium production profile reduced the direct lesson's initial
-encoded anatomical/catalog transfer by 82.5% relative to Atlas Home. This desktop-hosted
+encoded anatomical/catalog transfer by 74.7% relative to Atlas Home. This desktop-hosted
 emulation does not prove physical-phone GPU, battery, thermal, or mobile-Safari behavior.
 See [`docs/PERFORMANCE.md`](docs/PERFORMANCE.md) for the method, measurements, replay
 command, and deferred device matrix.
@@ -515,7 +518,9 @@ Principal sources:
   rule.
 - Association tracts (`public/data/tracts.json`): selected and resampled from the
   **HCP-1065 Population-Averaged Tractography Atlas** (Yeh 2022), in ICBM 2009a
-  Nonlinear Asymmetric RAS+ world millimetres. `tools/map_tract_regions.py` compares
+  Nonlinear Asymmetric RAS+ world millimetres. The geometry-free
+  `public/data/tracts_metadata.json` is an exact checked projection used to defer the
+  full geometry until a named tract is visible. `tools/map_tract_regions.py` compares
   their unordered display endpoints with the shipped Jülich shell triangles offline;
   `public/data/tract_region_mapping.json` freezes the descriptive result.
 - Superficial white matter (`public/data/swm_fibres.json`): short bilateral

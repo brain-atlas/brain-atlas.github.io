@@ -60,8 +60,8 @@ no-WebGL, and renderer-import failure. `hardening.spec.cjs` adds settled-state a
 keyboard focus/announcement traversal, a complete expanded-Viewer inventory of 44 px
 effective targets (including shared panel-close and import controls), selective reduced-motion
 CSS and settled-playback checks, parsed semantic theme-token coverage, 200%-equivalent layout
-checks, and canonical visibility-driven asset
-requests. `power-rendering.spec.cjs` uses the
+checks, and canonical visibility-driven asset requests—including tract metadata readiness,
+tract-hidden lesson deferral, first-visible geometry loading, and complete Atlas loading. `power-rendering.spec.cjs` uses the
 development diagnostics to verify hidden/offscreen suspension, explicit Pause, reduced
 motion, accessible status, frozen model clocks, and event-driven paused render counts.
 The Chromium run also injects real touch input to verify Lesson scrolling versus Atlas

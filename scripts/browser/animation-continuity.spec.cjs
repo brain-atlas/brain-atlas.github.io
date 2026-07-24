@@ -17,7 +17,7 @@ async function ready(page, viewport) {
   await page.setViewportSize(viewport);
   await page.goto(new URL('?lesson=retina-to-v1', BASE_URL).href);
   await page.waitForFunction(() => window.__lesson?.controllerState?.status === 'ready');
-  await page.waitForFunction(() => window.__view?.activity?.opticRadiation && window.__view?.association && window.__view?.swm);
+  await page.waitForFunction(() => window.__view?.activity?.opticRadiation && window.__view?.swm);
 }
 
 async function waitForSettledCamera(page, index) {
@@ -42,7 +42,10 @@ async function waitForExpectedActivity(page, expected) {
       }
       if (!hasTracerNearV1) return false;
     }
-    if (association && window.__view.association.points.geometry.drawRange.count < 1) return false;
+    if (association) {
+      if (!window.__view.association) return false;
+      if (window.__view.association.points.geometry.drawRange.count < 1) return false;
+    }
     if (swm && window.__view.swm.points.geometry.drawRange.count < 1) return false;
     return true;
   }, expected);
@@ -92,6 +95,7 @@ async function activitySample(page) {
     };
     const activity = window.__view.activity;
     const optic = activity.opticRadiation;
+    const association = window.__view.association;
     let transparentPathwayDepthWrites = 0;
     activity.anterior.points[0]?.parent?.traverse((object) => {
       if (object.isMesh && object.material.transparent && object.material.depthWrite) {
@@ -124,11 +128,11 @@ async function activitySample(page) {
         endpointCaps: summarize(optic.endpointCaps),
       },
       association: {
-        modelTime: window.__view.association.modelTime,
-        activeCount: window.__view.association.activeCount,
-        eligibleGroups: window.__view.association.eligibleRenderedGroups,
-        renderedGroups: [...new Set(window.__view.association.renderedGroups)].sort(),
-        points: summarize([window.__view.association.points]),
+        modelTime: association?.modelTime ?? 0,
+        activeCount: association?.activeCount ?? 0,
+        eligibleGroups: association?.eligibleRenderedGroups ?? [],
+        renderedGroups: [...new Set(association?.renderedGroups ?? [])].sort(),
+        points: summarize(association ? [association.points] : []),
       },
       swm: { modelTime: window.__view.swm.modelTime, points: summarize([window.__view.swm.points]) },
     };
