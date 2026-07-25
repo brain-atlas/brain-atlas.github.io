@@ -1317,6 +1317,7 @@ function setExploreAvailability(available) {
   byId('lesson-import-trigger').hidden = false;
   byId('lesson-session-actions').hidden = !hasLessonSession;
   app.dataset.lessonSession = String(hasLessonSession);
+  app.dataset.workspaceMode = workspace.mode;
 }
 
 function renderExploreFidelity(snapshot, includedFidelityIds) {

@@ -64,8 +64,8 @@ navigation controls without inflating inline citations), selective reduced-motio
 CSS and settled-playback checks, parsed semantic theme-token coverage, semantic typography
 roles, 1rem compact prose, 45–65ch wide reading measure, resilient long headings, tabular
 instrument values, font-asset absence, one-copy Quick/Full Viewer topology and custom-query
-focus, 200%-equivalent layout checks, supplementary-image
-creation/error/retry/removal lifecycle, and canonical
+focus, compact-only primary Next hierarchy with Atlas-retained local import, 200%-equivalent
+layout checks, supplementary-image creation/error/retry/removal lifecycle, and canonical
 visibility-driven asset requests—including tract metadata readiness,
 tract-hidden lesson deferral, first-visible geometry loading, and complete Atlas loading. `power-rendering.spec.cjs` uses the
 development diagnostics to verify hidden/offscreen suspension, explicit Pause, reduced

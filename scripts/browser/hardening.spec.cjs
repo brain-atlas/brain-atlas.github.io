@@ -428,6 +428,52 @@ test('compact keyboard journey preserves modal containment, announcements, and r
   expect(errors).toEqual([]);
 });
 
+test('compact lesson prioritizes continuation while local import stays available from Atlas', async ({ page }) => { // Tests INV-61, FAIL-54
+  const errors = monitor(page);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto(new URL('?lesson=retina-to-v1', BASE_URL).href);
+  await page.waitForFunction(() => document.getElementById('app')?.dataset.state === 'ready');
+
+  await expect(page.locator('#back-to-atlas')).toBeVisible();
+  await expect(page.locator('#lesson-import-trigger')).toBeHidden();
+  const compact = await page.evaluate(() => {
+    const resolveColor = (value) => {
+      const probe = document.createElement('span');
+      probe.style.color = value;
+      document.body.append(probe);
+      const resolved = getComputedStyle(probe).color;
+      probe.remove();
+      return resolved;
+    };
+    const accent = resolveColor(getComputedStyle(document.documentElement).getPropertyValue('--accent'));
+    const style = (id) => getComputedStyle(document.getElementById(id));
+    const next = document.getElementById('scene-next').getBoundingClientRect();
+    return {
+      accent,
+      next: { background: style('scene-next').backgroundColor, height: next.height },
+      exploreBackground: style('explore-scene-trigger').backgroundColor,
+      sourcesBackground: style('model-sources-trigger').backgroundColor,
+      overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    };
+  });
+  expect(compact.next.background).toBe(compact.accent);
+  expect(compact.next.height).toBeGreaterThanOrEqual(44);
+  expect(compact.exploreBackground).not.toBe(compact.accent);
+  expect(compact.sourcesBackground).not.toBe(compact.accent);
+  expect(compact.overflow).toBe(0);
+
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await expect(page.locator('#lesson-import-trigger')).toBeVisible();
+  await expect.poll(() => page.locator('#scene-next').evaluate((button) => getComputedStyle(button).backgroundColor))
+    .not.toBe(compact.accent);
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.locator('#back-to-atlas').click();
+  await page.locator('#lessons-trigger').click();
+  await expect(page.locator('#lesson-drawer-open-local')).toBeVisible();
+  expect(errors).toEqual([]);
+});
+
 test('compact Atlas keeps every semantic camera action at least 44 CSS pixels high', async ({ page }) => { // Tests INV-23
   const errors = monitor(page);
   await page.setViewportSize({ width: 390, height: 844 });
