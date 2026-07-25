@@ -270,7 +270,13 @@ membership against displayed Jülich labels; it does not prove termination or co
 among highlighted regions. Long-tract impulses still use the disclosed 50/50 direction
 assumption, and SWM keeps zero-mean vibration.
 Fixed-position Previous/Next actions traverse the same sequence and can return to that
-entry view. At 700px and below, enabled **Next** is the one Neural Cyan transport action;
+entry view. On the final scene, transport announces **Lesson complete**, offers **Review
+prediction** for the checked lesson (generic local lessons use **Review opening**), and uses
+**Explore in Atlas** to preserve the final rendered camera and canonical filters in the same
+lesson-derived Atlas branch. Returning to the lesson retains this completion state and can
+still review the exact unnumbered entry view. No-WebGL completion keeps review available and
+labels unavailable Atlas exploration without implying it can open. At 700px and below,
+enabled **Next** is the one Neural Cyan transport action;
 **Explore this scene** and **Model & sources** remain accessible as quieter stage actions,
 and active lessons remove local import from the compact topbar. Local Markdown remains
 available after **Back to atlas** through **Lessons → Open lesson Markdown**. Wide lesson
@@ -335,7 +341,9 @@ Use **Lessons** to start/resume the checked reference lesson or open the local w
 validation errors without losing the active lesson, review the preview/privacy summary,
 and explicitly activate it. In compact active lessons, return to Atlas and use **Lessons →
 Open lesson Markdown** instead; this keeps continuation dominant without removing local
-import. Scroll or use Previous/Next to activate a scene. The reference lesson omits Restart
+import. Scroll or use Previous/Next to activate a scene. At completion, review the opening
+prediction or carry the final authored scene into Atlas through the same temporary inspection
+branch. The reference lesson omits Restart
 because its scenes do not yet define replay timelines; **Skip transition** appears on the
 stage only while camera motion is active, jumps to the authored destination camera, and
 settles activity without accelerating model time.

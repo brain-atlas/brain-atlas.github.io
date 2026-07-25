@@ -221,6 +221,8 @@ button:disabled, fieldset:disabled button, fieldset:disabled input { cursor: not
 button, .viewer-console > summary, .viewer-full-controls > summary { min-height: 44px; padding: 8px 12px; border: 1px solid var(--line-strong); border-radius: 4px; color: var(--muted); background: var(--control-surface); cursor: pointer; transition: color 150ms, border-color 150ms, background 150ms; }
 button:hover:not(:disabled), .viewer-console > summary:hover, .viewer-full-controls > summary:hover { color: var(--text); border-color: var(--accent-border-strong); background: var(--control-surface-hover); }
 button.on, button[aria-expanded="true"] { color: var(--text-on-accent); border-color: var(--accent); background: var(--accent); }
+.app-shell[data-lesson-completion="true"] .scene-transport #scene-position { color: var(--accent); }
+.app-shell[data-lesson-completion="true"] .scene-transport #scene-next:not(:disabled) { color: var(--text-on-accent); border-color: var(--accent); background: var(--accent); }
 
 .panel { border: 1px solid var(--line); background: var(--surface); }
 .viewer-console { width: min(1440px, calc(100% - 40px)); margin: 0 auto 8px; }

@@ -42,6 +42,24 @@ test('an entry view remains outside numbered scenes and reappears above the firs
   assert.equal(moveScene(state, 1).activeIndex, 0);
 });
 
+test('resumed navigation retains an authored entry view for explicit review', () => { // Tests INV-62
+  let state = createSceneNavigationState(4, 3, { hasEntryScene: true });
+  for (let step = 0; step < 4; step += 1) state = moveScene(state, -1);
+  assert.equal(state.activeIndex, -1);
+  assert.equal(state.hasEntryScene, true);
+});
+
+test('entry navigation rejects contradictory or non-boolean state', () => { // Tests FAIL-55
+  assert.throws(
+    () => createSceneNavigationState(4, -1, { hasEntryScene: false }),
+    /entry navigation state is invalid/,
+  );
+  assert.throws(
+    () => createSceneNavigationState(4, 0, { hasEntryScene: 'yes' }),
+    /entry navigation state is invalid/,
+  );
+});
+
 test('forward scroll activates only after the next anchor crosses its threshold', () => {
   const initial = updateSceneFromScroll(createSceneNavigationState(5), {
     anchorTops: [-200, 620, 1400, 2200, 3000],
