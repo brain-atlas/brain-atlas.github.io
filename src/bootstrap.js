@@ -863,6 +863,23 @@ function renderFidelity(index) {
   }, catalog));
 }
 
+function syncSceneTransport(index) {
+  const isEntry = index === -1;
+  const isComplete = index === presentation.scenes.length - 1;
+  const previous = byId('scene-previous');
+  const next = byId('scene-next');
+  app.dataset.lessonCompletion = String(isComplete);
+  byId('scene-position').textContent = isEntry ? 'Scroll to begin' : (isComplete ? 'Lesson complete' : `Scene ${index + 1} of ${presentation.scenes.length}`);
+  previous.disabled = isEntry;
+  previous.textContent = isComplete
+    ? (activeLessonKey === 'checked:retina-to-v1' ? '← Review prediction' : '← Review opening')
+    : '← Previous';
+  next.disabled = isComplete && rendererUnavailable;
+  next.textContent = isComplete
+    ? (rendererUnavailable ? 'Atlas unavailable' : 'Explore in Atlas →')
+    : 'Next →';
+}
+
 function updateActivePresentation(index, reason = 'initial') {
   sceneCards.forEach((card, cardIndex) => {
     const active = cardIndex === index;
@@ -876,16 +893,17 @@ function updateActivePresentation(index, reason = 'initial') {
   const count = presentation.scenes.length;
   byId('scene-count').textContent = isEntry ? 'Topic overview' : `Scene ${index + 1} of ${count}`;
   byId('stage-heading').textContent = isEntry ? lesson.title : scene.title;
-  byId('scene-position').textContent = isEntry ? 'Scroll to begin' : `Scene ${index + 1} of ${count}`;
-  byId('scene-previous').disabled = isEntry;
-  byId('scene-next').disabled = index === count - 1;
+  const isComplete = index === count - 1;
+  syncSceneTransport(index);
   byId('stage-fallback').querySelector('#fallback-message').textContent = isEntry
     ? `Topic overview: ${lesson.title}. Scroll to begin the first scene; Model & sources describes the displayed pathway.`
     : `Current scene: ${scene.title}. Refer to the active lesson section and Model & sources for its anatomy and limitations.`;
   renderFidelity(index);
   byId('announcer').textContent = reason === 'initial'
     ? ''
-    : (isEntry ? `Topic overview: ${lesson.title}` : `Scene ${index + 1}: ${scene.title}`);
+    : (isEntry
+      ? `Topic overview: ${lesson.title}`
+      : (isComplete ? `Lesson complete. Scene ${index + 1}: ${scene.title}` : `Scene ${index + 1}: ${scene.title}`));
   const fieldset = byId('viewer-controls-fieldset');
   fieldset.disabled = scene.snapshot.controlPolicy.mode !== 'explore' || !controller;
   byId('viewer-policy-note').textContent = fieldset.disabled
@@ -937,9 +955,7 @@ function scrollToSurfaceTarget(target) {
   });
 }
 
-function moveExplicit(delta) {
-  if (exploreState) return;
-  const next = moveScene(navigation, delta);
+function applyExplicitNavigation(next) {
   if (next === navigation) return;
   navigation = next;
   updateActivePresentation(next.activeIndex, next.lastReason);
@@ -948,6 +964,19 @@ function moveExplicit(delta) {
   const focusTarget = destination.querySelector('h1, h2, h3, h4, h5, h6') ?? destination;
   scrollToSurfaceTarget(focusTarget);
   focusSceneAfterScroll(focusTarget);
+}
+
+function moveExplicit(delta) {
+  if (exploreState) return;
+  applyExplicitNavigation(moveScene(navigation, delta));
+}
+
+function reviewLessonOpening() {
+  if (exploreState) return;
+  const firstIndex = navigation.hasEntryScene ? -1 : 0;
+  let next = navigation;
+  while (next.activeIndex > firstIndex) next = moveScene(next, -1);
+  applyExplicitNavigation(next);
 }
 
 function onScroll() {
@@ -1006,8 +1035,15 @@ function onPageScrollKey(event) {
 }
 
 function bindNavigation() {
-  byId('scene-previous').addEventListener('click', () => moveExplicit(-1));
-  byId('scene-next').addEventListener('click', () => moveExplicit(1));
+  byId('scene-previous').addEventListener('click', () => {
+    if (app.dataset.lessonCompletion === 'true') reviewLessonOpening();
+    else moveExplicit(-1);
+  });
+  byId('scene-next').addEventListener('click', (event) => {
+    if (app.dataset.lessonCompletion === 'true') {
+      if (!rendererUnavailable) leaveLessonForAtlas(event.currentTarget);
+    } else moveExplicit(1);
+  });
   byId('scene-skip').addEventListener('click', () => controller?.skip());
   skipLink.addEventListener('click', (event) => {
     event.preventDefault();
@@ -1802,6 +1838,7 @@ function showRendererFallback(message) {
   if (exploreState?.origin === 'lesson') exitExplore();
   rendererUnavailable = true;
   setExploreAvailability(false);
+  if (workspace.mode === 'lesson' && navigation) syncSceneTransport(navigation.activeIndex);
   byId('stage').hidden = true;
   byId('stage-fallback').hidden = false;
   byId('fallback-message').textContent = message;
@@ -2097,7 +2134,9 @@ function activatePreparedLesson(candidate, {
   presentation = candidate.presentation;
   const startIndex = initialIndex ?? (presentation.entryScene ? -1 : 0);
   const resumeVisualId = resumeToken?.selectedVisualId ?? null;
-  navigation = createSceneNavigationState(presentation.scenes.length, startIndex);
+  navigation = createSceneNavigationState(presentation.scenes.length, startIndex, {
+    hasEntryScene: Boolean(presentation.entryScene),
+  });
   selectedVisualId = resumeVisualId
     ?? activePresentationScene(navigation.activeIndex).snapshot.visual.id;
   resetSupplementaryImage();

@@ -8,10 +8,14 @@ function assertSceneCount(sceneCount) {
   }
 }
 
-export function createSceneNavigationState(sceneCount, initialIndex = 0) {
+export function createSceneNavigationState(sceneCount, initialIndex = 0, options = {}) {
   assertSceneCount(sceneCount);
   if (!Number.isInteger(initialIndex) || initialIndex < -1 || initialIndex >= sceneCount) {
     throw new RangeError('initial scene index is out of bounds');
+  }
+  const hasEntryScene = options.hasEntryScene ?? (initialIndex === -1);
+  if (typeof hasEntryScene !== 'boolean' || (initialIndex === -1 && !hasEntryScene)) {
+    throw new TypeError('entry navigation state is invalid');
   }
   return freezeState({
     sceneCount,
@@ -19,7 +23,7 @@ export function createSceneNavigationState(sceneCount, initialIndex = 0) {
     activationCount: 1,
     lastReason: 'initial',
     lastScrollY: null,
-    hasEntryScene: initialIndex === -1,
+    hasEntryScene,
   });
 }
 

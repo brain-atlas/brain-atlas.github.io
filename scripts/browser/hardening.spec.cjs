@@ -474,6 +474,88 @@ test('compact lesson prioritizes continuation while local import stays available
   expect(errors).toEqual([]);
 });
 
+test('final lesson scene offers completion actions and preserves the scene when exploring Atlas', async ({ page }) => { // Tests INV-62, FAIL-55
+  const errors = monitor(page);
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.goto(new URL('?lesson=retina-to-v1', BASE_URL).href);
+  await page.waitForFunction(() => document.getElementById('app')?.dataset.state === 'ready');
+  for (let step = 0; step < 8; step += 1) await page.locator('#scene-next').click();
+  await page.waitForFunction(() => window.__lesson.navigation.activeIndex === 7);
+
+  await expect(page.locator('#scene-position')).toHaveText('Lesson complete');
+  await expect(page.locator('#scene-previous')).toHaveText('← Review prediction');
+  await expect(page.locator('#scene-next')).toHaveText('Explore in Atlas →');
+  await expect(page.locator('#scene-previous')).toBeEnabled();
+  await expect(page.locator('#scene-next')).toBeEnabled();
+  await expect.poll(() => page.evaluate(() => {
+    const probe = document.createElement('span');
+    probe.style.color = getComputedStyle(document.documentElement).getPropertyValue('--accent');
+    document.body.append(probe);
+    const accent = getComputedStyle(probe).color;
+    probe.remove();
+    return {
+      nextMatches: getComputedStyle(document.getElementById('scene-next')).backgroundColor === accent,
+      statusMatches: getComputedStyle(document.getElementById('scene-position')).color === accent,
+    };
+  })).toEqual({ nextMatches: true, statusMatches: true });
+  await expect(page.locator('#app')).toHaveAttribute('data-lesson-completion', 'true');
+  await expect(page.locator('#announcer')).toContainText('Lesson complete');
+
+  await page.locator('#scene-previous').click();
+  await page.waitForFunction(() => window.__lesson.navigation.activeIndex === -1);
+  await expect(page.locator('#scene-count')).toHaveText('Topic overview');
+  await expect(page.locator('#scene-position')).toHaveText('Scroll to begin');
+  await expect(page.locator('#scene-previous')).toBeDisabled();
+  await expect(page.locator('#scene-next')).toHaveText('Next →');
+  await expect(page.locator('#lesson-title')).toBeFocused();
+
+  for (let step = 0; step < 8; step += 1) await page.locator('#scene-next').click();
+  const finalState = await page.evaluate(() => ({
+    camera: {
+      position: window.__view.camera.position.toArray(),
+      target: window.__view.controls.target.toArray(),
+    },
+    visibility: window.__lesson.presentation.scenes.at(-1).snapshot.visibility.entities,
+  }));
+  await page.locator('#scene-next').click();
+  await expect(page.locator('#atlas-workspace')).toBeVisible();
+  await expect(page.locator('#return-to-lesson')).toBeFocused();
+  expect(await page.evaluate(() => ({
+    kind: window.__lesson.exploreState.kind,
+    camera: {
+      position: window.__lesson.exploreState.snapshot.camera.position,
+      target: window.__lesson.exploreState.snapshot.camera.target,
+    },
+    visibility: window.__lesson.exploreState.snapshot.visibility.entities,
+  }))).toEqual({ kind: 'scene', ...finalState });
+
+  await page.locator('#return-to-lesson').click();
+  await expect(page.locator('#app')).toHaveAttribute('data-lesson-completion', 'true');
+  await page.locator('#scene-previous').click();
+  await page.waitForFunction(() => window.__lesson.navigation.activeIndex === -1);
+  await expect(page.locator('#scene-count')).toHaveText('Topic overview');
+  expect(errors).toEqual([]);
+});
+
+test('no-WebGL completion keeps review available without implying Atlas exploration', async ({ page }) => { // Tests INV-62, FAIL-55
+  const errors = monitor(page);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto(new URL('?no-webgl=1&lesson=retina-to-v1', BASE_URL).href);
+  await page.waitForFunction(() => document.getElementById('app')?.dataset.state === 'fallback');
+  for (let step = 0; step < 8; step += 1) await page.locator('#scene-next').click();
+  await page.waitForFunction(() => window.__lesson.navigation.activeIndex === 7);
+
+  await expect(page.locator('#scene-position')).toHaveText('Lesson complete');
+  await expect(page.locator('#scene-previous')).toHaveText('← Review prediction');
+  await expect(page.locator('#scene-next')).toHaveText('Atlas unavailable');
+  await expect(page.locator('#scene-next')).toBeDisabled();
+  await page.locator('#scene-previous').click();
+  await page.waitForFunction(() => window.__lesson.navigation.activeIndex === -1);
+  await expect(page.locator('#scene-count')).toHaveText('Topic overview');
+  expect(errors).toEqual([]);
+});
+
 test('compact Atlas keeps every semantic camera action at least 44 CSS pixels high', async ({ page }) => { // Tests INV-23
   const errors = monitor(page);
   await page.setViewportSize({ width: 390, height: 844 });
