@@ -303,6 +303,57 @@ test('interface colors resolve through semantic root theme tokens', async ({ pag
   expect(errors).toEqual([]);
 });
 
+test('Atlas Viewer starts with canonical essentials and retains one full-control disclosure', async ({ page }) => { // Tests INV-60
+  const errors = monitor(page);
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.goto(BASE_URL);
+  await page.waitForFunction(() => document.getElementById('app')?.dataset.state === 'ready');
+
+  const viewer = page.locator('#viewer-console');
+  await expect(viewer).toHaveAttribute('open', '');
+  const quick = viewer.locator('#viewer-quick-controls');
+  await expect(quick).toBeVisible();
+  for (const selector of ['#hemisphere-controls', '#fibre-filter-preset', '#fibre-filter-summary', '#play', '#speed', '[data-view]']) {
+    await expect(quick.locator(selector).first()).toBeVisible();
+    await expect(viewer.locator(selector)).toHaveCount(selector === '[data-view]' ? 4 : 1);
+  }
+
+  const full = viewer.locator('#viewer-full-controls');
+  const fullSummary = full.locator(':scope > summary');
+  await expect(full).not.toHaveAttribute('open', '');
+  await expect(fullSummary).toHaveText('Full controls');
+  await expect(viewer.locator('#layers')).not.toBeVisible();
+  await expect(viewer.locator('#fibre-filter-mode')).not.toBeVisible();
+  await expect(viewer.locator('#clip')).not.toBeVisible();
+  await expect(viewer.locator('#tissue')).not.toBeVisible();
+  await expect(viewer.locator('#reset')).not.toBeVisible();
+
+  await fullSummary.click();
+  await expect(full).toHaveAttribute('open', '');
+  for (const selector of ['#layers', '#fibre-filter-mode', '#clip', '#tissue', '#reset']) {
+    await expect(viewer.locator(selector)).toBeVisible();
+    await expect(viewer.locator(selector)).toHaveCount(1);
+  }
+  expect(errors).toEqual([]);
+});
+
+test('choosing a custom fibre preset reveals and focuses the retained query controls', async ({ page }) => { // Tests INV-60
+  const errors = monitor(page);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto(BASE_URL);
+  await page.waitForFunction(() => document.getElementById('app')?.dataset.state === 'ready');
+  if (!await page.locator('#viewer-console').getAttribute('open')) {
+    await page.locator('#viewer-console > summary').click();
+  }
+
+  const full = page.locator('#viewer-full-controls');
+  await expect(full).not.toHaveAttribute('open', '');
+  await page.locator('#fibre-filter-preset').selectOption('custom');
+  await expect(full).toHaveAttribute('open', '');
+  await expect(page.locator('#fibre-filter-mode')).toBeFocused();
+  expect(errors).toEqual([]);
+});
+
 test('retained layer controls expose entity-specific keyboard toggles', async ({ page }) => { // Tests INV-50
   const errors = monitor(page);
   await page.setViewportSize({ width: 390, height: 844 });
@@ -311,6 +362,7 @@ test('retained layer controls expose entity-specific keyboard toggles', async ({
   if (!await page.locator('#viewer-console').getAttribute('open')) {
     await page.locator('#viewer-console > summary').click();
   }
+  await page.locator('#viewer-full-controls > summary').click();
   await page.locator('.lyr-disclosure').first().click();
   const row = page.locator('.lyr-kids .lyr-child').first();
   const entityName = (await row.locator('.lyr-t').textContent()).trim();
@@ -384,6 +436,7 @@ test('compact Atlas keeps every semantic camera action at least 44 CSS pixels hi
   if (!await page.locator('#viewer-console').getAttribute('open')) {
     await page.locator('#viewer-console > summary').click();
   }
+  await page.locator('#viewer-full-controls > summary').click();
 
   const actions = await page.locator('#viewer-console [data-view], #viewer-console [data-explore-camera], #reset')
     .evaluateAll(elements => elements.filter(element => element.getClientRects().length).map(element => ({
@@ -403,6 +456,7 @@ test('compact Atlas exposes 44 CSS pixel effective Viewer targets', async ({ pag
   if (!await page.locator('#viewer-console').getAttribute('open')) {
     await page.locator('#viewer-console > summary').click();
   }
+  await page.locator('#viewer-full-controls > summary').click();
   await page.locator('.lyr-disclosure[aria-expanded="false"]')
     .evaluateAll((disclosures) => disclosures.forEach((disclosure) => disclosure.click()));
 

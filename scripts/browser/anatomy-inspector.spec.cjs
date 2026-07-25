@@ -102,6 +102,7 @@ test('compact anatomy details contain focus, restore the invoker, and clear hidd
 
   const viewer = page.locator('#viewer-console');
   if (!await viewer.getAttribute('open')) await viewer.locator(':scope > summary').click();
+  await page.locator('#viewer-full-controls > summary').click();
   const anterior = page.locator('#layers input[data-id="anterior"]');
   await anterior.uncheck();
   await expect(page.locator('#anatomy-options [data-inspectable-id^="landmark."]')).toHaveCount(0);

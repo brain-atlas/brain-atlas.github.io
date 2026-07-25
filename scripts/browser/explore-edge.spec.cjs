@@ -20,6 +20,11 @@ async function directLesson(page, viewport) {
   await ready(page, new URL('?lesson=retina-to-v1', BASE_URL).href, viewport);
 }
 
+async function openFullControls(page) {
+  const full = page.locator('#viewer-full-controls');
+  if (!await full.getAttribute('open')) await full.locator(':scope > summary').click();
+}
+
 async function disableAllVisualizations(page) {
   const grouped = page.locator('.lyr-grpwrap > .lyr-group input:checked');
   for (let count = 0; await grouped.count(); count += 1) {
@@ -115,6 +120,7 @@ test('responsive Atlas keeps exact stage aspect and usable controls', async ({ p
     expect(result.modelTarget[1]).toBeGreaterThanOrEqual(44);
     expect(result.root).toEqual([0, 0]);
     await page.locator('#viewer-console > summary').click();
+    await openFullControls(page);
     await expect(page.locator('[data-explore-camera="zoom-in"]')).toBeVisible();
   }
   expect(errors).toEqual([]);
@@ -124,6 +130,7 @@ test('empty Atlas visibility remains recoverable through the retained controls',
   const errors = monitor(page);
   await ready(page);
   await expect(page.locator('#app')).toHaveAttribute('data-state', 'ready');
+  await openFullControls(page);
 
   await disableAllVisualizations(page);
 
@@ -143,6 +150,7 @@ test('empty Atlas visibility remains recoverable through the retained controls',
   await directLesson(page);
   await page.locator('#explore-scene-trigger').click();
   await expect(page.locator('#atlas-workspace')).toBeVisible();
+  await openFullControls(page);
   await disableSelectedVisualizations(page);
   await expect(page.locator('#app')).toHaveAttribute('data-state', 'ready');
   await expect(page.locator('#viewer-empty-state')).toBeVisible();
@@ -155,6 +163,7 @@ test('canonical L and R edits retain semantic subgroup disclosure, focus, and sc
   const errors = monitor(page);
   await ready(page);
   const viewer = page.locator('#viewer-console');
+  await openFullControls(page);
 
   async function exercise(entityId, parentIndeterminate) {
     const row = page.locator(`[data-entity-id="${entityId}"]`);
@@ -254,12 +263,13 @@ test('closed Viewer controls return wide space to the stage and keep a compact r
 test('every viewer axis edits canonical Atlas state without snapping the camera', async ({ page }) => {
   const errors = monitor(page);
   await ready(page);
+  await openFullControls(page);
   await page.evaluate(() => {
     window.__view.camera.position.set(130, 40, -110);
     window.__view.controls.target.set(5, -3, 12);
     window.__view.controls.update();
   });
-  await page.locator('#layers .hemi-chip input').first().uncheck();
+  await page.locator('#hemisphere-controls .hemi-chip input').first().uncheck();
   const lgnRow = page.locator('[data-entity-id="region.lgn"]');
   await lgnRow.locator('xpath=ancestor::div[contains(@class,"lyr-grpwrap")]').locator('.caret').click();
   await lgnRow.locator('.pill').first().click();

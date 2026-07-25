@@ -24,8 +24,7 @@ test('endpoint presets coherently filter geometry, activity, summaries, and cano
   const errors = monitor(page);
   await ready(page);
 
-  await expect(page.locator('#fibre-filter-preset')).toHaveAccessibleName('Preset');
-  await expect(page.locator('#fibre-filter-mode')).toHaveAccessibleName('Query mode');
+  await expect(page.locator('#fibre-filter-preset')).toHaveAccessibleName('Fibre preset');
   await expect(page.locator('#fibre-filter-summary')).toHaveAttribute('aria-live', 'polite');
   await page.locator('#fibre-filter-preset').selectOption('fibre-filter.dorsal');
   await page.waitForFunction(() => (
@@ -89,6 +88,8 @@ test('endpoint presets coherently filter geometry, activity, summaries, and cano
 test('custom endpoint controls expose all strict unordered query modes and explicit quality selectors', async ({ page }) => {
   const errors = monitor(page);
   await ready(page, { width: 1100, height: 820 });
+  await page.locator('#viewer-full-controls > summary').click();
+  await expect(page.locator('#fibre-filter-mode')).toHaveAccessibleName('Query mode');
 
   await page.locator('#fibre-filter-mode').selectOption('connects-between');
   await page.locator('#fibre-filter-set-a').selectOption(['region.v1']);

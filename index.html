@@ -106,64 +106,76 @@
       <summary aria-controls="viewer-controls-fieldset" aria-expanded="false">Viewer controls</summary>
       <fieldset id="viewer-controls-fieldset">
         <legend class="sr-only">Viewer controls</legend>
-        <div class="viewer-grid">
-          <section>
-            <h2>Layers</h2>
-            <p id="viewer-empty-state" class="viewer-empty-state" role="status" aria-live="polite" hidden>No visualizations selected. Turn on a layer to restore the atlas.</p>
-            <div id="layers" class="layer-tree"></div>
-          </section>
-          <section class="control-stack">
-            <h2>Display</h2>
-            <div id="fibre-filter-controls" class="fibre-filter-controls">
-              <h3>Fibre endpoints</h3>
-              <label for="fibre-filter-preset">Preset</label>
-              <select id="fibre-filter-preset">
-                <option value="all">All classified fibres</option>
-                <option value="custom">Custom query</option>
-              </select>
-              <label for="fibre-filter-mode">Query mode</label>
-              <select id="fibre-filter-mode">
-                <option value="all">All fibres</option>
-                <option value="touches-any">Touches any selected region</option>
-                <option value="connects-within">Both ends within selected regions</option>
-                <option value="connects-between">One endpoint in each region set</option>
-              </select>
-              <div id="fibre-filter-set-a-wrap">
-                <label for="fibre-filter-set-a">Region set A</label>
-                <select id="fibre-filter-set-a" multiple size="6" aria-describedby="fibre-filter-selection-help"></select>
+        <section id="viewer-quick-controls" class="viewer-quick-controls" aria-labelledby="viewer-quick-heading">
+          <h2 id="viewer-quick-heading">Quick controls</h2>
+          <div class="quick-control">
+            <span class="control-label">Hemisphere</span>
+            <div id="hemisphere-controls"></div>
+          </div>
+          <label class="quick-control" for="fibre-filter-preset">
+            <span class="control-label">Fibre preset</span>
+            <select id="fibre-filter-preset" aria-describedby="fibre-filter-summary">
+              <option value="all">All classified fibres</option>
+              <option value="custom">Custom query</option>
+            </select>
+          </label>
+          <p id="fibre-filter-summary" class="fibre-filter-summary" role="status" aria-live="polite">Endpoint filter data are loading.</p>
+          <button id="play" class="play on" type="button"><span class="glyph" id="playGlyph">❚❚</span><span id="playTxt">Pause activity</span></button>
+          <label class="row" for="speed"><span class="lbl">Activity speed</span><input id="speed" type="range" min="15" max="160" value="70"><span class="val" id="speedV">70</span></label>
+          <div class="row"><span class="lbl">View</span><div class="btns">
+            <button data-view="lateral" type="button">Side</button>
+            <button data-view="top" type="button">Top</button>
+            <button data-view="post" type="button">Back</button>
+            <button data-view="ant" type="button">Front</button>
+          </div></div>
+        </section>
+        <details id="viewer-full-controls" class="viewer-full-controls">
+          <summary>Full controls</summary>
+          <div class="viewer-grid">
+            <section>
+              <h2>Layers</h2>
+              <p id="viewer-empty-state" class="viewer-empty-state" role="status" aria-live="polite" hidden>No visualizations selected. Turn on a layer to restore the atlas.</p>
+              <div id="layers" class="layer-tree"></div>
+            </section>
+            <section class="control-stack">
+              <h2>Display &amp; camera</h2>
+              <div id="fibre-filter-controls" class="fibre-filter-controls">
+                <h3>Custom endpoint query</h3>
+                <label for="fibre-filter-mode">Query mode</label>
+                <select id="fibre-filter-mode">
+                  <option value="all">All fibres</option>
+                  <option value="touches-any">Touches any selected region</option>
+                  <option value="connects-within">Both ends within selected regions</option>
+                  <option value="connects-between">One endpoint in each region set</option>
+                </select>
+                <div id="fibre-filter-set-a-wrap">
+                  <label for="fibre-filter-set-a">Region set A</label>
+                  <select id="fibre-filter-set-a" multiple size="6" aria-describedby="fibre-filter-selection-help"></select>
+                </div>
+                <div id="fibre-filter-set-b-wrap" hidden>
+                  <label for="fibre-filter-set-b">Region set B</label>
+                  <select id="fibre-filter-set-b" multiple size="6" aria-describedby="fibre-filter-selection-help"></select>
+                </div>
+                <p id="fibre-filter-selection-help" class="control-help">Use Ctrl or Command to select more than one region.</p>
+                <p class="control-help">Endpoints are assigned geometrically to displayed atlas regions. This does not show measured connectivity or direction. Unknown and ambiguous endpoints match only when you select them.</p>
               </div>
-              <div id="fibre-filter-set-b-wrap" hidden>
-                <label for="fibre-filter-set-b">Region set B</label>
-                <select id="fibre-filter-set-b" multiple size="6" aria-describedby="fibre-filter-selection-help"></select>
+              <label class="row" for="clip"><span class="lbl">Cutaway</span><input id="clip" type="range" min="0" max="100" value="0"><span class="val" id="clipV">0%</span></label>
+              <label class="row" for="tissue"><span class="lbl">Tissue</span><input id="tissue" type="range" min="0" max="100" value="16"><span class="val" id="tissueV">16</span></label>
+              <div id="explore-camera-controls" class="explore-camera-controls" hidden>
+                <span class="lbl">Camera</span>
+                <div class="btns" aria-label="Explore camera controls">
+                  <button data-explore-camera="zoom-in" type="button">Zoom in</button>
+                  <button data-explore-camera="zoom-out" type="button">Zoom out</button>
+                  <button data-explore-camera="pan-left" type="button">Pan left</button>
+                  <button data-explore-camera="pan-right" type="button">Pan right</button>
+                  <button data-explore-camera="pan-up" type="button">Pan up</button>
+                  <button data-explore-camera="pan-down" type="button">Pan down</button>
+                </div>
               </div>
-              <p id="fibre-filter-selection-help" class="control-help">Use Ctrl or Command to select more than one region.</p>
-              <p id="fibre-filter-summary" class="fibre-filter-summary" role="status" aria-live="polite">Endpoint filter data are loading.</p>
-              <p class="control-help">Endpoints are assigned geometrically to displayed atlas regions. This does not show measured connectivity or direction. Unknown and ambiguous endpoints match only when you select them.</p>
-            </div>
-            <button id="play" class="play on" type="button"><span class="glyph" id="playGlyph">❚❚</span><span id="playTxt">Pause activity</span></button>
-            <label class="row" for="speed"><span class="lbl">Activity speed</span><input id="speed" type="range" min="15" max="160" value="70"><span class="val" id="speedV">70</span></label>
-            <label class="row" for="clip"><span class="lbl">Cutaway</span><input id="clip" type="range" min="0" max="100" value="0"><span class="val" id="clipV">0%</span></label>
-            <label class="row" for="tissue"><span class="lbl">Tissue</span><input id="tissue" type="range" min="0" max="100" value="16"><span class="val" id="tissueV">16</span></label>
-            <div class="row"><span class="lbl">View</span><div class="btns">
-              <button data-view="lateral" type="button">Side</button>
-              <button data-view="top" type="button">Top</button>
-              <button data-view="post" type="button">Back</button>
-              <button data-view="ant" type="button">Front</button>
-            </div></div>
-            <div id="explore-camera-controls" class="explore-camera-controls" hidden>
-              <span class="lbl">Camera</span>
-              <div class="btns" aria-label="Explore camera controls">
-                <button data-explore-camera="zoom-in" type="button">Zoom in</button>
-                <button data-explore-camera="zoom-out" type="button">Zoom out</button>
-                <button data-explore-camera="pan-left" type="button">Pan left</button>
-                <button data-explore-camera="pan-right" type="button">Pan right</button>
-                <button data-explore-camera="pan-up" type="button">Pan up</button>
-                <button data-explore-camera="pan-down" type="button">Pan down</button>
-              </div>
-            </div>
-            <div class="btns"><button id="spin" class="wide on" type="button">Auto-rotate</button><button id="reset" class="wide" type="button">Reset</button></div>
-          </section>
-        </div>
+              <div class="btns"><button id="spin" class="wide on" type="button">Auto-rotate</button><button id="reset" class="wide" type="button">Reset</button></div>
+            </section>
+          </div>
+        </details>
       </fieldset>
       <p id="viewer-policy-note" class="viewer-policy-note">Lesson scenes control these settings. Free exploration arrives in a later step.</p>
     </details>
