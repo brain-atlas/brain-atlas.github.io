@@ -451,7 +451,8 @@ button.layer-entity-toggle:hover:not(:disabled) { color: var(--text); border-col
   .topbar-actions { gap: 6px; }
   .lesson-session-actions { gap: 4px; }
   .lesson-session-actions .topbar-action { padding-inline: 7px; font-size: var(--type-label-size); }
-  .app-shell[data-lesson-session="true"] #lesson-import-trigger { display: none; }
+  .app-shell[data-lesson-session="true"] #lesson-import-trigger,
+  .app-shell[data-workspace-mode="lesson"] #lesson-import-trigger { display: none; }
   .brand { min-width: 0; }
   .brand-kicker { display: none; }
   .app-shell[data-lesson-session="true"] .brand-kicker { display: inline; font-size: var(--type-micro-size); }
@@ -463,6 +464,7 @@ button.layer-entity-toggle:hover:not(:disabled) { color: var(--text); border-col
   .stage-header > div { min-width: 0; }
   .stage-header h2 { max-width: none; overflow: visible; line-height: var(--type-title-leading); text-overflow: clip; white-space: normal; font-size: var(--type-support-size); }
   .disclosure-trigger { min-height: 44px; padding: 6px 8px; font-size: var(--type-label-size); }
+  .stage-actions .explore-trigger, .stage-actions .disclosure-trigger { color: var(--muted); border-color: var(--line-strong); background: var(--control-surface); }
   .visual-selector { min-height: 40px; padding-inline: 8px; }
   .visual-surface { height: 35svh; min-height: 245px; }
   .visual-surface.is-split { grid-template-columns: minmax(0, 1fr); }
@@ -472,6 +474,7 @@ button.layer-entity-toggle:hover:not(:disabled) { color: var(--text); border-col
   .scene-transport { position: fixed; z-index: 70; right: 0; bottom: 0; left: 0; min-height: 58px; grid-template-columns: 1fr 1fr; padding: 8px max(10px, env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left)); border-top: 1px solid var(--line-strong); background: var(--surface-deep); backdrop-filter: none; }
   .scene-transport button { width: 100%; min-width: 0; min-height: 44px; padding: 7px 9px; font-size: var(--type-control-size); line-height: var(--type-control-leading); }
   .scene-transport #scene-next { justify-self: end; }
+  .scene-transport #scene-next:not(:disabled) { color: var(--text-on-accent); border-color: var(--accent); background: var(--accent); }
   .scene-transport #scene-position { display: none; }
   .transition-skip { top: 8px; right: 8px; min-height: 44px; }
   .lesson-reader { padding: 0 16px 10vh; }
