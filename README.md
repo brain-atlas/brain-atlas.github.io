@@ -226,8 +226,11 @@ remain separate in `public/data/fidelity.json`. See
 [`src/lesson/SPEC.md`](src/lesson/SPEC.md) for the contract.
 
 The app opens in the complete exploratory Atlas, not inside a lesson. The retained Viewer
-controls provide orbit, zoom, pan, hemispheres, layers, cutaway, tissue, and activity over
-the one canonical global-atlas snapshot. **Lessons** opens a responsive drawer with the
+shows one compact Quick controls layer—global hemispheres, fibre preset/status, activity,
+speed, and fixed views—while one **Full controls** disclosure retains layers, custom endpoint
+queries, cutaway, tissue, camera actions, and reset over the same canonical global-atlas
+snapshot. Selecting **Custom query** opens and focuses those retained query controls; no
+second toolbar, state path, or renderer is created. **Lessons** opens a responsive drawer with the
 checked reference lesson and local Markdown entry. Starting a lesson preserves the actual Atlas
 camera and filters. From a lesson, **Back to atlas**, the brand link, browser Back, and
 **Explore this scene** all open Atlas from the lesson’s current rendered camera and complete
@@ -346,11 +349,13 @@ suspends draws and model clocks while the tab is hidden or the 3D stage is fully
 offscreen, preserving explicit Play/Pause intent; visible paused or settled views redraw
 only when controls, state, layout, or assets change.
 
-The **Viewer controls** dock contains Play/Pause, activity speed, **Cutaway**,
-**Tissue**, Side/Top/Back/Front, hemisphere/layer filters, endpoint-filter presets and
-custom all/touches/within/between queries, Auto-rotate, and Reset. Closing the dock on a
-wide screen returns its space to the atlas while leaving a keyboard-accessible reopen
-control; compact screens keep the bounded stacked panel. Viewer actions, filters,
+The **Viewer controls** dock keeps global hemispheres, endpoint preset/status, Play/Pause,
+activity speed, and Side/Top/Back/Front in **Quick controls**. One **Full controls** disclosure
+reveals layer filters, custom all/touches/within/between endpoint queries, **Cutaway**,
+**Tissue**, camera actions, Auto-rotate, and Reset. Choosing **Custom query** opens that
+disclosure and focuses Query mode. Closing the outer dock on a wide screen returns its space
+to the atlas while leaving a keyboard-accessible reopen control; compact screens keep the
+bounded stacked panel. Viewer actions, filters,
 ranges, label-backed checkboxes, panel close actions, the local-file picker, and
 standalone brand/skip/footer navigation links expose at least 44×44 CSS-pixel effective
 targets. Inline scientific citations remain ordinary text links within prose.

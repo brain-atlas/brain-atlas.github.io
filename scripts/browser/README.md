@@ -50,8 +50,9 @@ entry/instructional view after camera settlement in wide and compact layouts, in
 model clocks, draw ranges/checksums, in-frame motion, changing settled-stage pixels,
 V1-proximal optic events and caps, selected association groups, and distinct
 Skip/Pause/Play/reduced-motion semantics.
-The broader matrix covers Atlas-as-Home, the responsive Lessons drawer, checked and
-local activation, direct/static routes, Back/Forward and
+The broader matrix covers Atlas-as-Home, its canonical Quick controls plus one native
+Full controls disclosure and Custom-query focus handoff, the responsive Lessons drawer,
+checked and local activation, direct/static routes, Back/Forward and
 reload recovery, persistent global state, lesson-derived Atlas handoff from the actual
 camera and filters, compact Return/Exit controls, checked/local closeout and default reset,
 every canonical viewer axis, semantic and pointer camera controls, exact Return, repeated
@@ -62,7 +63,8 @@ effective targets (including shared panel-close, import, brand, skip, and standa
 navigation controls without inflating inline citations), selective reduced-motion
 CSS and settled-playback checks, parsed semantic theme-token coverage, semantic typography
 roles, 1rem compact prose, 45–65ch wide reading measure, resilient long headings, tabular
-instrument values, font-asset absence, 200%-equivalent layout checks, supplementary-image
+instrument values, font-asset absence, one-copy Quick/Full Viewer topology and custom-query
+focus, 200%-equivalent layout checks, supplementary-image
 creation/error/retry/removal lifecycle, and canonical
 visibility-driven asset requests—including tract metadata readiness,
 tract-hidden lesson deferral, first-visible geometry loading, and complete Atlas loading. `power-rendering.spec.cjs` uses the

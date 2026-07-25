@@ -36,6 +36,7 @@ test('scene Explore preserves rendered camera, commands do not snap it, and Retu
   await expect(page.locator('#atlas-workspace')).toBeVisible();
   await expect(page.locator('#atlas-workspace')).toHaveAccessibleName('Explore the human visual system');
   await expect(page.locator('#return-to-lesson')).toBeFocused();
+  await page.locator('#viewer-full-controls > summary').click();
   expect(await page.evaluate(() => ({
     kind: window.__lesson.exploreState.kind,
     camera: {

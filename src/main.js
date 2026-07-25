@@ -1108,7 +1108,11 @@ function configureFibreFilterControls(catalog) {
   if (fibreFilterControlsConfigured) return;
   fibreFilterControlsConfigured = true;
   preset.addEventListener('change', () => {
-    if (preset.value === 'custom') return;
+    if (preset.value === 'custom') {
+      $('viewer-full-controls').open = true;
+      requestAnimationFrame(() => $('fibre-filter-mode').focus());
+      return;
+    }
     if (preset.value === 'all') {
       dispatchExploreCommands([{ type: 'fibre-filter.set', ...ALL_FIBRE_FILTER }]);
       return;
@@ -1387,7 +1391,11 @@ function buildPanel(regions, tracts, { initialize = !panelInitialized } = {}) {
     for (const id of DEFAULT_OFF) { sceneState.visible.delete(id); if (layerObjs[id]) layerObjs[id].visible = false; }
     panelInitialized = true;
   }
-  const root = $('layers'); if (!root) return; root.innerHTML = '';
+  const root = $('layers');
+  const hemisphereRoot = $('hemisphere-controls');
+  if (!root || !hemisphereRoot) return;
+  root.innerHTML = '';
+  hemisphereRoot.innerHTML = '';
   const sec = (title) => { const h = document.createElement('div'); h.className = 'lyr-sec'; h.textContent = title; root.appendChild(h); };
   const leafRow = (id, label, o = {}) => {
     const row = document.createElement('label'); row.className = 'lyr' + (o.child ? ' lyr-child' : '');
@@ -1477,7 +1485,6 @@ function buildPanel(regions, tracts, { initialize = !panelInitialized } = {}) {
     for (const [stream, label] of STREAM_ORDER) if (bs[stream]) root.appendChild(streamBlock(stream, label, bs[stream], hemiMap, applyFn, rendererKind));
   };
 
-  sec('Hemisphere');
   const hrow = document.createElement('div'); hrow.className = 'hemi-row';
   for (const h of ['L', 'R']) {
     const chip = document.createElement('label'); chip.className = 'hemi-chip';
@@ -1495,7 +1502,7 @@ function buildPanel(regions, tracts, { initialize = !panelInitialized } = {}) {
     const t = document.createElement('span'); t.textContent = h === 'L' ? 'Left' : 'Right';
     chip.append(cb, t); hrow.appendChild(chip);
   }
-  root.appendChild(hrow);
+  hemisphereRoot.appendChild(hrow);
 
   streamSection('Structures', regions, regionHemi, applyRegionMesh, 'region');
   if (tracts && tracts.length) streamSection('White-matter tracts', tracts, tractHemi, applyTractMesh, 'tract');
@@ -1511,7 +1518,7 @@ function buildPanel(regions, tracts, { initialize = !panelInitialized } = {}) {
 
 function syncPanelControls(model) {
   const root = $('layers');
-  for (const input of root.querySelectorAll('.hemi-chip input[data-hemisphere]')) {
+  for (const input of $('hemisphere-controls').querySelectorAll('.hemi-chip input[data-hemisphere]')) {
     input.checked = model.globalHemispheres[input.dataset.hemisphere];
   }
   for (const row of root.querySelectorAll('.lyr-child[data-entity-id]')) {

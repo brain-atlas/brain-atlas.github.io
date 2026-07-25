@@ -17,6 +17,11 @@ async function ready(page, viewport = { width: 1440, height: 900 }, path = '') {
   await page.waitForFunction(() => document.getElementById('app')?.dataset.state === 'ready');
 }
 
+async function openFullControls(page) {
+  const full = page.locator('#viewer-full-controls');
+  if (!await full.getAttribute('open')) await full.locator(':scope > summary').click();
+}
+
 function deferred() {
   let resolve;
   const promise = new Promise(done => { resolve = done; });
@@ -126,6 +131,7 @@ test('browser Back from Lesson preserves the rendered lesson view in Atlas', asy
 test('scene inspection uses a temporary Atlas branch and preserves the global Atlas workspace', async ({ page }) => { // Tests INV-28
   const errors = monitor(page);
   await ready(page);
+  await openFullControls(page);
   await page.locator('#clip').evaluate(input => {
     input.value = '27';
     input.dispatchEvent(new Event('input', { bubbles: true }));
@@ -145,6 +151,7 @@ test('scene inspection uses a temporary Atlas branch and preserves the global At
 
   await page.locator('#explore-scene-trigger').click();
   await expect(page.locator('#atlas-workspace')).toBeVisible();
+  await openFullControls(page);
   expect(await page.evaluate(() => window.__lesson.workspaceState.atlasKind)).toBe('scene');
   expect(await page.evaluate(() => window.__lesson.exploreState.snapshot.cutaway.position)).not.toBe(27);
   await page.locator('#tissue').evaluate(input => {
@@ -180,6 +187,7 @@ test('scene inspection uses a temporary Atlas branch and preserves the global At
 test('checked Exit lesson clears resume state and resets the complete default Atlas', async ({ page }) => { // Tests INV-34, FAIL-32
   const errors = monitor(page);
   await ready(page);
+  await openFullControls(page);
   const defaultSnapshot = await page.evaluate(() => window.__lesson.exploreState.snapshot);
   await page.locator('#clip').evaluate(input => {
     input.value = '27';
