@@ -275,15 +275,56 @@ test('nightly replacement uploads and verifies commit assets before promotion an
   assert.ok(mutations.indexOf('deleteAsset') > mutations.indexOf('edit'));
 });
 
-test('nightly detects a concurrent tag move before deleting prior assets', async () => {
+test('nightly tolerates delayed tag visibility before deleting prior assets', async () => {
+  const oldBundle = fakeBundle('nightly-aaaaaaaaaaaa', OLD_SHA);
+  const release = remoteRelease('nightly', OLD_SHA, oldBundle.assets);
+  const client = new FakeClient({
+    main: SHA,
+    release,
+    tags: { nightly: OLD_SHA },
+    tagObservationsAfterEdit: [OLD_SHA, SHA],
+  });
+  const next = fakeBundle('nightly-1234567890ab', SHA);
+
+  const result = await publishNightly(next, client, { tagVerificationRetryDelays: [0] });
+
+  assert.equal(result.status, 'updated');
+  assert.equal(client.release.assets.some(({ name }) => name.includes('nightly-aaaaaaaaaaaa')), false);
+  const edit = client.log.indexOf('edit');
+  const firstDelete = client.log.indexOf('deleteAsset');
+  assert.equal(client.log.slice(edit + 1, firstDelete).filter((entry) => entry === 'resolveTag').length, 2);
+});
+
+test('nightly detects a persistent tag mismatch before deleting prior assets', async () => {
   const oldBundle = fakeBundle('nightly-aaaaaaaaaaaa', OLD_SHA);
   const release = remoteRelease('nightly', OLD_SHA, oldBundle.assets);
   const client = new FakeClient({ main: SHA, release, tags: { nightly: OLD_SHA }, tagAfterEdit: OLD_SHA });
   const next = fakeBundle('nightly-1234567890ab', SHA);
 
-  await assert.rejects(() => publishNightly(next, client), /nightly tag changed during promotion/);
+  await assert.rejects(
+    () => publishNightly(next, client, { tagVerificationRetryDelays: [0, 0] }),
+    new RegExp(`nightly tag.*expected ${SHA}.*observed.*${OLD_SHA}`),
+  );
   assert.equal(client.release.assets.some(({ name }) => name.includes('nightly-aaaaaaaaaaaa')), true);
   assert.equal(client.mutations().includes('deleteAsset'), false);
+});
+
+test('nightly rejects missing or wrong tag-update acknowledgements', async () => {
+  const oldBundle = fakeBundle('nightly-aaaaaaaaaaaa', OLD_SHA);
+  const next = fakeBundle('nightly-1234567890ab', SHA);
+  for (const acknowledgement of [null, OLD_SHA]) {
+    const release = remoteRelease('nightly', OLD_SHA, oldBundle.assets);
+    const client = new FakeClient({
+      main: SHA,
+      release,
+      tags: { nightly: OLD_SHA },
+      moveTagAcknowledgement: acknowledgement,
+    });
+
+    await assert.rejects(() => publishNightly(next, client), /tag update acknowledgement/);
+    assert.equal(client.mutations().includes('edit'), false);
+    assert.equal(client.mutations().includes('deleteAsset'), false);
+  }
 });
 
 test('nightly digest conflict fails without clobbering or promotion', async () => {
@@ -408,12 +449,23 @@ function remoteRelease(tag, commit, assets, overrides = {}) {
 }
 
 class FakeClient {
-  constructor({ main, release = null, tags = {}, tagAfterEdit = null, tagAfterPublish = null }) {
+  constructor({
+    main,
+    release = null,
+    tags = {},
+    tagAfterEdit = null,
+    tagAfterPublish = null,
+    tagObservationsAfterEdit = [],
+    moveTagAcknowledgement,
+  }) {
     this.main = main;
     this.release = release;
     this.tags = { ...tags };
     this.tagAfterEdit = tagAfterEdit;
     this.tagAfterPublish = tagAfterPublish;
+    this.tagObservationsAfterEdit = [...tagObservationsAfterEdit];
+    this.moveTagAcknowledgement = moveTagAcknowledgement;
+    this.edited = false;
     this.log = [];
     this.nextAssetID = 1000;
   }
@@ -434,6 +486,11 @@ class FakeClient {
 
   async resolveTag(tag) {
     this.log.push('resolveTag');
+    if (this.edited && this.tagObservationsAfterEdit.length > 0) {
+      const observed = this.tagObservationsAfterEdit.shift();
+      this.tags[tag] = observed;
+      return observed;
+    }
     return this.tags[tag] ?? null;
   }
 
@@ -454,6 +511,7 @@ class FakeClient {
   async moveTag(tag, sha) {
     this.log.push('moveTag');
     this.tags[tag] = sha;
+    return this.moveTagAcknowledgement === undefined ? sha : this.moveTagAcknowledgement;
   }
 
   async edit({ tag, sha, prerelease, latest }) {
@@ -462,6 +520,7 @@ class FakeClient {
     this.release.prerelease = prerelease;
     this.release.latest = latest;
     if (this.tagAfterEdit) this.tags[tag] = this.tagAfterEdit;
+    this.edited = true;
   }
 
   async publish({ tag, sha, prerelease, latest }) {
