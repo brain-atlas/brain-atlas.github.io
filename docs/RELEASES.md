@@ -94,11 +94,13 @@ release database ID before its metadata and assets are checked.
    `--clobber`.
 4. Re-check current `main`. Publish a verified draft at the approved commit,
    allowing GitHub to create its previously missing tag; otherwise move only the
-   existing `nightly` tag and update the published prerelease title/body.
-5. Re-read the tag, release, digests, and current `main`; any concurrent change
-   fails before cleanup. Delete only prior assets that match the project's
-   complete managed-nightly naming pattern. Unknown assets and all stable assets
-   remain untouched.
+   existing `nightly` tag, require the update-reference response to acknowledge
+   the exact commit, and update the published prerelease title/body.
+5. Re-read the tag with bounded 1-, 2-, and 4-second convergence waits, then
+   re-read the release, digests, and current `main`. A persistent tag mismatch
+   reports every observed value and fails before cleanup. Delete only prior
+   assets that match the project's complete managed-nightly naming pattern.
+   Unknown assets and all stable assets remain untouched.
 
 If an upload fails, the previous set remains available. A partially uploaded
 candidate remains visibly commit-labeled. If promotion succeeds but cleanup

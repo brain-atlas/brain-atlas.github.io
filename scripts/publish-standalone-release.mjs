@@ -3,6 +3,7 @@ import { createHash } from 'node:crypto';
 import { lstatSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { basename, join, resolve } from 'node:path';
+import { setTimeout as delay } from 'node:timers/promises';
 import { pathToFileURL } from 'node:url';
 
 const SHA_PATTERN = /^[0-9a-f]{40}$/;
@@ -138,7 +139,9 @@ function fileDigest(path) {
   return createHash('sha256').update(readFileSync(path)).digest('hex');
 }
 
-export async function publishNightly(bundle, client) {
+export async function publishNightly(bundle, client, {
+  tagVerificationRetryDelays = [1000, 2000, 4000],
+} = {}) {
   assertPublishableBundle(bundle);
   const expectedLabel = `nightly-${bundle.commit.slice(0, 12)}`;
   if (bundle.label !== expectedLabel) throw new Error(`nightly bundle label must be ${expectedLabel}`);
@@ -156,7 +159,7 @@ export async function publishNightly(bundle, client) {
     verifyRemoteAssets(release, bundle.assets, { exact: true });
     if (await client.currentMain() !== bundle.commit) return { status: 'stale' };
     await client.publish({ tag: 'nightly', sha: bundle.commit, title, body, prerelease: true, latest: false });
-    await verifyNightlyPromotion(client, bundle);
+    await verifyNightlyPromotion(client, bundle, tagVerificationRetryDelays);
     return { status: 'published' };
   }
   if (release.tag !== 'nightly' || !release.prerelease) {
@@ -187,10 +190,15 @@ export async function publishNightly(bundle, client) {
     }
     await client.publish({ tag: 'nightly', sha: bundle.commit, title, body, prerelease: true, latest: false });
   } else {
-    if (tagCommit !== bundle.commit) await client.moveTag('nightly', bundle.commit);
+    if (tagCommit !== bundle.commit) {
+      const acknowledged = await client.moveTag('nightly', bundle.commit);
+      if (acknowledged !== bundle.commit) {
+        throw new Error(`nightly tag update acknowledgement mismatch: expected ${bundle.commit}; observed ${JSON.stringify(acknowledged)}`);
+      }
+    }
     await client.edit({ tag: 'nightly', sha: bundle.commit, title, body, prerelease: true, latest: false });
   }
-  await verifyNightlyPromotion(client, bundle);
+  await verifyNightlyPromotion(client, bundle, tagVerificationRetryDelays);
   for (const asset of obsolete) await client.deleteAsset(asset.id);
   return { status: 'updated' };
 }
@@ -232,9 +240,16 @@ export async function publishStable(bundle, tag, client) {
   return { status: 'unchanged' };
 }
 
-async function verifyNightlyPromotion(client, bundle) {
-  if (await client.resolveTag('nightly') !== bundle.commit) {
-    throw new Error('nightly tag changed during promotion');
+async function verifyNightlyPromotion(client, bundle, retryDelays) {
+  const observed = [];
+  for (let attempt = 0; ; attempt += 1) {
+    const tagCommit = await client.resolveTag('nightly');
+    observed.push(tagCommit);
+    if (tagCommit === bundle.commit) break;
+    if (attempt >= retryDelays.length) {
+      throw new Error(`nightly tag did not converge: expected ${bundle.commit}; observed ${observed.map((sha) => JSON.stringify(sha)).join(', ')}`);
+    }
+    await delay(retryDelays[attempt]);
   }
   if (await client.currentMain() !== bundle.commit) {
     throw new Error('main advanced during nightly promotion; a newer run must repair the channel');
@@ -426,7 +441,13 @@ class GhClient {
   }
 
   async moveTag(tag, sha) {
-    this.#run(['api', '--method', 'PATCH', `repos/${this.repo}/git/refs/tags/${tag}`, '-f', `sha=${sha}`, '-F', 'force=true']);
+    const response = JSON.parse(this.#json([
+      'api', '--method', 'PATCH', `repos/${this.repo}/git/refs/tags/${tag}`,
+      '-f', `sha=${sha}`, '-F', 'force=true',
+    ]));
+    return response?.ref === `refs/tags/${tag}` && response.object?.type === 'commit'
+      ? response.object.sha
+      : null;
   }
 
   async edit({ tag, sha, title, body, prerelease, latest }) {
@@ -501,7 +522,7 @@ class DryRunClient {
     };
   }
   async upload(_tag, assets) { this.actions.push({ action: 'upload', assets: assets.map(({ name }) => name) }); }
-  async moveTag(tag, sha) { this.actions.push({ action: 'move-tag', tag, sha }); this.tags.set(tag, sha); }
+  async moveTag(tag, sha) { this.actions.push({ action: 'move-tag', tag, sha }); this.tags.set(tag, sha); return sha; }
   async edit(options) { this.actions.push({ action: 'edit-release', tag: options.tag }); }
   async publish(options) {
     this.actions.push({ action: 'publish-release', tag: options.tag });
