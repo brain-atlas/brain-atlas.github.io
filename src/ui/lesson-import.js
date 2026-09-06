@@ -1,27 +1,14 @@
 import { parseLesson } from '../lesson/index.js';
+import { deepFreeze } from '../lesson/scene-state.js';
 import { createLessonPresentation } from './lesson-presentation.js';
 
 export const MAX_LESSON_SOURCE_BYTES = 512 * 1024;
 
-function freezeDeep(value) {
-  if (!value || typeof value !== 'object' || Object.isFrozen(value)) return value;
-  for (const child of Object.values(value)) freezeDeep(child);
-  return Object.freeze(value);
-}
-
-function cloneCatalogValue(value) {
-  if (Array.isArray(value)) return value.map(cloneCatalogValue);
-  if (value && typeof value === 'object') {
-    return Object.fromEntries(Object.entries(value).map(([key, nested]) => [key, cloneCatalogValue(nested)]));
-  }
-  return value;
-}
-
 export function createLessonRuntimeCatalog(catalog, lesson) {
   if (!catalog || typeof catalog !== 'object') throw new TypeError('catalog must be an object');
   if (!lesson || !Array.isArray(lesson.visuals)) throw new TypeError('lesson visuals must be an array');
-  return freezeDeep({
-    ...cloneCatalogValue(catalog),
+  return deepFreeze({
+    ...structuredClone(catalog),
     visualIds: [...new Set([
       ...(catalog.visualIds ?? []),
       ...lesson.visuals.map(({ id }) => id),
@@ -30,7 +17,7 @@ export function createLessonRuntimeCatalog(catalog, lesson) {
 }
 
 function failure(code, message, location = {}) {
-  return freezeDeep({
+  return deepFreeze({
     ok: false,
     diagnostics: [{
       code,
@@ -43,7 +30,7 @@ function failure(code, message, location = {}) {
 }
 
 function freezeFailure(diagnostics) {
-  return freezeDeep({ ok: false, diagnostics: structuredClone(diagnostics) });
+  return deepFreeze({ ok: false, diagnostics: structuredClone(diagnostics) });
 }
 
 export function validateLessonImport(source, catalog) {
@@ -90,7 +77,7 @@ export function validateLessonImport(source, catalog) {
 
   const externalHosts = [...new Set(parsed.value.visuals.map(({ src }) => new URL(src).hostname))]
     .sort((a, b) => a.localeCompare(b));
-  return freezeDeep({
+  return deepFreeze({
     ok: true,
     value: {
       lesson: parsed.value,

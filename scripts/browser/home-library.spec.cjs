@@ -1,7 +1,7 @@
 const { test, expect } = require('@playwright/test');
 const fs = require('node:fs');
 const path = require('node:path');
-const BASE_URL = process.env.BRAIN_ATLAS_URL ?? 'http://127.0.0.1:5199/';
+const { BASE_URL } = require('./helpers.cjs');
 const fixture = fs.readFileSync(path.join(__dirname, '../../test/fixtures/lessons/frontoparietal-orientation.md'), 'utf8');
 
 // Inject a second inert fixture into the ordinary Vite module, never public content

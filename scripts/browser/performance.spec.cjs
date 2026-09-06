@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
 
-const BASE_URL = process.env.BRAIN_ATLAS_URL ?? 'http://127.0.0.1:5199/';
+const { BASE_URL } = require('./helpers.cjs');
 const DEVICE_SCALE_FACTOR = Number(process.env.DEVICE_SCALE_FACTOR ?? 3);
 const CPU_THROTTLE_RATE = 4;
 const DOWNLOAD_BYTES_PER_SECOND = 10 * 1024 * 1024 / 8;

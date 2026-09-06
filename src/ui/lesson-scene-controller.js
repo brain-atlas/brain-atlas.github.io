@@ -1,11 +1,7 @@
-function freezeDeep(value) {
-  if (!value || typeof value !== 'object' || Object.isFrozen(value)) return value;
-  for (const child of Object.values(value)) freezeDeep(child);
-  return Object.freeze(value);
-}
+import { deepFreeze } from '../lesson/scene-state.js';
 
 function settledSnapshot(snapshot, { instantCamera = false } = {}) {
-  return freezeDeep({
+  return deepFreeze({
     ...snapshot,
     camera: instantCamera
       ? { ...snapshot.camera, transition: { kind: 'instant', durationMs: 0 } }
@@ -44,7 +40,7 @@ export function createLessonSceneController({
   }
 
   let restoredSnapshot = null;
-  let state = freezeDeep({
+  let state = deepFreeze({
     status: 'loading',
     activeIndex: startingIndex,
     activeSceneId: startsAtEntry ? entryScene.id : scenes[startingIndex].id,
@@ -58,7 +54,7 @@ export function createLessonSceneController({
   });
 
   function setState(patch) {
-    state = freezeDeep({ ...state, ...patch });
+    state = deepFreeze({ ...state, ...patch });
     onChange(state);
     return state;
   }
@@ -120,7 +116,7 @@ export function createLessonSceneController({
         || (!(activeIndex === -1 && entryScene) && (activeIndex < 0 || activeIndex >= scenes.length))) {
         throw new RangeError('restored lesson scene index is out of bounds');
       }
-      restoredSnapshot = freezeDeep(structuredClone(snapshot));
+      restoredSnapshot = deepFreeze(structuredClone(snapshot));
       setState({
         lastReason: reason,
         activeIndex,

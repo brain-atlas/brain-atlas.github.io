@@ -2,15 +2,8 @@ const { test, expect } = require('@playwright/test');
 const fs = require('fs');
 const path = require('path');
 
-const BASE_URL = process.env.BRAIN_ATLAS_URL ?? 'http://127.0.0.1:5199/';
+const { BASE_URL, monitor } = require('./helpers.cjs');
 const AXE_SOURCE = fs.readFileSync(require.resolve('axe-core/axe.min.js'), 'utf8');
-
-function monitor(page) {
-  const errors = [];
-  page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
-  page.on('pageerror', error => errors.push(String(error)));
-  return errors;
-}
 
 async function waitForQuietRequests(page, active, quietMs = 400) {
   for (;;) {

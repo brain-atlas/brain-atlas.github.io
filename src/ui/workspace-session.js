@@ -1,18 +1,10 @@
-import {
-  applyExploreCommands,
-  createSceneExploreSnapshot,
-} from './explore-session.js';
+import { deepFreeze } from '../lesson/scene-state.js';
+import { applyExploreCommands } from './explore-session.js';
 
 const HISTORY_SCHEMA_VERSION = 1;
 const HISTORY_MODES = new Set(['atlas', 'lesson', 'inspect']);
 const SOURCE_KINDS = new Set(['reference', 'local']);
 const FOCUS_TARGETS = new Set(['back-to-atlas']);
-
-function freezeDeep(value) {
-  if (!value || typeof value !== 'object' || Object.isFrozen(value)) return value;
-  for (const child of Object.values(value)) freezeDeep(child);
-  return Object.freeze(value);
-}
 
 function nonEmptyString(value, label) {
   if (typeof value !== 'string' || value.trim() === '') {
@@ -42,7 +34,7 @@ export function createCheckedLessonEntry({ id, candidate, summary }) {
   if (!preview || typeof preview.title !== 'string' || !Number.isInteger(preview.sceneCount)) {
     throw new TypeError('checked lesson candidate requires validated summary data');
   }
-  return freezeDeep({
+  return deepFreeze({
     id,
     title: preview.title,
     status: preview.status ?? null,
@@ -154,10 +146,6 @@ export function captureAtlasSnapshot(snapshot, renderedCamera, catalog) {
   return applyExploreCommands(snapshot, [], renderedCamera, catalog);
 }
 
-export function createSceneInspectionSnapshot(snapshot, renderedCamera, catalog) {
-  return createSceneExploreSnapshot(snapshot, renderedCamera, catalog);
-}
-
 export function createLessonResumeToken({
   lessonKey,
   sourceKind,
@@ -189,7 +177,7 @@ export function createLessonResumeToken({
   if (!FOCUS_TARGETS.has(focusTarget)) {
     throw new RangeError(`unknown lesson focus target: ${focusTarget}`);
   }
-  return freezeDeep({
+  return deepFreeze({
     lessonKey,
     sourceKind,
     activeIndex,

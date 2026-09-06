@@ -1,22 +1,13 @@
 import { unified } from 'unified';
 import remarkParse from 'remark-parse';
 
-function freezeDeep(value) {
-  if (!value || typeof value !== 'object' || Object.isFrozen(value)) return value;
-  for (const child of Object.values(value)) freezeDeep(child);
-  return Object.freeze(value);
-}
+import { isCredentialFreeHttps } from '../lesson/https-formats.js';
+import { deepFreeze } from '../lesson/scene-state.js';
 
 function allowedUrl(value, { image = false } = {}) {
   const normalized = value.trim();
   if (!image && normalized.startsWith('#')) return normalized;
-  try {
-    const url = new URL(normalized);
-    if (url.protocol !== 'https:' || !url.hostname || url.username || url.password) return null;
-    return normalized;
-  } catch {
-    return null;
-  }
+  return isCredentialFreeHttps(normalized) ? normalized : null;
 }
 
 function childModels(node, context) {
@@ -92,5 +83,5 @@ export function markdownToViewModel(markdown) {
     if (!allowedUrl(node.url)) throw new Error(`unsafe URL in Markdown: ${node.url}`);
     definitions.set(node.identifier, node);
   }
-  return freezeDeep(nodeModel(tree, { definitions }));
+  return deepFreeze(nodeModel(tree, { definitions }));
 }

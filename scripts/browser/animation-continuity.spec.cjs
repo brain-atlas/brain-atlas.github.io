@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
 
-const BASE_URL = process.env.BRAIN_ATLAS_URL ?? 'http://127.0.0.1:5199/';
+const { BASE_URL } = require('./helpers.cjs');
 const PLAYING_VIEWS = [
   { index: -1, id: 'orientation', anterior: true, optic: true, swm: true },
   { index: 0, id: 'nasal-crossing', anterior: true },

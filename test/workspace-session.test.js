@@ -9,7 +9,6 @@ const {
   createCheckedLessonEntry,
   createHistoryIntent,
   createLessonResumeToken,
-  createSceneInspectionSnapshot,
   parseWorkspaceLocation,
   workspaceUrl,
 } = moduleUnderTest;
@@ -199,19 +198,6 @@ test('lesson resume tokens preserve stable semantic state and exclude transient 
   assert.equal('particles' in token, false);
   assert.equal(Object.isFrozen(token), true);
   assert.equal(Object.isFrozen(token.snapshot), true);
-});
-
-test('scene inspection derives a temporary full-control branch without mutating the lesson', () => { // Tests INV-28
-  assert.equal(typeof createSceneInspectionSnapshot, 'function');
-  const source = lessonSnapshot();
-  const before = JSON.stringify(source);
-  const result = createSceneInspectionSnapshot(source, RENDERED_CAMERA, CATALOG);
-
-  assert.deepEqual(result.camera.position, RENDERED_CAMERA.position);
-  assert.deepEqual(result.visual, { id: 'atlas', layout: 'dominant' });
-  assert.deepEqual(result.controlPolicy, { mode: 'explore' });
-  assert.deepEqual(result.visibility, source.visibility);
-  assert.equal(JSON.stringify(source), before);
 });
 
 test('workspace boundary rejects invalid routes, tokens, and history payloads', () => { // Tests FAIL-27

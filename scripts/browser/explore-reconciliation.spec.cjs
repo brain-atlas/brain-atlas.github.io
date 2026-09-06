@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
 
-const BASE_URL = process.env.BRAIN_ATLAS_URL ?? 'http://127.0.0.1:5199/';
+const { BASE_URL } = require('./helpers.cjs');
 
 async function ready(page, path = '') {
   const errors = [];

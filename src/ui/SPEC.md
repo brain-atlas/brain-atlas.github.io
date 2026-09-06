@@ -46,7 +46,7 @@ scientific catalogs, authored lesson state, or anatomical coordinates.
 - `lesson-library.js` — strict repository-owned library metadata, source matching, and frozen candidates via the shared import contract; filesystem evidence checks live in `scripts/check-lessons.mjs`.
 - `lesson-import.js` — bounded all-or-nothing local-source validation, preview metadata, and lesson-scoped renderer catalog derivation.
 - `explore-session.js` — canonical scene/global Atlas snapshots, camera-first command batching, panel projection, and fidelity aggregation.
-- `workspace-session.js` — checked drawer records, query/history validation, Atlas capture, lesson resume tokens, and scene-inspection capture.
+- `workspace-session.js` — checked drawer records, query/history validation, Atlas capture, and lesson resume tokens.
 - `markdown-view-model.js` — allowlisted semantic Markdown plain data.
 - `fidelity-view-model.js` — scene fidelity status/detail projection.
 - `anatomy-inspector.js` — inspectable availability/detail projection, modality state, tap threshold, exact-canvas NDC, and nearest-hit choice.
@@ -82,7 +82,6 @@ scientific catalogs, authored lesson state, or anatomical coordinates.
 | `parseWorkspaceLocation(input)` / `workspaceUrl(input)` / `createHistoryIntent(input)` | bootstrap/tests | Validate small static-safe Atlas/checked/local/inspection navigation intent; source and snapshots never enter URL/history. |
 | `captureAtlasSnapshot(snapshot, camera, catalog)` | bootstrap/tests | Substitutes the actual rendered camera into complete canonical Atlas state without mutating it. |
 | `createLessonResumeToken(input, catalog)` | bootstrap/tests | Validates and freezes the single stable in-memory lesson restoration token; excludes transient particles and source. |
-| `createSceneInspectionSnapshot(snapshot, camera, catalog)` | bootstrap/tests | Creates a full-control temporary Atlas branch from effective lesson state and rendered camera. |
 | `markdownToViewModel(source)` | bootstrap/tests | Frozen allowlisted plain tree; rejects raw HTML and unsafe URLs defensively. |
 | `createFidelityViewModel(input, catalog)` | bootstrap/tests | Frozen scene records with separate ordered geometry/activity statuses; unknown records fail. |
 | `availableInspectableIds(snapshot, catalog)` | bootstrap/tests | Returns sorted inspectable IDs whose canonical owner is visible under effective global/per-entity hemispheres; unresolved owners fail. |

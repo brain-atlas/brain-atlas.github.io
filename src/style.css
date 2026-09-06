@@ -377,7 +377,6 @@ button.layer-entity-toggle:hover:not(:disabled) { color: var(--text); border-col
 .explore-camera-controls .btns { margin-left: 0; }
 .explore-camera-controls button { min-height: 44px; }
 .explore-placeholder { min-width: 0; }
-.explore-placeholder-stage { width: 100%; }
 @media (min-width: 981px) {
   .explore-mount:has(> .viewer-console:not([open])) { grid-template-columns: minmax(0, 1fr); }
   .explore-mount:has(> .viewer-console:not([open])) .stage-shell { border-right: 0; }
@@ -413,7 +412,6 @@ button.layer-entity-toggle:hover:not(:disabled) { color: var(--text); border-col
 .fidelity-status { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
 .fidelity-status-label { width: 72px; color: var(--dim); font-size: var(--type-micro-size); line-height: var(--type-micro-leading); text-transform: uppercase; }
 .status-chip { padding: 4px 7px; border: 1px solid var(--line-strong); border-radius: 999px; color: var(--text-chip); font-size: var(--type-micro-size); line-height: var(--type-micro-leading); }
-.fidelity-status-activity .status-chip { border-color: var(--violet-border); }
 .fidelity-record { border-bottom: 1px solid var(--line); }
 .fidelity-record > summary { display: grid; gap: 4px; padding: 15px 2px; cursor: pointer; }
 .fidelity-record-title { color: var(--text); font-weight: 600; }
@@ -439,8 +437,7 @@ button.layer-entity-toggle:hover:not(:disabled) { color: var(--text); border-col
   .topbar { grid-template-columns: minmax(0, 1fr) auto; padding: 6px 16px; }
   .app-status { display: none; }
   .lesson-layout { display: flex; flex-direction: column; gap: 0; padding: 0; }
-  .stage-shell, .explore-placeholder-stage { order: -1; }
-  .stage-shell { z-index: 20; top: 0; width: 100%; margin: 0; border-right: 0; border-left: 0; background: var(--bg); backdrop-filter: none; }
+  .stage-shell { z-index: 20; order: -1; top: 0; width: 100%; margin: 0; border-right: 0; border-left: 0; background: var(--bg); backdrop-filter: none; }
   .explore-mount { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; }
   .explore-mount .stage-shell { order: 0; min-height: 0; border-bottom: 1px solid var(--line-strong); }
   .explore-mount .viewer-console { height: auto; max-height: 44dvh; }

@@ -1,14 +1,7 @@
 const { test, expect } = require('@playwright/test');
 
-const BASE_URL = process.env.BRAIN_ATLAS_URL ?? 'http://127.0.0.1:5199/';
+const { BASE_URL, monitor } = require('./helpers.cjs');
 const HAS_DEV_HOOKS = process.env.PRODUCTION_PREVIEW !== '1';
-
-function monitor(page) {
-  const errors = [];
-  page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
-  page.on('pageerror', error => errors.push(String(error)));
-  return errors;
-}
 
 async function ready(page, viewport = { width: 1440, height: 900 }, path = '') {
   await page.setViewportSize(viewport);

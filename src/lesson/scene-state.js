@@ -11,10 +11,6 @@ export function deepFreeze(value) {
   return Object.freeze(value);
 }
 
-function clone(value) {
-  return structuredClone(value);
-}
-
 function sortedUnique(values = []) {
   return [...new Set(values)].sort();
 }
@@ -236,14 +232,14 @@ export function normalizeCanonicalSnapshot(snapshot, catalog) {
   return normalizeSceneSnapshot({
     id: 'snapshot',
     visual: snapshot.visual.id,
-    camera: clone(snapshot.camera),
-    show: clone(snapshot.visibility.entities),
-    hemispheres: clone(snapshot.hemispheres),
-    fibreFilter: clone(snapshot.fibreFilter),
+    camera: structuredClone(snapshot.camera),
+    show: structuredClone(snapshot.visibility.entities),
+    hemispheres: structuredClone(snapshot.hemispheres),
+    fibreFilter: structuredClone(snapshot.fibreFilter),
     cutaway: snapshot.cutaway.position,
     tissueOpacity: snapshot.material.tissueOpacity,
-    playback: clone(snapshot.playback),
-    selection: clone(snapshot.selection),
+    playback: structuredClone(snapshot.playback),
+    selection: structuredClone(snapshot.selection),
     controls: { mode: snapshot.controlPolicy.mode },
     layout: snapshot.visual.layout,
   }, catalog);

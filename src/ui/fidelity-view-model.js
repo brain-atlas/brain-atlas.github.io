@@ -1,3 +1,5 @@
+import { deepFreeze } from '../lesson/scene-state.js';
+
 const STATUS_ORDER = [
   'data-derived',
   'derived',
@@ -19,12 +21,6 @@ const STATUS_LABELS = {
   'display-only': 'Display-only',
   none: 'None',
 };
-
-function freezeDeep(value) {
-  if (!value || typeof value !== 'object' || Object.isFrozen(value)) return value;
-  for (const child of Object.values(value)) freezeDeep(child);
-  return Object.freeze(value);
-}
 
 function orderedStatuses(statuses, { activity = false } = {}) {
   const unique = new Set(statuses);
@@ -75,7 +71,7 @@ export function createFidelityViewModel({ fidelityIds, entityIds = [] }, catalog
     };
   });
 
-  return freezeDeep({
+  return deepFreeze({
     geometryStatuses: orderedStatuses(sourceRecords.flatMap(({ geometry }) => geometry.statuses)),
     activityStatuses: orderedStatuses(sourceRecords.flatMap(({ activity }) => activity.statuses), { activity: true }),
     records,

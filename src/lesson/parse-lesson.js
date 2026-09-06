@@ -4,6 +4,7 @@ import { unified } from 'unified';
 import { LineCounter, parseDocument } from 'yaml';
 
 import { createDiagnostic } from './diagnostics.js';
+import { isCredentialFreeHttps } from './https-formats.js';
 import { deepFreeze, normalizeSceneSnapshot } from './scene-state.js';
 import { validateLessonMetadata, validateSceneDirective } from './schemas.js';
 
@@ -80,14 +81,7 @@ function walk(node, parent, visit) {
 
 function isAllowedUrl(url, { image = false } = {}) {
   const normalized = url.trim();
-  if (!image && normalized.startsWith('#')) return true;
-  try {
-    const parsed = new URL(normalized);
-    return parsed.protocol === 'https:' && Boolean(parsed.hostname) &&
-      parsed.username === '' && parsed.password === '';
-  } catch {
-    return false;
-  }
+  return (!image && normalized.startsWith('#')) || isCredentialFreeHttps(normalized);
 }
 
 function markdownDiagnostics(tree, visuals) {
