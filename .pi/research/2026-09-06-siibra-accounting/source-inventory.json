@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "bead": "brain-atlas-yum.14.1",
-  "status": "research-checkpoint-not-approved-build-manifest",
+  "status": "completed-research-inventory-not-approved-build-manifest",
   "verifiedDate": "2026-09-06",
   "softwareVersion": "1.0.1a20",
   "softwareCommit": "44549ae595533054135a4d62d567069353027b34",
@@ -48,7 +48,7 @@
       "url": "https://data-proxy.ebrains.eu/api/v1/buckets/p22717-hbp-d000339_SuperficialWhiteMatterBundles_pub/version%202018/mpm_swm/short-bundles_maxprob.nii.gz",
       "bytes": 121709,
       "sha256": "27e5394670bae40a07d88e592bca25f802a1273adcce93323027412bcca25ed9",
-      "terms": "unresolved; candidate only"
+      "terms": "CC BY-NC-SA 4.0 per EBRAINS DatasetVersion f58e4425-6614-4ad9-ac26-5e946b1296cb; not adopted due to provenance conflict (rights-report.md)"
     },
     {
       "id": "vep-map",
@@ -266,11 +266,15 @@
     }
   ],
   "unresolved": [
-    "No repository-wide configuration reuse license verified",
-    "ARCHI and VEP data terms unresolved",
-    "No complete byte/hash inventory for probabilistic NIfTI volume sets",
-    "Exact/uncertain point branch behavior source-reviewed but not executed",
-    "HCP/ARCHI source-space and dataset-version correspondence not established",
-    "Whole-brain anatomical-domain map not selected"
+    "Configuration-authored hierarchy reuse not adopted; licensed dataset XML and validated terminology edges selected instead",
+    "VEP rejected on unresolved rights; ARCHI rights resolved but provenance conflict retains rejection",
+    "HCP version skew resolved as v1.0 metadata/v1.1 volumes; candidate remains unadopted pending scientific validation",
+    "No whole-brain domain atlas selected; candidates reviewed/rejected here, selection owned by .3/.6"
+  ],
+  "completionEvidence": [
+    "rights-report.md",
+    "probability-manifest.json",
+    "probe-results.json",
+    "research-environment.json"
   ]
 }

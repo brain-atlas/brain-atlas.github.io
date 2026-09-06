@@ -1,19 +1,19 @@
 # Source-bound hierarchical fibre accounting
 
 - **Bead:** `brain-atlas-yum.14.1`; parent `brain-atlas-yum.14`.
-- **Status:** **Draft — research checkpoint, not implementation approval.**
+- **Status:** **Research decision complete; implementation design remains Draft.**
 - **Date:** 2026-09-06.
 - **Approval:** None. Every child implementation needs a separately accepted design.
-- **Evidence:** [source inventory](../research/2026-09-06-siibra-accounting/source-inventory.json) and [configuration URL checks](../research/2026-09-06-siibra-accounting/config-url-verification.json).
+- **Evidence:** [source inventory](../research/2026-09-06-siibra-accounting/source-inventory.json), [configuration URL checks](../research/2026-09-06-siibra-accounting/config-url-verification.json), [complete probability manifest](../research/2026-09-06-siibra-accounting/probability-manifest.json), [rights decisions](../research/2026-09-06-siibra-accounting/rights-report.md), and [executed probe results](../research/2026-09-06-siibra-accounting/probe-results.json).
 - **Authority:** Beads owns live status and blockers. `tools/assets/SPEC.md` continues to describe the implemented pipeline. This draft changes neither current classification nor project invariants.
 
-## Decision proposed
+## Research decision and implementation boundary
 
 Use siibra as an offline acquisition, terminology, map, and reference-method source. Do not install it in the browser, add it to the existing generator environment, or make its assignment API the project's classifier. Preserve explicit hash-checked inputs and compact generated data behind the existing one-renderer boundary.
 
 Account for anatomical domain before selecting a named regional primary. Keep two unordered endpoint records per displayed contour and a deterministic fibre summary. A primary is a visualization choice supported by disclosed evidence, not a biological termination, connectivity measurement, or polarity.
 
-This checkpoint does **not** satisfy all acceptance criteria. Configuration reuse terms, some candidate dataset terms, complete probability-map hashes, and executed exact/uncertain-point probes remain outstanding. No runtime/data replacement is authorized.
+Research resolves adoption versus rejection rather than treating every candidate gap as a blocker. All 314 selected Jülich probability volumes are byte-pinned; exact/uncertain-point probes execute real pinned siibra code. Configuration-authored hierarchy reuse is not adopted without rights; licensed dataset terminology provides the supported alternative. ARCHI and VEP remain rejected, and HCP remains a separately gated candidate. No runtime/data replacement is authorized.
 
 ## Verified source boundary
 
@@ -36,12 +36,16 @@ Exact retrieval URLs, per-file IDs, bytes, and hashes are in the source inventor
 | Source | Identity and evidence | Proposed disposition |
 |---|---|---|
 | Jülich-Brain v3.0.3 | Parcellation `minds/core/parcellationatlas/v1.0.0/94c1125b-b87e-45e4-901c-00daee7f2579-300`; DatasetVersion `d69b70e2-3002-4eaf-9c61-9c56f019bbc8`. Hierarchy has 598 nodes/350 leaves. MPM uses the 157-area set, represented bilaterally; the finer 175-area statistical set has no corresponding MPM. | Retain current 157-area MPM identity. Propose 157-area statistical evidence and explicit hierarchy mapping; never equate all hierarchy leaves with MPM labels. Finer maps remain separately versioned, not a silent substitute. |
-| HCP superficial bundles | Parcellation `juelich/iav/atlas/v1.0.0/79cbeaa4ee96d5d3dfe2876e9f74b3dc3d3ffb84304fb9b965b1776563a1069c`; 673 bundle maps. Hierarchy/map-level DatasetVersion is `6a7e07ad-303c-4b1d-b444-ded9ee782225`, while delivered volume metadata/bucket names `609c0598-bf02-4b65-8d7d-3a40f0c2f543`. | Candidate only. Dataset license PDF identifies CC BY-NC 4.0. Resolve version correspondence and source cohort/registration before use. Do not call it the project's HCP-1065 tractography source. |
-| ARCHI superficial bundles | Parcellation `juelich/iav/atlas/v1.0.0/6`; DatasetVersion `f58e4425-6614-4ad9-ac26-5e946b1296cb`; 100 maps. | Reject assignment use pending terms and source reconciliation. Peer descriptor review found 79 subjects and `MNI152_T1_2mm`; config says 78 subjects and 2009c, while retrieved MPM is 1 mm. Preserve conflict rather than infer a resampling derivation. |
+| HCP superficial bundles | Parcellation `juelich/iav/atlas/v1.0.0/79cbeaa4ee96d5d3dfe2876e9f74b3dc3d3ffb84304fb9b965b1776563a1069c`; 673 bundle maps. Hierarchy/map-level DatasetVersion `6a7e07ad-303c-4b1d-b444-ded9ee782225` is v1.0; volume bucket `609c0598-bf02-4b65-8d7d-3a40f0c2f543` is v1.1 of the same atlas, which added spatial affine transformations. | Candidate only, CC BY-NC 4.0. Version skew is resolved, but metadata must be normalized to v1.1 and cohort/registration validated before use. Do not call it the project's HCP-1065 source. |
+| ARCHI superficial bundles | Parcellation `juelich/iav/atlas/v1.0.0/6`; DatasetVersion `f58e4425-6614-4ad9-ac26-5e946b1296cb`; 100 maps; EBRAINS DOI `10.25493/ENJ7-ZKM`, CC BY-NC-SA 4.0. | Terms resolved; reject assignment use on provenance conflict. Descriptor says 79 subjects and `MNI152_T1_2mm`; config/EBRAINS say 78, config says 2009c, retrieved MPM is 1 mm. Do not infer a resampling derivation. |
 | VEP whole-brain map | Config identity `https://doi.org/10.1016/j.jneumeth.2020.108983/mni152`; configured provider uses moving `develop`. Research found a commit-bound object at `7d3f12c7e7fa0a8f28fc5e948f850b7755834172`. | Reject for now: dataset terms unresolved and grid differs. A commit pin fixes mutability, not anatomical validation or licensing. |
 | Existing TemplateFlow GM/WM | Exact inputs already bound by `tools/assets/manifest.json`. | Tissue evidence only. GM/WM does not distinguish cerebrum, cerebellum, brainstem, or deep nuclei. It cannot serve as a complete domain atlas. |
 
-The inventory binds retrieved Jülich MPM (335,280 bytes, `3af71c8d467db42d8561115164e0f365b942dfaa3568740ce62846fa3a201aff`), HCP MPM, ARCHI MPM, VEP volume, and Jülich/HCP license PDFs. Parent independently checked retained bytes; dataset interpretation and PDF readings came from the research peer. All 314 Jülich statistical volumes and candidate bundle probability sets have **not** been individually pinned. Configuration hashes do not substitute for volume hashes.
+The inventory binds retrieved Jülich MPM (335,280 bytes, `3af71c8d467db42d8561115164e0f365b942dfaa3568740ce62846fa3a201aff`), HCP MPM, ARCHI MPM, VEP volume, and Jülich/HCP license PDFs. Parent independently checked retained bytes; dataset interpretation and PDF readings came from the research peer. All 314 Jülich statistical volumes are individually pinned in `probability-manifest.json` (39,297,057 bytes total, zero acquisition failures). Parent verification matched source URLs/indices and rehashed every volume and four auxiliary files. Non-adopted 175-area and bundle probability sets are configuration-pinned candidates only, not complete volume acquisitions. Configuration hashes never substitute for volume hashes.
+
+### Licensed terminology alternative
+
+Do not copy the unlicensed configuration-authored hierarchy into a product. The same licensed Jülich dataset supplies a 20,165-byte MPM XML (`b6d153f3dc47f17d26fe0c3065b65ff949640821392804a2bcc375ed53f735a4`) containing all 157 structures with bilateral labels and a 30,925-byte terminology JSON (`5815cc0595f8f226814c7023ab811c022db60f4706da5a0a4b0b381192f1ed02`). The latter has 155 leaf occurrences but only 151 unique names: it is not a complete hierarchy. Adopt XML identities and only individually validated licensed hierarchy edges; leave missing/duplicate correspondences unresolved. Five XML/config name differences are explicit in the probability manifest, never fuzzy-matched at generation time. This establishes a rights-compatible acquisition/terminology route without inventing missing anatomy. Full hierarchy completion remains `.2` work.
 
 No whole-brain anatomical-domain map is selected yet. `brain-atlas-yum.14.3` owns domain validation; `.6` owns deeper/cerebellar atlas selection. The earlier carpet-segmentation pilot is not source-bound evidence and is not adopted by this record.
 
@@ -68,14 +72,20 @@ The reference implementation is the selected release's `siibra/locations/point.p
 | Cache | Default 2 GiB cache may evict old entries; keys derive from requests rather than this project's source manifest. | Disposable acquisition acceleration only, never durable evidence. No reliance on warm-cache success. |
 | Local configuration | Local directory/ZIP supported; repository ZIP has a wrapper directory. Local config still contains remote data URLs. | If used in a research environment, strip exactly one verified wrapper level into a new root and configure before import. Local config alone is not an offline guarantee. |
 
-These are **source-reviewed observations**, not executed API tests. Required executable probes remain a closeout blocker:
+### Executed exact/uncertain-point evidence
 
-1. Pin a separate research environment without changing `tools/assets/requirements.lock`.
-2. Use a local synthetic map, local explicit space, and fail-closed network access. No actual warp call.
-3. Compare exact points, subvoxel offsets, sigma `0`, `0.1`, `2`, `2.999`, `3`, and `3.001` mm on a 1 mm grid. Cover constant and mixed-sigma point clouds.
-4. Assert which branch runs and which metrics exist; cover ties, zeros, threshold equality, negative voxel coordinates, and out-of-bounds positions. Do not mistake a branch mock for full assignment validation.
-5. Assert space mismatch is rejected by the proposed project boundary before upstream assignment. Source inspection proves missing sigma forwarding; it does not validate any real warp or propagated uncertainty.
-6. Retain source/environment hashes, runnable probe, exact output, and interpretation. A network/cache/config failure is not an assignment result.
+[`probe_siibra_assignment.py`](../research/2026-09-06-siibra-accounting/probe_siibra_assignment.py) executes real `Map._assign` and public `Map.assign` against two local 25³ statistical NIfTIs at 1 mm. It checks source-distribution and installed Point/PointCloud/assignment hashes. Synthetic configuration is selected before import; network connections are denied and zero were attempted. No `Point.warp` or cross-space assignment runs. Same-space `PointCloud.warp` returns the identical cloud. A mismatched-space fixture is detected before any upstream call; this is a research preflight check, not an implemented production guard.
+
+Fifteen cases passed; a parent rerun reproduced `probe-results.json` byte-for-byte:
+
+- Constant sigma `0`, `0.1`, `2`, and `2.999` mm returns exact `MapAssignment` values. Offsets 12 and 12.49 select the same voxel; 12.5 selects the next. No subvoxel uncertainty integration is supplied.
+- Sigma `3` and `3.001` mm returns `AssignImageResult` Gaussian/overlap evidence, not exact map-value evidence. Mixed uncertain-only clouds work.
+- Mixed-sigma clouds containing a below-3-voxel point fail through both APIs with `ValueError: shapes (4,4) and (1,4) not aligned: 4 (dim 1) != 1 (dim 0)`. This reinforces rejection of the API as normative classifier; no upstream patch is made.
+- Exact threshold equality and zero support are excluded. The uncertain branch tests strict IoU threshold semantics separately; thresholds are not interchangeable between evidence types.
+- Negative coordinate −0.51 truncates into voxel zero; −1.5 lies outside. Positive out-of-bounds and uncertain boundary clipping are covered. A future project sampler must specify its own validated boundary rule.
+- AST inspection confirms `Point.warp` omits `sigma_mm` from its returned constructor; warp is never executed. No claim about actual warped uncertainty or geometric validity follows.
+
+[`research-environment.json`](../research/2026-09-06-siibra-accounting/research-environment.json) records CPython 3.12.9, resolved package versions and hashes. This isolated probe neither changes the CPython 3.13.1 asset environment nor proves real-atlas classifier accuracy. Re-run with its documented command after explicitly preparing the same environment and source archives.
 
 ## Proposed logical schema: `brain-atlas/fibre-accounting/v1`
 
@@ -127,17 +137,12 @@ Current `src/fibre-endpoint-filter.js` rejects artifact versions other than 1, d
 4. `.2` expands the Jülich vocabulary/visualization; `.3` validates domains and SWM curation; `.4` evaluates superficial bundles; `.5` integrates probabilities/primary alternatives; `.6` selects cerebellar/deep atlases. Preserve prerequisites recorded in Beads.
 5. Before replacement: compare old/new counts and reasons, keep scientific disclosures aligned, verify source terms/attribution, strict import/query compatibility, keyboard/accessibility, one-canvas geometry/activity coherence, and measured browser memory/rebuild cost. Maintain rollback through the old checked artifact and compatible runtime revision.
 
-## Remaining closeout gates
+## Acceptance evidence and downstream gates
 
-- [x] Claimed Bead; current contracts inspected; no runtime/data changes.
-- [x] Publisher article verified; selected software/config pins recorded.
-- [x] Thirteen revision-bound config URLs independently fetched with matching bytes/hashes.
-- [x] Candidate MPM/software/license-file bytes independently hashed; source and dataset IDs recorded.
-- [x] Draft logical schema, deterministic precedence, offline boundary, and legacy migration documented.
-- [ ] Resolve applicable configuration reuse terms and candidate terms, or document a source-verified alternative that avoids reuse. Do not ask an owner to waive absent third-party rights.
-- [ ] Complete exact map-file inventory for every adopted probability set; record sizes, hashes, terms and explicit scope exclusions.
-- [ ] Execute and retain exact/uncertain-point probes in a pinned isolated environment.
-- [ ] Independently reconcile HCP/ARCHI dataset/version/space evidence or formally retain rejection with downstream blockers.
-- [ ] Review the completed decision record; add the approved future contract to `tools/assets/SPEC.md` without describing it as implemented.
+- Source pins, verified URLs, sizes, hashes, dataset IDs and terms: source/probability inventories and rights report. Non-adopted candidate gaps are explicit, not successful rights determinations.
+- Hierarchy/sparse/assignment/uncertainty/cache/local-configuration decisions: method table plus fifteen real-code probes with independent byte-identical rerun.
+- Versioned record, deterministic fibre precedence, mixed-template limitation and legacy migration: sections above; no data or runtime replacement.
+- Offline/new-root/drift/compact-output requirements: future-only section in `tools/assets/SPEC.md`. This documents requirements, not an implemented command or approved child design.
+- Complete full-paper review remains `.12`; complete hierarchy/domain/bundle/primary integration remains `.2`–`.6`. HCP metadata correction, ARCHI provenance conflict, VEP rights rejection, unknown NIfTI unit codes, and incomplete licensed hierarchy must remain visible in child designs.
 
-No change to README capabilities, runtime architecture, geometry, scientific display, lesson claims, release identity, shipped dependencies, notices, or licenses is made. Therefore current public documents and `tools/assets/manifest.json` remain unchanged. When a child lands behavior, its public architecture, provenance, terms, metadata, and lesson-impact review must land together.
+No change to README capabilities, runtime architecture, geometry, scientific display, lesson claims, release identity, shipped dependencies, notices, or shipped data licenses is made. `tools/assets/manifest.json` remains unchanged; siibra is a research dependency only. When a child lands behavior, its public architecture, provenance, terms, metadata, and lesson-impact review must land together. The initial incomplete checkpoint at `fc09b66` is superseded by this completed research record, not by a new runtime implementation.

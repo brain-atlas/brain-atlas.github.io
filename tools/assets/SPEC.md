@@ -234,6 +234,51 @@ Raw outputs/logs stay outside Git. Their owner-only durable archive is `~/.local
 
 Minimum closeout runs focused tests, all builders/post-processors in temporary directories, both manual replay validations, the `brain-atlas-yum.5` verifier, full Node/build/audit checks, and Firefox/Chromium development/production regression matrices.
 
+## Future hierarchical fibre accounting (not implemented)
+
+Research decision `brain-atlas-yum.14.1` is recorded in
+[the source-bound accounting design](../../.pi/plans/brain-atlas-yum.14.1-siibra-fibre-accounting.md).
+It authorizes no builder, dependency, runtime, or public-asset replacement.
+`build endpoints`, INV-13, and current `fibre_endpoints.json` schema 1 remain
+unchanged. Child implementations require separately approved designs.
+
+Any future implementation must:
+
+- Consume explicit byte/hash-pinned local source files, including the complete
+  selected probability-map set and licensed terminology. siibra is an acquisition
+  and reference-method source, never a runtime dependency or an implicit fetcher.
+  Configuration availability does not grant reuse rights; use the licensed Jülich
+  XML and validated terminology edges, preserving incomplete hierarchy coverage.
+- Preserve 2009a fibre lineage and 2009c map grids independently. No `Point.warp`,
+  automatic cross-space assignment, source relabeling, fitting, or second runtime
+  transform. Record unknown NIfTI unit codes rather than silently repairing them.
+- Reuse INV-3/5 input and new-empty-nonsymlink-output guards; never write into or
+  automatically replace `public/`. Separate explicit acquisition from network-free
+  regeneration; neither siibra caches nor mutable sparse indices are authorities.
+- Emit the versioned domain/primary/alternative/evidence/method/uncertainty record
+  defined in the design, preserving domain-only/unresolved outcomes and exactly
+  two unordered endpoints per fibre. Balance 17,880 fibres and 35,760 endpoints.
+  Freeze domain eligibility, numerical rules, scientific tie handling and fibre
+  precedence before examining production results. Probability, overlap, distance,
+  localization uncertainty and template mismatch remain distinct evidence.
+- Hash-check source, config, hierarchy/map correspondence, geometry order, method
+  and environment; compare deterministic output bytes and all group/status/preset
+  totals. Drift fails closed rather than widening thresholds or adopting latest
+  releases. Explicitly test exact, uncertain, mixed-sigma and boundary behavior;
+  siibra's tested cutoff/errors are not a project numerical contract.
+- Keep dense maps and full acquisition evidence offline. Intern repeated metadata
+  in compact browser tables and set a measured byte/memory/query budget in the
+  child design. No additional renderer or filtering engine.
+- Preserve legacy tuples, selectors, ambiguity precedence and preset counts
+  through the existing artifact or an exact legacy projection. New domains,
+  ancestors or alternatives require explicit query/snapshot migration, not silent
+  reinterpretation of existing lesson filters.
+
+Verification for this research-only contract is the source/probability inventory,
+rights record, and runnable pinned assignment probe linked from the design.
+Future builder and runtime verification must also cover these requirements; the
+research probe does not establish real-atlas assignment accuracy.
+
 ## Dependencies
 
 | Dependency | Role |
