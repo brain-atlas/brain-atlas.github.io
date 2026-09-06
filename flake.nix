@@ -18,7 +18,7 @@
         {
           default = pkgs.mkShell {
             buildInputs = with pkgs; [
-              nodejs_22   # Node 22 — runs Vite dev server + the Three.js build
+              nodejs_24   # Node 22 — runs Vite dev server + the Three.js build
               go          # Builds the CGO-free standalone localhost server
               git
               jq
