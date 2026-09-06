@@ -763,7 +763,7 @@ test('supplementary image DOM exists only while a validated visual is active', a
   expect(errors).toEqual([]);
 });
 
-test('direct lesson entry loads active filtered SWM once and defers later-region assets', async ({ page }) => { // Tests INV-45
+test('direct lesson entry loads active filtered SWM once and defers later-region assets', async ({ page }) => { // Tests INV-4, INV-45
   const errors = monitor(page);
   const requests = [];
   const active = new Set();
@@ -802,6 +802,8 @@ test('direct lesson entry loads active filtered SWM once and defers later-region
     await page.locator('#scene-next').click();
     await page.waitForFunction(expected => window.__lesson?.navigation?.activeIndex === expected, index);
     if (await page.locator('#scene-skip').isVisible()) await page.locator('#scene-skip').click();
+    await expect.poll(() => page.evaluate(() => window.__lesson.navigation.activeIndex),
+      { message: 'Heading reflow and Skip must retain the explicit scene' }).toBe(index);
   }
   await waitForQuietRequests(page, active);
 

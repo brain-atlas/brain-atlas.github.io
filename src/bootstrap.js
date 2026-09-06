@@ -914,6 +914,8 @@ function updateActivePresentation(index, reason = 'initial', {
   byId('viewer-policy-note').textContent = fieldset.disabled
     ? 'This lesson scene controls the display. Canvas interaction follows the scene policy.'
     : 'Explore mode: viewer controls are available.';
+  // Heading/visual reflow can trigger scroll anchoring. That is not reading input.
+  navigation = Object.freeze({ ...navigation, lastScrollY: pageScroll.scrollTop });
 }
 
 function focusSceneAfterScroll(target) {
