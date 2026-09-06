@@ -108,22 +108,21 @@ test('reduced motion replaces camera animation and activity with a settled scene
   assert.equal(fake.applied.length, 1);
 });
 
-test('restart resets then reapplies authored activity, while skip settles in place', () => {
+test('restart explicitly replays authored activity once, while skip settles in place', () => { // Tests INV-6
   const fake = fakeAdapter();
   const controller = createLessonSceneController({ scenes, adapter: fake.adapter });
   controller.setReady();
   controller.restart();
 
-  assert.equal(fake.applied.length, 3);
-  assert.deepEqual(fake.applied[1].playback, { playing: false, speed: 70, settled: true });
-  assert.deepEqual(fake.applied[2].playback, scenes[0].snapshot.playback);
+  assert.equal(fake.applied.length, 2);
+  assert.deepEqual(fake.applied[1].playback, scenes[0].snapshot.playback);
   assert.equal(controller.state.replayCount, 1);
   assert.equal(controller.state.lastReason, 'restart');
 
   controller.skip();
-  assert.equal(fake.applied.length, 4);
-  assert.deepEqual(fake.applied[3].playback, { playing: false, speed: 70, settled: true });
-  assert.deepEqual(fake.applied[3].camera.transition, { kind: 'instant', durationMs: 0 });
+  assert.equal(fake.applied.length, 3);
+  assert.deepEqual(fake.applied[2].playback, { playing: false, speed: 70, settled: true });
+  assert.deepEqual(fake.applied[2].camera.transition, { kind: 'instant', durationMs: 0 });
   assert.equal(controller.state.manualSettled, true);
   assert.equal(controller.state.lastReason, 'skip');
 });
@@ -186,4 +185,50 @@ test('adapter failures become explicit controller error state and remain observa
   assert.throws(() => controller.setReady(), /renderer unavailable/);
   assert.equal(controller.state.status, 'error');
   assert.equal(controller.state.error, 'renderer unavailable');
+});
+
+
+test('only authored activation and Restart request activity replay', () => { // Tests INV-5/6/27
+  const intents = [];
+  const controller = createLessonSceneController({
+    scenes,
+    adapter: { apply(snapshot, intent) { intents.push(intent); return snapshot; } },
+  });
+  controller.setReady();
+  controller.activate(1);
+  controller.restart();
+  controller.skip();
+  controller.restore(scenes[1].snapshot);
+  controller.setReducedMotion(true);
+  assert.deepEqual(intents, [
+    { restartActivity: true }, { restartActivity: true }, { restartActivity: true },
+    { restartActivity: false }, { restartActivity: false }, { restartActivity: false },
+  ]);
+});
+
+test('retained controller restores current motion preference in one application', () => { // Tests INV-27/32
+  const fake = fakeAdapter();
+  const controller = createLessonSceneController({ scenes, adapter: fake.adapter });
+  controller.setReady();
+  controller.restore(scenes[0].snapshot, { reducedMotion: true });
+  assert.equal(fake.applied.length, 2);
+  assert.equal(controller.state.reducedMotion, true);
+  assert.deepEqual(fake.applied.at(-1).camera.transition, { kind: 'instant', durationMs: 0 });
+  assert.deepEqual(fake.applied.at(-1).playback, { playing: false, speed: 70, settled: true });
+  controller.setReducedMotion(false);
+  assert.deepEqual(fake.applied.at(-1), scenes[0].snapshot);
+});
+
+
+test('retained resume restores token index atomically and rejects invalid positions', () => { // Tests INV-27; FAIL-23
+  const fake = fakeAdapter();
+  const controller = createLessonSceneController({ scenes, adapter: fake.adapter });
+  controller.setReady();
+  controller.restore(scenes[1].snapshot, { activeIndex: 1, reducedMotion: true });
+  assert.equal(controller.state.activeIndex, 1);
+  assert.equal(controller.activeScene.id, 'two');
+  assert.equal(fake.applied.length, 2);
+  assert.throws(() => controller.restore(scenes[0].snapshot, { activeIndex: 9 }), /bounds/);
+  assert.equal(controller.state.activeIndex, 1);
+  assert.equal(fake.applied.length, 2);
 });

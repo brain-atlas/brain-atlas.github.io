@@ -306,7 +306,9 @@ lesson-derived branch with the active filters and exact rendered camera. It gran
 controls without overwriting the persistent global Atlas. **Return to lesson** restores
 the stable token and discards temporary edits. **Exit lesson** clears that token and resets
 Atlas Home to the authored complete default. No second renderer, canvas, WebGL context,
-filter path, or coordinate transform is created.
+filter path, or coordinate transform is created. Returning to the same lesson also retains
+its reading content rather than rebuilding it. In Atlas, tissue, cutaway, and speed edits
+do not restart activity; unchanged **Model & sources** records keep their expanded state.
 
 The checked lesson has a static-safe `?lesson=retina-to-v1` route. Atlas uses the base URL.
 Browser Back/Forward uses the same workspace transition path as visible controls. Local

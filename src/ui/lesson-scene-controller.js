@@ -74,9 +74,9 @@ export function createLessonSceneController({
     return snapshot;
   }
 
-  function applyCurrent() {
+  function applyCurrent({ restartActivity = false } = {}) {
     try {
-      return adapter.apply(effectiveSnapshot());
+      return adapter.apply(effectiveSnapshot(), { restartActivity });
     } catch (error) {
       setState({ status: 'error', error: error instanceof Error ? error.message : String(error) });
       throw error;
@@ -89,7 +89,7 @@ export function createLessonSceneController({
     setReady() {
       if (state.status === 'ready') return state;
       setState({ status: 'ready', error: null });
-      applyCurrent();
+      applyCurrent({ restartActivity: true });
       return state;
     },
     activate(index, { reason = 'navigation', force = false } = {}) {
@@ -108,15 +108,24 @@ export function createLessonSceneController({
         resumed: false,
         error: null,
       });
-      if (state.status === 'ready') applyCurrent();
+      if (state.status === 'ready') applyCurrent({ restartActivity: true });
       return state;
     },
-    restore(snapshot, { reason = 'workspace-resume' } = {}) {
+    restore(snapshot, {
+      reason = 'workspace-resume', reducedMotion = state.reducedMotion, activeIndex = state.activeIndex,
+    } = {}) {
       if (state.status !== 'ready') throw new Error('lesson scene controller must be ready before restore');
       if (!snapshot || typeof snapshot !== 'object') throw new TypeError('restored lesson snapshot is required');
+      if (!Number.isInteger(activeIndex)
+        || (!(activeIndex === -1 && entryScene) && (activeIndex < 0 || activeIndex >= scenes.length))) {
+        throw new RangeError('restored lesson scene index is out of bounds');
+      }
       restoredSnapshot = freezeDeep(structuredClone(snapshot));
       setState({
         lastReason: reason,
+        activeIndex,
+        activeSceneId: activeIndex === -1 ? entryScene.id : scenes[activeIndex].id,
+        reducedMotion: Boolean(reducedMotion),
         manualSettled: false,
         resumed: true,
         error: null,
@@ -127,14 +136,13 @@ export function createLessonSceneController({
     restart() {
       if (state.reducedMotion || state.status !== 'ready') return state;
       restoredSnapshot = null;
-      adapter.apply(settledSnapshot(currentScene().snapshot));
       setState({
         replayCount: state.replayCount + 1,
         lastReason: 'restart',
         manualSettled: false,
         resumed: false,
       });
-      applyCurrent();
+      applyCurrent({ restartActivity: true });
       return state;
     },
     skip() {

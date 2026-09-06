@@ -34,6 +34,25 @@ Active playback, authored camera/visibility transitions, OrbitControls damping/i
 
 The policy intentionally has no keyboard/pointer/touch/scroll inactivity timeout. Passive lesson reading and assistive-technology use cannot be distinguished reliably from abandonment, and the current fixed/sticky lesson stage normally remains observable while reading. `test/viewer-power.test.js` freezes this decision. `scripts/browser/power-rendering.spec.cjs` verifies hidden and simulated fully-offscreen states, explicit Pause, reduced motion, accessible status, model clocks, and render counts. These checks establish scheduler behavior, not physical-device battery savings.
 
+## Reconciliation checks (2026-09-06)
+
+`brain-atlas-s4q` removes repeated work without changing datasets or activity models:
+
+- opacity-only frames and unrelated Atlas edits no longer recalculate endpoint membership
+  or rewrite static fibre geometry; changed query/global hemispheres calculate once, and
+  late geometry reuses the retained result;
+- state synchronization preserves playing model clocks instead of implicitly restarting
+  them; authored scene activation/Restart remains explicit;
+- same-lesson resume retains lesson DOM/controller/adapter, while unchanged Atlas source
+  disclosures retain their nodes and native expanded state; and
+- mouse hover bursts coalesce to one pick per frame, with cancellation and immediate tap
+  activation.
+
+`scripts/browser/explore-reconciliation.spec.cjs` checks buffer versions, clock continuity,
+DOM identity, delayed geometry, immediate Skip, image/no-WebGL resume, and raycast calls.
+These are deterministic avoided-work checks, not timing or physical-device measurements.
+The historical loading/frame measurements below have not been remeasured for this change.
+
 ## Mobile-emulation evidence
 
 The checked profile runs the static production preview in system Chromium with:

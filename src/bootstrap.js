@@ -824,7 +824,9 @@ function activePresentationScene(index) {
   return index === -1 ? presentation.entryScene : presentation.scenes[index];
 }
 
+let exploreFidelityKey = null;
 function renderFidelityModel(model) {
+  exploreFidelityKey = null;
   const content = byId('fidelity-content');
   const fragment = document.createDocumentFragment();
   const statuses = node('section', 'fidelity-statuses');
@@ -880,15 +882,18 @@ function syncSceneTransport(index) {
     : 'Next →';
 }
 
-function updateActivePresentation(index, reason = 'initial') {
+function updateActivePresentation(index, reason = 'initial', {
+  snapshot = activePresentationScene(index).snapshot,
+  visualId = snapshot.visual.id,
+} = {}) {
   sceneCards.forEach((card, cardIndex) => {
     const active = cardIndex === index;
     card.classList.toggle('is-active', active);
     if (active) card.setAttribute('aria-current', 'step'); else card.removeAttribute('aria-current');
   });
   const scene = activePresentationScene(index);
-  syncAnatomyAvailability(scene.snapshot);
-  showLessonVisual(scene.snapshot.visual.id, scene.snapshot.visual.layout);
+  syncAnatomyAvailability(snapshot);
+  showLessonVisual(visualId, snapshot.visual.layout);
   const isEntry = index === -1;
   const count = presentation.scenes.length;
   byId('scene-count').textContent = isEntry ? 'Topic overview' : `Scene ${index + 1} of ${count}`;
@@ -905,7 +910,7 @@ function updateActivePresentation(index, reason = 'initial') {
       ? `Topic overview: ${lesson.title}`
       : (isComplete ? `Lesson complete. Scene ${index + 1}: ${scene.title}` : `Scene ${index + 1}: ${scene.title}`));
   const fieldset = byId('viewer-controls-fieldset');
-  fieldset.disabled = scene.snapshot.controlPolicy.mode !== 'explore' || !controller;
+  fieldset.disabled = snapshot.controlPolicy.mode !== 'explore' || !controller;
   byId('viewer-policy-note').textContent = fieldset.disabled
     ? 'This lesson scene controls the display. Canvas interaction follows the scene policy.'
     : 'Explore mode: viewer controls are available.';
@@ -1361,10 +1366,13 @@ function renderExploreFidelity(snapshot, includedFidelityIds) {
   const fidelityIds = exploreFidelityIds(snapshot, catalog, includedFidelityIds);
   const isEmpty = snapshot.visibility.entities.length === 0;
   byId('fidelity-context').textContent = 'Visible in Atlas';
+  const key = JSON.stringify([snapshot.visibility.entities, fidelityIds]);
+  if (exploreFidelityKey?.catalog === catalog && exploreFidelityKey.key === key) return;
   if (fidelityIds.length === 0) {
     byId('fidelity-content').replaceChildren(
       node('p', 'fidelity-empty-state', 'No visualizations selected. Turn on a layer in Viewer controls to restore the atlas.'),
     );
+    exploreFidelityKey = { catalog, key };
     return;
   }
   renderFidelityModel(createFidelityViewModel({
@@ -1376,6 +1384,7 @@ function renderExploreFidelity(snapshot, includedFidelityIds) {
       node('p', 'fidelity-empty-state', 'No visualizations selected. The records below retain the originating lesson context; turn on a layer in Viewer controls to restore the atlas.'),
     );
   }
+  exploreFidelityKey = { catalog, key };
 }
 
 function moveExploreNode(element, name, mount = byId('atlas-mount')) {
@@ -2105,16 +2114,6 @@ function returnToLesson({ historyAction = 'push' } = {}) {
   const state = exploreState;
   const session = workspace.lesson;
   if (!state || state.origin !== 'lesson' || !session?.candidate || !session.token) return;
-  if (rendererAdapter && state.kind === 'global') {
-    workspace.atlas.persistentSnapshot = captureAtlasSnapshot(
-      state.snapshot,
-      rendererAdapter.captureRenderedCamera(),
-      catalog,
-    );
-  }
-  restoreLessonSurfaceHomes(state);
-  exploreState = null;
-  workspace.mode = 'lesson';
   openLessonCandidate(session.candidate, {
     key: session.key,
     sourceKind: session.sourceKind,
@@ -2128,6 +2127,8 @@ function activatePreparedLesson(candidate, {
   initialIndex = null,
   resumeToken = null,
 } = {}) {
+  const retainLesson = resumeToken && lesson === candidate.lesson
+    && (!rendererAdapter || controller?.state.status === 'ready');
   resetAnatomyInspector();
   lessonSourceKind = sourceKind;
   lesson = candidate.lesson;
@@ -2139,17 +2140,24 @@ function activatePreparedLesson(candidate, {
   });
   selectedVisualId = resumeVisualId
     ?? activePresentationScene(navigation.activeIndex).snapshot.visual.id;
-  resetSupplementaryImage();
-  renderLesson();
-  refreshRendererAdapter();
-  createCurrentController();
-  updateActivePresentation(navigation.activeIndex, resumeToken ? 'workspace-resume' : 'initial');
-  if (resumeToken && controller) {
-    controller.restore(resumeToken.snapshot, { reason: 'workspace-resume' });
-    syncAnatomyAvailability(resumeToken.snapshot);
-    const scene = activePresentationScene(navigation.activeIndex);
-    showLessonVisual(resumeVisualId, scene.snapshot.visual.layout);
+  if (retainLesson) {
+    renderLessonIdentity();
+  } else {
+    resetSupplementaryImage();
+    renderLesson();
+    refreshRendererAdapter();
+    createCurrentController();
   }
+  if (resumeToken && controller) {
+    controller.restore(resumeToken.snapshot, {
+      activeIndex: navigation.activeIndex,
+      reducedMotion: reducedMotionQuery.matches,
+    });
+  }
+  updateActivePresentation(navigation.activeIndex, resumeToken ? 'workspace-resume' : 'initial', {
+    snapshot: resumeToken?.snapshot ?? activePresentationScene(navigation.activeIndex).snapshot,
+    visualId: selectedVisualId,
+  });
   if (rendererAdapter) {
     const panelSnapshot = resumeToken?.snapshot ?? activePresentationScene(navigation.activeIndex).snapshot;
     const runtimeCatalog = createLessonRuntimeCatalog(catalog, lesson);

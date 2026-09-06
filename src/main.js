@@ -244,7 +244,6 @@ function applyTractMesh(id) {
   }
 }
 function applyHemi() {
-  recalculateFibreFilter();
   for (const id in regionsById) applyRegionMesh(id);
   for (const id in tractsById) applyTractMesh(id);
   for (const h of ['L', 'R']) {
@@ -490,6 +489,7 @@ let fibreEndpointIndex = null;
 let requestedFibreFilter = ALL_FIBRE_FILTER;
 let fibreFilterResult = null;
 let fibreFilterLastRebuildMs = null;
+let fibreFilterInputKey = null;
 const tractFilterMasksByGroup = {};
 function hexRGB(hex) { const n = parseInt(hex.replace('#', ''), 16); return [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255]; }
 function loadTractMetadata() {
@@ -550,9 +550,11 @@ function loadTracts() {
       }
     }
     initTractImpulses(activity);
-    recalculateFibreFilter();
-    reapplyLessonMaterialFactors(tractGroup);
-    for (const id in tractsById) applyTractMesh(id);
+    recalculateFibreFilter({ geometryChanged: true });
+    for (const id in tractsById) {
+      reapplyLessonMaterialFactors(tractsById[id].group);
+      applyTractMesh(id);
+    }
     requestViewerRender();
   }).catch((e) => { console.warn('tract geometry load failed:', e); });
   return tractGeometryLoad;
@@ -772,7 +774,7 @@ function loadSwm() {
       const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(linePos[h], 3).setUsage(THREE.DynamicDrawUsage));
       const lines = new THREE.LineSegments(g, grainMat); lines.visible = hemiState[h]; swmGroup.add(lines); swmLines[h] = lines;
     }
-    recalculateFibreFilter();
+    recalculateFibreFilter({ geometryChanged: true });
     reapplyLessonMaterialFactors(swmGroup);
   }).catch((e) => console.warn('swm load failed:', e));
 }
@@ -810,13 +812,19 @@ function updateFibreFilterStatus() {
     : 'Endpoint filter data are loading.';
 }
 
-function recalculateFibreFilter() {
+function recalculateFibreFilter({ geometryChanged = false } = {}) {
   if (!fibreEndpointIndex) {
     updateFibreFilterStatus();
     return;
   }
+  const key = JSON.stringify([requestedFibreFilter, hemiState.L, hemiState.R]);
+  const queryChanged = key !== fibreFilterInputKey;
+  if (!queryChanged && !geometryChanged) return;
   const startedAt = performance.now();
-  fibreFilterResult = filterFibreEndpoints(fibreEndpointIndex, requestedFibreFilter, hemiState);
+  if (queryChanged) {
+    fibreFilterResult = filterFibreEndpoints(fibreEndpointIndex, requestedFibreFilter, hemiState);
+    fibreFilterInputKey = key;
+  }
   for (const group of fibreFilterResult.association) {
     const entry = tractsById[group.id];
     if (!entry) continue;
@@ -845,8 +853,10 @@ function recalculateFibreFilter() {
       attribute.needsUpdate = true;
     }
   }
-  activeTractImpulses = [];
-  tractImpulseGeo.setDrawRange(0, 0);
+  if (queryChanged) {
+    activeTractImpulses = [];
+    tractImpulseGeo.setDrawRange(0, 0);
+  }
   updateFibreFilterStatus();
   syncFibreFilterControls(requestedFibreFilter);
   fibreFilterLastRebuildMs = performance.now() - startedAt;
@@ -937,6 +947,7 @@ function updateViewerVisibility(patch) {
   const now = performance.now();
   if (!previous.suspended && next.suspended) {
     viewerSuspendedAt = now;
+    cancelAnatomyHover();
     if (viewerFrameRequest !== null) cancelAnimationFrame(viewerFrameRequest);
     viewerFrameRequest = null;
   } else if (previous.suspended && !next.suspended) {
@@ -1161,6 +1172,14 @@ let anatomyIntentHandler = null;
 let highlightedInspectableId = null;
 let hoveredInspectableId = null;
 let anatomyPointerStart = null;
+let anatomyHoverFrame = null;
+let anatomyHoverPosition = null;
+
+function cancelAnatomyHover() {
+  if (anatomyHoverFrame !== null) cancelAnimationFrame(anatomyHoverFrame);
+  anatomyHoverFrame = null;
+  anatomyHoverPosition = null;
+}
 
 function inspectableRendererObjects(inspectable) {
   if (inspectable.renderer.kind === 'landmark') {
@@ -1220,17 +1239,28 @@ function updateAnatomyHover(clientX, clientY) {
 }
 
 renderer.domElement.addEventListener('pointermove', (event) => {
-  if (event.pointerType === 'mouse' && event.buttons === 0) {
-    updateAnatomyHover(event.clientX, event.clientY);
+  if (event.pointerType !== 'mouse' || event.buttons !== 0 || currentViewerPowerState().suspended) {
+    cancelAnatomyHover();
+    return;
   }
+  anatomyHoverPosition = { x: event.clientX, y: event.clientY };
+  if (anatomyHoverFrame !== null) return;
+  anatomyHoverFrame = requestAnimationFrame(() => {
+    const { x, y } = anatomyHoverPosition;
+    anatomyHoverFrame = null;
+    anatomyHoverPosition = null;
+    updateAnatomyHover(x, y);
+  });
 });
 renderer.domElement.addEventListener('pointerleave', (event) => {
   if (event.pointerType !== 'mouse') return;
+  cancelAnatomyHover();
   renderer.domElement.style.cursor = '';
   hoveredInspectableId = null;
   emitAnatomyIntent({ type: 'clear', input: 'pointer' });
 });
 renderer.domElement.addEventListener('pointerdown', (event) => {
+  cancelAnatomyHover();
   if (!event.isPrimary || event.button !== 0) return;
   anatomyPointerStart = {
     pointerId: event.pointerId,
@@ -1239,6 +1269,7 @@ renderer.domElement.addEventListener('pointerdown', (event) => {
   };
 });
 renderer.domElement.addEventListener('pointercancel', () => {
+  cancelAnatomyHover();
   anatomyPointerStart = null;
 });
 renderer.domElement.addEventListener('pointerup', (event) => {
@@ -1288,6 +1319,7 @@ function setInspectableHighlight(id) {
 }
 
 function configureAnatomyInspector(catalog) {
+  cancelAnatomyHover();
   setInspectableHighlight(null);
   anatomyCatalog = catalog;
   anatomyIntentHandler = null;
@@ -1431,25 +1463,38 @@ function buildPanel(regions, tracts, { initialize = !panelInitialized } = {}) {
       const entityId = entityIdForRenderer(rendererKind, it.id);
       row.dataset.rendererId = it.id;
       if (entityId) row.dataset.entityId = entityId;
-      const applyEntityState = () => {
-        const state = hemiMap[it.id];
-        syncEntityHemisphereToggle(nm, state);
+      const entityState = () => explorePanelModel?.entities[entityId] ?? hemiMap[it.id];
+      const applyEntityState = (state) => {
         const commands = entityId ? [
           { type: 'visibility.set', entity: entityId, visible: state.L || state.R },
           { type: 'hemispheres.set-entity', entity: entityId, L: state.L, R: state.R },
         ] : [];
-        if (!dispatchExploreCommands(commands)) applyFn(it.id);
+        if (dispatchExploreCommands(commands)) return;
+        hemiMap[it.id] = { L: state.L, R: state.R };
+        applyFn(it.id);
+        syncEntityHemisphereToggle(nm, state);
+        for (const h of ['L', 'R']) {
+          pill[h].classList.toggle('on', state[h]);
+          pill[h].setAttribute('aria-pressed', String(state[h]));
+        }
         syncStreamParent(cb, syncers, hemiMap);
       };
       for (const h of ['L', 'R']) {
         const p = document.createElement('button'); p.type = 'button'; p.className = 'pill'; p.textContent = h; p.dataset.hemisphere = h;
         p.setAttribute('aria-label', `Show ${h === 'L' ? 'left' : 'right'} hemisphere for ${it.name}`);
         p.classList.toggle('on', hemiMap[it.id][h]); p.setAttribute('aria-pressed', String(hemiMap[it.id][h]));
-        p.addEventListener('click', () => { hemiMap[it.id][h] = !hemiMap[it.id][h]; p.classList.toggle('on', hemiMap[it.id][h]); p.setAttribute('aria-pressed', String(hemiMap[it.id][h])); applyEntityState(); });
+        p.addEventListener('click', () => {
+          const state = entityState();
+          applyEntityState({ L: state.L, R: state.R, [h]: !state[h] });
+        });
         pills.append(p); pill[h] = p;
       }
       syncEntityHemisphereToggle(nm, hemiMap[it.id]);
-      nm.addEventListener('click', () => { const on = !(hemiMap[it.id].L || hemiMap[it.id].R); hemiMap[it.id].L = hemiMap[it.id].R = on; for (const h of ['L', 'R']) { pill[h].classList.toggle('on', on); pill[h].setAttribute('aria-pressed', String(on)); } applyEntityState(); });
+      nm.addEventListener('click', () => {
+        const state = entityState();
+        const on = !(state.L || state.R);
+        applyEntityState({ L: on, R: on });
+      });
       row.append(sw, nm, pills); kids.appendChild(row);
       syncers.push({ id: it.id, pill, entityToggle: nm });
     }
@@ -1457,9 +1502,11 @@ function buildPanel(regions, tracts, { initialize = !panelInitialized } = {}) {
       const on = cb.checked;
       const commands = [];
       for (const s of syncers) {
-        hemiMap[s.id].L = hemiMap[s.id].R = on;
-        for (const h of ['L', 'R']) { s.pill[h].classList.toggle('on', on); s.pill[h].setAttribute('aria-pressed', String(on)); }
-        syncEntityHemisphereToggle(s.entityToggle, hemiMap[s.id]);
+        if (!exploreCommandHandler) {
+          hemiMap[s.id].L = hemiMap[s.id].R = on;
+          for (const h of ['L', 'R']) { s.pill[h].classList.toggle('on', on); s.pill[h].setAttribute('aria-pressed', String(on)); }
+          syncEntityHemisphereToggle(s.entityToggle, hemiMap[s.id]);
+        }
         const entityId = entityIdForRenderer(rendererKind, s.id);
         if (entityId) commands.push(
           { type: 'visibility.set', entity: entityId, visible: on },
@@ -1490,14 +1537,17 @@ function buildPanel(regions, tracts, { initialize = !panelInitialized } = {}) {
     const chip = document.createElement('label'); chip.className = 'hemi-chip';
     const cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = hemiState[h]; cb.dataset.hemisphere = h;
     cb.addEventListener('change', () => {
-      hemiState[h] = cb.checked;
       if (explorePanelModel) {
         dispatchExploreCommands([{
           type: 'hemispheres.set-global',
-          L: h === 'L' ? cb.checked : hemiState.L,
-          R: h === 'R' ? cb.checked : hemiState.R,
+          L: h === 'L' ? cb.checked : explorePanelModel.globalHemispheres.L,
+          R: h === 'R' ? cb.checked : explorePanelModel.globalHemispheres.R,
         }]);
-      } else applyHemi();
+      } else {
+        hemiState[h] = cb.checked;
+        applyHemi();
+        recalculateFibreFilter();
+      }
     });
     const t = document.createElement('span'); t.textContent = h === 'L' ? 'Left' : 'Right';
     chip.append(cb, t); hrow.appendChild(chip);
@@ -1551,32 +1601,18 @@ function syncPanelControls(model) {
 function projectExplorePanel(model) {
   explorePanelModel = model;
   $('viewer-empty-state').hidden = Object.values(model.entities).some(({ visible }) => visible);
-  Object.assign(hemiState, model.globalHemispheres);
-  requestedFibreFilter = model.fibreFilter;
   syncFibreFilterControls(model.fibreFilter);
-  sceneState.visible.clear();
-  for (const entity of Object.values(model.entities)) {
-    const { kind, id } = entity.renderer;
-    if (kind === 'layer') {
-      setLayer(id, entity.visible);
-    } else if (kind === 'region') {
-      regionHemi[id] = { L: entity.L, R: entity.R };
-    } else if (kind === 'tract') {
-      tractHemi[id] = { L: entity.L, R: entity.R };
-    }
-  }
   $('clip').value = model.cutaway.position;
   $('clipV').textContent = `${model.cutaway.position}%`;
   setFill($('clip'));
   $('tissue').value = Math.round(model.material.tissueOpacity * 100);
   $('tissueV').textContent = $('tissue').value;
   setFill($('tissue'));
-  requestedLessonPlayback = model.playback;
   syncPlaybackControls();
   if (_regions) {
     if (!$('layers').querySelector('[data-entity-id]')) buildPanel(_regions, tractsMeta, { initialize: false });
     syncPanelControls(model);
-  } else recalculateFibreFilter();
+  }
 }
 
 function clearExplorePanel() {
@@ -1664,13 +1700,14 @@ function settleLessonActivity() {
   updateAnteriorFlow();
   updateSwm(0);
 }
-function applyLessonPlaybackRequest({ resume = false } = {}) {
+function applyLessonPlaybackRequest({ restart = false } = {}) {
   if (requestedLessonPlayback) {
+    const wasSettled = st.settled;
     st.speed = requestedLessonPlayback.speed;
     st.settled = reduce || requestedLessonPlayback.settled;
     st.flow = !st.settled && requestedLessonPlayback.playing;
-    if (st.settled) settleLessonActivity();
-    else if (st.flow && !resume) resetLessonActivity();
+    if (st.settled && (!wasSettled || restart)) settleLessonActivity();
+    else if (st.flow && (wasSettled || restart)) resetLessonActivity();
   }
   syncPlaybackControls();
 }
@@ -1723,7 +1760,12 @@ export function createLessonRendererAdapter(catalog, {
     };
   }
   let captured = { schemaVersion: 2 };
-  const remember = (axis, value) => { captured = { ...captured, [axis]: value }; };
+  let restartActivityOnApply = false;
+  const remember = (axis, value) => {
+    const changed = JSON.stringify(captured[axis]) !== JSON.stringify(value);
+    captured = { ...captured, [axis]: value };
+    return changed;
+  };
   const entityIds = Object.keys(catalog.entitiesById);
   function applyVisibilitySample(sample) {
     lessonEntityOpacities = sample.opacities;
@@ -1775,7 +1817,8 @@ export function createLessonRendererAdapter(catalog, {
     },
     setVisibility(value) {
       ensureVisibilityAssets(value.entities, catalog);
-      remember('visibility', value);
+      const changed = remember('visibility', value);
+      if (!changed && !(lessonVisibilityTransition && !lessonCameraTransition)) return;
       lessonVisibilityActive = true;
       const now = performance.now();
       lessonVisibilityTransition = createVisibilityTransition({
@@ -1787,7 +1830,7 @@ export function createLessonRendererAdapter(catalog, {
       updateLessonVisibility(now);
     },
     setHemispheres(value) {
-      remember('hemispheres', value);
+      if (!remember('hemispheres', value)) return;
       Object.assign(hemiState, value.global);
       for (const entity of Object.values(catalog.entitiesById)) {
         if (entity.renderer.kind === 'region') regionHemi[entity.renderer.id] = { L: true, R: true };
@@ -1807,14 +1850,14 @@ export function createLessonRendererAdapter(catalog, {
       recalculateFibreFilter();
     },
     setCutaway(value) {
-      remember('cutaway', value);
+      if (!remember('cutaway', value)) return;
       clipPlane.constant = 80 - (value.position / 100) * 160;
       $('clip').value = value.position;
       $('clipV').textContent = `${value.position}%`;
       setFill($('clip'));
     },
     setMaterial(value) {
-      remember('material', value);
+      if (!remember('material', value)) return;
       brainMat.userData.lessonBaseOpacity = value.tissueOpacity;
       applyLessonMaterialOpacity(brainMat);
       $('tissue').value = Math.round(value.tissueOpacity * 100);
@@ -1823,17 +1866,11 @@ export function createLessonRendererAdapter(catalog, {
     },
     setPlayback(value) {
       remember('playback', value);
-      const resume = requestedLessonPlayback
-        && !requestedLessonPlayback.playing
-        && !requestedLessonPlayback.settled
-        && value.playing
-        && !value.settled
-        && requestedLessonPlayback.speed === value.speed;
       requestedLessonPlayback = value;
-      applyLessonPlaybackRequest({ resume });
+      applyLessonPlaybackRequest({ restart: restartActivityOnApply });
     },
     setSelection(value) {
-      remember('selection', value);
+      if (!remember('selection', value)) return;
       const emphasized = new Set(value.emphasized);
       if (value.selected) emphasized.add(value.selected);
       const hasFocus = emphasized.size > 0;
@@ -1864,11 +1901,18 @@ export function createLessonRendererAdapter(catalog, {
     entity.id,
   ]));
   return Object.freeze({
-    apply(snapshot) {
-      const result = adapter.apply(snapshot);
-      notifyViewerPowerState();
-      requestViewerRender();
-      return result;
+    apply(snapshot, { restartActivity = false } = {}) {
+      if (typeof restartActivity !== 'boolean') throw new TypeError('restartActivity must be a boolean');
+      cancelAnatomyHover();
+      restartActivityOnApply = restartActivity;
+      try {
+        const result = adapter.apply(snapshot);
+        notifyViewerPowerState();
+        requestViewerRender();
+        return result;
+      } finally {
+        restartActivityOnApply = false;
+      }
     },
     capture: adapter.capture,
     captureRenderedCamera() {
@@ -1881,6 +1925,7 @@ export function createLessonRendererAdapter(catalog, {
       if (handler !== null && typeof handler !== 'function') {
         throw new TypeError('Anatomy intent handler must be a function or null');
       }
+      cancelAnatomyHover();
       anatomyIntentHandler = handler;
     },
     setInspectableHighlight,

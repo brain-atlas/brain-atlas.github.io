@@ -181,6 +181,42 @@ The checked-in `src/lessons/retina-to-v1.md` exercises that contract through one
 
 `src/bootstrap.js` converts validated Markdown to an allowlisted plain view model and creates DOM nodes with `createElement`/`textContent`; it never inserts author HTML. Declared HTTPS images render as semantic DOM figures only after lesson activation. The image element itself exists only while its validated visual is active; bootstrap assigns alt text, lazy decoding, no-referrer policy, load/error handlers, caption, credit, and source metadata before assigning `src`, removes the element on atlas/reset, and recreates it for explicit retry. The reserved figure/failure surface remains stable. The atlas remains the first visual choice. Wide `split` scenes may show atlas and image together; compact scenes show one selected visual, and manual visual changes do not alter semantic scene state. Images never become WebGL textures. Geometry and activity fidelity statuses come from `public/data/fidelity.json` and appear inside the persistent **Model & sources** disclosure rather than in duplicate canvas badges, stage rows, or the global header. Scene identity/progress remains in the stage header and transport. The wide disclosure is nonmodal. The compact lesson sheet inerts background/skip-link content, locks `#page-scroll`, cycles visible focusables, and resynchronizes focus/semantics when a breakpoint changes; close restores exact surface position and trigger focus. In Atlas, the same disclosure stays within the top-level workspace and follows visible entities, unioned with the originating scene's records for stage-local inspection. The separate cited anatomy inspector composes those fidelity records with curated anatomy explanations; it does not redefine provenance or add lesson-authored claims. Its wide panel is nonmodal, its external compact sheet contains focus while the app is inert, and close restores the exact semantic invoker or a connected stage fallback. Opening either detail surface closes the other without changing workspace history, camera, filters, playback, or the resumable lesson. Lesson scenes currently hide legacy fixed-anchor 3D labels under decision `brain-atlas-jes`; responsive placement is tracked by `brain-atlas-zmq.20`.
 
+## Runtime reconciliation
+
+Complete snapshots still validate and round-trip through the single adapter; completeness
+is not a request to repeat every effect. The concrete renderer compares visibility,
+hemisphere, cutaway, material, and selection inputs before updating their derived state.
+Camera application still reconciles the actual OrbitControls pose. An instant application
+also completes a pending visibility fade even when its destination IDs are unchanged.
+
+Endpoint membership is recalculated only for changed query/global-hemisphere inputs.
+Opacity samples apply visibility and material factors without rebuilding fibre buffers or
+clearing association events. Late tract/SWM geometry consumes the retained result; each
+tract's new children also inherit its own placeholder group's material factors. This is
+one retained result, not a multi-query cache or another filter path.
+
+The concrete `apply(snapshot, { restartActivity = false })` wrapper distinguishes ordinary
+synchronization from authored scene activation/Restart. The controller requests replay
+explicitly; unrelated Atlas edits, speed changes, and ordinary Pause/Play do not reset
+model clocks. Settled/reduced-motion transitions retain their existing behavior. Panel
+projection updates DOM only; controls derive edits from the canonical panel model.
+
+Same-candidate Return, drawer Resume, and history restoration retain lesson DOM, adapter,
+and controller inside the existing guarded activation transaction. Controller `restore`
+accepts the token index and current motion preference together and applies one snapshot.
+Replacement and Start over still activate afresh. Stage images remain governed by active
+visual ownership rather than retained with the lesson tree.
+
+Atlas Model & sources retains its native disclosure nodes while catalog, visible entity
+IDs, and resolved fidelity IDs are unchanged; inspector hemisphere availability updates
+independently. Hover picking consumes only the latest mouse position once per animation
+frame. Leave, drag start/cancel, snapshot/handler replacement, and viewer suspension cancel
+pending hover work; click/touch activation still picks synchronously.
+
+`explore-reconciliation.spec.cjs` checks these update boundaries, late geometry, Skip,
+retained resume/history/images, disclosure identity, and hover bursts. They establish
+avoided work and preserved behavior, not a measured frame-rate or battery improvement.
+
 ## Data loading and build
 
 After the WebGL gate, the renderer eagerly loads the cortical GLB, optic-radiation JSON, compact endpoint tuples, region manifest, and the 1.4 kB checked geometry-free association metadata projection. Renderer readiness resolves after region and projected tract metadata bind; a manifest or renderer failure returns the page to readable lesson fallback. The first canonical visibility snapshot then starts each required bilateral region OBJ pair, the independently packaged SWM JSON when visible, and the unchanged 2.4 MB association geometry/activity payload when any named tract becomes visible. Runtime loading verifies the geometry's identity/order/color/group/point-count fields against the checked projection before binding it. A direct checked lesson therefore starts with LGN, V1, V2, V3v, V3d, and SWM because the opening snapshot uses the shared-early endpoint query, while its tract-hidden opening scenes avoid association transfer, parsing, and geometry construction. The first tract-bearing scene loads that payload once. Atlas Home's complete default requests every region, tract, and SWM immediately. [`PERFORMANCE.md`](PERFORMANCE.md) records production-profile evidence and device limits.

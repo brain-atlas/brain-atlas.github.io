@@ -56,6 +56,14 @@ Import consumer APIs from `src/lesson/index.js`.
 | `applySceneCommand(snapshot, command, catalog)` | Validates an allowlisted command and returns new frozen state without mutating the prior snapshot. |
 | `createRendererAdapter(bindings, catalog)` | Requires all snapshot-axis bindings and returns `{ apply, capture }`; validates before invoking renderer bindings. |
 
+The concrete wrapper in `src/main.js` additionally accepts transient
+`apply(snapshot, { restartActivity: boolean })` intent (default `false`). The lesson
+controller requests it for authored activation/Restart; it is not a canonical field,
+lesson-source directive, or command. Complete validation and capture verification still
+run here, while concrete bindings may avoid unchanged derived effects. Actual camera
+restoration and completion of an instant visibility transition cannot be skipped solely
+because their previous requested values match.
+
 A diagnostic is always plain data:
 
 ```text
