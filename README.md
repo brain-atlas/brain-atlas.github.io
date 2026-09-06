@@ -231,7 +231,7 @@ speed, and fixed views—while one **Full controls** disclosure retains layers, 
 queries, cutaway, tissue, camera actions, and reset over the same canonical global-atlas
 snapshot. Selecting **Custom query** opens and focuses those retained query controls; no
 second toolbar, state path, or renderer is created. **Lessons** opens a responsive drawer with the
-checked reference lesson and local Markdown entry. Starting a lesson preserves the actual Atlas
+static lesson library and local Markdown entry. Starting a lesson preserves the actual Atlas
 camera and filters. From a lesson, **Back to atlas**, the brand link, browser Back, and
 **Explore this scene** all open Atlas from the lesson’s current rendered camera and complete
 filters. Compact **Return to lesson** and **Exit lesson** actions distinguish temporary
@@ -243,6 +243,28 @@ hide until Return or Exit so the two active-session choices remain readable and 
 overlap. Individual stochastic particles are not serialized. A compact Atlas moves the
 camera uniformly away from the same target to keep the complete brain framed; anatomy,
 canvas scale, and the MNI transform remain uniform.
+
+The library registry is `src/lessons/library.json`; it currently contains one lesson.
+Each drawer card shows its source summary and scene count, with links to bundled
+Markdown, the prose license, and the repository review/citation record (requires
+internet). A registry entry or passing validator is not scientific approval or permission
+to publish. Existing review-record limitations still apply; no Reviewed badge is inferred.
+Lessons declaring external images disclose hosts and media terms in the drawer before
+**Start lesson**. Fresh image-bearing routes return to Atlas for that disclosure instead
+of making image requests automatically. The current lesson declares no external images.
+
+For maintainers: add `src/lessons/<id>.md` and one registry record with a unique lowercase
+hyphenated ID (not `local`), `license: "AGPL-3.0-only"`, an existing
+`docs/lessons/<name>-validation.md` review record, and `media: []` or one `{ id, license }`
+record per declared image. Each lesson needs a frontmatter summary. Other prose-license
+terms require an explicit publication design change. Verify citations and media rights
+in the review record; nonempty metadata alone cannot establish either.
+`npm run check:lessons` checks every registered source with the same bounded import
+parser/presentation contract. Vite also checks on development startup and every build,
+including publication and standalone builds; malformed sources report filename,
+line, column, code, and field path. Missing/unregistered sources, duplicate IDs, and
+missing license/review metadata fail the check. Review content is human evidence, not
+machine certification. No backend, accounts, or content persistence are involved.
 
 The shipped **Early Vision: Retina to the Cortical Streams** reference lesson lives at
 `src/lessons/retina-to-v1.md`. Its scientific evidence, section-level curriculum review,
@@ -310,7 +332,8 @@ filter path, or coordinate transform is created. Returning to the same lesson al
 its reading content rather than rebuilding it. In Atlas, tissue, cutaway, and speed edits
 do not restart activity; unchanged **Model & sources** records keep their expanded state.
 
-The checked lesson has a static-safe `?lesson=retina-to-v1` route. Atlas uses the base URL.
+Library entries use static-safe `?lesson=<id>` routes; the current lesson is
+`?lesson=retina-to-v1`. Atlas uses the base URL.
 Browser Back/Forward uses the same workspace transition path as visible controls. Local
 source stays memory-only; `?lesson=local` marks only a session that cannot survive reload.
 Reload removes that marker, returns to Atlas, and announces that local content was not

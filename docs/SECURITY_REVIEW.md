@@ -79,6 +79,14 @@ or relaxing the standalone loopback/authentication boundary.
 - Browser-visible author content is projected through an allowlisted view model and
   inserted with `createElement`/`textContent`; author HTML, unsafe URL schemes,
   undeclared images, scripts, styles, and frames are rejected.
+- The repository-owned static lesson registry uses that same bounded validator at
+  development startup and build time. Exact registry fields, safe nonreserved IDs,
+  source membership, prose/media-license metadata and local review-record existence
+  are checked; metadata does not certify rights or scientific review. Library Markdown
+  links resolve to bundled inert source; review/citation links explicitly open GitHub.
+  Fresh image-bearing routes return to Atlas for host disclosure before explicit Start,
+  and initial Atlas preparation creates no declared image elements. No new network
+  API, persistence, script authority, dependency, or CSP permission is introduced.
 - Local source is bounded to 512 KiB and validated all-or-nothing through the same
   strict parser/presentation path as checked-in content. Editing invalidates a valid
   preview; only explicit **Open lesson** activation can replace the in-memory session.

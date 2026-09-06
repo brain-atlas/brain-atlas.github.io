@@ -15,6 +15,7 @@ Scientific interpretation and model limitations are inventoried separately in
 
 | Project files | Source | Terms |
 |---|---|---|
+| `src/lessons/retina-to-v1.md`, `src/lessons/library.json` | Original project lesson prose and library metadata; citations and review limits in `docs/lessons/retina-to-v1-validation.md`; no supplementary images declared | [AGPL-3.0-only](LICENSE); displayed atlas assets retain their separate terms below |
 | `public/models/brain_mni.glb` | MNI152NLin2009cAsym brain mask via TemplateFlow | MNI notice reproduced below |
 | `public/data/regions.json`, `public/data/regions/*.obj` | Jülich-Brain Atlas v3.0.3 maximum probability map | [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) |
 | `public/data/tracts.json`, `public/data/tracts_metadata.json` | HCP-1065 population-averaged tractography atlas and its geometry-free runtime projection | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) and WU-Minn HCP Open Access Data Use Terms |

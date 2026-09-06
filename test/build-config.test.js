@@ -21,6 +21,15 @@ function threeGroup(config) {
     .find(({ name }) => name === 'three');
 }
 
+test('Vite validates the lesson library in development and every build', () => {
+  for (const standalone of [false, true]) {
+    const plugin = configFor('development', { standalone }).plugins.find(({ name }) => name === 'lesson-library');
+    assert.ok(plugin, 'library validation plugin exists');
+    assert.equal(plugin.apply, undefined, 'development and build both validate');
+    assert.equal(typeof plugin.buildStart, 'function');
+  }
+});
+
 test('Vite uses native Rolldown grouping for the cacheable Three.js chunk', () => {
   const config = configFor('production');
   assert.equal(config.build.rollupOptions, undefined);

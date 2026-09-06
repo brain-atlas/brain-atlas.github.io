@@ -1,5 +1,17 @@
 import { readFileSync } from 'node:fs';
 import { defineConfig } from 'vite';
+import { checkLessons } from './scripts/check-lessons.mjs';
+
+const lessonLibrary = () => ({
+  name: 'lesson-library',
+  buildStart() {
+    const { files } = checkLessons();
+    for (const file of files) this.addWatchFile(file);
+  },
+  handleHotUpdate({ file }) {
+    if (/\/(src\/lessons\/|docs\/lessons\/|public\/data\/)/.test(file)) checkLessons();
+  },
+});
 
 const PUBLICATION_FILES = ['LICENSE', 'DATA_LICENSES.md', 'THIRD_PARTY_NOTICES.md', 'CITATION.cff'];
 const publicationFiles = () => ({
@@ -33,7 +45,7 @@ export default defineConfig(() => {
 
   return {
     base: './',
-    plugins: [publicationFiles(), ...(standalone ? [standaloneLifecycle()] : [])],
+    plugins: [lessonLibrary(), publicationFiles(), ...(standalone ? [standaloneLifecycle()] : [])],
     server: { port: 5180, open: false, host: true },
     build: {
       target: 'es2022',

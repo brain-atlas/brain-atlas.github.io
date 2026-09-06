@@ -1,7 +1,8 @@
 import './style.css';
 
 import { createLessonCatalog } from './lesson/index.js';
-import lessonSource from './lessons/retina-to-v1.md?raw';
+import libraryRecords from './lessons/library.json';
+import { createLessonLibrary } from './ui/lesson-library.js';
 import { createFidelityViewModel } from './ui/fidelity-view-model.js';
 import {
   applyAnatomySelectionIntent,
@@ -35,12 +36,16 @@ import {
 } from './ui/scroll-surface.js';
 import {
   captureAtlasSnapshot,
-  createCheckedLessonEntry,
   createHistoryIntent,
   createLessonResumeToken,
   parseWorkspaceLocation,
   workspaceUrl,
 } from './ui/workspace-session.js';
+
+const lessonSources = Object.fromEntries(Object.entries(
+  import.meta.glob('./lessons/*.md', { eager: true, query: '?raw', import: 'default' }),
+).map(([path, source]) => [path.split('/').at(-1), source]));
+const lessonSourceUrls = import.meta.glob('./lessons/*.md', { eager: true, query: '?url', import: 'default' });
 
 const byId = (id) => document.getElementById(id);
 const app = byId('app');
@@ -70,8 +75,8 @@ let lessonSourceKind = 'reference';
 let lessonImportCandidate = null;
 let importCloseFocus = 'trigger';
 let exitDialogCloseFocus = 'exit';
-let referenceCandidate = null;
-let activeLessonKey = 'checked:retina-to-v1';
+let lessonLibrary = [];
+let activeLessonKey = null;
 let localLessonSerial = 0;
 let historySerial = 0;
 let restoringHistory = false;
@@ -136,12 +141,23 @@ function availableSessionKeys() {
 }
 
 function workspaceLocationIntent() {
-  return parseWorkspaceLocation({
+  const intent = parseWorkspaceLocation({
     search: location.search,
     historyState: history.state,
-    checkedIds: ['retina-to-v1'],
+    checkedIds: lessonLibrary.map(({ id }) => id),
     availableSessionKeys: availableSessionKeys(),
   });
+  const record = lessonLibrary.find(({ id }) => id === intent.checkedLessonId);
+  if (record?.candidate.summary.externalHosts.length && workspace.lesson.key !== `checked:${record.id}`) {
+    return { mode: 'atlas', recovery: 'image-consent' };
+  }
+  return intent;
+}
+
+function workspaceRecoveryMessage(recovery) {
+  if (recovery === 'image-consent') return 'This lesson uses external images. Open Lessons to review image hosts before starting it.';
+  if (recovery === 'session-unavailable') return 'The local session was not retained. Returned to Atlas.';
+  return 'That checked lesson is unavailable. Returned to Atlas.';
 }
 
 function writeWorkspaceHistory(mode, {
@@ -166,7 +182,7 @@ function writeWorkspaceHistory(mode, {
 
 function writeCurrentLessonHistory({ replace = false } = {}) {
   if (lessonSourceKind === 'reference') {
-    writeWorkspaceHistory('lesson', { checkedLessonId: 'retina-to-v1', replace });
+    writeWorkspaceHistory('lesson', { checkedLessonId: activeLessonKey.slice('checked:'.length), replace });
   } else {
     writeWorkspaceHistory('lesson', { sessionKey: activeLessonKey, replace });
   }
@@ -277,7 +293,9 @@ function renderMarkdownNode(model) {
     case 'image': {
       const visual = lesson.visuals.find(({ src, alt }) => src === model.url && alt === model.alt);
       if (!visual) throw new Error(`undeclared lesson image: ${model.url}`);
-      return createDeclaredImageFigure(visual);
+      return workspace.mode === 'lesson'
+        ? createDeclaredImageFigure(visual)
+        : document.createTextNode(visual.alt);
     }
     default:
       throw new Error(`unsupported presentation node: ${model.type}`);
@@ -359,35 +377,49 @@ function renderLesson() {
 }
 
 function renderLessonDrawer() {
-  if (!referenceCandidate) return;
-  const entry = createCheckedLessonEntry({
-    id: 'retina-to-v1',
-    candidate: referenceCandidate,
-    summary: 'Follow visual signals from the retina through early vision and into ventral and dorsal cortical streams.',
+  const cards = lessonLibrary.map((record) => {
+    const { entry } = record;
+    const card = node('article', 'lesson-entry-card');
+    card.dataset.lessonId = entry.id;
+    const heading = node('h4', '', entry.title);
+    const description = node('p', '', entry.summary);
+    const meta = node('div', 'lesson-entry-meta');
+    if (entry.statusLabel) meta.append(node('span', 'lesson-status', entry.statusLabel));
+    meta.append(node('span', '', `${entry.sceneCount} scenes`));
+    const resume = workspace.lesson.key === `checked:${entry.id}` && workspace.lesson.token;
+    const actions = node('div', 'lesson-entry-actions');
+    const action = node('button', '', resume ? 'Resume lesson' : 'Start lesson');
+    action.type = 'button';
+    action.dataset.startLesson = entry.id;
+    action.addEventListener('click', () => openCheckedLesson(entry.id, { resume: Boolean(resume) }));
+    actions.append(action);
+    if (resume) {
+      const restart = node('button', 'secondary', 'Start over');
+      restart.type = 'button';
+      restart.dataset.restartLesson = entry.id;
+      restart.addEventListener('click', () => openCheckedLesson(entry.id, { resume: false }));
+      actions.append(restart);
+    }
+    const links = node('div', 'lesson-entry-links');
+    for (const [label, href] of [
+      ['Lesson Markdown', lessonSourceUrls[`./lessons/${entry.id}.md`]],
+      [`Prose: ${record.license}`, './LICENSE'],
+      ['Review & citations', `https://github.com/brain-atlas/brain-atlas.github.io/blob/main/${record.review}`],
+    ]) {
+      const link = node('a', '', label);
+      link.href = href;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      links.append(link);
+    }
+    card.append(heading, description, meta, actions, links);
+    if (record.candidate.summary.externalHosts.length) {
+      card.append(node('p', '', `Opening permits image requests to ${record.candidate.summary.externalHosts.join(', ')}. No referrer is sent.`));
+      for (const image of record.media) card.append(node('p', '', `${image.id}: ${image.license}`));
+    }
+    return card;
   });
-  const card = node('article', 'lesson-entry-card');
-  card.dataset.lessonId = entry.id;
-  const heading = node('h4', '', entry.title);
-  const description = node('p', '', entry.summary);
-  const meta = node('div', 'lesson-entry-meta');
-  if (entry.statusLabel) meta.append(node('span', 'lesson-status', entry.statusLabel));
-  meta.append(node('span', '', `${entry.sceneCount} scenes`));
-  const resume = workspace.lesson.key === `checked:${entry.id}` && workspace.lesson.token;
-  const actions = node('div', 'lesson-entry-actions');
-  const action = node('button', '', resume ? 'Resume lesson' : 'Start lesson');
-  action.type = 'button';
-  action.dataset.startLesson = entry.id;
-  action.addEventListener('click', () => openCheckedLesson(entry.id, { resume: Boolean(resume) }));
-  actions.append(action);
-  if (resume) {
-    const restart = node('button', 'secondary', 'Start over');
-    restart.type = 'button';
-    restart.dataset.restartLesson = entry.id;
-    restart.addEventListener('click', () => openCheckedLesson(entry.id, { resume: false }));
-    actions.append(restart);
-  }
-  card.append(heading, description, meta, actions);
-  byId('premade-lessons').replaceChildren(card);
+  byId('premade-lessons').replaceChildren(...cards);
 }
 
 function renderVisualSelector() {
@@ -421,6 +453,7 @@ function createSupplementaryImage() {
 }
 
 function showLessonVisual(visualId, layout, { announce = false } = {}) {
+  if (workspace.phase === 'booting' && workspace.mode !== 'lesson') visualId = 'atlas';
   const visual = visualId === 'atlas'
     ? null
     : lesson.visuals.find(({ id }) => id === visualId);
@@ -1675,9 +1708,7 @@ function restoreHistoryIntent(intent) {
       restoreAtlasWithoutHistory();
       if (intent.recovery) {
         writeWorkspaceHistory('atlas', { replace: true, force: true });
-        byId('announcer').textContent = intent.recovery === 'session-unavailable'
-          ? 'The local session was not retained. Returned to Atlas.'
-          : 'That checked lesson is unavailable. Returned to Atlas.';
+        byId('announcer').textContent = workspaceRecoveryMessage(intent.recovery);
       }
       focusHistoryDestination(
         derivedFromLesson && !intent.recovery ? 'return-to-lesson' : 'atlas-heading',
@@ -1690,7 +1721,7 @@ function restoreHistoryIntent(intent) {
       let key;
       let sourceKind;
       if (intent.sourceKind === 'reference') {
-        candidate = referenceCandidate;
+        candidate = lessonLibrary.find(({ id }) => id === intent.checkedLessonId)?.candidate;
         key = `checked:${intent.checkedLessonId}`;
         sourceKind = 'reference';
       } else {
@@ -2063,14 +2094,15 @@ function openLessonCandidate(candidate, {
 }
 
 function openCheckedLesson(id, { resume = false } = {}) {
-  if (id !== 'retina-to-v1' || !referenceCandidate) return;
+  const candidate = lessonLibrary.find((record) => record.id === id)?.candidate;
+  if (!candidate) return;
   if (byId('lesson-drawer').open) byId('lesson-drawer').close();
   const token = resume && workspace.lesson.key === `checked:${id}` ? workspace.lesson.token : null;
   if (!token) {
     localCandidatesByKey.clear();
     inspectionBranchesByKey.clear();
   }
-  openLessonCandidate(referenceCandidate, {
+  openLessonCandidate(candidate, {
     key: `checked:${id}`,
     sourceKind: 'reference',
     resumeToken: token,
@@ -2185,10 +2217,13 @@ async function start() {
       fetchJson('/data/fibre_filter_presets.json'),
     ]);
     catalog = createLessonCatalog(entities, fidelity, fibreFilterPresets);
-    const prepared = validateLessonImport(lessonSource, catalog);
-    if (!prepared.ok) throw new Error(`reference lesson failed validation: ${JSON.stringify(prepared.diagnostics)}`);
-    referenceCandidate = prepared.value;
-    activatePreparedLesson(referenceCandidate);
+    lessonLibrary = createLessonLibrary(libraryRecords, lessonSources, catalog);
+    historySerial = Number.isInteger(history.state?.serial) ? history.state.serial : 0;
+    const initialIntent = workspaceLocationIntent();
+    const initialRecord = lessonLibrary.find(({ id }) => id === initialIntent.checkedLessonId) ?? lessonLibrary[0];
+    activeLessonKey = `checked:${initialRecord.id}`;
+    workspace.mode = initialIntent.mode;
+    activatePreparedLesson(initialRecord.candidate);
     bindNavigation();
     bindFidelity();
     bindAnatomyInspector();
@@ -2199,15 +2234,13 @@ async function start() {
     bindLessonExit();
     bindWorkspaceHistory();
     document.body.classList.toggle('reduced-motion', reducedMotionQuery.matches);
-    historySerial = Number.isInteger(history.state?.serial) ? history.state.serial : 0;
-    const initialIntent = workspaceLocationIntent();
     if (initialIntent.mode === 'lesson' && initialIntent.sourceKind === 'reference') {
       activeLessonKey = `checked:${initialIntent.checkedLessonId}`;
       workspace.mode = 'lesson';
       workspace.lesson = {
         key: activeLessonKey,
         sourceKind: 'reference',
-        candidate: referenceCandidate,
+        candidate: initialRecord.candidate,
         token: null,
       };
       workspace.phase = 'booting';
@@ -2223,9 +2256,7 @@ async function start() {
       prepareInitialAtlasWorkspace();
       writeWorkspaceHistory('atlas', { replace: true });
       if (initialIntent.recovery) {
-        pendingWorkspaceNotice = initialIntent.recovery === 'session-unavailable'
-          ? 'The local session was not retained after reload. Returned to Atlas.'
-          : 'That checked lesson is unavailable. Returned to Atlas.';
+        pendingWorkspaceNotice = workspaceRecoveryMessage(initialIntent.recovery);
         byId('announcer').textContent = pendingWorkspaceNotice;
       }
     }

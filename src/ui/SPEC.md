@@ -43,6 +43,7 @@ scientific catalogs, authored lesson state, or anatomical coordinates.
 - `camera-transition.js` — deterministic easing and pivot-preserving orbit sampling.
 - `visibility-transition.js` — deterministic filter-union and opacity cross-fade sampling.
 - `scroll-surface.js` — pure surface-relative coordinates and fixed-shell keyboard intent.
+- `lesson-library.js` — strict repository-owned library metadata, source matching, and frozen candidates via the shared import contract; filesystem evidence checks live in `scripts/check-lessons.mjs`.
 - `lesson-import.js` — bounded all-or-nothing local-source validation, preview metadata, and lesson-scoped renderer catalog derivation.
 - `explore-session.js` — canonical scene/global Atlas snapshots, camera-first command batching, panel projection, and fidelity aggregation.
 - `workspace-session.js` — checked drawer records, query/history validation, Atlas capture, lesson resume tokens, and scene-inspection capture.
@@ -76,6 +77,7 @@ scientific catalogs, authored lesson state, or anatomical coordinates.
 | `applyExploreCommands(snapshot, commands, camera, catalog)` | bootstrap/tests | Synchronizes actual camera first, then applies an allowlisted command batch without mutating the input. |
 | `createExplorePanelModel(snapshot, catalog)` | bootstrap/tests | Projects frozen layer/hemisphere/display/playback/endpoint-filter state keyed by stable entity ID and renderer binding, with strict preset and selector records for the retained controls. |
 | `exploreFidelityIds(snapshot, catalog, included?)` | bootstrap/tests | Returns the validated sorted union of visible-entity and context fidelity records. |
+| `createLessonLibrary(records, sources, catalog)` | bootstrap/build/tests | Returns a frozen ordered array of registry metadata, validated candidates, and drawer entries; throws on invalid exact fields, duplicate/reserved IDs, source drift, missing summaries, unsupported prose license, invalid review path, or incomplete per-image license metadata. Uses `validateLessonImport`; no scientific approval is inferred. |
 | `createCheckedLessonEntry(input)` | bootstrap/tests | Projects one frozen drawer record from validated checked candidate metadata without retaining lesson source/data. |
 | `parseWorkspaceLocation(input)` / `workspaceUrl(input)` / `createHistoryIntent(input)` | bootstrap/tests | Validate small static-safe Atlas/checked/local/inspection navigation intent; source and snapshots never enter URL/history. |
 | `captureAtlasSnapshot(snapshot, camera, catalog)` | bootstrap/tests | Substitutes the actual rendered camera into complete canonical Atlas state without mutating it. |
@@ -161,6 +163,7 @@ scientific catalogs, authored lesson state, or anatomical coordinates.
 | INV-65 | Same-candidate Return, drawer Resume, and history reuse retained lesson DOM/controller/adapter through the guarded activation transaction; restore combines token index and current motion preference in one snapshot application. Replacement and Start over still activate afresh; stage images follow active-visual lifecycle. | reconciliation identity/history/image/no-WebGL checks + workspace suites | Resume avoids rebuilding stable content without introducing a second session or weakening restoration. |
 | INV-66 | Atlas fidelity content is rebuilt only when its catalog, visible entity IDs, or resolved fidelity IDs change. Native disclosure state survives unrelated controls; inspector availability still follows hemispheres independently. | reconciliation disclosure identity + empty-Atlas checks | Continuous controls cannot erase reading position in unchanged sources. |
 | INV-67 | Mouse hover consumes latest coordinates at most once per frame. Leave, drag start/cancel, snapshot/handler replacement, and suspension cancel pending work; activation picks synchronously. | reconciliation pointer-burst + anatomy/power browser checks | Input frequency cannot multiply unnecessary picks or emit stale hover after a workspace switch. |
+| INV-68 | One repository registry feeds library cards, source/license/review links, candidate selection, and checked query/history IDs. Development/build validation uses the same bounded import contract plus source/evidence-file checks. Library membership makes no reviewed/published claim. Fresh image-bearing routes require drawer host disclosure and explicit Start; Atlas preparation creates no declared images. | `test/lesson-library.test.js`, `test/build-config.test.js`, `scripts/browser/home-library.spec.cjs` | More lessons cannot fork parsing, silently misroute to the first candidate, bypass source/media evidence, or contact image hosts before consent. |
 
 ## Failure Modes
 
@@ -226,6 +229,7 @@ scientific catalogs, authored lesson state, or anatomical coordinates.
 | FAIL-58 | Return rebuilds lesson content or uses stale motion/index | Resume is routed through fresh construction or motion/index are restored separately | Reuse same-candidate objects and atomically restore the validated token and current preference. |
 | FAIL-59 | Sources collapse on unrelated edits or show stale subjects | Disclosure redraw is unconditional or keyed only by fidelity records | Include visible entities and catalog identity; refresh only changed content and keep inspector availability separate. |
 | FAIL-60 | Hover floods raycasts or reappears after leave | Picking follows raw event frequency or pending work survives ownership changes | Coalesce latest coordinates and cancel pending frame at input/lifecycle changes; retain immediate activation. |
+| FAIL-61 | A library entry opens another lesson, malformed/unregistered source ships, or fresh entry contacts image hosts before disclosure | Hardcoded candidate/route IDs, bypassed build validation, or premature image creation | Derive all checked paths from the validated registry; fail with file/position diagnostics; return fresh image routes to Atlas and require explicit drawer opening after host disclosure. |
 
 ## Decision Framework
 
@@ -286,6 +290,7 @@ node --test test/scene-navigation.test.js test/lesson-scene-controller.test.js \
 | INV-60, FAIL-53 | `scripts/browser/hardening.spec.cjs` verifies one Quick/Full control topology, initial disclosure, custom-query focus, uniqueness, 44px targets, and retained canonical bindings in Chromium/Firefox |
 | INV-61, FAIL-54 | `scripts/browser/hardening.spec.cjs` verifies compact-only import demotion, primary Next styling, secondary stage actions, wide parity, local-import reachability, 44px targets, and zero overflow in Chromium/Firefox |
 | INV-62, FAIL-55 | `test/scene-navigation.test.js` verifies resumed entry capability and invalid state; `scripts/browser/hardening.spec.cjs` verifies final status/actions, review focus, final camera/filter Explore, Return, and no-WebGL completion in Chromium/Firefox |
+| INV-68, FAIL-61 | `test/lesson-library.test.js`, `test/build-config.test.js`, and `scripts/browser/home-library.spec.cjs` multi-candidate route/history/resume, no-WebGL, external-host consent, and 44px source-link checks |
 | INV-63–INV-67, FAIL-56–FAIL-60 | `scripts/browser/explore-reconciliation.spec.cjs`, controller tests, and existing endpoint, anatomy, power, workspace, and animation suites |
 
 Full repository verification remains `npm test && npm run build:publish` plus

@@ -15,6 +15,7 @@
   },
   "scripts": {
     "dev": "vite",
+    "check:lessons": "node scripts/check-lessons.mjs",
     "generate:lesson-validators": "node scripts/generate-lesson-validators.mjs",
     "test": "node --test",
     "build": "vite build",
