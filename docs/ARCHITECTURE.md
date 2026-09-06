@@ -170,8 +170,17 @@ imports neither DOM nor Three.js. Bootstrap renders equivalent semantic buttons 
 short label, owns wide/compact panel and focus behavior, and retains the same details
 without WebGL. Compact details inert the background and use their own page-lock owner;
 wide details remain nonmodal. Canvas and DOM input feed the same reducer. The expanded
-set still follows canonical owner visibility; it adds no search state, filter, transform,
-or renderer adapter.
+selection still follows canonical owner visibility. The searchable catalog additionally
+lists hidden inspectables and canonical entities without curated details, explicitly disabled.
+`createAnatomyCatalogViewModel` projects these records from the same catalog; optional entity
+`atlasId` values reproduce the region manifest's `area` identifiers under a drift test.
+Search is an in-memory substring match over existing text/IDs, not a second metadata source.
+The renderer wrapper exposes `getInspectableGeometryIds` and `setAnatomyGeometryHandler`:
+existing loader completion calls refresh geometry presence without polling, fetching, or
+changing canonical state. Region/tract/layer presence requires both authored hemispheres;
+this is not pixel visibility. Deferred, partial, and failed loads share an explicit pending/
+unavailable label. Bootstrap preserves result focus, invoker, query, and list scroll across
+load notifications. No filter, transform, or renderer adapter is added.
 
 `src/ui/explore-session.js` derives complete immutable Atlas snapshots. Atlas Home starts from the project-authored complete-atlas default and retains its working state until a deliberate lesson Exit resets it. Every active-Lesson → Atlas transition preserves effective lesson state, substitutes the actual rendered camera, and opens the same temporary branch; the persistent global snapshot stays untouched. Before every noncamera panel command, the branch merges the latest rendered camera, applies an allowlisted command batch, and sends one complete snapshot through the same adapter. The panel is a projection of this state, not a second filter system. An empty visibility list remains a valid Atlas snapshot: bootstrap renders explicit empty Viewer and Model & sources copy instead of passing it into the lesson-only nonempty fidelity-record contract. On wide screens the open panel occupies its dock; closing it removes that grid track and overlays only the semantic reopen summary, while compact screens retain the bounded stacked panel. Inside the dock, one Quick controls layer owns the existing global hemisphere, fibre-preset/status, activity/speed, and fixed-view elements; one native **Full controls** disclosure contains the retained layer, custom-query, cutaway/tissue, camera, and reset elements. Selecting **Custom query** opens and focuses that same query UI. This is DOM organization only: every control still projects the one canonical snapshot and no duplicate toolbar or filter path exists. The stage `ResizeObserver` remains the sole response to either layout. `src/ui/workspace-session.js` validates small query/history intents, checked drawer records, persistent Atlas capture, lesson resume tokens, and lesson-derived branch capture without importing the DOM or Three.js. Bootstrap’s Exit transaction clears the token and session-only keys, converts the already-reparented surface to Home ownership, and applies `createAtlasExploreSnapshot` once with responsive camera fit. Auto-rotate remains excluded; Atlas grants full orbit/zoom/pan and semantic camera controls.
 

@@ -1498,6 +1498,7 @@
     {
       "id": "region.lgn",
       "type": "region",
+      "atlasId": "CGL",
       "label": "LGN",
       "renderer": {
         "kind": "region",
@@ -1509,6 +1510,7 @@
     {
       "id": "region.v1",
       "type": "region",
+      "atlasId": "hOc1",
       "label": "V1",
       "renderer": {
         "kind": "region",
@@ -1520,6 +1522,7 @@
     {
       "id": "region.v2",
       "type": "region",
+      "atlasId": "hOc2",
       "label": "V2",
       "renderer": {
         "kind": "region",
@@ -1531,6 +1534,7 @@
     {
       "id": "region.v3v",
       "type": "region",
+      "atlasId": "hOc3v",
       "label": "V3v",
       "renderer": {
         "kind": "region",
@@ -1542,6 +1546,7 @@
     {
       "id": "region.v3d",
       "type": "region",
+      "atlasId": "hOc3d",
       "label": "V3d",
       "renderer": {
         "kind": "region",
@@ -1553,6 +1558,7 @@
     {
       "id": "region.v4v",
       "type": "region",
+      "atlasId": "hOc4v",
       "label": "V4v",
       "renderer": {
         "kind": "region",
@@ -1564,6 +1570,7 @@
     {
       "id": "region.loa",
       "type": "region",
+      "atlasId": "hOc4la",
       "label": "LOC-a",
       "renderer": {
         "kind": "region",
@@ -1575,6 +1582,7 @@
     {
       "id": "region.lop",
       "type": "region",
+      "atlasId": "hOc4lp",
       "label": "LOC-p",
       "renderer": {
         "kind": "region",
@@ -1586,6 +1594,7 @@
     {
       "id": "region.fg1",
       "type": "region",
+      "atlasId": "FG1",
       "label": "FG1",
       "renderer": {
         "kind": "region",
@@ -1597,6 +1606,7 @@
     {
       "id": "region.fg2",
       "type": "region",
+      "atlasId": "FG2",
       "label": "FG2",
       "renderer": {
         "kind": "region",
@@ -1608,6 +1618,7 @@
     {
       "id": "region.fg3",
       "type": "region",
+      "atlasId": "FG3",
       "label": "FG3",
       "renderer": {
         "kind": "region",
@@ -1619,6 +1630,7 @@
     {
       "id": "region.fg4",
       "type": "region",
+      "atlasId": "FG4",
       "label": "FG4",
       "renderer": {
         "kind": "region",
@@ -1630,6 +1642,7 @@
     {
       "id": "region.v3a",
       "type": "region",
+      "atlasId": "hOc4d",
       "label": "V3A",
       "renderer": {
         "kind": "region",
@@ -1641,6 +1654,7 @@
     {
       "id": "region.v6",
       "type": "region",
+      "atlasId": "hOc6",
       "label": "V6",
       "renderer": {
         "kind": "region",
@@ -1652,6 +1666,7 @@
     {
       "id": "region.mt",
       "type": "region",
+      "atlasId": "hOc5",
       "label": "MT/V5",
       "renderer": {
         "kind": "region",
@@ -1663,6 +1678,7 @@
     {
       "id": "region.hip1",
       "type": "region",
+      "atlasId": "hIP1",
       "label": "hIP1",
       "renderer": {
         "kind": "region",
@@ -1674,6 +1690,7 @@
     {
       "id": "region.hip2",
       "type": "region",
+      "atlasId": "hIP2",
       "label": "hIP2",
       "renderer": {
         "kind": "region",
@@ -1685,6 +1702,7 @@
     {
       "id": "region.hip3",
       "type": "region",
+      "atlasId": "hIP3",
       "label": "hIP3",
       "renderer": {
         "kind": "region",
@@ -1696,6 +1714,7 @@
     {
       "id": "region.hip4",
       "type": "region",
+      "atlasId": "hIP4",
       "label": "hIP4",
       "renderer": {
         "kind": "region",
@@ -1707,6 +1726,7 @@
     {
       "id": "region.hip5",
       "type": "region",
+      "atlasId": "hIP5",
       "label": "hIP5",
       "renderer": {
         "kind": "region",
@@ -1718,6 +1738,7 @@
     {
       "id": "region.hip6",
       "type": "region",
+      "atlasId": "hIP6",
       "label": "hIP6",
       "renderer": {
         "kind": "region",
@@ -1729,6 +1750,7 @@
     {
       "id": "region.hip7",
       "type": "region",
+      "atlasId": "hIP7",
       "label": "hIP7",
       "renderer": {
         "kind": "region",
@@ -1740,6 +1762,7 @@
     {
       "id": "region.hip8",
       "type": "region",
+      "atlasId": "hIP8",
       "label": "hIP8",
       "renderer": {
         "kind": "region",
@@ -1751,6 +1774,7 @@
     {
       "id": "region.spl7a",
       "type": "region",
+      "atlasId": "7A",
       "label": "7A",
       "renderer": {
         "kind": "region",
@@ -1762,6 +1786,7 @@
     {
       "id": "region.spl7p",
       "type": "region",
+      "atlasId": "7P",
       "label": "7P",
       "renderer": {
         "kind": "region",
@@ -1773,6 +1798,7 @@
     {
       "id": "region.spl5l",
       "type": "region",
+      "atlasId": "5L",
       "label": "5L",
       "renderer": {
         "kind": "region",
@@ -1784,6 +1810,7 @@
     {
       "id": "region.spl5m",
       "type": "region",
+      "atlasId": "5M",
       "label": "5M",
       "renderer": {
         "kind": "region",
@@ -1795,6 +1822,7 @@
     {
       "id": "region.sts2",
       "type": "region",
+      "atlasId": "STS2",
       "label": "STS2",
       "renderer": {
         "kind": "region",
@@ -1806,6 +1834,7 @@
     {
       "id": "region.pf",
       "type": "region",
+      "atlasId": "PF",
       "label": "PF",
       "renderer": {
         "kind": "region",
@@ -1817,6 +1846,7 @@
     {
       "id": "region.pft",
       "type": "region",
+      "atlasId": "PFt",
       "label": "PFt",
       "renderer": {
         "kind": "region",
@@ -1828,6 +1858,7 @@
     {
       "id": "region.pfm",
       "type": "region",
+      "atlasId": "PFm",
       "label": "PFm",
       "renderer": {
         "kind": "region",
@@ -1839,6 +1870,7 @@
     {
       "id": "region.pga",
       "type": "region",
+      "atlasId": "PGa",
       "label": "PGa",
       "renderer": {
         "kind": "region",
@@ -1850,6 +1882,7 @@
     {
       "id": "region.hpo1",
       "type": "region",
+      "atlasId": "hPO1",
       "label": "hPO1",
       "renderer": {
         "kind": "region",
@@ -1861,6 +1894,7 @@
     {
       "id": "region.ofc",
       "type": "region",
+      "atlasId": "Fo4",
       "label": "OFC",
       "renderer": {
         "kind": "region",
@@ -1872,6 +1906,7 @@
     {
       "id": "region.presma",
       "type": "region",
+      "atlasId": "6ma",
       "label": "preSMA",
       "renderer": {
         "kind": "region",
@@ -1883,6 +1918,7 @@
     {
       "id": "region.dlpfc",
       "type": "region",
+      "atlasId": "IFS3",
       "label": "DLPFC",
       "renderer": {
         "kind": "region",
@@ -1894,6 +1930,7 @@
     {
       "id": "region.broca",
       "type": "region",
+      "atlasId": "44",
       "label": "Broca 44",
       "renderer": {
         "kind": "region",
@@ -1905,6 +1942,7 @@
     {
       "id": "region.fp1",
       "type": "region",
+      "atlasId": "Fp1",
       "label": "Fp1 (pole)",
       "renderer": {
         "kind": "region",
@@ -1916,6 +1954,7 @@
     {
       "id": "region.sfg8",
       "type": "region",
+      "atlasId": "8d1",
       "label": "8d1 (SFG)",
       "renderer": {
         "kind": "region",
@@ -1927,6 +1966,7 @@
     {
       "id": "region.op6",
       "type": "region",
+      "atlasId": "Op6",
       "label": "Op6 (operc.)",
       "renderer": {
         "kind": "region",
@@ -1938,6 +1978,7 @@
     {
       "id": "region.pcg6",
       "type": "region",
+      "atlasId": "6d1",
       "label": "6d1 (premotor)",
       "renderer": {
         "kind": "region",
@@ -1949,6 +1990,7 @@
     {
       "id": "region.gap-fi",
       "type": "region",
+      "atlasId": "Frontal-I",
       "label": "Frontal (unparc.)",
       "renderer": {
         "kind": "region",
@@ -1960,6 +2002,7 @@
     {
       "id": "region.gap-fii",
       "type": "region",
+      "atlasId": "Frontal-II",
       "label": "Frontal-II (unparc.)",
       "renderer": {
         "kind": "region",
@@ -1971,6 +2014,7 @@
     {
       "id": "region.gap-fo",
       "type": "region",
+      "atlasId": "Frontal-to-Occipital",
       "label": "Fronto-occipital (unparc.)",
       "renderer": {
         "kind": "region",
@@ -1982,6 +2026,7 @@
     {
       "id": "region.gap-tp",
       "type": "region",
+      "atlasId": "Temporal-to-Parietal",
       "label": "Temporo-parietal (unparc.)",
       "renderer": {
         "kind": "region",

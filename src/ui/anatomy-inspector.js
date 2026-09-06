@@ -70,6 +70,41 @@ export function availableInspectableIds(snapshot, catalog) {
   });
 }
 
+function searchText(inspectable) {
+  return [
+    inspectable.id,
+    inspectable.label,
+    inspectable.shortLabel,
+    inspectable.description,
+    inspectable.atlasId,
+    inspectable.renderer.id,
+  ].join(' ').normalize('NFKC').toLowerCase();
+}
+
+export function createAnatomyCatalogViewModel({ query = '', snapshot, catalog, geometryIds = [] }) {
+  requireCatalog(catalog);
+  const available = new Set(availableInspectableIds(snapshot, catalog));
+  const geometry = new Set(geometryIds ?? []);
+  const needle = query.trim().normalize('NFKC').toLowerCase();
+  const ids = new Set([...catalog.entityIds, ...catalog.inspectableIds]);
+  return deepFreeze([...ids]
+    .map((id) => ({ ...catalog.entitiesById[id], ...catalog.inspectablesById[id] }))
+    .filter((record) => !needle || searchText(record).includes(needle))
+    .sort((a, b) => a.label.localeCompare(b.label) || a.id.localeCompare(b.id))
+    .map((record) => ({
+      id: record.id,
+      label: record.label,
+      catalogId: record.atlasId ? `${record.id} · ${record.atlasId}` : record.id,
+      availability: !catalog.inspectablesById[record.id] ? 'no-content'
+        : available.has(record.id) ? 'available' : 'hidden',
+      availabilityLabel: !catalog.inspectablesById[record.id] ? 'Anatomy details not yet available'
+        : available.has(record.id) ? 'Available in current view' : 'Hidden in current view',
+      geometryLabel: !catalog.inspectablesById[record.id] ? null
+        : geometryIds === null ? '3D unavailable; text details only'
+          : geometry.has(record.id) ? 'Geometry loaded' : 'Geometry pending or unavailable',
+    })));
+}
+
 export function createAnatomyDetailViewModel(id, catalog) {
   requireCatalog(catalog);
   const inspectable = catalog.inspectablesById[id];

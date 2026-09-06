@@ -8,6 +8,7 @@ import {
   anatomyTapIntent,
   applyAnatomySelectionIntent,
   availableInspectableIds,
+  createAnatomyCatalogViewModel,
   createAnatomyDetailViewModel,
   createAnatomySelectionState,
   nearestAnatomyHit,
@@ -44,6 +45,46 @@ test('inspectable availability follows owner visibility and effective hemisphere
     visible: ['pathway.optic-radiation', 'region.lgn'],
     global: { L: false, R: false },
   }), currentCatalog), []);
+});
+
+test('catalog search uses inspectable names, stable IDs, and atlas terms with explicit availability', async () => { // Tests INV-36
+  const currentCatalog = await catalog;
+  const current = snapshot({ visible: ['region.lgn', 'region.loa'] });
+
+  assert.deepEqual(
+    createAnatomyCatalogViewModel({ query: 'lateral geniculate', snapshot: current, catalog: currentCatalog })
+      .map(({ id, availability }) => ({ id, availability })),
+    [{ id: 'region.lgn', availability: 'available' }],
+  );
+  assert.deepEqual(
+    createAnatomyCatalogViewModel({ query: 'hOc4la', snapshot: current, catalog: currentCatalog })
+      .map(({ id, availability }) => ({ id, availability })),
+    [{ id: 'region.loa', availability: 'available' }],
+  );
+  assert.deepEqual(
+    createAnatomyCatalogViewModel({ query: 'region.v1', snapshot: current, catalog: currentCatalog })
+      .map(({ id, availabilityLabel }) => ({ id, availabilityLabel })),
+    [{ id: 'region.v1', availabilityLabel: 'Hidden in current view' }],
+  );
+  assert.deepEqual(
+    createAnatomyCatalogViewModel({ query: 'not seeded', snapshot: current, catalog: currentCatalog }),
+    [],
+  );
+  assert.equal(Object.isFrozen(createAnatomyCatalogViewModel({ query: '', snapshot: current, catalog: currentCatalog })), true);
+});
+
+test('catalog exposes missing content, geometry state, and source atlas identifiers', async () => {
+  const currentCatalog = await catalog;
+  const current = snapshot({ visible: currentCatalog.entityIds });
+  const search = (query, geometryIds = []) => createAnatomyCatalogViewModel({
+    query, snapshot: current, catalog: currentCatalog, geometryIds,
+  });
+  assert.equal(search('hOc1')[0]?.id, 'region.v1');
+  assert.equal(search('CGL')[0]?.id, 'region.lgn');
+  assert.equal(search('region.v3v')[0]?.availabilityLabel, 'Anatomy details not yet available');
+  assert.equal(search('region.v1')[0]?.geometryLabel, 'Geometry pending or unavailable');
+  assert.equal(search('region.v1', ['region.v1'])[0]?.geometryLabel, 'Geometry loaded');
+  assert.equal(search('region.v1', null)[0]?.geometryLabel, '3D unavailable; text details only');
 });
 
 test('anatomy details separate explanation from displayed fidelity and citations', async () => { // Tests INV-37

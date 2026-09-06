@@ -190,9 +190,18 @@ button:disabled, fieldset:disabled button, fieldset:disabled input { cursor: not
 .anatomy-browser > summary::-webkit-details-marker { display: none; }
 .anatomy-browser > summary::before { content: "+"; margin-right: 7px; color: var(--accent); }
 .anatomy-browser[open] > summary::before { content: "−"; }
-.anatomy-options { position: absolute; bottom: calc(100% + 8px); left: 0; width: min(320px, calc(100vw - 24px)); max-height: min(44vh, 360px); display: grid; gap: 4px; overflow: auto; overscroll-behavior: contain; padding: 8px; border: 1px solid var(--line-strong); border-radius: 6px; background: var(--surface-popover); box-shadow: 0 14px 48px var(--shadow-popover); }
-.anatomy-options button { min-height: 44px; padding: 7px 9px; color: var(--muted); background: var(--surface-clear); text-align: left; font-size: var(--type-control-size); line-height: var(--type-control-leading); }
-.anatomy-options button:hover, .anatomy-options button:focus-visible { color: var(--text); background: var(--accent-soft); }
+.anatomy-catalog { position: absolute; bottom: calc(100% + 8px); left: 0; width: min(360px, calc(100vw - 24px)); max-height: min(56vh, 480px); display: grid; grid-template-rows: auto auto auto minmax(0, 1fr); gap: 6px; padding: 10px; border: 1px solid var(--line-strong); border-radius: 6px; background: var(--surface-popover); box-shadow: 0 14px 48px var(--shadow-popover); }
+.anatomy-catalog > label { color: var(--muted); font-family: var(--font-mono); font-size: var(--type-label-size); line-height: var(--type-label-leading); }
+#anatomy-search { width: 100%; min-height: 44px; padding: 8px 10px; color: var(--text); border: 1px solid var(--line-strong); border-radius: 4px; background: var(--surface-select); }
+#anatomy-result-count { margin: 0; color: var(--dim); font-size: var(--type-micro-size); line-height: var(--type-micro-leading); }
+.anatomy-options { min-height: 0; display: grid; align-content: start; gap: 4px; overflow: auto; overscroll-behavior: contain; }
+.anatomy-result { min-height: 60px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 2px 8px; padding: 8px; color: var(--muted); background: var(--surface-clear); text-align: left; font-size: var(--type-control-size); line-height: var(--type-control-leading); }
+.anatomy-result:hover, .anatomy-result:focus-visible { color: var(--text); background: var(--accent-soft); }
+.anatomy-result[aria-disabled="true"] { cursor: default; }
+.anatomy-result[aria-disabled="true"]:hover, .anatomy-result[aria-disabled="true"]:focus-visible { color: var(--muted); background: var(--surface-clear); }
+.anatomy-result-name { overflow-wrap: anywhere; }
+.anatomy-result-id { align-self: start; overflow-wrap: anywhere; color: var(--dim); font-family: var(--font-mono); font-size: var(--type-micro-size); }
+.anatomy-result-status { grid-column: 1 / -1; color: var(--dim); font-size: var(--type-micro-size); }
 .lbl3d { padding: 3px 7px; border: 1px solid var(--label-border); border-radius: 2px; color: var(--text-label); background: var(--surface-label); font-family: var(--font-mono); font-size: var(--type-canvas-label-size); white-space: nowrap; }
 .stage-fallback { width: 100%; height: 100%; display: grid; align-content: center; padding: clamp(28px, 7vw, 80px); background: linear-gradient(145deg, var(--fallback-surface-start), var(--fallback-surface-end)); }
 .stage-fallback[hidden] { display: none; }
@@ -504,7 +513,7 @@ button.layer-entity-toggle:hover:not(:disabled) { color: var(--text); border-col
   .anatomy-controls { right: 8px; bottom: 8px; left: 8px; align-items: flex-end; }
   .anatomy-preview { max-width: 48%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .anatomy-browser { margin-left: auto; }
-  .anatomy-options { right: 0; left: auto; width: min(320px, calc(100vw - 16px)); max-height: 36vh; }
+  .anatomy-catalog { right: 0; left: auto; width: min(360px, calc(100vw - 16px)); max-height: 44vh; }
   .anatomy-inspector, .fidelity-panel { top: auto; left: 0; width: 100%; max-height: 80vh; border: 1px solid var(--line-strong); border-bottom: 0; border-radius: 16px 16px 0 0; box-shadow: 0 -24px 80px var(--shadow-sheet); }
   .atlas-workspace .fidelity-panel { top: auto; max-height: 80vh; }
   .fidelity-panel > header { min-height: 64px; }

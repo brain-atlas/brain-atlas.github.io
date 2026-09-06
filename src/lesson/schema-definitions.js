@@ -214,6 +214,7 @@ export const entityCatalogSchema = {
         properties: {
           id: stableId,
           type: { enum: ['layer', 'pathway', 'region', 'tract'] },
+          atlasId: nonEmptyText,
           label: nonEmptyText,
           renderer: {
             type: 'object',

@@ -7,6 +7,7 @@ import { createFidelityViewModel } from './ui/fidelity-view-model.js';
 import {
   applyAnatomySelectionIntent,
   availableInspectableIds,
+  createAnatomyCatalogViewModel,
   createAnatomyDetailViewModel,
   createAnatomySelectionState,
 } from './ui/anatomy-inspector.js';
@@ -58,6 +59,7 @@ let disclosureScrollTop = null;
 let anatomyScrollTop = null;
 let anatomySelection = createAnatomySelectionState();
 let anatomyAvailableIds = [];
+let anatomySnapshot = null;
 let anatomyAvailabilityKey = '';
 let anatomyInvoker = null;
 const pageLockOwners = new Set();
@@ -769,49 +771,80 @@ function closeAnatomyInspector({ restoreFocus = true, clear = false } = {}) {
 
 function resetAnatomyInspector() {
   anatomySelection = applyAnatomySelectionIntent(anatomySelection, { type: 'reset' });
+  byId('anatomy-search').value = '';
+  anatomyAvailabilityKey = '';
   renderAnatomySelection();
   hideAnatomyInspector({ restoreFocus: false });
 }
 
 function renderAnatomyOptions() {
-  const key = anatomyAvailableIds.join('|');
+  const query = byId('anatomy-search').value;
+  if (!anatomySnapshot) return;
+  const geometryIds = rendererUnavailable ? null : rendererAdapter?.getInspectableGeometryIds() ?? [];
+  const key = JSON.stringify([anatomyAvailableIds, query, geometryIds]);
   if (key === anatomyAvailabilityKey) return;
   anatomyAvailabilityKey = key;
   const controls = byId('anatomy-controls');
   const browser = byId('anatomy-browser');
   const options = byId('anatomy-options');
+  const focusedId = options.contains(document.activeElement) ? document.activeElement.dataset.catalogId : null;
+  const invokerId = anatomyInvoker?.closest('#anatomy-options') ? anatomyInvoker.dataset.catalogId : null;
+  const scrollTop = options.scrollTop;
+  const records = createAnatomyCatalogViewModel({
+    query,
+    snapshot: anatomySnapshot,
+    catalog,
+    geometryIds,
+  });
   const fragment = document.createDocumentFragment();
-  for (const id of anatomyAvailableIds) {
-    const inspectable = catalog.inspectablesById[id];
-    const button = node('button', '', inspectable.label);
+  for (const record of records) {
+    const button = node('button', 'anatomy-result');
     button.type = 'button';
-    button.dataset.inspectableId = id;
-    button.addEventListener('focus', () => {
-      applyAnatomyIntent({ type: 'preview', id, input: 'focus' });
-    });
-    button.addEventListener('blur', () => {
-      requestAnimationFrame(() => {
-        const active = document.activeElement;
-        if (!controls.contains(active) && !byId('anatomy-inspector').contains(active)) {
-          applyAnatomyIntent({ type: 'clear', input: 'focus' });
-        }
+    button.dataset.catalogId = record.id;
+    if (catalog.inspectablesById[record.id]) button.dataset.inspectableId = record.id;
+    button.setAttribute('aria-disabled', String(record.availability !== 'available'));
+    button.append(
+      node('span', 'anatomy-result-name', record.label),
+      node('code', 'anatomy-result-id', record.catalogId),
+      node('span', 'anatomy-result-status', record.availabilityLabel),
+    );
+    if (record.geometryLabel) button.append(node('span', 'anatomy-result-status', record.geometryLabel));
+    if (record.availability === 'available') {
+      button.addEventListener('focus', () => {
+        applyAnatomyIntent({ type: 'preview', id: record.id, input: 'focus' });
       });
-    });
-    button.addEventListener('click', (event) => {
-      applyAnatomyIntent({
-        type: 'activate',
-        id,
-        input: event.detail === 0 ? 'keyboard' : 'pointer',
-      }, { invoker: button });
-    });
+      button.addEventListener('blur', () => {
+        requestAnimationFrame(() => {
+          const active = document.activeElement;
+          if (!controls.contains(active) && !byId('anatomy-inspector').contains(active)) {
+            applyAnatomyIntent({ type: 'clear', input: 'focus' });
+          }
+        });
+      });
+      button.addEventListener('click', (event) => {
+        applyAnatomyIntent({
+          type: 'activate',
+          id: record.id,
+          input: event.detail === 0 ? 'keyboard' : 'pointer',
+        }, { invoker: button });
+      });
+    }
     fragment.append(button);
   }
   options.replaceChildren(fragment);
-  browser.hidden = anatomyAvailableIds.length === 0;
+  const buttons = [...options.children];
+  if (invokerId) anatomyInvoker = buttons.find((button) => button.dataset.catalogId === invokerId) ?? anatomyInvoker;
+  if (focusedId) buttons.find((button) => button.dataset.catalogId === focusedId)?.focus({ preventScroll: true });
+  options.scrollTop = scrollTop;
+  byId('anatomy-result-count').textContent = records.length
+    ? `${records.length} ${records.length === 1 ? 'result' : 'results'}`
+    : 'No matching anatomy';
+  browser.hidden = catalog.inspectableIds.length === 0;
   if (browser.hidden) browser.open = false;
 }
 
 function syncAnatomyAvailability(snapshot) {
+  anatomySnapshot = snapshot;
   anatomyAvailableIds = availableInspectableIds(snapshot, catalog);
   const previousDetailsId = anatomySelection.detailsId;
   anatomySelection = applyAnatomySelectionIntent(anatomySelection, {
@@ -826,6 +859,11 @@ function syncAnatomyAvailability(snapshot) {
 }
 
 function bindAnatomyInspector() {
+  byId('anatomy-search').addEventListener('input', () => {
+    applyAnatomyIntent({ type: 'clear', input: 'focus' });
+    renderAnatomyOptions();
+  });
+  byId('anatomy-browser').addEventListener('toggle', renderAnatomyOptions);
   byId('anatomy-preview').addEventListener('click', () => {
     if (!anatomySelection.previewedId) return;
     applyAnatomyIntent({
@@ -1967,6 +2005,7 @@ function onRendererPowerStateChange(state) {
 function refreshRendererAdapter() {
   if (!rendererAdapterFactory) return;
   rendererAdapter?.setAnatomyIntentHandler(null);
+  rendererAdapter?.setAnatomyGeometryHandler(null);
   rendererAdapter?.setInspectableHighlight(null);
   rendererAdapter?.setExploreCommandHandler(null);
   rendererAdapter?.endExplore();
@@ -1976,6 +2015,7 @@ function refreshRendererAdapter() {
     onPowerStateChange: onRendererPowerStateChange,
   });
   rendererAdapter.setAnatomyIntentHandler((intent) => applyAnatomyIntent(intent));
+  rendererAdapter.setAnatomyGeometryHandler(renderAnatomyOptions);
   rendererAdapter.setInspectableHighlight(anatomySelection.previewedId);
 }
 

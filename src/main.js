@@ -282,6 +282,7 @@ function loadRegionMeshes(reg) {
       group.add(mesh);
       reapplyLessonMaterialFactors(group);
       applyRegionMesh(reg.id);
+      anatomyGeometryChanged();
     }, undefined, (e) => console.warn('region mesh failed:', reg.meshes[hemi].file, e));
   }
 }
@@ -468,6 +469,7 @@ function loadFibres() {
     }
     initFiring();          // build per-fibre firing states now that FIB is populated
     reapplyLessonMaterialFactors(fibreGroup);
+    anatomyGeometryChanged();
     requestViewerRender();
   }).catch((e) => console.warn('fibres load failed:', e));
 }
@@ -555,6 +557,7 @@ function loadTracts() {
       reapplyLessonMaterialFactors(tractsById[id].group);
       applyTractMesh(id);
     }
+    anatomyGeometryChanged();
     requestViewerRender();
   }).catch((e) => { console.warn('tract geometry load failed:', e); });
   return tractGeometryLoad;
@@ -776,6 +779,7 @@ function loadSwm() {
     }
     recalculateFibreFilter({ geometryChanged: true });
     reapplyLessonMaterialFactors(swmGroup);
+    anatomyGeometryChanged();
   }).catch((e) => console.warn('swm load failed:', e));
 }
 function updateSwm(dt, playing = st.flow) {
@@ -1169,6 +1173,7 @@ anatomyRaycaster.params.Line.threshold = 5;
 anatomyRaycaster.params.Points.threshold = 6;
 let anatomyCatalog = null;
 let anatomyIntentHandler = null;
+let anatomyGeometryChanged = () => {};
 let highlightedInspectableId = null;
 let hoveredInspectableId = null;
 let anatomyPointerStart = null;
@@ -1187,6 +1192,22 @@ function inspectableRendererObjects(inspectable) {
   }
   const owner = anatomyCatalog?.entitiesById?.[inspectable.entity];
   return owner ? lessonRendererObjects(owner) : [];
+}
+
+function getInspectableGeometryIds() {
+  return anatomyCatalog.inspectableIds.filter((id) => {
+    const { renderer: binding } = anatomyCatalog.inspectablesById[id];
+    if (binding.kind === 'landmark') return Boolean(landmarkMarkersById[binding.id]);
+    if (binding.kind === 'region') {
+      const group = regionsById[binding.id];
+      return Object.keys(regionMetadataById[binding.id].meshes).every((hemi) => (
+        group.children.some((mesh) => mesh.isMesh && mesh.userData.hemi === hemi)
+      ));
+    }
+    const lines = binding.kind === 'tract' ? tractsById[binding.id]?.lines
+      : binding.id === 'or' ? orLines : binding.id === 'swm' ? swmLines : null;
+    return Boolean(lines?.L && lines?.R);
+  });
 }
 
 function objectIsRendered(object) {
@@ -1323,6 +1344,7 @@ function configureAnatomyInspector(catalog) {
   setInspectableHighlight(null);
   anatomyCatalog = catalog;
   anatomyIntentHandler = null;
+  anatomyGeometryChanged = () => {};
   hoveredInspectableId = null;
   renderer.domElement.style.cursor = '';
   if (import.meta.env.DEV) {
@@ -1929,6 +1951,11 @@ export function createLessonRendererAdapter(catalog, {
       anatomyIntentHandler = handler;
     },
     setInspectableHighlight,
+    getInspectableGeometryIds,
+    setAnatomyGeometryHandler(handler) {
+      if (handler !== null && typeof handler !== 'function') throw new TypeError('Anatomy geometry handler must be a function or null');
+      anatomyGeometryChanged = handler ?? (() => {});
+    },
     resizeToStage() { resize(); },
     setExploreCommandHandler(handler) {
       if (handler !== null && typeof handler !== 'function') throw new TypeError('Explore command handler must be a function or null');

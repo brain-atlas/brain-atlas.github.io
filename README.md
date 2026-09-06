@@ -315,10 +315,16 @@ Changed source/destination filters remain eligible while their anatomy cross-fad
 during the first half of a quintic-eased transition. The scene header owns scene
 identity and progress. The persistent **Model & sources** control opens the sole
 geometry/activity status and provenance surface; the canvas and stage do not duplicate
-those records. **Inspect anatomy** exposes a small DOM-backed list for LGN, V1, optic
-radiation, the two schematic eye markers, and the optic chiasm. Hover or keyboard focus
-shows the same transient highlight and short label; mouse click, Enter, or the revealed
-label opens cited details. A first raw-canvas touch previews and a second activation opens.
+those records. **Inspect anatomy → Search anatomy** browses the catalog or searches
+existing names, abbreviations, descriptions, stable IDs (such as `region.v1`), and
+Jülich area identifiers (such as `hOc1` or `CGL`). Hidden entries stay listed but cannot
+be selected; use Atlas Viewer controls to enable them. Entries without curated inspector
+content say **Anatomy details not yet available**. Geometry status is separate: **Geometry
+pending or unavailable** includes deferred, partial, and failed loads; **Geometry loaded**
+does not promise visibility through cutaway, endpoint filtering, or occlusion. No-WebGL
+results say **3D unavailable; text details only**. Search stays in memory and uses no backend.
+Hover or keyboard focus on available anatomy shows the same transient highlight and short
+label; mouse click, Enter, or the revealed label opens cited details. A first raw-canvas touch previews and a second activation opens.
 Wide details are nonmodal; compact details use a focus-contained bottom sheet. Both close
 without changing camera, filters, playback, lesson position, or canonical scene selection.
 Close restores focus and the exact lesson-surface position.

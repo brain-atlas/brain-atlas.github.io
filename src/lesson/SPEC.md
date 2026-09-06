@@ -37,7 +37,7 @@ This subsystem does **not** render Markdown, own scrolling, import files, fetch 
 - `commands.js` — allowlisted pure scene-state transitions.
 - `renderer-adapter.js` — single renderer port; no Three.js dependency.
 - `index.js` — supported consumer entry point.
-- `public/data/entities.json` — stable scene and inspectable domain IDs to current renderer bindings plus curated anatomy and relationship evidence.
+- `public/data/entities.json` — stable scene and inspectable domain IDs to current renderer bindings plus curated anatomy and relationship evidence. Optional entity `atlasId` is a nonempty source identifier; current region IDs copy `regions.json`'s `area` field exactly, checked by `test/catalog.test.js`. Search consumes this projection without fetching geometry or parsing scientific prose for identifiers.
 - `public/data/tract_region_mapping.json` — generated offline evidence bound to dataset-derived catalog relationships by regression tests; it is not fetched by the browser.
 - `public/data/fibre_filter_presets.json` — strict authored endpoint-query presets loaded before the WebGL gate; generated tuple/count evidence remains in renderer data `fibre_endpoints.json`.
 - `public/data/fidelity.json` — curated geometry/activity disclosure records.

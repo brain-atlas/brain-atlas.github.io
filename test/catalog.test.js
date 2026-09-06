@@ -32,6 +32,10 @@ test('current entity catalog binds every region and tract manifest ID exactly on
 
   assert.deepEqual(regionBindings, regions.regions.map(({ id }) => id).sort());
   assert.deepEqual(tractBindings, tracts.tracts.map(({ id }) => id).sort());
+  for (const region of regions.regions) {
+    const entity = entities.entities.find(({ renderer }) => renderer.kind === 'region' && renderer.id === region.id);
+    assert.equal(entity.atlasId, region.area, `atlas identifier drift: ${region.id}`);
+  }
   assert.equal(new Set(catalog.entityIds).size, catalog.entityIds.length);
   assert.ok(catalog.entityIds.every((id) => /^(layer|pathway|region|tract)\./.test(id)));
   assert.equal(Object.isFrozen(catalog), true);

@@ -73,7 +73,13 @@
               <button id="anatomy-preview" class="anatomy-preview" type="button" aria-haspopup="dialog" hidden></button>
               <details id="anatomy-browser" class="anatomy-browser">
                 <summary>Inspect anatomy</summary>
-                <div id="anatomy-options" class="anatomy-options" aria-label="Anatomy available in this view"></div>
+                <div class="anatomy-catalog">
+                  <label for="anatomy-search">Search anatomy</label>
+                  <input id="anatomy-search" type="search" autocomplete="off"
+                    placeholder="Name or atlas ID" />
+                  <p id="anatomy-result-count" role="status" aria-live="polite"></p>
+                  <div id="anatomy-options" class="anatomy-options" aria-label="Anatomy catalog results"></div>
+                </div>
               </details>
             </div>
           </div>

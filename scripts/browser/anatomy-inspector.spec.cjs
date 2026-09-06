@@ -23,6 +23,44 @@ async function openInspectableList(page) {
   }
 }
 
+test('catalog search finds common names and atlas terms while exposing hidden results', async ({ page }) => { // Tests INV-36, INV-41
+  const errors = monitor(page);
+  await ready(page);
+  await openInspectableList(page);
+  const search = page.locator('#anatomy-search');
+  await expect(search).toBeVisible();
+
+  await search.fill('lateral geniculate');
+  await expect(page.locator('#anatomy-options [data-catalog-id]')).toHaveCount(1);
+  await expect(page.locator('#anatomy-options [data-catalog-id="region.lgn"]')).toContainText('Available in current view');
+
+  await search.fill('hOc4la');
+  await expect(page.locator('#anatomy-options [data-catalog-id]')).toHaveCount(1);
+  await expect(page.locator('#anatomy-options [data-catalog-id="region.loa"]')).toContainText('LOC-a');
+
+  await search.fill('region.v1');
+  const viewer = page.locator('#viewer-console');
+  if (!await viewer.evaluate(element => element.open)) await viewer.locator(':scope > summary').click();
+  await page.locator('#viewer-full-controls > summary').click();
+  await page.locator('#layers button').filter({ hasText: 'Early / shared' }).first().click();
+  const v1Toggle = page.locator('#layers .layer-entity-toggle').filter({ hasText: /^V1$/ });
+  await v1Toggle.click();
+  const v1 = page.locator('#anatomy-options [data-catalog-id="region.v1"]');
+  await expect(v1).toContainText('Hidden in current view');
+  await expect(v1).toHaveAttribute('aria-disabled', 'true');
+  await v1.focus();
+  await v1.press('Enter');
+  await expect(page.locator('#anatomy-inspector')).toBeHidden();
+
+  await v1Toggle.click();
+  await expect(v1).toHaveAttribute('aria-disabled', 'false');
+  await v1.focus();
+  await expect(page.locator('#anatomy-preview')).toHaveText('V1');
+  await v1.click();
+  await expect(page.locator('#anatomy-inspector-title')).toHaveText('Primary visual cortex (V1)');
+  expect(errors).toEqual([]);
+});
+
 test('DOM focus previews anatomy and wide explicit activation opens cited nonmodal details', async ({ page }) => { // Tests INV-41
   const errors = monitor(page);
   await ready(page);
@@ -30,7 +68,8 @@ test('DOM focus previews anatomy and wide explicit activation opens cited nonmod
     ? await page.evaluate(() => window.__lesson.exploreState.snapshot)
     : null;
   await openInspectableList(page);
-  await expect(page.locator('#anatomy-options button')).toHaveCount(33);
+  await expect(page.locator('#anatomy-options button[data-inspectable-id]')).toHaveCount(33);
+  await expect(page.locator('#anatomy-options [data-catalog-id="region.v3v"]')).toContainText('Anatomy details not yet available');
 
   const lgn = page.locator('#anatomy-options [data-inspectable-id="region.lgn"]');
   await lgn.focus();
@@ -101,11 +140,11 @@ test('compact anatomy details contain focus, restore the invoker, and clear hidd
   expect(await page.locator('#app').evaluate(element => element.inert)).toBe(false);
 
   const viewer = page.locator('#viewer-console');
-  if (!await viewer.getAttribute('open')) await viewer.locator(':scope > summary').click();
+  if (!await viewer.evaluate(element => element.open)) await viewer.locator(':scope > summary').click();
   await page.locator('#viewer-full-controls > summary').click();
   const anterior = page.locator('#layers input[data-id="anterior"]');
   await anterior.uncheck();
-  await expect(page.locator('#anatomy-options [data-inspectable-id^="landmark."]')).toHaveCount(0);
+  await expect(page.locator('#anatomy-options [data-inspectable-id^="landmark."][aria-disabled="true"]')).toHaveCount(3);
   await expect(page.locator('#anatomy-preview')).toBeHidden();
   if (HAS_DEV_HOOKS) {
     expect(await page.evaluate(() => window.__view.inspector.highlightedId)).toBe(null);
@@ -118,6 +157,8 @@ test('no-WebGL Atlas retains semantic anatomy names, status, limitations, and ci
   await ready(page, { width: 390, height: 844 }, '?no-webgl=1');
   await expect(page.locator('#stage-fallback')).toBeVisible();
   await openInspectableList(page);
+  await page.getByLabel('Search anatomy').fill('optic chiasm');
+  await expect(page.locator('#anatomy-options [data-inspectable-id="landmark.optic-chiasm"]')).toContainText('3D unavailable; text details only');
   await page.locator('#anatomy-options [data-inspectable-id="landmark.optic-chiasm"]').click();
   const inspector = page.locator('#anatomy-inspector');
   await expect(inspector).toBeVisible();
@@ -183,4 +224,31 @@ test('raw canvas mouse and touch use the same preview with staged touch activati
   await tap();
   await expect(page.locator('#anatomy-inspector')).toBeVisible();
   expect(errors).toEqual([]);
+});
+
+
+test('catalog reports pending geometry and preserves search/focus when loading completes', async ({ page }) => {
+  let release;
+  const gate = new Promise(resolve => { release = resolve; });
+  await page.route('**/data/regions/v1_R.obj', async route => { await gate; await route.continue(); });
+  try {
+    await ready(page, { width: 390, height: 844 });
+    await openInspectableList(page);
+    const search = page.getByLabel('Search anatomy');
+    await search.fill('hOc1');
+    const result = page.locator('#anatomy-options [data-catalog-id="region.v1"]');
+    await expect(result).toContainText('Geometry pending or unavailable');
+    await result.focus();
+    release();
+    await expect(result).toContainText('Geometry loaded');
+    await expect(result).toBeFocused();
+    await expect(search).toHaveValue('hOc1');
+    const bounds = await page.locator('.anatomy-catalog').boundingBox();
+    expect(bounds.x).toBeGreaterThanOrEqual(0);
+    expect(bounds.x + bounds.width).toBeLessThanOrEqual(390);
+    await result.press('Enter');
+    await expect(page.locator('#anatomy-inspector-title')).toHaveText('Primary visual cortex (V1)');
+    await page.keyboard.press('Escape');
+    await expect(result).toBeFocused();
+  } finally { release(); }
 });
