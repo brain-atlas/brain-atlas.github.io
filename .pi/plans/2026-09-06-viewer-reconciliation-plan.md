@@ -1,14 +1,14 @@
 # Viewer reconciliation implementation plan
 
 **Issue:** brain-atlas-s4q — Reconcile viewer effects and retain lesson UI state
-**Status:** Approved for implementation by user's explicit request, recorded in brain-atlas-s4q on 2026-09-06.
+**Status:** Implemented and verified; approval, follow-up decisions, and closeout evidence are recorded in brain-atlas-s4q.
 **Design:** Astra architecture review in owning Bead/session; bounded design below.
 **Date:** 2026-09-06
 **Branch:** main
 
 ## Goal and boundary
 
-Implement all five reviewed improvements without another renderer, transform, filter system, dependency, or persistent snapshot axis. Complete canonical validation/capture stays authoritative. Scientific models/assets, import trust boundaries, no-WebGL, history, focus/scroll, reduced motion and image activation semantics remain intact. Existing unrelated package-lock.json diff must remain unchanged (diff SHA256 68439f78985aa794e6f006356f5e52ddfda76418f79fe6f14d94744d2a74e6b4).
+Implement all five reviewed improvements without another renderer, transform, filter system, dependency, or persistent snapshot axis. Complete canonical validation/capture stays authoritative. Scientific models/assets, import trust boundaries, no-WebGL, history, focus/scroll, reduced motion and image activation semantics remain intact. The original unrelated package-lock.json diff was preserved during implementation, then discarded only after the user's explicit follow-up authorization recorded in brain-atlas-s4q.
 
 ## Ordered work
 
@@ -42,4 +42,4 @@ Run focused new regression and relevant existing browser suites first, then broa
 
 ## Documentation and closeout
 
-Update docs/ARCHITECTURE.md, docs/PERFORMANCE.md, src/ui/SPEC.md, and any changed renderer interface contract. README only for observable control/resume behavior. No new scientific claims, asset derivations, licenses, dependencies or notices; record no-impact rationale in Bead. Mark plan Implemented only after verification. Stage/commit task-owned files only; do not push. Standard direct-closeout may block on unrelated lockfile edit: preserve it and report/request handling rather than stash, discard, or commit it without authority.
+Update docs/ARCHITECTURE.md, docs/PERFORMANCE.md, src/ui/SPEC.md, and any changed renderer interface contract. README only for observable control/resume behavior. No new scientific claims, asset derivations, licenses, dependencies or notices; record no-impact rationale in Bead. Mark plan Implemented only after verification. Stage/commit task-owned files only; do not push. Implementation commits: `10fd142` and follow-up compact-navigation fix `c96a936`. Astra findings were reproduced and corrected. The remaining test prerequisite was resolved by populating the existing hash-locked uv dependency cache, without changing versions, locks, code, or assets. Verification: 242 Node tests pass; publication build and Go tests pass; development browser suites pass (Chromium 77, Firefox 75, with expected skips); production workspace checks pass 3/3 in each browser. Bead owns exact commands, proof frames, and final closeout status.

@@ -246,6 +246,10 @@ test('closed Viewer controls return wide space to the stage and keep a compact r
   await summary.click();
   await expect(page.locator('#viewer-console')).toHaveAttribute('open', '');
   await expect(summary).toHaveAttribute('aria-expanded', 'true');
+  await page.waitForFunction(() => {
+    const rect = document.getElementById('stage').getBoundingClientRect();
+    return Math.abs(window.__view.camera.aspect - rect.width / rect.height) < 1e-6;
+  });
   const compact = await page.evaluate(() => {
     const stage = document.getElementById('stage').getBoundingClientRect();
     return {

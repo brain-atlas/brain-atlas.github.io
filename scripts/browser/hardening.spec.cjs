@@ -801,7 +801,10 @@ test('direct lesson entry loads active filtered SWM once and defers later-region
   for (let index = 0; index <= 4; index++) {
     await page.locator('#scene-next').click();
     await page.waitForFunction(expected => window.__lesson?.navigation?.activeIndex === expected, index);
-    if (await page.locator('#scene-skip').isVisible()) await page.locator('#scene-skip').click();
+    // This asset test may outlast the transition: inspect and activate atomically.
+    await page.locator('#scene-skip').evaluate(button => {
+      if (!button.hidden && !button.disabled) button.click();
+    });
     await expect.poll(() => page.evaluate(() => window.__lesson.navigation.activeIndex),
       { message: 'Heading reflow and Skip must retain the explicit scene' }).toBe(index);
   }
