@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "verifiedOn": "2026-09-07",
+  "inventoryInputs": 680,
+  "inventoryBytes": 101301105,
+  "inventorySha256": "942aaaf882168f2cdf8d09af83e5044b3cbc5dc3f7a5611f23b3c4d88bdc971e",
+  "niftiCount": 675,
+  "headerGroups": [
+    {
+      "dtype": "float64",
+      "slope": "1.0",
+      "intercept": "0.0",
+      "units": "('unknown', 'unknown')",
+      "qformCode": 4,
+      "sformCode": 4,
+      "count": 673
+    },
+    {
+      "dtype": "int16",
+      "slope": "1.0",
+      "intercept": "1154.0",
+      "units": "('unknown', 'unknown')",
+      "qformCode": 4,
+      "sformCode": 4,
+      "count": 2
+    }
+  ],
+  "panelReceipt": {
+    "scriptSha256": "e5354ba67bce6f59f256d15c420859d9d242ab63b73c78e2cddd81616c2df684",
+    "summarySha256": "f62b72497433e4aa694a615b73df47d025b29e48549d67901e2809edd79bf91d",
+    "t1": {
+      "bytes": 13685075,
+      "sha256": "1f27aabea9f7183dc0c69dafa71e1787b921ca778d655d9c1bf302b273d5627a"
+    },
+    "intensityWindow": [
+      56.0,
+      9015.0
+    ],
+    "cropRadiusVoxels": 40,
+    "overlayAlpha": 0.45,
+    "indices": {
+      "all-broad-noncerebral-deep-source|L": 9551,
+      "all-broad-noncerebral-deep-source|R": 1970,
+      "all-cerebral-source|L": 2984,
+      "all-cerebral-source|R": 2788,
+      "mixed-other-source|L": 11756,
+      "mixed-other-source|R": 5206
+    },
+    "limitations": "Gross support/slice mechanism inspection, not bundle identity, full-curve overlap or anatomical accuracy."
+  },
+  "panelSha256": {
+    "contour-11756.png": "f2f37ac932e28bafb6709bdb6c562b866bfff720837179105d39c9e9995b6dfa",
+    "contour-1970.png": "e6175184b5b8e8ada39232599efe5008dbeb7c1fad8f08cfc548557bbb3c7e45",
+    "contour-2788.png": "7a416df2dbbe51e1f7a8bb8b10e7fa55d222957326708c178835b78e6ea60e07",
+    "contour-2984.png": "3021acdb23b6beaa4a6e50f2c5436b0a48b701491cef9c3e0e0095b1704b157b",
+    "contour-5206.png": "f1fade878e2a42aeadfca3934409f161d9e122c470e86a5b25062c3cf2e72151",
+    "contour-9551.png": "550977704027110d669824e963d23460c7b03f37f66891a11cc5aa46dce06883"
+  },
+  "reviewStatus": "parent-six-panel-gross-support-review-complete-not-anatomical-validation",
+  "outputSha256": {
+    "swm-bundle-records.json": "46528ddd3c4001398c2945ab59e76c211be872c9727e5d2094b712ebe050f575",
+    "swm-bundle-summary.json": "f62b72497433e4aa694a615b73df47d025b29e48549d67901e2809edd79bf91d"
+  }
+}

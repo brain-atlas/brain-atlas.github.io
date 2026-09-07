@@ -1271,6 +1271,26 @@
         "sourceIndexLineage": "not available in this audit; separate brain-atlas-yum.14.7"
       },
       "outputs": "isolated swm-domain-records.json and swm-domain-summary.json; never public assets"
+    },
+    {
+      "id": "swm-bundles",
+      "sourceIds": [],
+      "parameters": {
+        "methodVersion": "swm-bundle-screen-v1",
+        "scope": "private-population-map-screening-only",
+        "shippedClassifications": false,
+        "sourceInventory": {
+          "path": "tools/assets/swm-bundle-sources.json",
+          "bytes": 329085,
+          "sha256": "942aaaf882168f2cdf8d09af83e5044b3cbc5dc3f7a5611f23b3c4d88bdc971e"
+        },
+        "primaryMinimumSamples": 5,
+        "sampleCount": 8,
+        "holdoutHashPrefix": "brain-atlas/swm-bundle-holdout/v1:",
+        "holdoutModulo": 5,
+        "probability": null
+      },
+      "outputs": "isolated swm-bundle-records.json and swm-bundle-summary.json; no runtime adoption"
     }
   ],
   "outputs": [

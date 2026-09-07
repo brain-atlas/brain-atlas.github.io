@@ -61,6 +61,14 @@ def _parser() -> argparse.ArgumentParser:
     domains.add_argument("--accept-local-screening-terms", action="store_true",
                          help="acknowledge local-only screening, notice retention and unresolved upstream rights; no redistribution")
 
+    bundles = audit_subparsers.add_parser("swm-bundles")
+    _add_heavy_common_arguments(bundles)
+    bundles.add_argument("--repo", type=Path, required=True)
+    bundles.add_argument("--masked-mpm", type=Path, required=True)
+    bundles.add_argument("--domain-records", type=Path, required=True)
+    bundles.add_argument("--accept-local-screening-terms", action="store_true",
+                         help="acknowledge private population-map screening, unknown units/normalization and no redistribution")
+
     prepare = subparsers.add_parser("prepare", help="derive verified tracking inputs")
     prepare_subparsers = prepare.add_subparsers(dest="asset", required=True)
     for asset in ("optic-radiation", "swm"):
@@ -465,11 +473,16 @@ def main(argv: Sequence[str] | None = None) -> int:
             if not args.accept_local_screening_terms:
                 raise ContractError("private audit requires --accept-local-screening-terms; no redistribution or shipped classification")
             verify_environment(args.uv, manifest)
-            source = _record_by_id(manifest["sources"], "templateflow-carpet")
-            inputs = resolve_inputs(args.inputs, [source])
-            from .swm_domains import audit_swm_domains
+            if args.asset == "swm-bundles":
+                from .swm_bundles import audit_swm_bundles
 
-            details = audit_swm_domains(inputs["templateflow-carpet"], args.repo, args.output, manifest)
+                details = audit_swm_bundles(args.inputs, args.masked_mpm, args.domain_records, args.repo, args.output, manifest)
+            else:
+                source = _record_by_id(manifest["sources"], "templateflow-carpet")
+                inputs = resolve_inputs(args.inputs, [source])
+                from .swm_domains import audit_swm_domains
+
+                details = audit_swm_domains(inputs["templateflow-carpet"], args.repo, args.output, manifest)
             report = {"command": "audit", "asset": args.asset, "status": "ok", "details": details}
         elif args.command == "build":
             report = _run_builder(args, manifest)

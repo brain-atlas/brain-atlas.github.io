@@ -39,6 +39,7 @@ uv run --python 3.13.1 --offline \
 | Command | Contract |
 |---|---|
 | `audit swm-domains --inputs <dir> --repo <path> --output <empty-dir>` | Private source-compartment audit of all displayed SWM points; requires `--accept-local-screening-terms`. Hash/environment gates, no public output or source redistribution. |
+| `audit swm-bundles --inputs <dir> --masked-mpm <file> --domain-records <file> --repo <path> --output <empty-dir>` | Private HCP v1.1 population-map overlap evaluation. Requires `--accept-local-screening-terms`; complete pinned inputs, no download, runtime adoption or public output. |
 | `check-manifest` | Validate schema/semantics/references/rights and the lock identity without network access. |
 | `verify-current --repo <path>` | Verify exact current files, region tree, metadata, geometry payloads, and runtime mirror disclosure without regeneration. |
 | `build cortex` | Generate the cortical GLB from the exact TemplateFlow brain mask. |
@@ -91,6 +92,60 @@ shipped classifications remain unapproved. INV-2/FAIL-7 public derivative-rights
 gates remain unchanged. The source's exact construction and upstream rights gaps
 are retained in manifest/report metadata and the linked
 [anatomical suitability register](../../.pi/research/2026-09-07-swm-domains/anatomical-suitability.md).
+
+### Private SWM bundle-evidence boundary
+
+**INV-16 / FAIL-14:** `swm_bundles.py` consumes all 673 HCP v1.1 unmasked maps,
+licensed source label tables, unmasked MPM and acquisition/rights records through
+`swm-bundle-sources.json`, whose bytes/hash are pinned by the `swm-bundles` pipeline
+in `manifest.json`. This submanifest inventories private inputs; none is a public
+output or a license grant for configuration hierarchy. Separate masked MPM and
+source-domain records are byte-pinned too. Existing `swm-domains` compatibility
+pins and strata remain authoritative and unchanged. All files are hashed before
+scientific parsing; missing/extra files, unsafe output roots, unknown labels,
+nonfinite values or form drift fail closed. Test: `test/swm-bundle-assets.test.js`.
+
+All 675 NIfTIs must have 193×229×193 shape, identical code-4 qform/sform and unit-axis
+RAS affine at [-96,-132,-78]. Unknown spatial/time unit codes are retained, not
+repaired; numeric common-RAS-mm comparison is explicitly assumed. The descriptor
+binds a 2009c asymmetric CSF mask for masked products, not the full unmasked
+registration/template derivation. Fibre lineage remains 2009a. Source probability
+normalization and conflicting WU-Minn methods/MGH-USC acknowledgements remain
+unresolved. No second transform or automatic registration exists.
+
+Frozen `swm-bundle-screen-v1` counts every stored sample equally: nearest-even,
+bounds before index conversion, outside sentinel -1, background zero, no local
+fallback. `primary` means provisional categorical overlap, never anatomical
+identity. It requires one label on at least 5/8 samples, all eight source-domain
+IDs in {1,5}, and explicit label/legacy hemisphere agreement. Otherwise primary is
+null with a reason; a 4/4 tie is not broken by sorting. Coverage fractions are not
+whole-curve or length fractions. Historical ≥4/8 pilot diagnostics stay separate.
+
+Alternatives contain every positive native-map candidate or observed MPM label,
+with both categorical counts, positive-map sample count, native-value mean/max,
+and hemisphere consistency. Every map's finite 0–100 delivery range is checked;
+that numerical range does **not** establish percentages or contour probabilities.
+Probability stays null. Sort eight samples before float64 sum/8 for reversal
+invariance; sort candidates by source label, never by a fabricated confidence.
+Label files supply 365 L/308 R names, no bilateral pairing or configuration hierarchy.
+
+Source groups are all-eight {1,5}, all-eight {2,3,4,6}, and mixed/other. They are
+source compartments, not validated anatomical domains. Baseline cross-tabs cover
+these groups, legacy quality, shipped length, hemisphere and frozen holdout split.
+Holdout uses first eight hex digits of SHA-256 over ASCII
+`brain-atlas/swm-bundle-holdout/v1:<index>` modulo five equal zero; manual examples
+are smallest full digest in each source-group × hemisphere holdout cell, selected
+before scoring. No tuning or accuracy estimate is licensed by this split.
+
+All 27 coherent categorical offsets in {-0.5,0,+0.5}³ and floor(v+0.5) alternate
+rounding report sensitivity against fixed source strata. Continuous-map perturbation
+and measured registration uncertainty are not claimed. Private records/summary
+use sorted compact finite UTF-8 JSON plus newline, carry source/method/environment
+hashes, and must reproduce byte-for-byte. Manual review remains separately evidenced;
+the generator correctly emits `manualReviewStatus: pending`, never automatic approval.
+The [private evaluation report](../../.pi/research/2026-09-07-swm-bundles/evaluation-report.md)
+records pilot reproduction, B/C/D byte equality, sensitivity and six-panel review;
+none authorizes atlas adoption or changes public anatomical claims.
 
 ## Equality contracts
 
@@ -309,7 +364,13 @@ Raw outputs/logs stay outside Git. Their owner-only durable archive is `~/.local
 | INV-10–11 | CLI tests, Beads evidence, and scientific review. |
 | FAIL-1–10 | Named negative tests include `# Tests FAIL-N` traceability comments. |
 
-Minimum closeout runs focused tests, all builders/post-processors in temporary directories, both manual replay validations, the `brain-atlas-yum.5` verifier, full Node/build/audit checks, and Firefox/Chromium development/production regression matrices.
+Asset-regeneration closeout runs focused tests, all builders/post-processors in temporary directories, both manual replay validations, the `brain-atlas-yum.5` verifier, full Node/build/audit checks, and Firefox/Chromium development/production regression matrices.
+
+Private screening-only changes (INV-15/16) instead require focused boundary tests,
+complete pinned-source checks, byte-identical private reruns, separately evidenced
+manual review, full Node tests, current-output verification and diff checks. They
+do not authorize or require unrelated regeneration, DSI execution, public-asset
+replacement or a runtime/browser release claim.
 
 ## Future hierarchical fibre accounting (classification not implemented)
 

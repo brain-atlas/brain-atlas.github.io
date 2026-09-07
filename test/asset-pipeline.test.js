@@ -113,13 +113,18 @@ test('manifest inventories every source, pipeline, output, coordinate contract, 
 
   assert.deepEqual(
     manifest.pipelines.map(({ id }) => id),
-    ['cortex', 'regions', 'association', 'endpoints', 'optic-radiation', 'swm', 'swm-domains'],
+    ['cortex', 'regions', 'association', 'endpoints', 'optic-radiation', 'swm', 'swm-domains', 'swm-bundles'],
   );
   const domainAudit = manifest.pipelines.find(({ id }) => id === 'swm-domains');
   assert.deepEqual(domainAudit.sourceIds, ['templateflow-carpet']);
   assert.equal(domainAudit.parameters.scope, 'private-source-compartment-screening-only');
   assert.equal(domainAudit.parameters.shippedClassifications, false);
   assert.equal(manifest.outputs.some(({ pipelineId }) => pipelineId === 'swm-domains'), false);
+  const bundleAudit = manifest.pipelines.find(({ id }) => id === 'swm-bundles');
+  assert.deepEqual(bundleAudit.sourceIds, []);
+  assert.equal(bundleAudit.parameters.scope, 'private-population-map-screening-only');
+  assert.equal(bundleAudit.parameters.shippedClassifications, false);
+  assert.equal(manifest.outputs.some(({ pipelineId }) => pipelineId === 'swm-bundles'), false);
   const regionPipeline = manifest.pipelines.find(({ id }) => id === 'regions');
   assert.deepEqual(regionPipeline.sourceIds, ['julich-mpm', 'julich-terminology-xml', 'julich-hierarchy']);
   const endpointPipeline = manifest.pipelines.find(({ id }) => id === 'endpoints');
@@ -195,7 +200,7 @@ test('lightweight CLI validates the manifest and exact checked outputs without n
     schemaVersion: 1,
     sources: 11,
     intermediates: 6,
-    pipelines: 7,
+    pipelines: 8,
     outputs: 8,
     rights: 8,
     status: 'ok',
