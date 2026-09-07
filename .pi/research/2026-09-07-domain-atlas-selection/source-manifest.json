@@ -1,0 +1,127 @@
+{
+  "schemaVersion": 1,
+  "approval": "brain-atlas-5ezq",
+  "manualAcquisitionDecision": "brain-atlas-gcoh",
+  "doi": "10.12751/g-node.be5e62",
+  "url": "https://doi.gin.g-node.org/10.12751/g-node.be5e62/10.12751_g-node.be5e62.zip",
+  "source": "user-supplied original DOI archive",
+  "archiveBytes": 192053219,
+  "archiveSha256": "bc32fdb58cc3993f4bbbbb5d4bbc007378fa97fa574d309a83b2b75cdc976389",
+  "expandedBytes": 192050619,
+  "archiveCrc": "all entries passed",
+  "files": [
+    {
+      "id": "CerebrA.mnc",
+      "filename": "CerebrA.mnc",
+      "bytes": 501507,
+      "sha256": "64a265da995a8e82bf6d39bbb758bfeabd35876f5dfff13deaba702ca90de1ab"
+    },
+    {
+      "id": "CerebrA.nii",
+      "filename": "CerebrA.nii",
+      "bytes": 34120436,
+      "sha256": "c83e8038b21ff85c5efaa4082eb1a4560f4bae392bc6f9b1fc0a7888e4fce1d3"
+    },
+    {
+      "id": "CerebrA_DKT.mnc",
+      "filename": "CerebrA_DKT.mnc",
+      "bytes": 521616,
+      "sha256": "24bb3f609a27efe359fb05ab39fbdd030657c7feead6633fbd4341862f883936"
+    },
+    {
+      "id": "CerebrA_DKT.nii",
+      "filename": "CerebrA_DKT.nii",
+      "bytes": 34120436,
+      "sha256": "57093126ac1729063854ee2348e3e222f593450d0246eb3332cfb7436c08fd40"
+    },
+    {
+      "id": "CerebrA_LabelDetails.csv",
+      "filename": "CerebrA_LabelDetails.csv",
+      "bytes": 2866,
+      "sha256": "1f27188447421c37f35d0cb3c7adebd072ecbe745f52ae23066f3a98337d8c4c"
+    },
+    {
+      "id": "DKT2icbm.xfm",
+      "filename": "DKT2icbm.xfm",
+      "bytes": 1024,
+      "sha256": "5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef"
+    },
+    {
+      "id": "DKT2icbmnl.xfm",
+      "filename": "DKT2icbmnl.xfm",
+      "bytes": 461,
+      "sha256": "f7b9ef2beca4981760766d6c7b2432be572f9bc0576331d177ae36e993361dd3"
+    },
+    {
+      "id": "DKT2icbmnl_grid_0.mnc",
+      "filename": "DKT2icbmnl_grid_0.mnc",
+      "bytes": 72376831,
+      "sha256": "ffb34c0b781b97a205bdd5ddaa0d98cea06c7fa481872d8516a37eb70b6eb4b7"
+    },
+    {
+      "id": "DKT_Atlas_icbm_nl.mnc",
+      "filename": "DKT_Atlas_icbm_nl.mnc",
+      "bytes": 488540,
+      "sha256": "9b823a3385a0eedbfe2aa09b8a98d624b32f88b18aaba3121c26a9a93c2b8972"
+    },
+    {
+      "id": "DKT_Atlas_icbm_nl.nii",
+      "filename": "DKT_Atlas_icbm_nl.nii",
+      "bytes": 34120436,
+      "sha256": "68799fb06e73a147113c8f6aaed1d7825d00111718dc1c4a2d1f62e8cf4b0492"
+    },
+    {
+      "id": "LICENSE",
+      "filename": "LICENSE",
+      "bytes": 6894,
+      "sha256": "46633d9b124044cc1ff3d3891e45d3d866b9c6d29896d62d81072b6c5868816b"
+    },
+    {
+      "id": "README.md",
+      "filename": "README.md",
+      "bytes": 167,
+      "sha256": "67d76381cf06bbed40c13130a057b5e47d86bb5a7294451f5247406d92819d97"
+    },
+    {
+      "id": "ants_nl_registration.sh",
+      "filename": "ants_nl_registration.sh",
+      "bytes": 783,
+      "sha256": "9ce959fa047b7c74974062bfb9e19bf82db3165058e580bcd4b2dbff151e0b6b"
+    },
+    {
+      "id": "bestlinreg_s2",
+      "filename": "bestlinreg_s2",
+      "bytes": 11876,
+      "sha256": "9249a879b7c2d2a982c9169de5fbc0a1be0b74a777a87cea07d1cd95413d8c34"
+    },
+    {
+      "id": "datacite.yml",
+      "filename": "datacite.yml",
+      "bytes": 1190,
+      "sha256": "8b9ff7cad96efa5f05d9e9143291ea8cf57749c498cb265a919860f0a42d6f9e"
+    },
+    {
+      "id": "linear_registration.sh",
+      "filename": "linear_registration.sh",
+      "bytes": 84,
+      "sha256": "16cbe9b2e7317f405a23159f8052579bb4adcedfe83daf9cea3733e37d7cdb6e"
+    },
+    {
+      "id": "mni_icbm152_t1_tal_nlin_sym_09c.mnc",
+      "filename": "mni_icbm152_t1_tal_nlin_sym_09c.mnc",
+      "bytes": 15775336,
+      "sha256": "04cd0dac790801d0cc580a5ef5ed9f2b36a744e548866d8a2f9251b8e6e2e071"
+    },
+    {
+      "id": "resampling.sh",
+      "filename": "resampling.sh",
+      "bytes": 136,
+      "sha256": "37eaee3baf505a10a472ab04a16fe1d3c32336b7dcbef6ac6de8a498dc084239"
+    }
+  ],
+  "terms": {
+    "declared": "CC0-1.0",
+    "file": "LICENSE",
+    "scope": "private inspection and diagnostic evaluation only; upstream lineage retained, no redistribution approval"
+  }
+}
