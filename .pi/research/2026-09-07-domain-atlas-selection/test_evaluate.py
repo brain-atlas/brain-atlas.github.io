@@ -89,6 +89,29 @@ class ComparisonTests(unittest.TestCase):
             with Image.open(out/result['files'][0]) as image:
                 self.assertEqual(image.size,(960,980))
 
+    def test_native_permutation_and_photometric_limits(self):
+        path=HERE/'native_probe.py'
+        self.assertTrue(path.exists(), 'native template probe not implemented')
+        spec=importlib.util.spec_from_file_location('native_probe',path)
+        native=importlib.util.module_from_spec(spec); spec.loader.exec_module(native)
+        values=np.arange(60,dtype=np.float32).reshape(3,4,5)
+        affine=np.eye(4)[:,[2,1,0,3]]
+        image=nib.Nifti1Image(values,affine)
+        got=native.canonical_data(image,(5,4,3),np.eye(4))
+        np.testing.assert_array_equal(got,values.transpose(2,1,0))
+        np.testing.assert_array_equal(nib.affines.apply_affine(affine,[1,2,3]),[3,2,1])
+        with self.assertRaises(ValueError):native.canonical_data(image,(3,4,5),np.eye(4))
+        image.dataobj[0,0,0]=np.inf
+        with self.assertRaises(ValueError):native.canonical_data(image,(5,4,3),np.eye(4))
+        a=np.arange(27,dtype=float).reshape(3,3,3)
+        stats,x,y=native.photometry(a,2*a+7,np.ones(a.shape,dtype=bool))
+        np.testing.assert_allclose(x,y,atol=1e-15)
+        self.assertAlmostEqual(stats['pearson'],1)
+        self.assertEqual(stats['maskVoxels'],27)
+        self.assertAlmostEqual(stats['meanAbsoluteNormalizedDifference'],0)
+        with self.assertRaises(ValueError):native.photometry(a,a,np.zeros(a.shape,dtype=bool))
+        with self.assertRaises(ValueError):native.photometry(a,np.ones_like(a),np.ones(a.shape,dtype=bool))
+
     def test_input_and_output_guards(self):  # Tests INV-3/5 and FAIL-1/2 by reuse.
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp).resolve(); inp=root/'inputs'; inp.mkdir(); p=inp/'x'; p.write_bytes(b'x')

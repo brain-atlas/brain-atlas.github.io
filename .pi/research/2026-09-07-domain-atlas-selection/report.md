@@ -5,7 +5,8 @@ Status: **Implemented private diagnostic; full Bead acceptance remains partial.*
 User-supplied archive is pinned and evaluated. This supersedes the earlier acquisition
 blocker, not the anatomical-validation gate. Runtime/assets remain unchanged.
 Numerical policy: [frozen design-plan](../../plans/brain-atlas-yum.14.6-domain-atlas-design-plan.md).
-Independent [review](review.md): numerical PASS, full acceptance NOT MET.
+Independent [reviews](review.md): numerical/native-parser PASS, full acceptance NOT MET.
+Native-template supplement below resolves the earlier missing-parser blocker.
 
 ## Results and decision
 
@@ -95,11 +96,11 @@ in these selected views; this is not quantitative correspondence validation.
 | 257/1 | Internal carpet background encounters candidate optic-chiasm label; absence of carpet coverage is not outside-brain proof. |
 | 486/0, 3543/7 | Lateral-ventricle edges show absent candidate or named-deep-gray lookup. Preserve disagreement; no error fraction inferred. |
 
-No native symmetric T1 review: nibabel requires unavailable `h5py` for supplied
-MINC2. No new dependency was installed. Native parsing and a reviewed spatial-
-correspondence assessment are the next gate; additional sources remain necessary
-for cerebral WM/full CSF and fine cerebellar/brainstem anatomy. Anatomical uncertainty
-must not be conflated with the historical construction or source-rights questions.
+At this initial checkpoint native symmetric T1 could not be read without `h5py`.
+The approved native supplement below resolves that parser limitation; it does not
+resolve spatial correspondence. Additional sources remain necessary for cerebral
+WM/full CSF and fine cerebellar/brainstem anatomy. Anatomical uncertainty must not
+be conflated with historical construction or source-rights questions.
 
 ### Verification
 
@@ -133,6 +134,87 @@ uv run --python 3.13.1 --offline --with-requirements tools/assets/requirements.l
 Final full-suite/build/asset/diff verification and commit evidence belong in Beads.
 No browser/runtime/release-readiness claim. No numerical-policy deviation or threshold
 tuning; source-header inspection preceded policy, real SWM scoring followed it.
+
+## Native-template supplement — parser blocker resolved
+
+Approval `brain-atlas-g7fk` permits isolated **h5py 3.14.0**, beyond the original
+no-install boundary. Verified PyPI JSON release record:
+`https://pypi.org/pypi/h5py/3.14.0/json` (HTTP 200; project HTML instead returned a
+client challenge). Exact CPython3.13/macOS-arm64 wheel: **2,807,335 bytes**,
+SHA-256 `ef9603a501a04fcd0ba28dd8f0995303d26a77a980a1f9474b3417543d4c6174`.
+
+Approved browser acquisition succeeded from the PyPI-declared URL:
+`https://files.pythonhosted.org/packages/4f/31/f570fab1239b0d9441024b92b6ad03bb414ffa69101a985e4c83d37608bd/h5py-3.14.0-cp313-cp313-macosx_11_0_arm64.whl`.
+Local byte/hash/CRC checks passed. Wheel metadata requires only `numpy>=1.19.3`;
+existing pinned NumPy **2.5.1** satisfies this. Offline uv reused the complete base
+package set, adding h5py and bundled **HDF5 1.14.6** only. No production dependency,
+lockfile, global environment or source build changed. h5py's installed distribution
+tree is `69ca6dc35e165dd9a8eecf252bb7262ef4beaebfda6cc9cd44ce8c8d53faaad8`.
+
+Wheel retained in private `parser-wheel/`; BSD-3-Clause h5py terms and bundled HDF5/
+other notices retained under `parser-wheel/terms/` with original relative paths.
+Initial flat notice copying stopped on case-insensitive `license.txt`/`LICENSE.txt`
+collision; nothing was overwritten, and complete notice paths were then retained
+separately. Main h5py and HDF5 notices were read. No wheel/library redistribution.
+
+`native_probe.py` hashes all source files, references, prior summary and wheel,
+checks base package identities plus the added h5py tree, then uses nibabel's MINC2
+parser. Native T1 is uint16 storage with decoded finite range
+**0.010617810532494332–98.5586051940918**. Its voxel axes are Z,Y,X; nibabel canonical
+reorientation is **exact transposition**, not interpolation, registration, mirroring
+of anatomy or a new fibre/runtime transform. The resulting affine is exactly the
+existing unit-axis RAS grid. Independent review confirmed full-volume transposition
+and world-coordinate preservation.
+
+Frozen photometry uses **1,169,666 positive CerebrA-label voxels**, not whole brain or
+validated tissue support. Within that mask, independent 1st/99th-percentile windows
+are native `[29.713762588154275,88.47942645394339]` and asymmetric `[2891,9005]`.
+After independent [0,1] normalization/clipping:
+
+| Descriptor | Value |
+|---|---:|
+| Pearson intensity correlation | 0.7967012929826527 |
+| Mean absolute normalized difference | 0.07721318368934392 |
+| Median absolute normalized difference | 0.04797488771976424 |
+| 95th-percentile absolute normalized difference | 0.24821525659191065 |
+
+**None is anatomical accuracy, displacement, uncertainty radius or an adoption
+threshold.** Photometric differences do not separate intensity processing from
+anatomical differences. No threshold was tuned and no registration performed.
+
+Parent inspected all seven fixed native panels individually. Native/asymmetric
+views have broad anatomical concordance; local cortical, ventricular and deep
+boundary differences remain. The gross cerebellar example (11/0) remains plausible
+on both templates. Central/deep examples (149/2,1154/1,3/0,47/5,99/7) do not turn
+coarse source-label agreement into certified tissue or fine anatomical membership.
+Peripheral example 0/0 retains missing candidate coverage. Panels disclose exact
+slice offsets, orientations and native/reference identities. This finite example
+review supplies no whole-volume boundary accuracy or expert certification.
+
+`native-a/` and `native-b/` are **eight byte-identical outputs** (seven PNGs plus
+`native-summary.json`, 4,449 bytes, SHA-256
+`3051ca068d20601fe12f0dd61c1699913d7ea0cd2ec05e4a7e108d1552a279c9`).
+RED observed for missing native probe; seven focused tests now pass. Independent
+review found no defect and reproduced photometry; see [review](review.md).
+Original evaluation outputs and `evaluate.py` remain unchanged at `59d4a26`.
+
+Native reproduction uses only the approved local wheel and cached base dependencies:
+
+```bash
+ROOT="$HOME/.local/share/brain-atlas/domain-atlas-selection-yum14-6-2026-09-07"
+WHEEL="$ROOT/parser-wheel/h5py-3.14.0-cp313-cp313-macosx_11_0_arm64.whl"
+mkdir "$ROOT/native-new"
+uv run --python 3.13.1 --offline --with-requirements tools/assets/requirements.lock \
+  --with "$WHEEL" python .pi/research/2026-09-07-domain-atlas-selection/native_probe.py \
+  --inputs "$ROOT/inputs" \
+  --reference "$HOME/.local/share/brain-atlas/swm-domain-audit/brain-atlas-yum.14.3-source-2026-09-07/inputs" \
+  --summary "$ROOT/evaluation-a/summary.json" --wheel "$WHEEL" --output "$ROOT/native-new"
+```
+
+**Current remaining gate:** reviewed anatomical-domain eligibility and correspondence
+policy, plus missing coverage/rights decisions. Download and native-parser blockers
+are resolved. No evidence licenses automatic label adoption, runtime replacement,
+or closure of the full issue as anatomically validated.
 
 ## Source-selection rationale
 
@@ -244,10 +326,10 @@ byte pins and numerical evaluation above supersede the download blocker. Browser
 checklist proved source/terms only, not acquisition; local archive/CRC/hash evidence
 establishes the later user-supplied acquisition.
 
-Still required for full acceptance: native-template parsing/review, validated spatial
-support/correspondence sufficient for anatomical-domain interpretation, remaining
-coverage/rights decisions, and a domain authority/fusion decision beyond diagnostic
-comparison. No h5py install, registration or anatomical adoption is currently approved.
+Still required for full acceptance: validated spatial support/correspondence sufficient
+for anatomical-domain interpretation, remaining coverage/rights decisions, and a domain
+authority/fusion decision beyond diagnostic comparison. Native parsing/review is now
+complete under `g7fk`; registration or anatomical adoption is not approved.
 **Do not close full `yum.14.6` as success by relabeling this diagnostic as validation.**
 
 No public capability, geometry/activity, lesson, dependency, security/release,

@@ -76,3 +76,36 @@ real sample oracles, output accounting and inspect generated panels. Run `npm te
 Peer review must assess scientific wording and full Bead acceptance, not merely
 code correctness. Preserve any unmet native-template/rights/anatomical gates;
 no successful closeout until acceptance is met or separately narrowed by owner.
+
+## Native-template supplement — approval `brain-atlas-g7fk`
+
+The initial diagnostic is frozen at commit `59d4a26`; its parser limitation below
+is historical, not current after this supplement. Approved h5py 3.14.0 macOS arm64
+CPython3.13 wheel: 2,807,335 bytes, SHA-256
+`ef9603a501a04fcd0ba28dd8f0995303d26a77a980a1f9474b3417543d4c6174`.
+Browser acquisition succeeded. Retain wheel and bundled terms privately; offline uv
+adds only h5py/HDF5 to the exact base package set. Production lock remains unchanged.
+Installed h5py distribution tree `69ca6dc35e165dd9a8eecf252bb7262ef4beaebfda6cc9cd44ce8c8d53faaad8`.
+
+Before native comparison scoring: add a small `native_probe.py` and focused tests.
+Hash-check all candidate/reference inputs and the prior summary; verify base
+environment plus h5py tree. nibabel loads native MINC2, whose voxel axes are Z,Y,X;
+`as_closest_canonical` reorders axes into the existing RAS grid without interpolation,
+registration, reflection of anatomy or new point transform. Require exact affine,
+shape and finite data after reordering. Test permutation/world-coordinate preservation
+and reject grid/nonfinite drift.
+
+Frozen native comparison: positive CerebrA labels define a **label-support mask**,
+not whole brain/tissue truth. On this same mask, independently normalize each T1 by
+its 1st/99th percentiles, clipping to [0,1]. Report voxel count, both windows,
+Pearson correlation and mean/median/95th-percentile absolute normalized intensity
+difference. These are photometric descriptors, not anatomical alignment error,
+accuracy, uncertainty radius or pass/fail thresholds. No tuning or warp.
+
+Render the seven original fixed encounters (11/0,149/2,1154/1,3/0,47/5,99/7,0/0):
+native symmetric T1/overlay and asymmetric reference T1/overlay, same unshifted
+CerebrA labels, native one-pixel/voxel slices, signed offsets and orientation captions.
+Inspect each individually. Do not overwrite original evaluation outputs. Two native
+runs must be byte-identical. Record native parsing as resolved but keep any geometric,
+coverage, rights or anatomical-domain adoption gaps open; reading MINC2 is not validation
+of all anatomy.

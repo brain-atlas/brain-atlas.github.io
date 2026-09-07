@@ -26,3 +26,16 @@ Invocation `7177c226-ce45-43da-ac75-52276808f9ca`, child 0; numerical/acceptance
 Source255-hit: **3,447** contours; broader-union-hit: **4,253**.
 
 No images inspected; parent owns visual acceptance. No regeneration/byte-repeat claim. Initial serialization check differed only because decoded JSON converts integer label keys to strings; producer-key reconstruction matched exact bytes. Prior failed invocation not counted.
+
+## Native supplement review
+
+Invocation `24332ce2-e99c-407c-8d86-728eb3925ec4`, child 0. This resolves the earlier missing-native-parser blocker, not full anatomical acceptance.
+
+**No findings** in native supplement since `59d4a26`.
+
+- Wheel, installed environment, source/script pins verified. Native-a/b byte-identical; original evaluator unchanged.
+- Full-volume canonicalization equals exact axis transpose; world coordinates preserved. No warp.
+- Independent photometry matches: 1,169,666 label-support voxels; Pearson `0.796701293`, mean absolute normalized difference `0.077213184`.
+- Five read-only tests pass, including new native test. Two file-writing tests skipped; panels not reinspected.
+
+Native parser blocker resolved. Full `.6` acceptance remains open: symmetric/asymmetric correspondence, coverage, rights, anatomical assignments unresolved. Correlation does **not** establish spatial validity. No writes.
