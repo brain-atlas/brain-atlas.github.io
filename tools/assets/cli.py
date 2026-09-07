@@ -53,6 +53,14 @@ def _parser() -> argparse.ArgumentParser:
     _add_heavy_common_arguments(endpoints)
     endpoints.add_argument("--repo", type=Path, required=True)
 
+    audit = subparsers.add_parser("audit", help="run an isolated private source-compartment audit")
+    audit_subparsers = audit.add_subparsers(dest="asset", required=True)
+    domains = audit_subparsers.add_parser("swm-domains")
+    _add_heavy_common_arguments(domains)
+    domains.add_argument("--repo", type=Path, required=True)
+    domains.add_argument("--accept-local-screening-terms", action="store_true",
+                         help="acknowledge local-only screening, notice retention and unresolved upstream rights; no redistribution")
+
     prepare = subparsers.add_parser("prepare", help="derive verified tracking inputs")
     prepare_subparsers = prepare.add_subparsers(dest="asset", required=True)
     for asset in ("optic-radiation", "swm"):
@@ -147,19 +155,30 @@ def _run_builder(args: argparse.Namespace, manifest: dict[str, Any]) -> dict[str
             raise ContractError("generated cortical shell differs from the checked output")
         generated = [output.name]
     elif args.asset == "regions":
-        from .regions import build_regions_from_image
+        from .regions import build_complete_regions_from_image, build_julich_catalog
 
         parameters = pipeline["parameters"]
-        details = build_regions_from_image(
+        catalog = build_julich_catalog(
+            inputs["julich-terminology-xml"],
+            inputs["julich-hierarchy"],
+            parameters["regions"],
+            parameters["unresolvedAtlasIds"],
+        )
+        details = build_complete_regions_from_image(
             inputs["julich-mpm"],
             output_root,
-            parameters["regions"],
+            catalog,
             parameters["streams"],
+            legacy_regions=parameters["regions"],
         )
-        expected_manifest = _record_by_id(manifest["outputs"], "region-manifest")
-        region_manifest = output_root / "regions.json"
-        if region_manifest.stat().st_size != expected_manifest["bytes"] or sha256_file(region_manifest) != expected_manifest["sha256"]:
-            raise ContractError("generated region manifest differs from the checked output")
+        for output_id, filename in (
+            ("region-manifest", "regions.json"),
+            ("julich-region-catalog", "julich_regions.json"),
+        ):
+            expected_manifest = _record_by_id(manifest["outputs"], output_id)
+            actual_manifest = output_root / filename
+            if actual_manifest.stat().st_size != expected_manifest["bytes"] or sha256_file(actual_manifest) != expected_manifest["sha256"]:
+                raise ContractError(f"generated {output_id} differs from the checked output")
         obj_entries = [(path.name, path.read_bytes()) for path in output_root.glob("*.obj")]
         expected_tree = _record_by_id(manifest["outputs"], "region-mesh-tree")
         if len(obj_entries) != expected_tree["fileCount"] or sum(len(payload) for _, payload in obj_entries) != expected_tree["bytes"]:
@@ -442,6 +461,16 @@ def main(argv: Sequence[str] | None = None) -> int:
             return 0
         elif args.command == "verify-replay":
             report = _run_verify_replay(args, manifest)
+        elif args.command == "audit":
+            if not args.accept_local_screening_terms:
+                raise ContractError("private audit requires --accept-local-screening-terms; no redistribution or shipped classification")
+            verify_environment(args.uv, manifest)
+            source = _record_by_id(manifest["sources"], "templateflow-carpet")
+            inputs = resolve_inputs(args.inputs, [source])
+            from .swm_domains import audit_swm_domains
+
+            details = audit_swm_domains(inputs["templateflow-carpet"], args.repo, args.output, manifest)
+            report = {"command": "audit", "asset": args.asset, "status": "ok", "details": details}
         elif args.command == "build":
             report = _run_builder(args, manifest)
         elif args.command == "prepare":

@@ -1,0 +1,2049 @@
+{
+  "cases": [
+    {
+      "constant_sigma": true,
+      "coordinates": [
+        [
+          12,
+          12,
+          12
+        ],
+        [
+          12.49,
+          12,
+          12
+        ],
+        [
+          12.5,
+          12,
+          12
+        ]
+      ],
+      "lower_threshold": 0.0,
+      "name": "constant-sigma-0",
+      "public": [
+        {
+          "centroid": [
+            12.0,
+            12.0,
+            12.0
+          ],
+          "input structure": 0,
+          "map value": 0.5,
+          "region": "Probe A",
+          "volume": 0
+        },
+        {
+          "centroid": [
+            12.49,
+            12.0,
+            12.0
+          ],
+          "input structure": 1,
+          "map value": 0.5,
+          "region": "Probe A",
+          "volume": 0
+        },
+        {
+          "centroid": [
+            12.5,
+            12.0,
+            12.0
+          ],
+          "input structure": 2,
+          "map value": 0.75,
+          "region": "Probe A",
+          "volume": 0
+        },
+        {
+          "centroid": [
+            12.0,
+            12.0,
+            12.0
+          ],
+          "input structure": 0,
+          "map value": 0.5,
+          "region": "Probe B",
+          "volume": 1
+        },
+        {
+          "centroid": [
+            12.49,
+            12.0,
+            12.0
+          ],
+          "input structure": 1,
+          "map value": 0.5,
+          "region": "Probe B",
+          "volume": 1
+        },
+        {
+          "centroid": [
+            12.5,
+            12.0,
+            12.0
+          ],
+          "input structure": 2,
+          "map value": 0.25,
+          "region": "Probe B",
+          "volume": 1
+        }
+      ],
+      "public_columns": [
+        "input structure",
+        "centroid",
+        "volume",
+        "region",
+        "map value"
+      ],
+      "raw": [
+        {
+          "centroid": [
+            12.0,
+            12.0,
+            12.0
+          ],
+          "class": "MapAssignment",
+          "fragment": null,
+          "input_structure": 0,
+          "map_value": 0.5,
+          "volume": 0
+        },
+        {
+          "centroid": [
+            12.49,
+            12.0,
+            12.0
+          ],
+          "class": "MapAssignment",
+          "fragment": null,
+          "input_structure": 1,
+          "map_value": 0.5,
+          "volume": 0
+        },
+        {
+          "centroid": [
+            12.5,
+            12.0,
+            12.0
+          ],
+          "class": "MapAssignment",
+          "fragment": null,
+          "input_structure": 2,
+          "map_value": 0.75,
+          "volume": 0
+        },
+        {
+          "centroid": [
+            12.0,
+            12.0,
+            12.0
+          ],
+          "class": "MapAssignment",
+          "fragment": null,
+          "input_structure": 0,
+          "map_value": 0.5,
+          "volume": 1
+        },
+        {
+          "centroid": [
+            12.49,
+            12.0,
+            12.0
+          ],
+          "class": "MapAssignment",
+          "fragment": null,
+          "input_structure": 1,
+          "map_value": 0.5,
+          "volume": 1
+        },
+        {
+          "centroid": [
+            12.5,
+            12.0,
+            12.0
+          ],
+          "class": "MapAssignment",
+          "fragment": null,
+          "input_structure": 2,
+          "map_value": 0.25,
+          "volume": 1
+        }
+      ],
+      "sigma_mm": 0
+    },
+    {
+      "constant_sigma": true,
+      "coordinates": [
+        [
+          12,
+          12,
+          12
+        ],
+        [
+          12.49,
+          12,
+          12
+        ],
+        [
+          12.5,
+          12,
+          12
+        ]
+      ],
+      "lower_threshold": 0.0,
+      "name": "constant-sigma-0.1",
+      "public": [
+        {
+          "centroid": [
+            12.0,
+            12.0,
+            12.0
+          ],
+          "input structure": 0,
+          "map value": 0.5,
+          "region": "Probe A",
+          "volume": 0
+        },
+        {
+          "centroid": [
+            12.49,
+            12.0,
+            12.0
+          ],
+          "input structure": 1,
+          "map value": 0.5,
+          "region": "Probe A",
+          "volume": 0
+        },
+        {
+          "centroid": [
+            12.5,
+            12.0,
+            12.0
+          ],
+          "input structure": 2,
+          "map value": 0.75,
+          "region": "Probe A",
+          "volume": 0
+        },
+        {
+          "centroid": [
+            12.0,
+            12.0,
+            12.0
+          ],
+          "input structure": 0,
+          "map value": 0.5,
+          "region": "Probe B",
+          "volume": 1
+        },
+        {
+          "centroid": [
+            12.49,
+            12.0,
+            12.0
+          ],
+          "input structure": 1,
+          "map value": 0.5,
+          "region": "Probe B",
+          "volume": 1
+        },
+        {
+          "centroid": [
+            12.5,
+            12.0,
+            12.0
+          ],
+          "input structure": 2,
+          "map value": 0.25,
+          "region": "Probe B",
+          "volume": 1
+        }
+      ],
+      "public_columns": [
+        "input structure",
+        "centroid",
+        "volume",
+        "region",
+        "map value"
+      ],
+      "raw": [
+        {
+          "centroid": [
+            12.0,
+            12.0,
+            12.0
+          ],
+          "class": "MapAssignment",
+          "fragment": null,
+          "input_structure": 0,
+          "map_value": 0.5,
+          "volume": 0
+        },
+        {
+          "centroid": [
+            12.49,
+            12.0,
+            12.0
+          ],
+          "class": "MapAssignment",
+          "fragment": null,
+          "input_structure": 1,
+          "map_value": 0.5,
+          "volume": 0
+        },
+        {
+          "centroid": [
+            12.5,
+            12.0,
+            12.0
+          ],
+          "class": "MapAssignment",
+          "fragment": null,
+          "input_structure": 2,
+          "map_value": 0.75,
+          "volume": 0
+        },
+        {
+          "centroid": [
+            12.0,
+            12.0,
+            12.0
+          ],
+          "class": "MapAssignment",
+          "fragment": null,
+          "input_structure": 0,
+          "map_value": 0.5,
+          "volume": 1
+        },
+        {
+          "centroid": [
+            12.49,
+            12.0,
+            12.0
+          ],
+          "class": "MapAssignment",
+          "fragment": null,
+          "input_structure": 1,
+          "map_value": 0.5,
+          "volume": 1
+        },
+        {
+          "centroid": [
+            12.5,
+            12.0,
+            12.0
+          ],
+          "class": "MapAssignment",
+          "fragment": null,
+          "input_structure": 2,
+          "map_value": 0.25,
+          "volume": 1
+        }
+      ],
+      "sigma_mm": 0.1
+    },
+    {
+      "constant_sigma": true,
+      "coordinates": [
+        [
+          12,
+          12,
+          12
+        ],
+        [
+          12.49,
+          12,
+          12
+        ],
+        [
+          12.5,
+          12,
+          12
+        ]
+      ],
+      "lower_threshold": 0.0,
+      "name": "constant-sigma-2",
+      "public": [
+        {
+          "centroid": [
+            12.0,
+            12.0,
+            12.0
+          ],
+          "input structure": 0,
+          "map value": 0.5,
+          "region": "Probe A",
+          "volume": 0
+        },
+        {
+          "centroid": [
+            12.49,
+            12.0,
+            12.0
+          ],
+          "input structure": 1,
+          "map value": 0.5,
+          "region": "Probe A",
+          "volume": 0
+        },
+        {
+          "centroid": [
+            12.5,
+            12.0,
+            12.0
+          ],
+          "input structure": 2,
+          "map value": 0.75,
+          "region": "Probe A",
+          "volume": 0
+        },
+        {
+          "centroid": [
+            12.0,
+            12.0,
+            12.0
+          ],
+          "input structure": 0,
+          "map value": 0.5,
+          "region": "Probe B",
+          "volume": 1
+        },
+        {
+          "centroid": [
+            12.49,
+            12.0,
+            12.0
+          ],
+          "input structure": 1,
+          "map value": 0.5,
+          "region": "Probe B",
+          "volume": 1
+        },
+        {
+          "centroid": [
+            12.5,
+            12.0,
+            12.0
+          ],
+          "input structure": 2,
+          "map value": 0.25,
+          "region": "Probe B",
+          "volume": 1
+        }
+      ],
+      "public_columns": [
+        "input structure",
+        "centroid",
+        "volume",
+        "region",
+        "map value"
+      ],
+      "raw": [
+        {
+          "centroid": [
+            12.0,
+            12.0,
+            12.0
+          ],
+          "class": "MapAssignment",
+          "fragment": null,
+          "input_structure": 0,
+          "map_value": 0.5,
+          "volume": 0
+        },
+        {
+          "centroid": [
+            12.49,
+            12.0,
+            12.0
+          ],
+          "class": "MapAssignment",
+          "fragment": null,
+          "input_structure": 1,
+          "map_value": 0.5,
+          "volume": 0
+        },
+        {
+          "centroid": [
+            12.5,
+            12.0,
+            12.0
+          ],
+          "class": "MapAssignment",
+          "fragment": null,
+          "input_structure": 2,
+          "map_value": 0.75,
+          "volume": 0
+        },
+        {
+          "centroid": [
+            12.0,
+            12.0,
+            12.0
+          ],
+          "class": "MapAssignment",
+          "fragment": null,
+          "input_structure": 0,
+          "map_value": 0.5,
+          "volume": 1
+        },
+        {
+          "centroid": [
+            12.49,
+            12.0,
+            12.0
+          ],
+          "class": "MapAssignment",
+          "fragment": null,
+          "input_structure": 1,
+          "map_value": 0.5,
+          "volume": 1
+        },
+        {
+          "centroid": [
+            12.5,
+            12.0,
+            12.0
+          ],
+          "class": "MapAssignment",
+          "fragment": null,
+          "input_structure": 2,
+          "map_value": 0.25,
+          "volume": 1
+        }
+      ],
+      "sigma_mm": 2
+    },
+    {
+      "constant_sigma": true,
+      "coordinates": [
+        [
+          12,
+          12,
+          12
+        ],
+        [
+          12.49,
+          12,
+          12
+        ],
+        [
+          12.5,
+          12,
+          12
+        ]
+      ],
+      "lower_threshold": 0.0,
+      "name": "constant-sigma-2.999",
+      "public": [
+        {
+          "centroid": [
+            12.0,
+            12.0,
+            12.0
+          ],
+          "input structure": 0,
+          "map value": 0.5,
+          "region": "Probe A",
+          "volume": 0
+        },
+        {
+          "centroid": [
+            12.49,
+            12.0,
+            12.0
+          ],
+          "input structure": 1,
+          "map value": 0.5,
+          "region": "Probe A",
+          "volume": 0
+        },
+        {
+          "centroid": [
+            12.5,
+            12.0,
+            12.0
+          ],
+          "input structure": 2,
+          "map value": 0.75,
+          "region": "Probe A",
+          "volume": 0
+        },
+        {
+          "centroid": [
+            12.0,
+            12.0,
+            12.0
+          ],
+          "input structure": 0,
+          "map value": 0.5,
+          "region": "Probe B",
+          "volume": 1
+        },
+        {
+          "centroid": [
+            12.49,
+            12.0,
+            12.0
+          ],
+          "input structure": 1,
+          "map value": 0.5,
+          "region": "Probe B",
+          "volume": 1
+        },
+        {
+          "centroid": [
+            12.5,
+            12.0,
+            12.0
+          ],
+          "input structure": 2,
+          "map value": 0.25,
+          "region": "Probe B",
+          "volume": 1
+        }
+      ],
+      "public_columns": [
+        "input structure",
+        "centroid",
+        "volume",
+        "region",
+        "map value"
+      ],
+      "raw": [
+        {
+          "centroid": [
+            12.0,
+            12.0,
+            12.0
+          ],
+          "class": "MapAssignment",
+          "fragment": null,
+          "input_structure": 0,
+          "map_value": 0.5,
+          "volume": 0
+        },
+        {
+          "centroid": [
+            12.49,
+            12.0,
+            12.0
+          ],
+          "class": "MapAssignment",
+          "fragment": null,
+          "input_structure": 1,
+          "map_value": 0.5,
+          "volume": 0
+        },
+        {
+          "centroid": [
+            12.5,
+            12.0,
+            12.0
+          ],
+          "class": "MapAssignment",
+          "fragment": null,
+          "input_structure": 2,
+          "map_value": 0.75,
+          "volume": 0
+        },
+        {
+          "centroid": [
+            12.0,
+            12.0,
+            12.0
+          ],
+          "class": "MapAssignment",
+          "fragment": null,
+          "input_structure": 0,
+          "map_value": 0.5,
+          "volume": 1
+        },
+        {
+          "centroid": [
+            12.49,
+            12.0,
+            12.0
+          ],
+          "class": "MapAssignment",
+          "fragment": null,
+          "input_structure": 1,
+          "map_value": 0.5,
+          "volume": 1
+        },
+        {
+          "centroid": [
+            12.5,
+            12.0,
+            12.0
+          ],
+          "class": "MapAssignment",
+          "fragment": null,
+          "input_structure": 2,
+          "map_value": 0.25,
+          "volume": 1
+        }
+      ],
+      "sigma_mm": 2.999
+    },
+    {
+      "constant_sigma": true,
+      "coordinates": [
+        [
+          12,
+          12,
+          12
+        ],
+        [
+          12.49,
+          12,
+          12
+        ],
+        [
+          12.5,
+          12,
+          12
+        ]
+      ],
+      "lower_threshold": 0.0,
+      "name": "constant-sigma-3",
+      "public": [
+        {
+          "centroid": [
+            12.0,
+            12.0,
+            12.0
+          ],
+          "correlation": 0.826882617453471,
+          "input containedness": 0.9986301369863013,
+          "input structure": 0,
+          "input weighted mean": 0.13339455404400036,
+          "intersection over union": 0.10626822157434403,
+          "map containedness": 0.1062837148272343,
+          "map weighted mean": 0.0009071373769169452,
+          "region": "Probe A",
+          "volume": 0
+        },
+        {
+          "centroid": [
+            12.0,
+            12.0,
+            12.0
+          ],
+          "correlation": 0.829021436208618,
+          "input containedness": 0.9986301369863013,
+          "input structure": 0,
+          "input weighted mean": 0.13227738114007284,
+          "intersection over union": 0.10626822157434403,
+          "map containedness": 0.1062837148272343,
+          "map weighted mean": 0.0009044607257440878,
+          "region": "Probe B",
+          "volume": 1
+        },
+        {
+          "centroid": [
+            12.49,
+            12.0,
+            12.0
+          ],
+          "correlation": 0.826882617453471,
+          "input containedness": 0.9986301369863013,
+          "input structure": 1,
+          "input weighted mean": 0.13339455404400036,
+          "intersection over union": 0.10626822157434403,
+          "map containedness": 0.1062837148272343,
+          "map weighted mean": 0.0009071373769169452,
+          "region": "Probe A",
+          "volume": 0
+        },
+        {
+          "centroid": [
+            12.49,
+            12.0,
+            12.0
+          ],
+          "correlation": 0.829021436208618,
+          "input containedness": 0.9986301369863013,
+          "input structure": 1,
+          "input weighted mean": 0.13227738114007284,
+          "intersection over union": 0.10626822157434403,
+          "map containedness": 0.1062837148272343,
+          "map weighted mean": 0.0009044607257440878,
+          "region": "Probe B",
+          "volume": 1
+        },
+        {
+          "centroid": [
+            12.5,
+            12.0,
+            12.0
+          ],
+          "correlation": 0.8044162752649924,
+          "input containedness": 0.9986301369863013,
+          "input structure": 2,
+          "input weighted mean": 0.13016937348816188,
+          "intersection over union": 0.10626822157434403,
+          "map containedness": 0.1062837148272343,
+          "map weighted mean": 0.0008852048336397899,
+          "region": "Probe A",
+          "volume": 0
+        },
+        {
+          "centroid": [
+            12.5,
+            12.0,
+            12.0
+          ],
+          "correlation": 0.8058487709619412,
+          "input containedness": 0.9986301369863013,
+          "input structure": 2,
+          "input weighted mean": 0.12898837901572574,
+          "intersection over union": 0.10626822157434403,
+          "map containedness": 0.1062837148272343,
+          "map weighted mean": 0.0008819718223297486,
+          "region": "Probe B",
+          "volume": 1
+        }
+      ],
+      "public_columns": [
+        "input structure",
+        "centroid",
+        "volume",
+        "region",
+        "correlation",
+        "intersection over union",
+        "map weighted mean",
+        "map containedness",
+        "input weighted mean",
+        "input containedness"
+      ],
+      "raw": [
+        {
+          "centroid": [
+            12.0,
+            12.0,
+            12.0
+          ],
+          "class": "AssignImageResult",
+          "correlation": 0.826882617453471,
+          "fragment": null,
+          "input_structure": 0,
+          "intersection_over_first": 0.1062837148272343,
+          "intersection_over_second": 0.9986301369863013,
+          "intersection_over_union": 0.10626822157434403,
+          "map_value": null,
+          "volume": 0,
+          "weighted_mean_of_first": 0.0009071373769169452,
+          "weighted_mean_of_second": 0.13339455404400036
+        },
+        {
+          "centroid": [
+            12.0,
+            12.0,
+            12.0
+          ],
+          "class": "AssignImageResult",
+          "correlation": 0.829021436208618,
+          "fragment": null,
+          "input_structure": 0,
+          "intersection_over_first": 0.1062837148272343,
+          "intersection_over_second": 0.9986301369863013,
+          "intersection_over_union": 0.10626822157434403,
+          "map_value": null,
+          "volume": 1,
+          "weighted_mean_of_first": 0.0009044607257440878,
+          "weighted_mean_of_second": 0.13227738114007284
+        },
+        {
+          "centroid": [
+            12.49,
+            12.0,
+            12.0
+          ],
+          "class": "AssignImageResult",
+          "correlation": 0.826882617453471,
+          "fragment": null,
+          "input_structure": 1,
+          "intersection_over_first": 0.1062837148272343,
+          "intersection_over_second": 0.9986301369863013,
+          "intersection_over_union": 0.10626822157434403,
+          "map_value": null,
+          "volume": 0,
+          "weighted_mean_of_first": 0.0009071373769169452,
+          "weighted_mean_of_second": 0.13339455404400036
+        },
+        {
+          "centroid": [
+            12.49,
+            12.0,
+            12.0
+          ],
+          "class": "AssignImageResult",
+          "correlation": 0.829021436208618,
+          "fragment": null,
+          "input_structure": 1,
+          "intersection_over_first": 0.1062837148272343,
+          "intersection_over_second": 0.9986301369863013,
+          "intersection_over_union": 0.10626822157434403,
+          "map_value": null,
+          "volume": 1,
+          "weighted_mean_of_first": 0.0009044607257440878,
+          "weighted_mean_of_second": 0.13227738114007284
+        },
+        {
+          "centroid": [
+            12.5,
+            12.0,
+            12.0
+          ],
+          "class": "AssignImageResult",
+          "correlation": 0.8044162752649924,
+          "fragment": null,
+          "input_structure": 2,
+          "intersection_over_first": 0.1062837148272343,
+          "intersection_over_second": 0.9986301369863013,
+          "intersection_over_union": 0.10626822157434403,
+          "map_value": null,
+          "volume": 0,
+          "weighted_mean_of_first": 0.0008852048336397899,
+          "weighted_mean_of_second": 0.13016937348816188
+        },
+        {
+          "centroid": [
+            12.5,
+            12.0,
+            12.0
+          ],
+          "class": "AssignImageResult",
+          "correlation": 0.8058487709619412,
+          "fragment": null,
+          "input_structure": 2,
+          "intersection_over_first": 0.1062837148272343,
+          "intersection_over_second": 0.9986301369863013,
+          "intersection_over_union": 0.10626822157434403,
+          "map_value": null,
+          "volume": 1,
+          "weighted_mean_of_first": 0.0008819718223297486,
+          "weighted_mean_of_second": 0.12898837901572574
+        }
+      ],
+      "sigma_mm": 3
+    },
+    {
+      "constant_sigma": true,
+      "coordinates": [
+        [
+          12,
+          12,
+          12
+        ],
+        [
+          12.49,
+          12,
+          12
+        ],
+        [
+          12.5,
+          12,
+          12
+        ]
+      ],
+      "lower_threshold": 0.0,
+      "name": "constant-sigma-3.001",
+      "public": [
+        {
+          "centroid": [
+            12.0,
+            12.0,
+            12.0
+          ],
+          "correlation": 0.8269273550115754,
+          "input containedness": 0.9986301369863013,
+          "input structure": 0,
+          "input weighted mean": 0.13333580713227572,
+          "intersection over union": 0.10626822157434403,
+          "map containedness": 0.1062837148272343,
+          "map weighted mean": 0.0009067378739553303,
+          "region": "Probe A",
+          "volume": 0
+        },
+        {
+          "centroid": [
+            12.0,
+            12.0,
+            12.0
+          ],
+          "correlation": 0.8290701214499936,
+          "input containedness": 0.9986301369863013,
+          "input structure": 0,
+          "input weighted mean": 0.13221969115626073,
+          "intersection over union": 0.10626822157434403,
+          "map containedness": 0.1062837148272343,
+          "map weighted mean": 0.0009040662643163127,
+          "region": "Probe B",
+          "volume": 1
+        },
+        {
+          "centroid": [
+            12.49,
+            12.0,
+            12.0
+          ],
+          "correlation": 0.8269273550115754,
+          "input containedness": 0.9986301369863013,
+          "input structure": 1,
+          "input weighted mean": 0.13333580713227572,
+          "intersection over union": 0.10626822157434403,
+          "map containedness": 0.1062837148272343,
+          "map weighted mean": 0.0009067378739553303,
+          "region": "Probe A",
+          "volume": 0
+        },
+        {
+          "centroid": [
+            12.49,
+            12.0,
+            12.0
+          ],
+          "correlation": 0.8290701214499936,
+          "input containedness": 0.9986301369863013,
+          "input structure": 1,
+          "input weighted mean": 0.13221969115626073,
+          "intersection over union": 0.10626822157434403,
+          "map containedness": 0.1062837148272343,
+          "map weighted mean": 0.0009040662643163127,
+          "region": "Probe B",
+          "volume": 1
+        },
+        {
+          "centroid": [
+            12.5,
+            12.0,
+            12.0
+          ],
+          "correlation": 0.8044605176337515,
+          "input containedness": 0.9986301369863013,
+          "input structure": 2,
+          "input weighted mean": 0.1301123260764263,
+          "intersection over union": 0.10626822157434403,
+          "map containedness": 0.1062837148272343,
+          "map weighted mean": 0.0008848168879712986,
+          "region": "Probe A",
+          "volume": 0
+        },
+        {
+          "centroid": [
+            12.5,
+            12.0,
+            12.0
+          ],
+          "correlation": 0.8058974419032556,
+          "input containedness": 0.9986301369863013,
+          "input structure": 2,
+          "input weighted mean": 0.12893249258831663,
+          "intersection over union": 0.10626822157434403,
+          "map containedness": 0.1062837148272343,
+          "map weighted mean": 0.0008815896929115667,
+          "region": "Probe B",
+          "volume": 1
+        }
+      ],
+      "public_columns": [
+        "input structure",
+        "centroid",
+        "volume",
+        "region",
+        "correlation",
+        "intersection over union",
+        "map weighted mean",
+        "map containedness",
+        "input weighted mean",
+        "input containedness"
+      ],
+      "raw": [
+        {
+          "centroid": [
+            12.0,
+            12.0,
+            12.0
+          ],
+          "class": "AssignImageResult",
+          "correlation": 0.8269273550115754,
+          "fragment": null,
+          "input_structure": 0,
+          "intersection_over_first": 0.1062837148272343,
+          "intersection_over_second": 0.9986301369863013,
+          "intersection_over_union": 0.10626822157434403,
+          "map_value": null,
+          "volume": 0,
+          "weighted_mean_of_first": 0.0009067378739553303,
+          "weighted_mean_of_second": 0.13333580713227572
+        },
+        {
+          "centroid": [
+            12.0,
+            12.0,
+            12.0
+          ],
+          "class": "AssignImageResult",
+          "correlation": 0.8290701214499936,
+          "fragment": null,
+          "input_structure": 0,
+          "intersection_over_first": 0.1062837148272343,
+          "intersection_over_second": 0.9986301369863013,
+          "intersection_over_union": 0.10626822157434403,
+          "map_value": null,
+          "volume": 1,
+          "weighted_mean_of_first": 0.0009040662643163127,
+          "weighted_mean_of_second": 0.13221969115626073
+        },
+        {
+          "centroid": [
+            12.49,
+            12.0,
+            12.0
+          ],
+          "class": "AssignImageResult",
+          "correlation": 0.8269273550115754,
+          "fragment": null,
+          "input_structure": 1,
+          "intersection_over_first": 0.1062837148272343,
+          "intersection_over_second": 0.9986301369863013,
+          "intersection_over_union": 0.10626822157434403,
+          "map_value": null,
+          "volume": 0,
+          "weighted_mean_of_first": 0.0009067378739553303,
+          "weighted_mean_of_second": 0.13333580713227572
+        },
+        {
+          "centroid": [
+            12.49,
+            12.0,
+            12.0
+          ],
+          "class": "AssignImageResult",
+          "correlation": 0.8290701214499936,
+          "fragment": null,
+          "input_structure": 1,
+          "intersection_over_first": 0.1062837148272343,
+          "intersection_over_second": 0.9986301369863013,
+          "intersection_over_union": 0.10626822157434403,
+          "map_value": null,
+          "volume": 1,
+          "weighted_mean_of_first": 0.0009040662643163127,
+          "weighted_mean_of_second": 0.13221969115626073
+        },
+        {
+          "centroid": [
+            12.5,
+            12.0,
+            12.0
+          ],
+          "class": "AssignImageResult",
+          "correlation": 0.8044605176337515,
+          "fragment": null,
+          "input_structure": 2,
+          "intersection_over_first": 0.1062837148272343,
+          "intersection_over_second": 0.9986301369863013,
+          "intersection_over_union": 0.10626822157434403,
+          "map_value": null,
+          "volume": 0,
+          "weighted_mean_of_first": 0.0008848168879712986,
+          "weighted_mean_of_second": 0.1301123260764263
+        },
+        {
+          "centroid": [
+            12.5,
+            12.0,
+            12.0
+          ],
+          "class": "AssignImageResult",
+          "correlation": 0.8058974419032556,
+          "fragment": null,
+          "input_structure": 2,
+          "intersection_over_first": 0.1062837148272343,
+          "intersection_over_second": 0.9986301369863013,
+          "intersection_over_union": 0.10626822157434403,
+          "map_value": null,
+          "volume": 1,
+          "weighted_mean_of_first": 0.0008815896929115667,
+          "weighted_mean_of_second": 0.12893249258831663
+        }
+      ],
+      "sigma_mm": 3.001
+    },
+    {
+      "constant_sigma": false,
+      "coordinates": [
+        [
+          12,
+          12,
+          12
+        ],
+        [
+          12,
+          12,
+          12
+        ],
+        [
+          12,
+          12,
+          12
+        ],
+        [
+          12,
+          12,
+          12
+        ],
+        [
+          12,
+          12,
+          12
+        ],
+        [
+          12,
+          12,
+          12
+        ]
+      ],
+      "errors": {
+        "public": {
+          "class": "ValueError",
+          "message": "shapes (4,4) and (1,4) not aligned: 4 (dim 1) != 1 (dim 0)"
+        },
+        "raw": {
+          "class": "ValueError",
+          "message": "shapes (4,4) and (1,4) not aligned: 4 (dim 1) != 1 (dim 0)"
+        }
+      },
+      "lower_threshold": 0.0,
+      "name": "mixed-sigma-crossing-branch-boundary",
+      "sigma_mm": [
+        0,
+        0.1,
+        2,
+        2.999,
+        3,
+        3.001
+      ]
+    },
+    {
+      "constant_sigma": false,
+      "coordinates": [
+        [
+          12,
+          12,
+          12
+        ],
+        [
+          12,
+          12,
+          12
+        ]
+      ],
+      "errors": {
+        "public": {
+          "class": "ValueError",
+          "message": "shapes (4,4) and (1,4) not aligned: 4 (dim 1) != 1 (dim 0)"
+        },
+        "raw": {
+          "class": "ValueError",
+          "message": "shapes (4,4) and (1,4) not aligned: 4 (dim 1) != 1 (dim 0)"
+        }
+      },
+      "lower_threshold": 0.0,
+      "name": "mixed-sigma-exact-only",
+      "sigma_mm": [
+        0.1,
+        2.999
+      ]
+    },
+    {
+      "constant_sigma": false,
+      "coordinates": [
+        [
+          12,
+          12,
+          12
+        ],
+        [
+          12,
+          12,
+          12
+        ]
+      ],
+      "lower_threshold": 0.0,
+      "name": "mixed-sigma-uncertain-only",
+      "public": [
+        {
+          "centroid": [
+            12.0,
+            12.0,
+            12.0
+          ],
+          "correlation": 0.826882617453471,
+          "input containedness": 0.9986301369863013,
+          "input structure": 0,
+          "input weighted mean": 0.13339455404400036,
+          "intersection over union": 0.10626822157434403,
+          "map containedness": 0.1062837148272343,
+          "map weighted mean": 0.0009071373769169452,
+          "region": "Probe A",
+          "volume": 0
+        },
+        {
+          "centroid": [
+            12.0,
+            12.0,
+            12.0
+          ],
+          "correlation": 0.829021436208618,
+          "input containedness": 0.9986301369863013,
+          "input structure": 0,
+          "input weighted mean": 0.13227738114007284,
+          "intersection over union": 0.10626822157434403,
+          "map containedness": 0.1062837148272343,
+          "map weighted mean": 0.0009044607257440878,
+          "region": "Probe B",
+          "volume": 1
+        },
+        {
+          "centroid": [
+            12.0,
+            12.0,
+            12.0
+          ],
+          "correlation": 0.8269273550115754,
+          "input containedness": 0.9986301369863013,
+          "input structure": 1,
+          "input weighted mean": 0.13333580713227572,
+          "intersection over union": 0.10626822157434403,
+          "map containedness": 0.1062837148272343,
+          "map weighted mean": 0.0009067378739553303,
+          "region": "Probe A",
+          "volume": 0
+        },
+        {
+          "centroid": [
+            12.0,
+            12.0,
+            12.0
+          ],
+          "correlation": 0.8290701214499936,
+          "input containedness": 0.9986301369863013,
+          "input structure": 1,
+          "input weighted mean": 0.13221969115626073,
+          "intersection over union": 0.10626822157434403,
+          "map containedness": 0.1062837148272343,
+          "map weighted mean": 0.0009040662643163127,
+          "region": "Probe B",
+          "volume": 1
+        }
+      ],
+      "public_columns": [
+        "input structure",
+        "centroid",
+        "volume",
+        "region",
+        "correlation",
+        "intersection over union",
+        "map weighted mean",
+        "map containedness",
+        "input weighted mean",
+        "input containedness"
+      ],
+      "raw": [
+        {
+          "centroid": [
+            12.0,
+            12.0,
+            12.0
+          ],
+          "class": "AssignImageResult",
+          "correlation": 0.826882617453471,
+          "fragment": null,
+          "input_structure": 0,
+          "intersection_over_first": 0.1062837148272343,
+          "intersection_over_second": 0.9986301369863013,
+          "intersection_over_union": 0.10626822157434403,
+          "map_value": null,
+          "volume": 0,
+          "weighted_mean_of_first": 0.0009071373769169452,
+          "weighted_mean_of_second": 0.13339455404400036
+        },
+        {
+          "centroid": [
+            12.0,
+            12.0,
+            12.0
+          ],
+          "class": "AssignImageResult",
+          "correlation": 0.829021436208618,
+          "fragment": null,
+          "input_structure": 0,
+          "intersection_over_first": 0.1062837148272343,
+          "intersection_over_second": 0.9986301369863013,
+          "intersection_over_union": 0.10626822157434403,
+          "map_value": null,
+          "volume": 1,
+          "weighted_mean_of_first": 0.0009044607257440878,
+          "weighted_mean_of_second": 0.13227738114007284
+        },
+        {
+          "centroid": [
+            12.0,
+            12.0,
+            12.0
+          ],
+          "class": "AssignImageResult",
+          "correlation": 0.8269273550115754,
+          "fragment": null,
+          "input_structure": 1,
+          "intersection_over_first": 0.1062837148272343,
+          "intersection_over_second": 0.9986301369863013,
+          "intersection_over_union": 0.10626822157434403,
+          "map_value": null,
+          "volume": 0,
+          "weighted_mean_of_first": 0.0009067378739553303,
+          "weighted_mean_of_second": 0.13333580713227572
+        },
+        {
+          "centroid": [
+            12.0,
+            12.0,
+            12.0
+          ],
+          "class": "AssignImageResult",
+          "correlation": 0.8290701214499936,
+          "fragment": null,
+          "input_structure": 1,
+          "intersection_over_first": 0.1062837148272343,
+          "intersection_over_second": 0.9986301369863013,
+          "intersection_over_union": 0.10626822157434403,
+          "map_value": null,
+          "volume": 1,
+          "weighted_mean_of_first": 0.0009040662643163127,
+          "weighted_mean_of_second": 0.13221969115626073
+        }
+      ],
+      "sigma_mm": [
+        3,
+        3.001
+      ]
+    },
+    {
+      "constant_sigma": true,
+      "coordinates": [
+        [
+          12,
+          12,
+          12
+        ]
+      ],
+      "lower_threshold": 0.5,
+      "name": "exact-threshold-equality",
+      "public": [],
+      "public_columns": [
+        "input structure",
+        "centroid",
+        "volume",
+        "fragment",
+        "region",
+        "correlation",
+        "intersection over union",
+        "map value",
+        "map weighted mean",
+        "map containedness",
+        "input weighted mean",
+        "input containedness"
+      ],
+      "raw": [],
+      "sigma_mm": 0
+    },
+    {
+      "constant_sigma": true,
+      "coordinates": [
+        [
+          12,
+          12,
+          12
+        ]
+      ],
+      "lower_threshold": 0.499999,
+      "name": "exact-threshold-below-equality",
+      "public": [
+        {
+          "centroid": [
+            12.0,
+            12.0,
+            12.0
+          ],
+          "input structure": 0,
+          "map value": 0.5,
+          "region": "Probe A",
+          "volume": 0
+        },
+        {
+          "centroid": [
+            12.0,
+            12.0,
+            12.0
+          ],
+          "input structure": 0,
+          "map value": 0.5,
+          "region": "Probe B",
+          "volume": 1
+        }
+      ],
+      "public_columns": [
+        "input structure",
+        "centroid",
+        "volume",
+        "region",
+        "map value"
+      ],
+      "raw": [
+        {
+          "centroid": [
+            12.0,
+            12.0,
+            12.0
+          ],
+          "class": "MapAssignment",
+          "fragment": null,
+          "input_structure": 0,
+          "map_value": 0.5,
+          "volume": 0
+        },
+        {
+          "centroid": [
+            12.0,
+            12.0,
+            12.0
+          ],
+          "class": "MapAssignment",
+          "fragment": null,
+          "input_structure": 0,
+          "map_value": 0.5,
+          "volume": 1
+        }
+      ],
+      "sigma_mm": 0
+    },
+    {
+      "constant_sigma": true,
+      "coordinates": [
+        [
+          2,
+          2,
+          2
+        ]
+      ],
+      "lower_threshold": 0.0,
+      "name": "zero-is-excluded",
+      "public": [],
+      "public_columns": [
+        "input structure",
+        "centroid",
+        "volume",
+        "fragment",
+        "region",
+        "correlation",
+        "intersection over union",
+        "map value",
+        "map weighted mean",
+        "map containedness",
+        "input weighted mean",
+        "input containedness"
+      ],
+      "raw": [],
+      "sigma_mm": 0
+    },
+    {
+      "constant_sigma": true,
+      "coordinates": [
+        [
+          -0.51,
+          0,
+          0
+        ],
+        [
+          -1.5,
+          0,
+          0
+        ],
+        [
+          12.49,
+          12,
+          12
+        ],
+        [
+          12.5,
+          12,
+          12
+        ],
+        [
+          24.49,
+          24,
+          24
+        ],
+        [
+          24.5,
+          24,
+          24
+        ]
+      ],
+      "lower_threshold": 0.0,
+      "name": "rounding-and-bounds",
+      "public": [
+        {
+          "centroid": [
+            -0.51,
+            0.0,
+            0.0
+          ],
+          "input structure": 0,
+          "map value": 0.4000000059604645,
+          "region": "Probe A",
+          "volume": 0
+        },
+        {
+          "centroid": [
+            12.49,
+            12.0,
+            12.0
+          ],
+          "input structure": 2,
+          "map value": 0.5,
+          "region": "Probe A",
+          "volume": 0
+        },
+        {
+          "centroid": [
+            12.5,
+            12.0,
+            12.0
+          ],
+          "input structure": 3,
+          "map value": 0.75,
+          "region": "Probe A",
+          "volume": 0
+        },
+        {
+          "centroid": [
+            -0.51,
+            0.0,
+            0.0
+          ],
+          "input structure": 0,
+          "map value": 0.10000000149011612,
+          "region": "Probe B",
+          "volume": 1
+        },
+        {
+          "centroid": [
+            12.49,
+            12.0,
+            12.0
+          ],
+          "input structure": 2,
+          "map value": 0.5,
+          "region": "Probe B",
+          "volume": 1
+        },
+        {
+          "centroid": [
+            12.5,
+            12.0,
+            12.0
+          ],
+          "input structure": 3,
+          "map value": 0.25,
+          "region": "Probe B",
+          "volume": 1
+        }
+      ],
+      "public_columns": [
+        "input structure",
+        "centroid",
+        "volume",
+        "region",
+        "map value"
+      ],
+      "raw": [
+        {
+          "centroid": [
+            -0.51,
+            0.0,
+            0.0
+          ],
+          "class": "MapAssignment",
+          "fragment": null,
+          "input_structure": 0,
+          "map_value": 0.4000000059604645,
+          "volume": 0
+        },
+        {
+          "centroid": [
+            12.49,
+            12.0,
+            12.0
+          ],
+          "class": "MapAssignment",
+          "fragment": null,
+          "input_structure": 2,
+          "map_value": 0.5,
+          "volume": 0
+        },
+        {
+          "centroid": [
+            12.5,
+            12.0,
+            12.0
+          ],
+          "class": "MapAssignment",
+          "fragment": null,
+          "input_structure": 3,
+          "map_value": 0.75,
+          "volume": 0
+        },
+        {
+          "centroid": [
+            -0.51,
+            0.0,
+            0.0
+          ],
+          "class": "MapAssignment",
+          "fragment": null,
+          "input_structure": 0,
+          "map_value": 0.10000000149011612,
+          "volume": 1
+        },
+        {
+          "centroid": [
+            12.49,
+            12.0,
+            12.0
+          ],
+          "class": "MapAssignment",
+          "fragment": null,
+          "input_structure": 2,
+          "map_value": 0.5,
+          "volume": 1
+        },
+        {
+          "centroid": [
+            12.5,
+            12.0,
+            12.0
+          ],
+          "class": "MapAssignment",
+          "fragment": null,
+          "input_structure": 3,
+          "map_value": 0.25,
+          "volume": 1
+        }
+      ],
+      "sigma_mm": 0
+    },
+    {
+      "constant_sigma": true,
+      "coordinates": [
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "lower_threshold": 0.0,
+      "name": "uncertain-boundary-clipping",
+      "public": [
+        {
+          "centroid": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "correlation": -0.03335552756770745,
+          "input containedness": 0.012328767123287671,
+          "input structure": 0,
+          "input weighted mean": 0.005194566460750445,
+          "intersection over union": 0.005229517722254503,
+          "map containedness": 0.009,
+          "map weighted mean": 6.425195346800853e-06,
+          "region": "Probe A",
+          "volume": 0
+        },
+        {
+          "centroid": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "correlation": -0.04391997211909227,
+          "input containedness": 0.012328767123287671,
+          "input structure": 0,
+          "input weighted mean": 0.001298763262162384,
+          "intersection over union": 0.005229517722254503,
+          "map containedness": 0.009,
+          "map weighted mean": 1.6152365817586413e-06,
+          "region": "Probe B",
+          "volume": 1
+        }
+      ],
+      "public_columns": [
+        "input structure",
+        "centroid",
+        "volume",
+        "region",
+        "correlation",
+        "intersection over union",
+        "map weighted mean",
+        "map containedness",
+        "input weighted mean",
+        "input containedness"
+      ],
+      "raw": [
+        {
+          "centroid": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "class": "AssignImageResult",
+          "correlation": -0.03335552756770745,
+          "fragment": null,
+          "input_structure": 0,
+          "intersection_over_first": 0.009,
+          "intersection_over_second": 0.012328767123287671,
+          "intersection_over_union": 0.005229517722254503,
+          "map_value": null,
+          "volume": 0,
+          "weighted_mean_of_first": 6.425195346800853e-06,
+          "weighted_mean_of_second": 0.005194566460750445
+        },
+        {
+          "centroid": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "class": "AssignImageResult",
+          "correlation": -0.04391997211909227,
+          "fragment": null,
+          "input_structure": 0,
+          "intersection_over_first": 0.009,
+          "intersection_over_second": 0.012328767123287671,
+          "intersection_over_union": 0.005229517722254503,
+          "map_value": null,
+          "volume": 1,
+          "weighted_mean_of_first": 1.6152365817586413e-06,
+          "weighted_mean_of_second": 0.001298763262162384
+        }
+      ],
+      "sigma_mm": 3
+    },
+    {
+      "constant_sigma": true,
+      "coordinates": [
+        [
+          12,
+          12,
+          12
+        ]
+      ],
+      "lower_threshold": 0.10626822157434403,
+      "name": "uncertain-iou-threshold-equality",
+      "public": [],
+      "public_columns": [
+        "input structure",
+        "centroid",
+        "volume",
+        "fragment",
+        "region",
+        "correlation",
+        "intersection over union",
+        "map value",
+        "map weighted mean",
+        "map containedness",
+        "input weighted mean",
+        "input containedness"
+      ],
+      "raw": [],
+      "sigma_mm": 3
+    }
+  ],
+  "execution_guards": {
+    "cross_space_assignment_executed": false,
+    "mismatch_detected_without_upstream_assignment": true,
+    "network_attempt_count": 0,
+    "network_denied": true,
+    "same_space_pointcloud_warp_returns_identity": true,
+    "warp_calls": {
+      "Point.warp": 0,
+      "PointCloud.warp": 30
+    }
+  },
+  "limits": [
+    "Synthetic two-region statistical maps only; no real atlas data or scientific classification tested.",
+    "Latest compatible dependencies were resolved on probe date; source archive and executed siibra files are hash-bound.",
+    "Cross-space Point.warp was source-inspected only and never executed.",
+    "Public DataFrame conversion is exercised, but assertions use raw assignment dataclasses to preserve absent versus null metrics."
+  ],
+  "local_configuration": {
+    "configured_before_siibra_import": true,
+    "retained_config_zip_verified_but_not_redistributed": true,
+    "synthetic": true,
+    "wrapper_root": "siibra-configurations-177023a506eceff008a012bb0a98d7bca0d1bbd5"
+  },
+  "map": {
+    "affine": [
+      [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "shape": [
+      25,
+      25,
+      25
+    ],
+    "type": "STATISTICAL",
+    "voxel_scaling_mm": 1.0
+  },
+  "pins": {
+    "config_commit": "177023a506eceff008a012bb0a98d7bca0d1bbd5",
+    "config_sha256": "f41e45cd2306b645342e7937319bb1302a9d895d57f55cf1c67ffc0bc00a7c90",
+    "config_zip": "/private/tmp/siibra-configurations-177023.zip",
+    "siibra_commit": "44549ae595533054135a4d62d567069353027b34",
+    "siibra_version": "1.0.1a20",
+    "source_sha256": "1926610c0b829a9a1caf25290ce747bacfe290f89f92c37417e45bb9b57e0a81",
+    "source_tarball": "/private/tmp/siibra-1.0.1a20.tar.gz"
+  },
+  "point_warp_source_inspection": {
+    "executed": false,
+    "method_source_sha256": "9591801d80d97dac308065d311001f1c1e13719de57ff0dcbbe68a10e37b240c",
+    "returned_constructor_keywords": [
+      "coordinatespec",
+      "label",
+      "space"
+    ],
+    "sigma_mm_forwarded": false
+  },
+  "purpose": "Research-only execution of real pinned siibra assignment code; no production method adopted.",
+  "runtime": {
+    "implementation": "CPython",
+    "installed_source_file_sha256": {
+      "siibra/locations/point.py": "2a7ee0d6e62ee9fed4a2eada765dd90623b28ada4eab66caef896990f3af9089",
+      "siibra/locations/pointcloud.py": "3b735e3230b54c3bf69e25252f3944e096f199a99e695516a0c9a343736d4fa1",
+      "siibra/volumes/parcellationmap.py": "6f4f1ff1d24ac18f116f2d79a40d9f554617eb842143bb51a025b906dc806e17"
+    },
+    "packages": {
+      "nibabel": "5.4.2",
+      "nilearn": "0.14.1",
+      "numpy": "2.5.3",
+      "pandas": "3.0.5",
+      "scikit-image": "0.26.0",
+      "scipy": "1.18.1",
+      "siibra": "1.0.1a20"
+    },
+    "platform": "macOS-26.5.1-arm64-arm-64bit",
+    "python": "3.12.9",
+    "siibra": "1.0.1-alpha.20"
+  },
+  "schemaVersion": 1,
+  "synthetic_nifti": [
+    {
+      "affine": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "name": "synthetic-map-a.nii.gz",
+      "sha256": "40a1dd7b24bebfcbd5ee2447156948f6d891361326fe2d011cb5c5f12609346b",
+      "shape": [
+        25,
+        25,
+        25
+      ]
+    },
+    {
+      "affine": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "name": "synthetic-map-b.nii.gz",
+      "sha256": "7f8192be8fc9892e164ad0ea2c08d1096e339601413feeaeddc671968f1ab303",
+      "shape": [
+        25,
+        25,
+        25
+      ]
+    }
+  ]
+}

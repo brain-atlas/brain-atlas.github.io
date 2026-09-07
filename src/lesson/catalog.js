@@ -40,7 +40,7 @@ function duplicateDiagnostics(records, scope) {
   return diagnostics;
 }
 
-function semanticDiagnostics(entityManifest, fidelityManifest, fibreFilterManifest) {
+function semanticDiagnostics(entityManifest, fidelityManifest, fibreFilterManifest, filterRegionEntityIds) {
   const diagnostics = [
     ...duplicateDiagnostics(entityManifest.entities, 'entity'),
     ...duplicateDiagnostics(entityManifest.inspectables, 'inspectable'),
@@ -52,7 +52,7 @@ function semanticDiagnostics(entityManifest, fidelityManifest, fibreFilterManife
   const rendererBindings = new Set();
   const inspectableBindings = new Set();
   const undirectedPairs = new Set();
-  const regionEntityIds = new Set(
+  const regionEntityIds = filterRegionEntityIds ?? new Set(
     entityManifest.entities.filter(({ type }) => type === 'region').map(({ id }) => id),
   );
   const expectedSpecialSelectors = ['endpoint.unknown', 'endpoint.ambiguous'];
@@ -205,12 +205,97 @@ function sortedObject(entries) {
   return Object.fromEntries([...entries].sort(([a], [b]) => a.localeCompare(b)));
 }
 
+function completeJulichEntities(entityManifest, julichManifest) {
+  const baseRegionIds = new Set(
+    entityManifest.entities.filter(({ type }) => type === 'region').map(({ id }) => id),
+  );
+  if (julichManifest === undefined) {
+    return {
+      manifest: entityManifest,
+      baseRegionIds,
+      atlasDefaultEntityIds: entityManifest.entities
+        .map(({ id }) => id)
+        .filter((id) => id !== 'layer.labels'),
+    };
+  }
+  const topKeys = ['schemaVersion', 'space', 'source', 'coverage', 'hierarchy', 'streams', 'regions'];
+  if (!julichManifest || typeof julichManifest !== 'object' || Array.isArray(julichManifest)
+    || Object.keys(julichManifest).sort().join('\0') !== topKeys.sort().join('\0')
+    || julichManifest.schemaVersion !== 1
+    || julichManifest.space !== 'MNI152NLin2009cAsym'
+    || julichManifest.source?.atlas !== 'Jülich-Brain'
+    || julichManifest.source?.version !== '3.0.3'
+    || !Array.isArray(julichManifest.regions)
+    || julichManifest.regions.length !== 157) {
+    throw new TypeError('complete Jülich region catalog has an invalid shape or identity');
+  }
+  const baseByRenderer = new Map(entityManifest.entities
+    .filter(({ renderer }) => renderer.kind === 'region')
+    .map((entity) => [entity.renderer.id, entity]));
+  const additions = [];
+  const seenEntities = new Set();
+  const seenRenderers = new Set();
+  let currentCount = 0;
+  for (const region of julichManifest.regions) {
+    const valid = region && typeof region.id === 'string' && typeof region.entityId === 'string'
+      && region.entityId.startsWith('region.') && typeof region.name === 'string' && region.name.length > 0
+      && typeof region.atlasId === 'string' && region.atlasId.length > 0
+      && Number.isSafeInteger(region.leftLabel) && region.rightLabel === region.leftLabel + 1000
+      && ['lesson-current', 'atlas-available'].includes(region.catalogStatus)
+      && typeof region.gapMap === 'boolean'
+      && ['mapped', 'unresolved'].includes(region.hierarchyStatus)
+      && Array.isArray(region.hierarchyPaths)
+      && region.hierarchyPaths.every((path) => Array.isArray(path) && path.every((part) => typeof part === 'string' && part))
+      && region.meshes && ['L', 'R'].every((hemisphere) => typeof region.meshes[hemisphere]?.file === 'string');
+    if (!valid || seenEntities.has(region.entityId) || seenRenderers.has(region.id)) {
+      throw new TypeError(`complete Jülich region record is invalid or duplicate: ${region?.entityId ?? 'unknown'}`);
+    }
+    seenEntities.add(region.entityId);
+    seenRenderers.add(region.id);
+    const base = baseByRenderer.get(region.id);
+    if (region.catalogStatus === 'lesson-current') {
+      currentCount++;
+      if (!base || base.id !== region.entityId || base.atlasId !== region.atlasId) {
+        throw new TypeError(`current Jülich entity binding drift: ${region.entityId}`);
+      }
+    } else {
+      if (base || baseRegionIds.has(region.entityId)) {
+        throw new TypeError(`additional Jülich entity collides with current catalog: ${region.entityId}`);
+      }
+      additions.push({
+        id: region.entityId,
+        type: 'region',
+        atlasId: region.atlasId,
+        label: region.name,
+        renderer: { kind: 'region', id: region.id },
+        hemisphereMode: 'bilateral',
+        fidelity: 'fidelity.julich-regions',
+      });
+    }
+  }
+  if (currentCount !== baseRegionIds.size || currentCount !== 45 || additions.length !== 112) {
+    throw new TypeError('complete Jülich catalog must preserve 45 current and add 112 available regions');
+  }
+  const manifest = { ...entityManifest, entities: [...entityManifest.entities, ...additions] };
+  throwContractDiagnostics('extended entity catalog schema is invalid', validateEntityCatalog(manifest));
+  return {
+    manifest,
+    baseRegionIds,
+    atlasDefaultEntityIds: entityManifest.entities
+      .map(({ id }) => id)
+      .filter((id) => id !== 'layer.labels'),
+  };
+}
+
 export function createLessonCatalog(
   entityManifest,
   fidelityManifest,
   fibreFilterManifest = EMPTY_FIBRE_FILTER_PRESETS,
+  julichManifest,
 ) {
   throwContractDiagnostics('entity catalog schema is invalid', validateEntityCatalog(entityManifest));
+  const completed = completeJulichEntities(entityManifest, julichManifest);
+  entityManifest = completed.manifest;
   throwContractDiagnostics('fidelity catalog schema is invalid', validateFidelityCatalog(fidelityManifest));
   throwContractDiagnostics(
     'fibre filter preset catalog schema is invalid',
@@ -218,7 +303,7 @@ export function createLessonCatalog(
   );
   throwContractDiagnostics(
     'lesson catalog references are invalid',
-    semanticDiagnostics(entityManifest, fidelityManifest, fibreFilterManifest),
+    semanticDiagnostics(entityManifest, fidelityManifest, fibreFilterManifest, completed.baseRegionIds),
   );
 
   const entities = [...entityManifest.entities]
@@ -240,7 +325,7 @@ export function createLessonCatalog(
     }));
   const fibreFilterSelectors = [
     ...fibreFilterManifest.specialSelectors.map((selector) => structuredClone(selector)),
-    ...entities.filter(({ type }) => type === 'region').map(({ id, label }) => ({
+    ...entities.filter(({ id, type }) => type === 'region' && completed.baseRegionIds.has(id)).map(({ id, label }) => ({
       id,
       label,
       description: `Displayed atlas region: ${label}.`,
@@ -276,6 +361,7 @@ export function createLessonCatalog(
   return deepFreeze({
     schemaVersion: entityManifest.schemaVersion,
     entityIds: entities.map(({ id }) => id),
+    atlasDefaultEntityIds: [...completed.atlasDefaultEntityIds].sort((a, b) => a.localeCompare(b)),
     inspectableIds: inspectables.map(({ id }) => id),
     fidelityIds: fidelityRecords.map(({ id }) => id),
     fibreFilterPresetIds: fibreFilterPresets.map(({ id }) => id),

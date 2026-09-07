@@ -563,6 +563,18 @@ def verify_current(repo: Path, manifest: dict[str, Any]) -> dict[str, Any]:
     region_meshes = sum(len(region.get("meshes", {})) for region in regions.get("regions", []))
     if region_count != 45 or region_meshes != 90:
         raise ContractError("region manifest does not contain 45 bilateral regions")
+    julich_catalog = load_json(repo / "public/data/julich_regions.json")
+    julich_regions = julich_catalog.get("regions", [])
+    if len(julich_regions) != 157 or sum(len(region.get("meshes", {})) for region in julich_regions) != 314:
+        raise ContractError("complete Jülich catalog does not contain 157 bilateral regions")
+    if sum(region.get("catalogStatus") == "lesson-current" for region in julich_regions) != 45:
+        raise ContractError("complete Jülich catalog does not preserve 45 current regions")
+    if sum(region.get("gapMap") is True for region in julich_regions) != 6:
+        raise ContractError("complete Jülich catalog does not contain six GapMaps")
+    if sum(len(region.get("hierarchyPaths", [])) for region in julich_regions) != 155:
+        raise ContractError("complete Jülich catalog hierarchy occurrence count drifted")
+    if any(region.get("rightLabel") != region.get("leftLabel", 0) + 1000 for region in julich_regions):
+        raise ContractError("complete Jülich catalog bilateral labels drifted")
 
     association = load_json(repo / "public/data/tracts.json")
     tract_records = association.get("tracts", [])
@@ -681,7 +693,7 @@ def verify_current(repo: Path, manifest: dict[str, Any]) -> dict[str, Any]:
             "corticalShell": {"container": "glTF", "version": 2},
             "fibreEndpoints": {"associationFibres": 2880, "endpoints": 35760, "presets": 4, "swmFibres": 15000},
             "opticRadiation": {"fibres": 220, "pointsPerFibre": 64, "runtimeMirroredRight": True},
-            "regions": {"meshes": 90, "regions": 45},
+            "regions": {"catalog": 157, "lessonCurrent": 45, "meshes": 314},
             "swm": {"fibres": 15000, "lengths": 15000, "localLengths": 15000, "pointsPerFibre": 8},
         },
     }

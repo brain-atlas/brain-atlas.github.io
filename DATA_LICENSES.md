@@ -17,7 +17,7 @@ Scientific interpretation and model limitations are inventoried separately in
 |---|---|---|
 | `src/lessons/retina-to-v1.md`, `src/lessons/library.json` | Original project lesson prose and library metadata; citations and review limits in `docs/lessons/retina-to-v1-validation.md`; no supplementary images declared | [AGPL-3.0-only](LICENSE); displayed atlas assets retain their separate terms below |
 | `public/models/brain_mni.glb` | MNI152NLin2009cAsym brain mask via TemplateFlow | MNI notice reproduced below |
-| `public/data/regions.json`, `public/data/regions/*.obj` | Jülich-Brain Atlas v3.0.3 maximum probability map | [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) |
+| `public/data/regions.json`, `public/data/julich_regions.json`, `public/data/regions/*.obj` | Jülich-Brain Atlas v3.0.3 maximum probability map plus licensed XML identities and terminology hierarchy | [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) |
 | `public/data/tracts.json`, `public/data/tracts_metadata.json` | HCP-1065 population-averaged tractography atlas and its geometry-free runtime projection | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) and WU-Minn HCP Open Access Data Use Terms |
 | `public/data/tract_activity.json`, `public/data/fibre_filter_presets.json` | Project-authored activity assumptions, source links, and endpoint-query presets; no anatomical geometry | [AGPL-3.0-only](LICENSE) |
 | `public/data/fibre_endpoints.json` | Categorical assignments combining the Jülich-Brain v3.0.3 MPM with HCP-1065 association/SWM contour endpoints | [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/), [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/), and WU-Minn HCP Open Access Data Use Terms |
@@ -70,11 +70,16 @@ The source template carries this notice:
 
 ## Jülich-Brain region surfaces
 
-`public/data/regions.json` and `public/data/regions/*.obj` are adapted from the
-**Jülich-Brain Atlas, cytoarchitectonic maps v3.0.3** maximum probability map.
-The project extracted selected regions, separated hemispheres, converted
-volumetric labels to marching-cubes surfaces, and simplified the meshes for web
-rendering. These files are modified data, not original atlas files.
+`public/data/regions.json`, `public/data/julich_regions.json`, and
+`public/data/regions/*.obj` are adapted from the **Jülich-Brain Atlas,
+cytoarchitectonic maps v3.0.3** maximum probability map and its licensed XML and
+terminology hierarchy. The project extracted all 157 base regions as 314 real
+left/right marching-cubes surfaces and simplified them for web rendering. The
+complete catalog retains source XML IDs/names, bilateral MPM labels, six
+GapMaps, and all 155 licensed hierarchy path occurrences. Six XML identities have
+no hierarchy leaf and are marked unresolved rather than assigned invented edges.
+The legacy 45-region manifest remains unchanged for endpoint-artifact compatibility.
+These files are modified data, not original atlas files.
 
 Source and citation:
 
@@ -160,7 +165,28 @@ unrounded endpoints in a dilated cortical ribbon, deterministically sampled and
 resampled contours, and stored original and local-neighbour mean length measures
 used by the activity texture. These are real bilateral data and are not mirrored.
 Neither FIB-derived asset underwent a 2009a→2009c template warp; its decoded
-RAS+ coordinate frame was retained through resampling.
+RAS+ coordinate frame was retained through resampling. The SWM GM/WM seed and
+ribbon used whole-volume maps, not a cerebral-only exclusion; ribbon retention is
+not certification of superficial cerebral white matter.
+
+### Local-only anatomical screening reference
+
+The offline `audit swm-domains` command additionally uses the TemplateFlow carpet
+map at repository revision `15d7c02160f79f5218d2545b4febebeecc11531d`,
+[OSF record](https://api.osf.io/v2/files/5bc6475753cec40019ade131/), 451,304 bytes,
+SHA-256 `52eded597985fee7806699dfd276d32b1d53293dff04326773e4fe84864752c7`.
+It performs categorical lookup on existing displayed points only. The
+[published repository notice](https://raw.githubusercontent.com/templateflow/tpl-MNI152NLin2009cAsym/15d7c02160f79f5218d2545b4febebeecc11531d/LICENSE)
+is retained with local inputs. Exact upstream segmentation construction and rights
+remain unresolved; approval `brain-atlas-n401` permits bounded local screening,
+not a third-party rights waiver. Neither the carpet volume nor its per-contour
+classifications/overlays are distributed. This source does not generate or replace
+any shipped geometry, and the public asset terms remain unchanged. Source label
+255 remains combined Cerebellum and Midbrain, not anatomical ground truth.
+[Methods and limitations](docs/TRACT_SPACE_PROVENANCE.md#swm-source-compartment-screening)
+distinguish descriptive counts from validated tissue membership.
+
+### Recovered FIB-derived asset reproducibility
 
 Checked offline preparation and post-processing now reproduce the current OR and
 SWM files byte-for-byte from exact, non-redistributed recovered TrackVis

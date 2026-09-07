@@ -81,8 +81,9 @@ test('manifest inventories every source, pipeline, output, coordinate contract, 
   assert.equal(manifest.schemaVersion, 1);
 
   const expectedSources = new Set([
-    'templateflow-brain-mask', 'julich-mpm', 'julich-v1-left', 'julich-lgn-left',
-    'templateflow-gm', 'templateflow-wm', 'hcp1065-tract-archive', 'hcp1065-fib',
+    'templateflow-brain-mask', 'julich-mpm', 'julich-terminology-xml', 'julich-hierarchy',
+    'julich-v1-left', 'julich-lgn-left', 'templateflow-gm', 'templateflow-wm',
+    'hcp1065-tract-archive', 'hcp1065-fib', 'templateflow-carpet',
   ]);
   assert.deepEqual(new Set(manifest.sources.map(({ id }) => id)), expectedSources);
   for (const source of manifest.sources) {
@@ -112,8 +113,15 @@ test('manifest inventories every source, pipeline, output, coordinate contract, 
 
   assert.deepEqual(
     manifest.pipelines.map(({ id }) => id),
-    ['cortex', 'regions', 'association', 'endpoints', 'optic-radiation', 'swm'],
+    ['cortex', 'regions', 'association', 'endpoints', 'optic-radiation', 'swm', 'swm-domains'],
   );
+  const domainAudit = manifest.pipelines.find(({ id }) => id === 'swm-domains');
+  assert.deepEqual(domainAudit.sourceIds, ['templateflow-carpet']);
+  assert.equal(domainAudit.parameters.scope, 'private-source-compartment-screening-only');
+  assert.equal(domainAudit.parameters.shippedClassifications, false);
+  assert.equal(manifest.outputs.some(({ pipelineId }) => pipelineId === 'swm-domains'), false);
+  const regionPipeline = manifest.pipelines.find(({ id }) => id === 'regions');
+  assert.deepEqual(regionPipeline.sourceIds, ['julich-mpm', 'julich-terminology-xml', 'julich-hierarchy']);
   const endpointPipeline = manifest.pipelines.find(({ id }) => id === 'endpoints');
   assert.deepEqual(endpointPipeline.sourceIds, ['julich-mpm']);
   assert.equal(endpointPipeline.parameters.maxDistanceMm, 2);
@@ -121,7 +129,7 @@ test('manifest inventories every source, pipeline, output, coordinate contract, 
   assert.equal(endpointPipeline.parameters.endpointSemantics, 'unordered-geometry-not-polarity');
   assert.deepEqual(
     manifest.outputs.map(({ id }) => id),
-    ['cortical-shell', 'region-manifest', 'region-mesh-tree', 'association-tracts', 'optic-radiation', 'swm', 'fibre-endpoints'],
+    ['cortical-shell', 'region-manifest', 'julich-region-catalog', 'region-mesh-tree', 'association-tracts', 'optic-radiation', 'swm', 'fibre-endpoints'],
   );
   for (const output of manifest.outputs) {
     assert.match(output.sha256, /^[0-9a-f]{64}$/, `${output.id}.sha256`);
@@ -162,7 +170,11 @@ test('manifest inventories every source, pipeline, output, coordinate contract, 
     const rights = rightsByOutput.get(output.id);
     assert.ok(rights, `rights missing for ${output.id}`);
     assert.equal(rights.blocking, false, `${output.id}.blocking`);
-    assert.equal(rights.reviewedOn, '2026-07-22', `${output.id}.reviewedOn`);
+    assert.equal(
+      rights.reviewedOn,
+      ['julich-region-catalog', 'region-mesh-tree'].includes(output.id) ? '2026-09-06' : '2026-07-22',
+      `${output.id}.reviewedOn`,
+    );
     assert.ok(rights.obligations.length > 0, `${output.id}.obligations`);
   }
 
@@ -181,11 +193,11 @@ test('lightweight CLI validates the manifest and exact checked outputs without n
     command: 'check-manifest',
     manifest: 'tools/assets/manifest.json',
     schemaVersion: 1,
-    sources: 8,
+    sources: 11,
     intermediates: 6,
-    pipelines: 6,
-    outputs: 7,
-    rights: 7,
+    pipelines: 7,
+    outputs: 8,
+    rights: 8,
     status: 'ok',
   });
 
@@ -195,7 +207,7 @@ test('lightweight CLI validates the manifest and exact checked outputs without n
   assert.equal(current.command, 'verify-current');
   assert.equal(current.status, 'ok');
   assert.deepEqual(current.verifiedOutputs, [
-    'cortical-shell', 'region-manifest', 'region-mesh-tree',
+    'cortical-shell', 'region-manifest', 'julich-region-catalog', 'region-mesh-tree',
     'association-tracts', 'optic-radiation', 'swm', 'fibre-endpoints',
   ]);
   assert.deepEqual(current.structures, {
@@ -203,7 +215,7 @@ test('lightweight CLI validates the manifest and exact checked outputs without n
     corticalShell: { container: 'glTF', version: 2 },
     fibreEndpoints: { associationFibres: 2880, endpoints: 35760, presets: 4, swmFibres: 15000 },
     opticRadiation: { fibres: 220, pointsPerFibre: 64, runtimeMirroredRight: true },
-    regions: { meshes: 90, regions: 45 },
+    regions: { catalog: 157, lessonCurrent: 45, meshes: 314 },
     swm: { fibres: 15000, lengths: 15000, localLengths: 15000, pointsPerFibre: 8 },
   });
 
@@ -462,6 +474,108 @@ with tempfile.TemporaryDirectory() as temporary:
   assert.equal(report.regionReportMeshes, 2);
   assert.equal(report.regionsEscapeUnicode, true);
   assert.equal(report.regionsTrailingNewline, false);
+});
+
+test('Jülich catalog parser preserves licensed hierarchy multiplicity and unresolved regions', () => { // Tests INV-14; Tests FAIL-12
+  const result = runUvPython(`
+import json, tempfile
+from pathlib import Path
+from tools.assets.regions import build_julich_catalog
+
+with tempfile.TemporaryDirectory() as temporary:
+    root = Path(temporary)
+    xml = root / 'regions.xml'
+    xml.write_text('''<JulichBrainAtlas version="3.0"><Structures numStructures="3">
+      <Structure num="0" id="10" leftgrayvalue="1" rightgrayvalue="1001" color="rgb(1,2,3)">Area A</Structure>
+      <Structure num="1" id="20" leftgrayvalue="2" rightgrayvalue="1002" color="rgb(4,5,6)">SF (Amygdala)</Structure>
+      <Structure num="2" id="30" leftgrayvalue="3" rightgrayvalue="1003" color="rgb(7,8,9)">Missing (GapMap)</Structure>
+    </Structures></JulichBrainAtlas>''', encoding='utf-8')
+    hierarchy = root / 'hierarchy.json'
+    hierarchy.write_text(json.dumps({'name': 'fixture', 'properties': {'version': '3.0', 'regions': [{
+        'name': 'root', 'children': [
+            {'name': 'Area A', 'arealabel': 'A', 'children': []},
+            {'name': 'group', 'children': [
+                {'name': 'SF (Amygdala)', 'arealabel': 'SF', 'children': []},
+                {'name': 'SF (Amygdala)', 'arealabel': 'SF', 'children': []},
+            ]},
+        ],
+    }]}}), encoding='utf-8')
+    featured = [{
+        'id': 'current-a', 'name': 'Current A', 'area': 'A', 'stream': 'early',
+        'parent': 'fixture', 'color': '#abcdef', 'opacity': 0.15,
+        'leftLabel': 1, 'rightLabel': 1001,
+    }]
+    catalog = build_julich_catalog(
+        xml, hierarchy, featured, {'3': 'Missing'}, expected_regions=3,
+    )
+    print(json.dumps(catalog, sort_keys=True))
+`);
+  assert.equal(result.status, 0, result.stderr);
+  const records = JSON.parse(result.stdout);
+  assert.deepEqual(records.map(({ id }) => id), ['current-a', 'julich-002', 'julich-003']);
+  assert.equal(records[0].catalogStatus, 'lesson-current');
+  assert.equal(records[1].hierarchyPaths.length, 2, 'duplicate licensed paths stay duplicated');
+  assert.equal(records[2].hierarchyStatus, 'unresolved');
+  assert.equal(records[2].gapMap, true);
+  assert.deepEqual(records.map(({ leftLabel, rightLabel }) => rightLabel - leftLabel), [1000, 1000, 1000]);
+});
+
+test('complete Jülich builder emits legacy manifest plus lazy full catalog and meshes', () => { // Tests INV-14
+  const result = runUvPython(`
+import json, tempfile
+from pathlib import Path
+import nibabel as nib
+import numpy as np
+from tools.assets.regions import build_complete_regions_from_image
+
+with tempfile.TemporaryDirectory() as temporary:
+    root = Path(temporary)
+    affine = np.eye(4)
+    data = np.zeros((16, 16, 16), dtype=np.int16)
+    data[2:7, 2:7, 2:7] = 1
+    data[9:14, 2:7, 2:7] = 1001
+    data[2:7, 9:14, 2:7] = 2
+    data[9:14, 9:14, 2:7] = 1002
+    image = nib.Nifti1Image(data, affine)
+    image.header.set_sform(affine, code=1)
+    image.header.set_qform(affine, code=1)
+    source = root / 'regions.nii.gz'
+    nib.save(image, source)
+    output = root / 'output'
+    output.mkdir()
+    catalog = [
+      {'id': 'current', 'entityId': 'region.current', 'name': 'Current', 'atlasId': 'A',
+       'sourceName': 'Area A', 'sourceId': '10', 'leftLabel': 1, 'rightLabel': 1001,
+       'catalogStatus': 'lesson-current', 'gapMap': False, 'hierarchyStatus': 'mapped',
+       'hierarchyPaths': [['root']], 'stream': 'early', 'parent': 'root',
+       'color': '#abcdef', 'opacity': 0.15},
+      {'id': 'julich-002', 'entityId': 'region.julich-002', 'name': 'Area B', 'atlasId': 'B',
+       'sourceName': 'Area B', 'sourceId': '20', 'leftLabel': 2, 'rightLabel': 1002,
+       'catalogStatus': 'atlas-available', 'gapMap': False, 'hierarchyStatus': 'mapped',
+       'hierarchyPaths': [['root']], 'stream': 'atlas-root', 'parent': 'root',
+       'color': '#123456', 'opacity': 0.1},
+    ]
+    report = build_complete_regions_from_image(
+      source, output, catalog, {'early': {'hue': 172}}, max_faces=6000,
+    )
+    legacy = json.loads((output / 'regions.json').read_text())
+    complete = json.loads((output / 'julich_regions.json').read_text())
+    print(json.dumps({
+      'files': sorted(path.name for path in output.iterdir()),
+      'legacy': [region['id'] for region in legacy['regions']],
+      'complete': [region['id'] for region in complete['regions']],
+      'report': report,
+    }, sort_keys=True))
+`);
+  assert.equal(result.status, 0, result.stderr);
+  const report = JSON.parse(result.stdout);
+  assert.deepEqual(report.files, [
+    'current_L.obj', 'current_R.obj', 'julich-002_L.obj', 'julich-002_R.obj',
+    'julich_regions.json', 'regions.json',
+  ]);
+  assert.deepEqual(report.legacy, ['current']);
+  assert.deepEqual(report.complete, ['current', 'julich-002']);
+  assert.deepEqual(report.report, { regions: 2, meshes: 4, lessonCurrentRegions: 1 });
 });
 
 test('association builder uses standard archive/TRK parsing, one seeded RNG, resampling, and non-biological storage order', () => { // Tests INV-3; Tests INV-4; Tests INV-7; Tests FAIL-10

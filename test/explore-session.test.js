@@ -18,6 +18,13 @@ const CATALOG = {
     'layer.labels',
     'pathway.anterior',
     'region.dlpfc',
+    'region.julich-999',
+    'region.lgn',
+  ],
+  atlasDefaultEntityIds: [
+    'layer.cortex',
+    'pathway.anterior',
+    'region.dlpfc',
     'region.lgn',
   ],
   visualIds: ['atlas'],
@@ -63,6 +70,10 @@ const CATALOG = {
     'region.lgn': {
       id: 'region.lgn', hemisphereMode: 'bilateral', fidelity: 'fidelity.regions',
       renderer: { kind: 'region', id: 'lgn' },
+    },
+    'region.julich-999': {
+      id: 'region.julich-999', hemisphereMode: 'bilateral', fidelity: 'fidelity.regions',
+      renderer: { kind: 'region', id: 'julich-999' },
     },
   },
 };

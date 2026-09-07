@@ -38,10 +38,11 @@ uv run --python 3.13.1 --offline \
 
 | Command | Contract |
 |---|---|
+| `audit swm-domains --inputs <dir> --repo <path> --output <empty-dir>` | Private source-compartment audit of all displayed SWM points; requires `--accept-local-screening-terms`. Hash/environment gates, no public output or source redistribution. |
 | `check-manifest` | Validate schema/semantics/references/rights and the lock identity without network access. |
 | `verify-current --repo <path>` | Verify exact current files, region tree, metadata, geometry payloads, and runtime mirror disclosure without regeneration. |
 | `build cortex` | Generate the cortical GLB from the exact TemplateFlow brain mask. |
-| `build regions` | Generate 90 OBJ files and `regions.json` from the exact Jülich MPM. |
+| `build regions` | Generate 314 OBJ files, unchanged 45-region `regions.json`, and complete `julich_regions.json` from exact Jülich MPM/XML/hierarchy inputs. |
 | `build association` | Generate `tracts.json` from the complete exact HCP-1065 archive. |
 | `build endpoints` | Generate `fibre_endpoints.json` from the exact categorical Jülich MPM plus hash-frozen checked association/SWM/catalog/preset inputs. The command requires explicit `--inputs`, `--repo`, and new empty `--output`; it never writes into `public/`. |
 | `prepare optic-radiation` | Generate exact V1/LGN binary NIfTIs. |
@@ -71,6 +72,25 @@ All commands fail closed with a nonzero status. JSON reports contain no raw thir
 | INV-11 | The numerical algorithms and equality predicates are fixed before manual replay and may not be relaxed after observing output. | This spec, review, Git/Beads history. |
 | INV-12 | Runtime remains one proper transform. OR JSON contains 220 left fibres; `src/main.js` supplies the disclosed right `x → -x` mirror without changing fibre/point order. | Current-output/runtime structural tests. |
 | INV-13 | Endpoint classification uses the original Jülich v3.0.3 categorical MPM, exact checked displayed fibre order, and one frozen 2.0 mm nearest-nonzero/0.5 mm distinct-label ambiguity rule in RAS world millimetres. It emits only stable project region IDs or explicit ambiguous/unknown status; stored endpoint A/B is unordered geometry, probability is unavailable, and no streamline polarity, termination, connection strength, shared voxel grid, or template warp is inferred. | Synthetic classifier tests, exact generation, artifact/current-output validation, preset-count drift tests, and scientific review. |
+| INV-14 | Complete region generation parses the licensed v3.0 XML identity list and hierarchy exactly: 157 base identities, 314 real L/R meshes, six GapMaps, 151 hierarchy-matched identities across 155 path occurrences, and six explicitly unresolved identities. Duplicate paths stay duplicated; no configuration-only edge is copied. The 45-region legacy manifest remains byte-identical. | Parser/builder fixtures, exact regeneration, catalog tests, and current-output hashes. |
+
+### Private SWM screening boundary
+
+**INV-15 / FAIL-13:** `audit swm-domains` consumes manifest-pinned carpet bytes and
+four compatibility-pinned repository files, validates categorical labels and exact
+193×229×193 mm/code-4 forms, and accounts for every stored point/contour without
+changing geometry, legacy endpoint tuples or presets. Nonfinite points, unknown
+source labels, hash/form drift or unsafe outputs fail closed. The test is
+`test/swm-domain-assets.test.js`.
+
+This command emits private audit reports, not entries in the public `outputs` or
+public-output rights inventory. Approval `brain-atlas-n401` permits published
+repository terms for this local screening scope only; the explicit terms flag
+acknowledges that restriction, not a rights waiver. Source redistribution and
+shipped classifications remain unapproved. INV-2/FAIL-7 public derivative-rights
+gates remain unchanged. The source's exact construction and upstream rights gaps
+are retained in manifest/report metadata and the linked
+[anatomical suitability register](../../.pi/research/2026-09-07-swm-domains/anatomical-suitability.md).
 
 ## Equality contracts
 
@@ -132,7 +152,7 @@ Literal fixtures cover empty, regular file, file symlink, directory symlink, non
 
 - **compact fibre JSON:** CPython 3.13.1 `json.dumps`, UTF-8, `ensure_ascii=False`, `allow_nan=False`, insertion-order keys, separators `(', ', ': ')`, no trailing newline.
 - **compact endpoint JSON:** CPython 3.13.1 `json.dumps`, UTF-8, `ensure_ascii=False`, `allow_nan=False`, insertion-order keys, separators `(',', ':')`, no trailing newline. Entity/status/candidate tables are indexed by fixed four-integer endpoint tuples; each fibre stores exactly two tuples in source array order. Every preset audit balances included association/SWM/L/R totals, included known/unknown/ambiguous fibre quality, and full-population quality.
-- **`regions.json`:** UTF-8, `ensure_ascii=True` (matching the current file's `\\u2192` escapes), `allow_nan=False`, insertion order, `indent=1`, LF, no trailing newline.
+- **`regions.json` / `julich_regions.json`:** UTF-8, `ensure_ascii=True` (matching current `\\u2192` escapes), `allow_nan=False`, insertion order, `indent=1`, LF, one trailing newline.
 - **OBJ:** array order; `v {x:.1f} {y:.1f} {z:.1f}\n`, then one-indexed `f {a} {b} {c}\n`; final newline.
 - **NIfTI:** fresh little-endian `Nifti1Image(uint8_array, affine)`, no copied header/extensions; `set_sform(affine, code=4)` then `set_qform(affine, code=4)`; nibabel 5.4.2 default deterministic gzip writer.
 - **GLB:** trimesh 4.12.2 `Trimesh(vertices=v2, faces=f2, process=True)`, `fix_normals()`, then one positional `mesh.export(output_path)` call where the suffix is `.glb`.
@@ -140,6 +160,61 @@ Literal fixtures cover empty, regular file, file symlink, directory symlink, non
 Fixtures cover non-ASCII/escaping, negative zero, integer-like floats, scientific notation, insertion order, newline policy, NIfTI header/container bytes, and a tiny GLB.
 
 ## Numerical contracts
+
+### SWM source-compartment audit (v1)
+
+Freeze these rules before real counts; they describe source labels, not validated
+anatomical membership. No template warp or registration-error estimate is supplied.
+
+- Consume all 15,000 contours × 8 stored points, with first/last giving 30,000
+  unordered endpoints. Source label 0 is background; -1 is an outside-grid sentinel.
+  Unknown labels are rejected, not silently mapped. `unresolved` stays an explicit
+  zero-capable outcome; anatomical interpretation of background remains unresolved.
+- Pool source labels: 1/2 cerebral WM; 3/4 lateral ventricles; 5 source brain-stem;
+  34–37,39–41,45–51 subcortical gray including hippocampus/amygdala; 101–196 cortical
+  source labels (not a tissue ribbon); 255 combined Cerebellum and Midbrain.
+- Apply the inverse pinned RAS affine once offline for voxel lookup. Baseline
+  `rint` is nearest-even; alternate is `floor(v+0.5)`, including negatives. Test
+  bounds after rounding and before integer conversion. No nearest-nonzero fallback.
+- Unordered endpoint pairs, strict majority (at least 5/8)/no-majority, and
+  all-eight-same/mixed each partition contours. Point and endpoint totals partition
+  120,000 and 30,000. Any-point domain counts overlap, each denominator 15,000.
+  “All” and “majority” refer only to eight samples, never full continuous paths or
+  length fractions.
+- Hemisphere is sign of float64 mean displayed x, zero R; require exact agreement
+  with legacy artifact. Length bins use shipped `len`: [8,15),[15,25),[25,40),[40,55].
+  Spatial cells are `floor(mean(displayed xyz)/20)` in RAS mm, including negatives.
+  Legacy quality uses existing status classes with ambiguous > unknown > known.
+  Each stratum records the same partitions and preserves baseline strata during probes.
+- Rounding bounds are the closed component-wise ±0.05 mm box. The pinned grid has
+  integer origin and unit axis scales and displayed coordinates are decimal tenths;
+  express bounds in integer twentieths, determine reachable nearest-even integer
+  intervals per axis, and enumerate their Cartesian product. This includes all
+  reachable cells, not an unsupported corner-only heuristic.
+- Grid probes are all 27 offsets in {-0.5,0,+0.5}³, with each offset uniformly
+  applied to every point in a contour. Retain per-point domain possibility bitmasks,
+  source-label/domain change counts, and per-probe summaries. They are sensitivity
+  probes, not measured localization/registration uncertainty. Source-label changes
+  within the same pooled domain remain distinguishable from domain changes.
+- For source255 and the broader union (ventricle, source5, subcortical gray, source255),
+  a stable hit has at least one baseline target point whose full rounding/grid
+  domain options remain inside that target. A stable-interior hit additionally has
+  that point's baseline voxel centre at least 2 mm from an outside-target voxel
+  centre (Euclidean EDT on the target mask with one outside padding layer).
+  Partition each target population into no-baseline-hit, stable-interior-hit,
+  probe-stable-hit-only, boundary-sensitive-hit-only. Stability is not anatomical
+  accuracy. Distances are not voxel-face distances. Compare unrounded float64
+  distances; no threshold is adjusted after seeing counts.
+- Records preserve baseline raw source labels, endpoint labels, domain IDs,
+  rounding/grid option masks, strata and target statuses by original contour index.
+  Compact deterministic JSON uses sorted keys, UTF-8, no NaN, separators `(',',':')`
+  and one trailing newline. Summaries carry source/method/module/environment hashes,
+  explicit assumptions/rights and lineage limits. Compare complete output bytes on
+  rerun; public assets remain compatibility-pinned.
+- Original retention was whole-volume unrounded GM>0.40 plus one-voxel dilation,
+  then inclusive 8–55 mm and seeded sampling. It is not this later categorical
+  lookup. Exact retained-index reconstruction is not approximated; missing pinned
+  GM input is tracked separately in `brain-atlas-yum.14.7`.
 
 ### Shared contour resampling
 
@@ -162,7 +237,7 @@ Float32 C-contiguous brain mask; SciPy 1.18 `gaussian_filter(sigma=1.2, order=0,
 
 ### Regions
 
-Manifest label order; right label is left + 1000. Float32 equality mask, constant pad 2, Gaussian sigma 0.6, marching-cubes contract above, subtract pad, float64 affine, simplify only above 6,000 faces with the same simplifier options, then frozen OBJ/JSON writers. Produce exactly 90 meshes.
+Parse Jülich v3.0 XML with `ElementTree` and the licensed hierarchy with `json`; match identities by exact source name only. Preserve repeated hierarchy paths and use the six reviewed XML-to-atlas-ID correspondences only for identities absent from the hierarchy. Right label is left + 1000. Float32 equality mask, constant pad 2, Gaussian sigma 0.6, marching-cubes contract above, subtract pad, float64 affine, simplify only above 6,000 faces with the same simplifier options, then frozen OBJ/JSON writers. Produce exactly 314 meshes. Project the original manifest region order and display metadata back into byte-identical `regions.json`; write all 157 records to `julich_regions.json`.
 
 ### Association
 
@@ -218,6 +293,7 @@ Raw outputs/logs stay outside Git. Their owner-only durable archive is `~/.local
 | FAIL-9 | OR output contains right fibres | Pipeline/runtime boundary drift | Reject; JSON remains left-only and runtime mirror stays disclosed. |
 | FAIL-10 | Streamline order described as polarity | Scientific overclaim | Correct metadata/docs; order is storage only. |
 | FAIL-11 | MPM forms/hash/labels differ, a repository input drifts, a point is nonfinite, or assignment exceeds/is tied within the frozen local rule | Coordinate/provenance ambiguity | Stop before output. Preserve unknown/ambiguous status where the frozen rule applies; never fit geometry, widen thresholds after viewing, or coerce unsupported labels. |
+| FAIL-12 | XML/hierarchy identity, counts, exact correspondence, bilateral offset, or reviewed unresolved map differs | Catalog provenance drift | Stop before meshing; never fuzzy-match names, invent hierarchy edges, or relabel source space. |
 
 ## Testing
 
@@ -227,12 +303,59 @@ Raw outputs/logs stay outside Git. Their owner-only durable archive is `~/.local
 | INV-5–6 | Temporary-root and environment-tree positive/negative fixtures. |
 | INV-7, INV-12 | Manifest, NIfTI/TRK checks, current output hashes, runtime static checks, browser determinant/mirror metrics. |
 | INV-13, FAIL-11 | `test/fibre-endpoint-assets.test.js`, exact `build endpoints` regeneration, current-output structure checks, query/preset integrity tests, and scientific review. |
+| INV-14, FAIL-12 | Jülich parser/builder fixtures in `test/asset-pipeline.test.js`, exact `build regions` regeneration, catalog/runtime tests, and public hash checks. |
 | INV-8 | Static import/call scan plus exact command/wrapper fixtures; DSI is user-run only. |
 | INV-9 | Serializer fixtures and byte-exact generator replay. |
 | INV-10–11 | CLI tests, Beads evidence, and scientific review. |
 | FAIL-1–10 | Named negative tests include `# Tests FAIL-N` traceability comments. |
 
 Minimum closeout runs focused tests, all builders/post-processors in temporary directories, both manual replay validations, the `brain-atlas-yum.5` verifier, full Node/build/audit checks, and Firefox/Chromium development/production regression matrices.
+
+## Future hierarchical fibre accounting (classification not implemented)
+
+Research decision `brain-atlas-yum.14.1` is recorded in
+[the source-bound accounting design](../../.pi/plans/brain-atlas-yum.14.1-siibra-fibre-accounting.md).
+Its child `brain-atlas-yum.14.2` now ships the complete source-bound visualization
+catalog and optional meshes, but no fibre reclassification. `build endpoints`, INV-13,
+and current `fibre_endpoints.json` schema 1 remain unchanged. Further child
+implementations require separately approved designs.
+
+Any future implementation must:
+
+- Consume explicit byte/hash-pinned local source files, including the complete
+  selected probability-map set and licensed terminology. siibra is an acquisition
+  and reference-method source, never a runtime dependency or an implicit fetcher.
+  Configuration availability does not grant reuse rights; use the licensed Jülich
+  XML and validated terminology edges, preserving incomplete hierarchy coverage.
+- Preserve 2009a fibre lineage and 2009c map grids independently. No `Point.warp`,
+  automatic cross-space assignment, source relabeling, fitting, or second runtime
+  transform. Record unknown NIfTI unit codes rather than silently repairing them.
+- Reuse INV-3/5 input and new-empty-nonsymlink-output guards; never write into or
+  automatically replace `public/`. Separate explicit acquisition from network-free
+  regeneration; neither siibra caches nor mutable sparse indices are authorities.
+- Emit the versioned domain/primary/alternative/evidence/method/uncertainty record
+  defined in the design, preserving domain-only/unresolved outcomes and exactly
+  two unordered endpoints per fibre. Balance 17,880 fibres and 35,760 endpoints.
+  Freeze domain eligibility, numerical rules, scientific tie handling and fibre
+  precedence before examining production results. Probability, overlap, distance,
+  localization uncertainty and template mismatch remain distinct evidence.
+- Hash-check source, config, hierarchy/map correspondence, geometry order, method
+  and environment; compare deterministic output bytes and all group/status/preset
+  totals. Drift fails closed rather than widening thresholds or adopting latest
+  releases. Explicitly test exact, uncertain, mixed-sigma and boundary behavior;
+  siibra's tested cutoff/errors are not a project numerical contract.
+- Keep dense maps and full acquisition evidence offline. Intern repeated metadata
+  in compact browser tables and set a measured byte/memory/query budget in the
+  child design. No additional renderer or filtering engine.
+- Preserve legacy tuples, selectors, ambiguity precedence and preset counts
+  through the existing artifact or an exact legacy projection. New domains,
+  ancestors or alternatives require explicit query/snapshot migration, not silent
+  reinterpretation of existing lesson filters.
+
+Verification for this research-only contract is the source/probability inventory,
+rights record, and runnable pinned assignment probe linked from the design.
+Future builder and runtime verification must also cover these requirements; the
+research probe does not establish real-atlas assignment accuracy.
 
 ## Dependencies
 

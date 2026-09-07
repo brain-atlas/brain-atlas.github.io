@@ -42,7 +42,7 @@ export function createAtlasExploreSnapshot(catalog) {
     id: 'explore-atlas',
     visual: 'atlas',
     camera: 'home',
-    show: catalog.entityIds.filter((id) => id !== 'layer.labels'),
+    show: catalog.atlasDefaultEntityIds ?? catalog.entityIds.filter((id) => id !== 'layer.labels'),
     controls: { mode: 'explore' },
     layout: 'dominant',
   }, catalog);

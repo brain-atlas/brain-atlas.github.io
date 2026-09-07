@@ -1,0 +1,289 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Pinned evidence for research-only siibra assignment probe",
+  "createdDate": "2026-09-06",
+  "environmentPath": "/private/tmp/brain-atlas-siibra-probe-env",
+  "environmentRetainedOutsideRepository": true,
+  "python": {
+    "implementation": "CPython",
+    "version": "3.12.9",
+    "executableSha256": "9756b294b1d22f9e8ffd93fcc680e6f1c7ffaa97e7c6b49988177096adfab09b"
+  },
+  "uv": "0.9.30",
+  "probeCommand": "/private/tmp/brain-atlas-siibra-probe-env/bin/python .pi/research/2026-09-06-siibra-accounting/probe_siibra_assignment.py --source-tarball /private/tmp/siibra-1.0.1a20.tar.gz --config-zip /private/tmp/siibra-configurations-177023.zip --output .pi/research/2026-09-06-siibra-accounting/probe-results.json",
+  "artifacts": {
+    "/private/tmp/siibra-1.0.1a20.tar.gz": {
+      "bytes": 606983,
+      "sha256": "1926610c0b829a9a1caf25290ce747bacfe290f89f92c37417e45bb9b57e0a81",
+      "release": "1.0.1a20",
+      "commit": "44549ae595533054135a4d62d567069353027b34"
+    },
+    "/private/tmp/siibra-configurations-177023.zip": {
+      "bytes": 1548128,
+      "sha256": "f41e45cd2306b645342e7937319bb1302a9d895d57f55cf1c67ffc0bc00a7c90",
+      "commit": "177023a506eceff008a012bb0a98d7bca0d1bbd5"
+    },
+    ".pi/research/2026-09-06-siibra-accounting/probe_siibra_assignment.py": {
+      "bytes": 16502,
+      "sha256": "29097d7ada070a844c2b1c92254490b96f381aab7bbb8e2630d0f7e96cfddbc0"
+    },
+    ".pi/research/2026-09-06-siibra-accounting/probe-results.json": {
+      "bytes": 48970,
+      "sha256": "1ab680d57d6e678504404980fbd635a0010f35d7e66955e808f8531062c8e292"
+    }
+  },
+  "resolvedPackages": [
+    "anytree==2.13.0",
+    "appdirs==1.4.4",
+    "certifi==2026.7.22",
+    "charset-normalizer==3.5.1",
+    "cloudpickle==3.1.2",
+    "ebrains-drive==0.6.3",
+    "filelock==3.32.5",
+    "h5py==3.16.0",
+    "idna==3.19",
+    "imagecodecs==2026.8.16",
+    "imageio==2.37.4",
+    "jinja2==3.1.6",
+    "joblib==1.6.0",
+    "lazy-loader==0.5",
+    "markupsafe==3.0.3",
+    "networkx==3.6.1",
+    "neuroglancer-scripts==1.2.0",
+    "nibabel==5.4.2",
+    "nilearn==0.14.1",
+    "numpy==2.5.3",
+    "packaging==26.3",
+    "pandas==3.0.5",
+    "pillow==12.3.0",
+    "python-dateutil==2.9.0.post0",
+    "requests==2.34.2",
+    "scikit-image==0.26.0",
+    "scikit-learn==1.8.0",
+    "scipy==1.18.1",
+    "siibra==1.0.1a20 (installed from retained source tarball above)",
+    "six==1.17.0",
+    "threadpoolctl==3.6.0",
+    "tifffile==2026.8.23",
+    "tqdm==4.70.0",
+    "typing-extensions==4.16.0",
+    "urllib3==2.7.0"
+  ],
+  "reproductionLimit": "Dependency versions record resolved environment exactly, but transitive wheel hashes were not retained; only siibra source/config and probe evidence artifacts are byte-bound.",
+  "historicalCreationCommand": "rm -rf /private/tmp/brain-atlas-siibra-probe-env && uv venv --python 3.12 /private/tmp/brain-atlas-siibra-probe-env && UV_CACHE_DIR=/private/tmp/brain-atlas-siibra-uv-cache uv pip install --python /private/tmp/brain-atlas-siibra-probe-env/bin/python /private/tmp/siibra-1.0.1a20.tar.gz",
+  "preparationNote": "Historical creation command is evidence, not a rerun instruction. Never delete an existing environment. Use a new mktemp directory and the recorded versions; source and measured installed-tree identities bind this execution, not a cross-platform build claim.",
+  "safeNewEnvironmentCommand": "ENV=$(mktemp -d /private/tmp/brain-atlas-siibra-probe-XXXXXX); uv venv --python 3.12.9 \"$ENV\"; # install recorded resolvedPackages and hash-verified siibra source explicitly, then verify trees before claiming byte equality",
+  "distributionHashContract": "SHA256 over sorted Distribution.files regular entries, excluding __pycache__ and pyc: UTF-8 relative RECORD path, NUL, SHA256(file bytes) raw digest. Paths are metadata-relative; no source traversal or deletion.",
+  "installedDistributions": [
+    {
+      "name": "anytree",
+      "version": "2.13.0",
+      "files": 40,
+      "sha256": "686e061fdf0d2b4d2ad3e705c1e092dd9e7b7a918fc66b552729b35ef356ae93"
+    },
+    {
+      "name": "appdirs",
+      "version": "1.4.4",
+      "files": 8,
+      "sha256": "d341b0ddc337276d052fed644bcb06dde0845980a70f0013a2abc22601bb6813"
+    },
+    {
+      "name": "certifi",
+      "version": "2026.7.22",
+      "files": 14,
+      "sha256": "cb8de066df57bd9e5a358493b6f023d827f4e80e4bbf8716d0474c6b95de2c0b"
+    },
+    {
+      "name": "charset-normalizer",
+      "version": "3.5.1",
+      "files": 24,
+      "sha256": "c69e79d0f48b53a50ed17fba73eb0bcaf6fee1a5c70c9b215041aff2ec5e8c57"
+    },
+    {
+      "name": "cloudpickle",
+      "version": "3.1.2",
+      "files": 9,
+      "sha256": "fb3b30abadfca4d979b1086e468f9b11dd07c03c88d9031ce0d840822535ba6c"
+    },
+    {
+      "name": "ebrains-drive",
+      "version": "0.6.3",
+      "files": 20,
+      "sha256": "9b049a4b7bedb6a43111bbad2db67122b457de0f14fd0bdfb107eed5373cbdb1"
+    },
+    {
+      "name": "filelock",
+      "version": "3.32.5",
+      "files": 28,
+      "sha256": "dba4b408f0c1df6da644bc40c722ffafb9d61ec44f001f121c08eb1aa88a842a"
+    },
+    {
+      "name": "h5py",
+      "version": "3.16.0",
+      "files": 105,
+      "sha256": "82b43da39827aec38ba1439a20e1ab035e62174b0662c3ef5888292b831aefa0"
+    },
+    {
+      "name": "idna",
+      "version": "3.19",
+      "files": 19,
+      "sha256": "04c0bc31492ea2bfa78ad9987eff3b3552c296fac0c110e4d1ecfe08fde08fef"
+    },
+    {
+      "name": "imagecodecs",
+      "version": "2026.8.16",
+      "files": 192,
+      "sha256": "15726152508453f5a372c881a7ee332304d5b0fe8a150ccc57f3e8df2f70dfca"
+    },
+    {
+      "name": "ImageIO",
+      "version": "2.37.4",
+      "files": 68,
+      "sha256": "a6c0cdab099bdd5b7fd379cc2dfc9449c0e76f131de7d27bd1ea56ae185705bd"
+    },
+    {
+      "name": "Jinja2",
+      "version": "3.1.6",
+      "files": 33,
+      "sha256": "ee688b54ed426e72a5022a2d426848c33c6aef6cf657327c5dbced3671ebf0b9"
+    },
+    {
+      "name": "joblib",
+      "version": "1.6.0",
+      "files": 143,
+      "sha256": "f51d0bcf7fa6e6f0bce9f1913b570e97c6b1f8784899d661c647cea31aa1e67d"
+    },
+    {
+      "name": "lazy-loader",
+      "version": "0.5",
+      "files": 8,
+      "sha256": "da2f1e22171612199cdc29a6dc52d7d087450da82b05438468fb74cb8335899c"
+    },
+    {
+      "name": "MarkupSafe",
+      "version": "3.0.3",
+      "files": 13,
+      "sha256": "ba6e718e1a4e5fdb0e88b75843af1420cba15449f3c1664246322d13465e8167"
+    },
+    {
+      "name": "networkx",
+      "version": "3.6.1",
+      "files": 603,
+      "sha256": "480f9fdd36dc3fc7b6a3745b4fbdf751dbf9b17b0ff6227d91f6466cc7a07f74"
+    },
+    {
+      "name": "neuroglancer-scripts",
+      "version": "1.2.0",
+      "files": 45,
+      "sha256": "eff05513b426c5269a60bbfe3528aea5cb64e5ca7bcaa1ae59cc5db475c3e713"
+    },
+    {
+      "name": "nibabel",
+      "version": "5.4.2",
+      "files": 364,
+      "sha256": "50cce463f8b9fbd3daeed7aae5396cea55a013c0cded85702b9949589f994d56"
+    },
+    {
+      "name": "nilearn",
+      "version": "0.14.1",
+      "files": 516,
+      "sha256": "1e5aa400a8187967c5287af5d60dcd38ea361727d8bec4f8cff78197cfc83c43"
+    },
+    {
+      "name": "numpy",
+      "version": "2.5.3",
+      "files": 927,
+      "sha256": "e8371e6792e025530837371ec3d6aa213640bc9852275661617bb818d89b83fd"
+    },
+    {
+      "name": "packaging",
+      "version": "26.3",
+      "files": 31,
+      "sha256": "1e0b6fa0e094aacee7ff2d122b3822f58414be35cda94ff5b562552c6c589ca0"
+    },
+    {
+      "name": "pandas",
+      "version": "3.0.5",
+      "files": 1523,
+      "sha256": "cf9d38411873e3bca893199594b5321c96431a55c6317ba761be89ae318aabd6"
+    },
+    {
+      "name": "pillow",
+      "version": "12.3.0",
+      "files": 141,
+      "sha256": "087e909e2f83884f47d931003aa3d4ccb445826bb11c141249b9c69d0e91c0e3"
+    },
+    {
+      "name": "python-dateutil",
+      "version": "2.9.0.post0",
+      "files": 27,
+      "sha256": "967f8c50eafcf928499724e764558653d331937fa6291bb95c53885cef1a6c7a"
+    },
+    {
+      "name": "requests",
+      "version": "2.34.2",
+      "files": 28,
+      "sha256": "498927ccbf257a5b35ebaba59b49648347ede3789b56c2360018924a2874fea0"
+    },
+    {
+      "name": "scikit-image",
+      "version": "0.26.0",
+      "files": 311,
+      "sha256": "f1af8356d06535534c88d600ebed8a6ee13b14d52906898eb395f5e8c43b4844"
+    },
+    {
+      "name": "scikit-learn",
+      "version": "1.8.0",
+      "files": 962,
+      "sha256": "0913d01fa32d9cf7dd398516e353a9c927d9348ae157ee8e271459f8603cc72a"
+    },
+    {
+      "name": "scipy",
+      "version": "1.18.1",
+      "files": 1431,
+      "sha256": "85ccb5fc8476c62085e29e69474b37c49f820f31799780c71555fceaf79c1ade"
+    },
+    {
+      "name": "siibra",
+      "version": "1.0.1a20",
+      "files": 87,
+      "sha256": "b6fd6e36e8a08e8040984f51401deb7e427c8ea4b4dc40202aac419ca8f12432"
+    },
+    {
+      "name": "six",
+      "version": "1.17.0",
+      "files": 8,
+      "sha256": "152c64d0a020f8fca5284af47fdbd789b55c7e3c3ac2fc118c7db260bdffc11c"
+    },
+    {
+      "name": "threadpoolctl",
+      "version": "3.6.0",
+      "files": 7,
+      "sha256": "f50d7f340b05e47c01767634b76413a4a7785782df70a7ac805edd3bf4c5f027"
+    },
+    {
+      "name": "tifffile",
+      "version": "2026.8.23",
+      "files": 23,
+      "sha256": "58476ca4cbde738f29a4e147475a726974f00143534f8947eb919a2856606d39"
+    },
+    {
+      "name": "tqdm",
+      "version": "4.70.0",
+      "files": 42,
+      "sha256": "ad30e3f616653ddddfe938a7f1658b569489ebcc70d4a87db922f999528e2f5b"
+    },
+    {
+      "name": "typing_extensions",
+      "version": "4.16.0",
+      "files": 7,
+      "sha256": "4062e2c9d018221fca0196c683639b8639e0ad2698ae6f3755415e942c7c312d"
+    },
+    {
+      "name": "urllib3",
+      "version": "2.7.0",
+      "files": 44,
+      "sha256": "5cc3cf770b11608448c1113294f62c4788467f13461fef152159c01a72a30444"
+    }
+  ]
+}

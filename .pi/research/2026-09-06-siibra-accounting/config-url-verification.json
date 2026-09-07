@@ -1,0 +1,67 @@
+[
+  {
+    "path": "parcellations/julichbrain_v3_0_3.json",
+    "status": 200,
+    "bytesAndHashMatch": true
+  },
+  {
+    "path": "maps/mni152-jba30-labelled.json",
+    "status": 200,
+    "bytesAndHashMatch": true
+  },
+  {
+    "path": "maps/mni152-jba30_157regions-continuous.json",
+    "status": 200,
+    "bytesAndHashMatch": true
+  },
+  {
+    "path": "maps/mni152-jba30_175regions-continuous.json",
+    "status": 200,
+    "bytesAndHashMatch": true
+  },
+  {
+    "path": "parcellations/bundles_short.json",
+    "status": 200,
+    "bytesAndHashMatch": true
+  },
+  {
+    "path": "maps/mni152-swm-labelled.json",
+    "status": 200,
+    "bytesAndHashMatch": true
+  },
+  {
+    "path": "maps/mni152-swm-continuous.json",
+    "status": 200,
+    "bytesAndHashMatch": true
+  },
+  {
+    "path": "parcellations/superficial-white-bundle-hcp.json",
+    "status": 200,
+    "bytesAndHashMatch": true
+  },
+  {
+    "path": "maps/mni152-sw_hcp-labelled.json",
+    "status": 200,
+    "bytesAndHashMatch": true
+  },
+  {
+    "path": "maps/mni152-sw_hcp-continuous.json",
+    "status": 200,
+    "bytesAndHashMatch": true
+  },
+  {
+    "path": "parcellations/vep.json",
+    "status": 200,
+    "bytesAndHashMatch": true
+  },
+  {
+    "path": "maps/mni152-vep-labelled.json",
+    "status": 200,
+    "bytesAndHashMatch": true
+  },
+  {
+    "path": "spaces/icbm_152_2009c_nonl_asym.json",
+    "status": 200,
+    "bytesAndHashMatch": true
+  }
+]

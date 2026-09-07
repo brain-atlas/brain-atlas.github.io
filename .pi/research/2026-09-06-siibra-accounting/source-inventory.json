@@ -1,0 +1,280 @@
+{
+  "schemaVersion": 1,
+  "bead": "brain-atlas-yum.14.1",
+  "status": "completed-research-inventory-not-approved-build-manifest",
+  "verifiedDate": "2026-09-06",
+  "softwareVersion": "1.0.1a20",
+  "softwareCommit": "44549ae595533054135a4d62d567069353027b34",
+  "configurationCommit": "177023a506eceff008a012bb0a98d7bca0d1bbd5",
+  "evidence": "Retrieved by read-only research peers; retained bytes and structured IDs independently checked by parent. Not all primary terms or scientific lineage resolved.",
+  "artifacts": [
+    {
+      "id": "siibra-source-release",
+      "url": "https://files.pythonhosted.org/packages/fe/be/1b7e34361aba064b6acbb95f4f01a15f687dfc9d6efba251e0c9d08ca6f8/siibra-1.0.1a20.tar.gz",
+      "bytes": 606983,
+      "sha256": "1926610c0b829a9a1caf25290ce747bacfe290f89f92c37417e45bb9b57e0a81",
+      "terms": "Apache-2.0"
+    },
+    {
+      "id": "siibra-git-release",
+      "url": "https://codeload.github.com/FZJ-INM1-BDA/siibra-python/tar.gz/44549ae595533054135a4d62d567069353027b34",
+      "bytes": 1366921,
+      "sha256": "37551a8f200c67446707886cf40a5fa54145d2fdba58f55e2e48ef49b90f80fd",
+      "terms": "Apache-2.0"
+    },
+    {
+      "id": "siibra-configurations",
+      "url": "https://codeload.github.com/FZJ-INM1-BDA/siibra-configurations/zip/177023a506eceff008a012bb0a98d7bca0d1bbd5",
+      "bytes": 1548128,
+      "sha256": "f41e45cd2306b645342e7937319bb1302a9d895d57f55cf1c67ffc0bc00a7c90",
+      "terms": "unresolved"
+    },
+    {
+      "id": "julich-mpm",
+      "url": "https://data-proxy.ebrains.eu/api/v1/public/buckets/d-d69b70e2-3002-4eaf-9c61-9c56f019bbc8/maximum_probability_maps_MPMs_157areas/JulichBrainAtlas_3.0_areas_MPM_b_N10_nlin2ICBM152asym2009c_public_11035603b4744231e17e87fd8ebcaf1a.nii.gz",
+      "bytes": 335280,
+      "sha256": "3af71c8d467db42d8561115164e0f365b942dfaa3568740ce62846fa3a201aff",
+      "terms": "CC BY-NC-SA 4.0; dataset license PDF"
+    },
+    {
+      "id": "hcp-superficial-mpm",
+      "url": "https://data-proxy.ebrains.eu/api/v1/public/buckets/d-609c0598-bf02-4b65-8d7d-3a40f0c2f543/short-bundles_withSulciMask.nii",
+      "bytes": 17060394,
+      "sha256": "fe0f0aa6db055db0a51cee07cb9c01a69600ece032e1c805f3e5e0d0dc2abbdd",
+      "terms": "CC BY-NC 4.0; dataset license PDF; candidate only"
+    },
+    {
+      "id": "archi-superficial-mpm",
+      "url": "https://data-proxy.ebrains.eu/api/v1/buckets/p22717-hbp-d000339_SuperficialWhiteMatterBundles_pub/version%202018/mpm_swm/short-bundles_maxprob.nii.gz",
+      "bytes": 121709,
+      "sha256": "27e5394670bae40a07d88e592bca25f802a1273adcce93323027412bcca25ed9",
+      "terms": "CC BY-NC-SA 4.0 per EBRAINS DatasetVersion f58e4425-6614-4ad9-ac26-5e946b1296cb; not adopted due to provenance conflict (rights-report.md)"
+    },
+    {
+      "id": "vep-map",
+      "url": "https://jugit.fz-juelich.de/t.dickscheid/brainscapes-datafeatures/-/raw/7d3f12c7e7fa0a8f28fc5e948f850b7755834172/atlases/vep/aparc+aseg.vep.nii",
+      "bytes": 67109216,
+      "sha256": "c8d22d30dda96609b300a966f7e6c53d7d55dbadee619c0e9573ff5b08aab214",
+      "terms": "unresolved; candidate only"
+    },
+    {
+      "id": "julich-license",
+      "url": "https://data-proxy.ebrains.eu/api/v1/public/buckets/d-d69b70e2-3002-4eaf-9c61-9c56f019bbc8/Licence-CC-BY-NC-SA.pdf",
+      "bytes": 143466,
+      "sha256": "8ece6cf82c6c58157b8166d4a4cfd248ef5dec6ff1758a8d3811ebf032c714bf",
+      "terms": "license text; peer read; parent hash verified"
+    },
+    {
+      "id": "hcp-superficial-license",
+      "url": "https://data-proxy.ebrains.eu/api/v1/public/buckets/d-609c0598-bf02-4b65-8d7d-3a40f0c2f543/Licence-CC-BY-NC.pdf",
+      "bytes": 136411,
+      "sha256": "d4ea4c1326b46686559ca80db6c8be09d927ce7f44ecbf56a4fa269f3346d9ea",
+      "terms": "license text; peer read; parent hash verified"
+    }
+  ],
+  "configurations": [
+    {
+      "path": "parcellations/julichbrain_v3_0_3.json",
+      "url": "https://raw.githubusercontent.com/FZJ-INM1-BDA/siibra-configurations/177023a506eceff008a012bb0a98d7bca0d1bbd5/parcellations/julichbrain_v3_0_3.json",
+      "bytes": 214437,
+      "sha256": "a124594fc11db13a4f4b262d9fe7f02c2bf692a97e2422639c99ac39e4b621df",
+      "id": "minds/core/parcellationatlas/v1.0.0/94c1125b-b87e-45e4-901c-00daee7f2579-300",
+      "metadata": {
+        "openminds/DatasetVersion": "d69b70e2-3002-4eaf-9c61-9c56f019bbc8",
+        "openminds/Dataset": "5a16d948-8d1c-400c-b797-8a7ad29944b2",
+        "minds/core/species/v1.0.0": "0ea4e6ba-2681-4f7d-9fa9-49b915caaac9",
+        "openminds/Species": "97c070c6-8e1f-4ee8-9d28-18c7945921dd",
+        "openminds/BrainAtlasVersion": [
+          "2db81b5c-6192-498b-b4c2-7e4906929527",
+          "94340f2a-7e00-4e7a-9389-ce9f5e8824c2",
+          "636555e4-8a95-4be2-ac25-dd53b71caa08",
+          "ed538f38-5d2e-4efb-b401-1e524468c96c"
+        ]
+      },
+      "licenseStatus": "repository-wide reuse license unresolved; dataset terms separate"
+    },
+    {
+      "path": "maps/mni152-jba30-labelled.json",
+      "url": "https://raw.githubusercontent.com/FZJ-INM1-BDA/siibra-configurations/177023a506eceff008a012bb0a98d7bca0d1bbd5/maps/mni152-jba30-labelled.json",
+      "bytes": 32033,
+      "sha256": "949bf42f75b00018cff001f59cd3c9285e1549575621156cbed176f055e79fa4",
+      "id": "siibra-map-v0.0.1_mni152-jba30-labelled",
+      "metadata": {
+        "openminds/DatasetVersion": "d69b70e2-3002-4eaf-9c61-9c56f019bbc8",
+        "openminds/Dataset": "5a16d948-8d1c-400c-b797-8a7ad29944b2",
+        "minds/core/species/v1.0.0": "0ea4e6ba-2681-4f7d-9fa9-49b915caaac9",
+        "openminds/Species": "97c070c6-8e1f-4ee8-9d28-18c7945921dd"
+      },
+      "licenseStatus": "repository-wide reuse license unresolved; dataset terms separate"
+    },
+    {
+      "path": "maps/mni152-jba30_157regions-continuous.json",
+      "url": "https://raw.githubusercontent.com/FZJ-INM1-BDA/siibra-configurations/177023a506eceff008a012bb0a98d7bca0d1bbd5/maps/mni152-jba30_157regions-continuous.json",
+      "bytes": 271813,
+      "sha256": "72f5375fd036a5c3a653afb08f316329a2110ac16761ca86b3a3b5cfe5432f89",
+      "id": "siibra-map-v0.0.1_mni152-jba30_157regions-continuous",
+      "metadata": {
+        "openminds/DatasetVersion": "d69b70e2-3002-4eaf-9c61-9c56f019bbc8",
+        "openminds/Dataset": "5a16d948-8d1c-400c-b797-8a7ad29944b2",
+        "minds/core/species/v1.0.0": "0ea4e6ba-2681-4f7d-9fa9-49b915caaac9",
+        "openminds/Species": "97c070c6-8e1f-4ee8-9d28-18c7945921dd"
+      },
+      "licenseStatus": "repository-wide reuse license unresolved; dataset terms separate"
+    },
+    {
+      "path": "maps/mni152-jba30_175regions-continuous.json",
+      "url": "https://raw.githubusercontent.com/FZJ-INM1-BDA/siibra-configurations/177023a506eceff008a012bb0a98d7bca0d1bbd5/maps/mni152-jba30_175regions-continuous.json",
+      "bytes": 302821,
+      "sha256": "b57c744c05ab9e668c1c1b3c5f882968a81c5b10f719bdce87f73e92cbf20084",
+      "id": "siibra-map-v0.0.1_mni152-jba30_175regions-continuous",
+      "metadata": {
+        "openminds/DatasetVersion": "d69b70e2-3002-4eaf-9c61-9c56f019bbc8",
+        "openminds/Dataset": "5a16d948-8d1c-400c-b797-8a7ad29944b2",
+        "minds/core/species/v1.0.0": "0ea4e6ba-2681-4f7d-9fa9-49b915caaac9",
+        "openminds/Species": "97c070c6-8e1f-4ee8-9d28-18c7945921dd"
+      },
+      "licenseStatus": "repository-wide reuse license unresolved; dataset terms separate"
+    },
+    {
+      "path": "parcellations/bundles_short.json",
+      "url": "https://raw.githubusercontent.com/FZJ-INM1-BDA/siibra-configurations/177023a506eceff008a012bb0a98d7bca0d1bbd5/parcellations/bundles_short.json",
+      "bytes": 4759,
+      "sha256": "7fefdc8980475657dd0caf36ee36fb7b2d2320f42a38eb5bfa011dc3043db2a8",
+      "id": "juelich/iav/atlas/v1.0.0/6",
+      "metadata": {
+        "openminds/Species": "97c070c6-8e1f-4ee8-9d28-18c7945921dd",
+        "openminds/BrainAtlasVersion": "a0d69a7e-a053-4108-adff-3993ca851fcb",
+        "openminds/DatasetVersion": "f58e4425-6614-4ad9-ac26-5e946b1296cb"
+      },
+      "licenseStatus": "repository-wide reuse license unresolved; dataset terms separate"
+    },
+    {
+      "path": "maps/mni152-swm-labelled.json",
+      "url": "https://raw.githubusercontent.com/FZJ-INM1-BDA/siibra-configurations/177023a506eceff008a012bb0a98d7bca0d1bbd5/maps/mni152-swm-labelled.json",
+      "bytes": 8433,
+      "sha256": "ef07f773fcf7ea253bf31c016a01e33440927569bc9dc28dbfc1a99ec12dd061",
+      "id": "siibra-map-v0.0.1_mni152-swm-labelled",
+      "metadata": {
+        "openminds/Species": "97c070c6-8e1f-4ee8-9d28-18c7945921dd",
+        "openminds/DatasetVersion": "f58e4425-6614-4ad9-ac26-5e946b1296cb"
+      },
+      "licenseStatus": "repository-wide reuse license unresolved; dataset terms separate"
+    },
+    {
+      "path": "maps/mni152-swm-continuous.json",
+      "url": "https://raw.githubusercontent.com/FZJ-INM1-BDA/siibra-configurations/177023a506eceff008a012bb0a98d7bca0d1bbd5/maps/mni152-swm-continuous.json",
+      "bytes": 78276,
+      "sha256": "c83655100c88f423d65e3353fa79bd4fe88e0d82210c04be00158bcde6c88648",
+      "id": "siibra-map-v0.0.1_mni152-swm-continuous",
+      "metadata": {
+        "openminds/Species": "97c070c6-8e1f-4ee8-9d28-18c7945921dd",
+        "openminds/DatasetVersion": "f58e4425-6614-4ad9-ac26-5e946b1296cb"
+      },
+      "licenseStatus": "repository-wide reuse license unresolved; dataset terms separate"
+    },
+    {
+      "path": "parcellations/superficial-white-bundle-hcp.json",
+      "url": "https://raw.githubusercontent.com/FZJ-INM1-BDA/siibra-configurations/177023a506eceff008a012bb0a98d7bca0d1bbd5/parcellations/superficial-white-bundle-hcp.json",
+      "bytes": 102427,
+      "sha256": "4b17931f5ec0ab6e0611baa2e258aaa81bdce812a06671c07ccd757dbfc8b779",
+      "id": "juelich/iav/atlas/v1.0.0/79cbeaa4ee96d5d3dfe2876e9f74b3dc3d3ffb84304fb9b965b1776563a1069c",
+      "metadata": {
+        "openminds/Species": "97c070c6-8e1f-4ee8-9d28-18c7945921dd",
+        "openminds/DatasetVersion": "6a7e07ad-303c-4b1d-b444-ded9ee782225"
+      },
+      "licenseStatus": "repository-wide reuse license unresolved; dataset terms separate"
+    },
+    {
+      "path": "maps/mni152-sw_hcp-labelled.json",
+      "url": "https://raw.githubusercontent.com/FZJ-INM1-BDA/siibra-configurations/177023a506eceff008a012bb0a98d7bca0d1bbd5/maps/mni152-sw_hcp-labelled.json",
+      "bytes": 48158,
+      "sha256": "8d171e0059636c529161e5c4ea83e63ddc3e6c10a6465ee5cb8d8d600404b7c8",
+      "id": "siibra-map-v0.0.1_mni152-sw_hcp-labelled",
+      "metadata": {
+        "openminds/Species": "97c070c6-8e1f-4ee8-9d28-18c7945921dd",
+        "openminds/DatasetVersion": "6a7e07ad-303c-4b1d-b444-ded9ee782225"
+      },
+      "licenseStatus": "repository-wide reuse license unresolved; dataset terms separate"
+    },
+    {
+      "path": "maps/mni152-sw_hcp-continuous.json",
+      "url": "https://raw.githubusercontent.com/FZJ-INM1-BDA/siibra-configurations/177023a506eceff008a012bb0a98d7bca0d1bbd5/maps/mni152-sw_hcp-continuous.json",
+      "bytes": 533981,
+      "sha256": "acf528c16db7e0293ea2b51153fd0c7783344957e5c8bca470268f2b986c5255",
+      "id": "siibra-map-v0.0.1_mni152-sw_hcp-continuous",
+      "metadata": {
+        "openminds/Species": "97c070c6-8e1f-4ee8-9d28-18c7945921dd",
+        "openminds/DatasetVersion": "6a7e07ad-303c-4b1d-b444-ded9ee782225"
+      },
+      "licenseStatus": "repository-wide reuse license unresolved; dataset terms separate"
+    },
+    {
+      "path": "parcellations/vep.json",
+      "url": "https://raw.githubusercontent.com/FZJ-INM1-BDA/siibra-configurations/177023a506eceff008a012bb0a98d7bca0d1bbd5/parcellations/vep.json",
+      "bytes": 14911,
+      "sha256": "1aadc98948c31eba3966af00fc0419c22f5e152dececd6e94954c197b28ceeaf",
+      "id": "https://doi.org/10.1016/j.jneumeth.2020.108983/mni152",
+      "metadata": {
+        "openminds/Species": "97c070c6-8e1f-4ee8-9d28-18c7945921dd"
+      },
+      "licenseStatus": "repository-wide reuse license unresolved; dataset terms separate"
+    },
+    {
+      "path": "maps/mni152-vep-labelled.json",
+      "url": "https://raw.githubusercontent.com/FZJ-INM1-BDA/siibra-configurations/177023a506eceff008a012bb0a98d7bca0d1bbd5/maps/mni152-vep-labelled.json",
+      "bytes": 17513,
+      "sha256": "ab2b29de8f175dc2c39d715ea61f7bfd83dc0dec8f64be694054250e8bd48b5e",
+      "id": "siibra-map-v0.0.1_mni152-vep-labelled",
+      "metadata": {
+        "openminds/Species": "97c070c6-8e1f-4ee8-9d28-18c7945921dd"
+      },
+      "licenseStatus": "repository-wide reuse license unresolved; dataset terms separate"
+    },
+    {
+      "path": "spaces/icbm_152_2009c_nonl_asym.json",
+      "url": "https://raw.githubusercontent.com/FZJ-INM1-BDA/siibra-configurations/177023a506eceff008a012bb0a98d7bca0d1bbd5/spaces/icbm_152_2009c_nonl_asym.json",
+      "bytes": 3627,
+      "sha256": "61bbe8781b0ebaabdac0aa148b1ff9c9f80f854517478808849692d89dcb0764",
+      "id": "minds/core/referencespace/v1.0.0/dafcffc5-4826-4bf1-8ff6-46b8a31ff8e2",
+      "metadata": {
+        "minds/core/species/v1.0.0": "0ea4e6ba-2681-4f7d-9fa9-49b915caaac9",
+        "openminds/Species": "97c070c6-8e1f-4ee8-9d28-18c7945921dd"
+      },
+      "licenseStatus": "repository-wide reuse license unresolved; dataset terms separate"
+    }
+  ],
+  "currentCompatibilityBaseline": [
+    {
+      "path": "public/data/fibre_endpoints.json",
+      "bytes": 476050,
+      "sha256": "b1c358023ab239dbf574f9de68cf5d1e018e08bb6d827b62779297b6642caa26"
+    },
+    {
+      "path": "public/data/fibre_filter_presets.json",
+      "bytes": 3472,
+      "sha256": "ca360a16c8c2321294a8c596fd78d9f0fdae80d160f7fcdaf95ac46e550c36a5"
+    },
+    {
+      "path": "public/data/tracts.json",
+      "bytes": 2425216,
+      "sha256": "568d8848a6dfe4cb859d9c7ec8e572a90cf0d71d0b7c741c4a1e1e2e4471b213"
+    },
+    {
+      "path": "public/data/swm_fibres.json",
+      "bytes": 2758578,
+      "sha256": "81529a410c9053731416124e346dce21e85d96c85fb8b3bad151735a4b1f81fb"
+    }
+  ],
+  "unresolved": [
+    "Configuration-authored hierarchy reuse not adopted; licensed dataset XML and validated terminology edges selected instead",
+    "VEP rejected on unresolved rights; ARCHI rights resolved but provenance conflict retains rejection",
+    "HCP version skew resolved as v1.0 metadata/v1.1 volumes; candidate remains unadopted pending scientific validation",
+    "No whole-brain domain atlas selected; candidates reviewed/rejected here, selection owned by .3/.6"
+  ],
+  "completionEvidence": [
+    "rights-report.md",
+    "probability-manifest.json",
+    "probe-results.json",
+    "research-environment.json"
+  ]
+}
