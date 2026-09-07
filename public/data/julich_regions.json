@@ -1,0 +1,7094 @@
+{
+ "schemaVersion": 1,
+ "space": "MNI152NLin2009cAsym",
+ "source": {
+  "atlas": "J\u00fclich-Brain",
+  "version": "3.0.3",
+  "map": "categorical maximum-probability map"
+ },
+ "coverage": {
+  "kind": "complete-base-region-vocabulary",
+  "nonJulichDomains": "unsupported"
+ },
+ "hierarchy": {
+  "status": "partial-licensed-source",
+  "mappedRegions": 151,
+  "pathOccurrences": 155,
+  "unresolvedRegions": 6
+ },
+ "streams": {
+  "subcortical": {
+   "hue": 286
+  },
+  "early": {
+   "hue": 172
+  },
+  "ventral": {
+   "hue": 22
+  },
+  "dorsal": {
+   "hue": 208
+  },
+  "temporal": {
+   "hue": 45
+  },
+  "parietal": {
+   "hue": 140
+  },
+  "frontal": {
+   "hue": 330
+  },
+  "gap": {
+   "hue": 215
+  }
+ },
+ "regions": [
+  {
+   "id": "julich-001",
+   "entityId": "region.julich-001",
+   "name": "Area 45 (IFG)",
+   "atlasId": "Area-45",
+   "sourceName": "Area 45 (IFG)",
+   "sourceId": "1",
+   "leftLabel": 1,
+   "rightLabel": 1001,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "frontal lobe",
+     "inferior frontal gyrus"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "inferior frontal gyrus",
+   "color": "#a76792",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-001_L.obj",
+     "verts": 2972,
+     "centroid": [
+      -53.8,
+      26.8,
+      12.8
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-001_R.obj",
+     "verts": 3004,
+     "centroid": [
+      53.3,
+      28.0,
+      12.8
+     ]
+    }
+   }
+  },
+  {
+   "id": "broca",
+   "entityId": "region.broca",
+   "name": "Broca 44",
+   "atlasId": "44",
+   "sourceName": "Area 44 (IFG)",
+   "sourceId": "2",
+   "leftLabel": 2,
+   "rightLabel": 1002,
+   "catalogStatus": "lesson-current",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "frontal lobe",
+     "inferior frontal gyrus"
+    ]
+   ],
+   "stream": "frontal",
+   "parent": "inferior frontal gyrus",
+   "color": "#cf6fa2",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/broca_L.obj",
+     "verts": 3001,
+     "centroid": [
+      -52.3,
+      11.5,
+      16.4
+     ]
+    },
+    "R": {
+     "file": "data/regions/broca_R.obj",
+     "verts": 2999,
+     "centroid": [
+      55.3,
+      14.7,
+      15.2
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-003",
+   "entityId": "region.julich-003",
+   "name": "Area Fo1 (OFC)",
+   "atlasId": "Area-Fo1",
+   "sourceName": "Area Fo1 (OFC)",
+   "sourceId": "3",
+   "leftLabel": 3,
+   "rightLabel": 1003,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "frontal lobe",
+     "medial orbitofrontal cortex"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "medial orbitofrontal cortex",
+   "color": "#07ffb3",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-003_L.obj",
+     "verts": 2306,
+     "centroid": [
+      -8.1,
+      42.1,
+      -25.0
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-003_R.obj",
+     "verts": 2592,
+     "centroid": [
+      7.3,
+      42.7,
+      -24.4
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-004",
+   "entityId": "region.julich-004",
+   "name": "Area Fo2 (OFC)",
+   "atlasId": "Area-Fo2",
+   "sourceName": "Area Fo2 (OFC)",
+   "sourceId": "4",
+   "leftLabel": 4,
+   "rightLabel": 1004,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "frontal lobe",
+     "medial orbitofrontal cortex"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "medial orbitofrontal cortex",
+   "color": "#00ff00",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-004_L.obj",
+     "verts": 2202,
+     "centroid": [
+      -8.8,
+      21.9,
+      -22.2
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-004_R.obj",
+     "verts": 2076,
+     "centroid": [
+      7.5,
+      22.0,
+      -22.3
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-005",
+   "entityId": "region.julich-005",
+   "name": "Area Fo3 (OFC)",
+   "atlasId": "Area-Fo3",
+   "sourceName": "Area Fo3 (OFC)",
+   "sourceId": "5",
+   "leftLabel": 5,
+   "rightLabel": 1005,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "frontal lobe",
+     "medial orbitofrontal cortex"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "medial orbitofrontal cortex",
+   "color": "#b6bdfa",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-005_L.obj",
+     "verts": 3000,
+     "centroid": [
+      -23.1,
+      33.1,
+      -21.4
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-005_R.obj",
+     "verts": 3000,
+     "centroid": [
+      21.8,
+      34.6,
+      -21.0
+     ]
+    }
+   }
+  },
+  {
+   "id": "mt",
+   "entityId": "region.mt",
+   "name": "MT/V5",
+   "atlasId": "hOc5",
+   "sourceName": "Area hOc5 (LOC)",
+   "sourceId": "6",
+   "leftLabel": 6,
+   "rightLabel": 1006,
+   "catalogStatus": "lesson-current",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "occiptal lobe",
+     "lateral occipital cortex"
+    ]
+   ],
+   "stream": "dorsal",
+   "parent": "occipital cortex",
+   "color": "#7abfde",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/mt_L.obj",
+     "verts": 822,
+     "centroid": [
+      -42.3,
+      -73.9,
+      0.8
+     ]
+    },
+    "R": {
+     "file": "data/regions/mt_R.obj",
+     "verts": 756,
+     "centroid": [
+      49.1,
+      -65.9,
+      3.8
+     ]
+    }
+   }
+  },
+  {
+   "id": "v2",
+   "entityId": "region.v2",
+   "name": "V2",
+   "atlasId": "hOc2",
+   "sourceName": "Area hOc2 (V2, 18)",
+   "sourceId": "7",
+   "leftLabel": 7,
+   "rightLabel": 1007,
+   "catalogStatus": "lesson-current",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "occiptal lobe",
+     "occipital cortex"
+    ]
+   ],
+   "stream": "early",
+   "parent": "occipital cortex",
+   "color": "#6cdac4",
+   "opacity": 0.15,
+   "meshes": {
+    "L": {
+     "file": "data/regions/v2_L.obj",
+     "verts": 2991,
+     "centroid": [
+      -10.1,
+      -87.7,
+      4.0
+     ]
+    },
+    "R": {
+     "file": "data/regions/v2_R.obj",
+     "verts": 3000,
+     "centroid": [
+      15.4,
+      -85.8,
+      3.2
+     ]
+    }
+   }
+  },
+  {
+   "id": "v1",
+   "entityId": "region.v1",
+   "name": "V1",
+   "atlasId": "hOc1",
+   "sourceName": "Area hOc1 (V1, 17, CalcS)",
+   "sourceId": "8",
+   "leftLabel": 8,
+   "rightLabel": 1008,
+   "catalogStatus": "lesson-current",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "occiptal lobe",
+     "occipital cortex"
+    ]
+   ],
+   "stream": "early",
+   "parent": "occipital cortex",
+   "color": "#85e0c0",
+   "opacity": 0.15,
+   "meshes": {
+    "L": {
+     "file": "data/regions/v1_L.obj",
+     "verts": 3007,
+     "centroid": [
+      -9.4,
+      -83.8,
+      1.9
+     ]
+    },
+    "R": {
+     "file": "data/regions/v1_R.obj",
+     "verts": 2992,
+     "centroid": [
+      14.3,
+      -80.3,
+      1.5
+     ]
+    }
+   }
+  },
+  {
+   "id": "v4v",
+   "entityId": "region.v4v",
+   "name": "V4v",
+   "atlasId": "hOc4v",
+   "sourceName": "Area hOc4v (LingG)",
+   "sourceId": "9",
+   "leftLabel": 9,
+   "rightLabel": 1009,
+   "catalogStatus": "lesson-current",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "occiptal lobe",
+     "ventral occipital cortex"
+    ]
+   ],
+   "stream": "ventral",
+   "parent": "occipital cortex",
+   "color": "#e09285",
+   "opacity": 0.14,
+   "meshes": {
+    "L": {
+     "file": "data/regions/v4v_L.obj",
+     "verts": 3002,
+     "centroid": [
+      -26.7,
+      -79.1,
+      -12.1
+     ]
+    },
+    "R": {
+     "file": "data/regions/v4v_R.obj",
+     "verts": 3000,
+     "centroid": [
+      32.6,
+      -77.6,
+      -11.5
+     ]
+    }
+   }
+  },
+  {
+   "id": "v3v",
+   "entityId": "region.v3v",
+   "name": "V3v",
+   "atlasId": "hOc3v",
+   "sourceName": "Area hOc3v (LingG)",
+   "sourceId": "10",
+   "leftLabel": 10,
+   "rightLabel": 1010,
+   "catalogStatus": "lesson-current",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "occiptal lobe",
+     "ventral occipital cortex"
+    ]
+   ],
+   "stream": "early",
+   "parent": "occipital cortex",
+   "color": "#54d4cc",
+   "opacity": 0.15,
+   "meshes": {
+    "L": {
+     "file": "data/regions/v3v_L.obj",
+     "verts": 3003,
+     "centroid": [
+      -20.9,
+      -85.9,
+      -8.7
+     ]
+    },
+    "R": {
+     "file": "data/regions/v3v_R.obj",
+     "verts": 2994,
+     "centroid": [
+      25.2,
+      -82.6,
+      -8.9
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-011",
+   "entityId": "region.julich-011",
+   "name": "Area TE 1.0 (HESCHL)",
+   "atlasId": "Area-TE-1.0",
+   "sourceName": "Area TE 1.0 (HESCHL)",
+   "sourceId": "27",
+   "leftLabel": 11,
+   "rightLabel": 1011,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "temporal lobe",
+     "Heschl's gyrus"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "Heschl's gyrus",
+   "color": "#fc54de",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-011_L.obj",
+     "verts": 1044,
+     "centroid": [
+      -47.3,
+      -19.0,
+      8.6
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-011_R.obj",
+     "verts": 1040,
+     "centroid": [
+      50.3,
+      -12.1,
+      5.6
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-012",
+   "entityId": "region.julich-012",
+   "name": "Area TE 2.1 (STG)",
+   "atlasId": "Area-TE-2.1",
+   "sourceName": "Area TE 2.1 (STG)",
+   "sourceId": "28",
+   "leftLabel": 12,
+   "rightLabel": 1012,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "temporal lobe",
+     "superior temporal gyrus"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "superior temporal gyrus",
+   "color": "#43fe2c",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-012_L.obj",
+     "verts": 1804,
+     "centroid": [
+      -54.3,
+      -17.2,
+      5.5
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-012_R.obj",
+     "verts": 1038,
+     "centroid": [
+      56.8,
+      -10.5,
+      1.4
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-013",
+   "entityId": "region.julich-013",
+   "name": "Area TPJ (STG/SMG)",
+   "atlasId": "Area-TPJ",
+   "sourceName": "Area TPJ (STG/SMG)",
+   "sourceId": "29",
+   "leftLabel": 13,
+   "rightLabel": 1013,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "temporal lobe",
+     "temporo-parietal junction"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "temporo-parietal junction",
+   "color": "#5fc332",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-013_L.obj",
+     "verts": 2669,
+     "centroid": [
+      -60.2,
+      -39.7,
+      17.4
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-013_R.obj",
+     "verts": 2152,
+     "centroid": [
+      61.6,
+      -29.3,
+      15.8
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-014",
+   "entityId": "region.julich-014",
+   "name": "Area TE 1.2 (HESCHL)",
+   "atlasId": "Area-TE-1.2",
+   "sourceName": "Area TE 1.2 (HESCHL)",
+   "sourceId": "30",
+   "leftLabel": 14,
+   "rightLabel": 1014,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "temporal lobe",
+     "Heschl's gyrus"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "Heschl's gyrus",
+   "color": "#cafbc0",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-014_L.obj",
+     "verts": 1312,
+     "centroid": [
+      -51.9,
+      -4.7,
+      2.2
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-014_R.obj",
+     "verts": 686,
+     "centroid": [
+      53.8,
+      -1.3,
+      -0.6
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-015",
+   "entityId": "region.julich-015",
+   "name": "Area TE 3 (STG)",
+   "atlasId": "Area-TE-3",
+   "sourceName": "Area TE 3 (STG)",
+   "sourceId": "31",
+   "leftLabel": 15,
+   "rightLabel": 1015,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "temporal lobe",
+     "superior temporal gyrus"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "superior temporal gyrus",
+   "color": "#9f686c",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-015_L.obj",
+     "verts": 2998,
+     "centroid": [
+      -63.6,
+      -10.6,
+      0.8
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-015_R.obj",
+     "verts": 3002,
+     "centroid": [
+      64.3,
+      -8.9,
+      -0.6
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-016",
+   "entityId": "region.julich-016",
+   "name": "Area TE 1.1 (HESCHL)",
+   "atlasId": "Area-TE-1.1",
+   "sourceName": "Area TE 1.1 (HESCHL)",
+   "sourceId": "33",
+   "leftLabel": 16,
+   "rightLabel": 1016,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "temporal lobe",
+     "Heschl's gyrus"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "Heschl's gyrus",
+   "color": "#087144",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-016_L.obj",
+     "verts": 1158,
+     "centroid": [
+      -38.9,
+      -28.4,
+      11.7
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-016_R.obj",
+     "verts": 1114,
+     "centroid": [
+      40.5,
+      -24.7,
+      11.4
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-017",
+   "entityId": "region.julich-017",
+   "name": "Area TE 2.2 (STG)",
+   "atlasId": "Area-TE-2.2",
+   "sourceName": "Area TE 2.2 (STG)",
+   "sourceId": "34",
+   "leftLabel": 17,
+   "rightLabel": 1017,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "temporal lobe",
+     "superior temporal gyrus"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "superior temporal gyrus",
+   "color": "#3a687d",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-017_L.obj",
+     "verts": 3002,
+     "centroid": [
+      -53.1,
+      -30.9,
+      10.1
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-017_R.obj",
+     "verts": 2679,
+     "centroid": [
+      53.8,
+      -23.3,
+      10.6
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-018",
+   "entityId": "region.julich-018",
+   "name": "Area 33 (ACC)",
+   "atlasId": "Area-33",
+   "sourceName": "Area 33 (ACC)",
+   "sourceId": "39",
+   "leftLabel": 18,
+   "rightLabel": 1018,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "limbic lobe",
+     "cingulate gyrus, frontal part"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "cingulate gyrus, frontal part",
+   "color": "#3339f5",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-018_L.obj",
+     "verts": 2382,
+     "centroid": [
+      -4.5,
+      18.0,
+      14.9
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-018_R.obj",
+     "verts": 3000,
+     "centroid": [
+      4.4,
+      20.8,
+      14.3
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-019",
+   "entityId": "region.julich-019",
+   "name": "Area s32 (sACC)",
+   "atlasId": "Area-s32",
+   "sourceName": "Area s32 (sACC)",
+   "sourceId": "46",
+   "leftLabel": 19,
+   "rightLabel": 1019,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "limbic lobe",
+     "cingulate gyrus, frontal part"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "cingulate gyrus, frontal part",
+   "color": "#c15efa",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-019_L.obj",
+     "verts": 1780,
+     "centroid": [
+      -6.6,
+      35.5,
+      -15.3
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-019_R.obj",
+     "verts": 1710,
+     "centroid": [
+      3.4,
+      34.9,
+      -15.8
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-020",
+   "entityId": "region.julich-020",
+   "name": "Area p32 (pACC)",
+   "atlasId": "Area-p32",
+   "sourceName": "Area p32 (pACC)",
+   "sourceId": "47",
+   "leftLabel": 20,
+   "rightLabel": 1020,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "limbic lobe",
+     "cingulate gyrus, frontal part"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "cingulate gyrus, frontal part",
+   "color": "#57870e",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-020_L.obj",
+     "verts": 3002,
+     "centroid": [
+      -7.5,
+      49.9,
+      9.3
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-020_R.obj",
+     "verts": 2998,
+     "centroid": [
+      7.3,
+      49.8,
+      8.9
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-021",
+   "entityId": "region.julich-021",
+   "name": "Area Id2 (Insula)",
+   "atlasId": "Area-Id2",
+   "sourceName": "Area Id2 (Insula)",
+   "sourceId": "56",
+   "leftLabel": 21,
+   "rightLabel": 1021,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "insula",
+     "dysgranular insula"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "dysgranular insula",
+   "color": "#e17e49",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-021_L.obj",
+     "verts": 722,
+     "centroid": [
+      -41.0,
+      -12.0,
+      5.4
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-021_R.obj",
+     "verts": 775,
+     "centroid": [
+      42.0,
+      -10.0,
+      3.9
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-022",
+   "entityId": "region.julich-022",
+   "name": "Area Id3 (Insula)",
+   "atlasId": "Area-Id3",
+   "sourceName": "Area Id3 (Insula)",
+   "sourceId": "57",
+   "leftLabel": 22,
+   "rightLabel": 1022,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "insula",
+     "dysgranular insula"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "dysgranular insula",
+   "color": "#20203a",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-022_L.obj",
+     "verts": 1190,
+     "centroid": [
+      -40.6,
+      -9.2,
+      -8.2
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-022_R.obj",
+     "verts": 1330,
+     "centroid": [
+      40.0,
+      -6.2,
+      -9.2
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-023",
+   "entityId": "region.julich-023",
+   "name": "CA2 (Hippocampus)",
+   "atlasId": "CA2",
+   "sourceName": "CA2 (Hippocampus)",
+   "sourceId": "58",
+   "leftLabel": 23,
+   "rightLabel": 1023,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "limbic lobe",
+     "hippocampal formation"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "hippocampal formation",
+   "color": "#914365",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-023_L.obj",
+     "verts": 1488,
+     "centroid": [
+      -24.0,
+      -24.8,
+      -8.8
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-023_R.obj",
+     "verts": 1748,
+     "centroid": [
+      27.6,
+      -25.4,
+      -7.5
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-024",
+   "entityId": "region.julich-024",
+   "name": "CA3 (Hippocampus)",
+   "atlasId": "CA3",
+   "sourceName": "CA3 (Hippocampus)",
+   "sourceId": "59",
+   "leftLabel": 24,
+   "rightLabel": 1024,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "limbic lobe",
+     "hippocampal formation"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "hippocampal formation",
+   "color": "#e9d3dd",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-024_L.obj",
+     "verts": 1522,
+     "centroid": [
+      -21.0,
+      -29.8,
+      -3.4
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-024_R.obj",
+     "verts": 1384,
+     "centroid": [
+      22.6,
+      -27.8,
+      -3.7
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-025",
+   "entityId": "region.julich-025",
+   "name": "Entorhinal Cortex",
+   "atlasId": "Entorhinal-Cortex",
+   "sourceName": "Entorhinal Cortex",
+   "sourceId": "60",
+   "leftLabel": 25,
+   "rightLabel": 1025,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "limbic lobe",
+     "hippocampal formation"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "hippocampal formation",
+   "color": "#239fd6",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-025_L.obj",
+     "verts": 2808,
+     "centroid": [
+      -22.8,
+      -11.4,
+      -31.5
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-025_R.obj",
+     "verts": 2764,
+     "centroid": [
+      21.1,
+      -7.2,
+      -32.8
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-026",
+   "entityId": "region.julich-026",
+   "name": "DG (Hippocampus)",
+   "atlasId": "DG",
+   "sourceName": "DG (Hippocampus)",
+   "sourceId": "61",
+   "leftLabel": 26,
+   "rightLabel": 1026,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "limbic lobe",
+     "hippocampal formation"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "hippocampal formation",
+   "color": "#953778",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-026_L.obj",
+     "verts": 1757,
+     "centroid": [
+      -26.2,
+      -27.9,
+      -9.9
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-026_R.obj",
+     "verts": 1536,
+     "centroid": [
+      26.9,
+      -25.2,
+      -11.3
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-027",
+   "entityId": "region.julich-027",
+   "name": "CA1 (Hippocampus)",
+   "atlasId": "CA1",
+   "sourceName": "CA1 (Hippocampus)",
+   "sourceId": "66",
+   "leftLabel": 27,
+   "rightLabel": 1027,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "limbic lobe",
+     "hippocampal formation"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "hippocampal formation",
+   "color": "#7d09a7",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-027_L.obj",
+     "verts": 3002,
+     "centroid": [
+      -27.5,
+      -27.7,
+      -13.1
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-027_R.obj",
+     "verts": 3002,
+     "centroid": [
+      28.5,
+      -25.3,
+      -12.7
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-028",
+   "entityId": "region.julich-028",
+   "name": "HATA (Hippocampus)",
+   "atlasId": "HATA",
+   "sourceName": "HATA (Hippocampus)",
+   "sourceId": "68",
+   "leftLabel": 28,
+   "rightLabel": 1028,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "limbic lobe",
+     "hippocampal formation"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "hippocampal formation",
+   "color": "#890c49",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-028_L.obj",
+     "verts": 536,
+     "centroid": [
+      -13.7,
+      -12.1,
+      -19.5
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-028_R.obj",
+     "verts": 360,
+     "centroid": [
+      13.3,
+      -10.6,
+      -18.8
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-029",
+   "entityId": "region.julich-029",
+   "name": "Area OP4 (POperc)",
+   "atlasId": "Area-OP4",
+   "sourceName": "Area OP4 (POperc)",
+   "sourceId": "72",
+   "leftLabel": 29,
+   "rightLabel": 1029,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "parietal lobe",
+     "parietal operculum"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "parietal operculum",
+   "color": "#595084",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-029_L.obj",
+     "verts": 2488,
+     "centroid": [
+      -59.8,
+      -11.0,
+      17.2
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-029_R.obj",
+     "verts": 2233,
+     "centroid": [
+      61.6,
+      -6.9,
+      13.5
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-030",
+   "entityId": "region.julich-030",
+   "name": "Area OP1 (POperc)",
+   "atlasId": "Area-OP1",
+   "sourceName": "Area OP1 (POperc)",
+   "sourceId": "73",
+   "leftLabel": 30,
+   "rightLabel": 1030,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "parietal lobe",
+     "parietal operculum"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "parietal operculum",
+   "color": "#fab622",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-030_L.obj",
+     "verts": 2676,
+     "centroid": [
+      -51.8,
+      -23.3,
+      18.8
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-030_R.obj",
+     "verts": 2812,
+     "centroid": [
+      52.9,
+      -17.8,
+      18.7
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-031",
+   "entityId": "region.julich-031",
+   "name": "Area OP2 (POperc)",
+   "atlasId": "Area-OP2",
+   "sourceName": "Area OP2 (POperc)",
+   "sourceId": "74",
+   "leftLabel": 31,
+   "rightLabel": 1031,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "parietal lobe",
+     "parietal operculum"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "parietal operculum",
+   "color": "#242fdd",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-031_L.obj",
+     "verts": 814,
+     "centroid": [
+      -35.2,
+      -23.9,
+      19.6
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-031_R.obj",
+     "verts": 840,
+     "centroid": [
+      35.2,
+      -21.0,
+      19.2
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-032",
+   "entityId": "region.julich-032",
+   "name": "Area OP3 (POperc)",
+   "atlasId": "Area-OP3",
+   "sourceName": "Area OP3 (POperc)",
+   "sourceId": "75",
+   "leftLabel": 32,
+   "rightLabel": 1032,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "parietal lobe",
+     "parietal operculum"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "parietal operculum",
+   "color": "#3a7a50",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-032_L.obj",
+     "verts": 1140,
+     "centroid": [
+      -41.1,
+      -12.9,
+      18.4
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-032_R.obj",
+     "verts": 1226,
+     "centroid": [
+      41.4,
+      -9.3,
+      18.6
+     ]
+    }
+   }
+  },
+  {
+   "id": "fg2",
+   "entityId": "region.fg2",
+   "name": "FG2",
+   "atlasId": "FG2",
+   "sourceName": "Area FG2 (FusG)",
+   "sourceId": "106",
+   "leftLabel": 33,
+   "rightLabel": 1033,
+   "catalogStatus": "lesson-current",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "temporal lobe",
+     "fusiform gyrus"
+    ]
+   ],
+   "stream": "ventral",
+   "parent": "fusiform gyrus",
+   "color": "#d48c54",
+   "opacity": 0.14,
+   "meshes": {
+    "L": {
+     "file": "data/regions/fg2_L.obj",
+     "verts": 2998,
+     "centroid": [
+      -42.6,
+      -67.2,
+      -15.9
+     ]
+    },
+    "R": {
+     "file": "data/regions/fg2_R.obj",
+     "verts": 2118,
+     "centroid": [
+      42.7,
+      -63.4,
+      -17.0
+     ]
+    }
+   }
+  },
+  {
+   "id": "fg1",
+   "entityId": "region.fg1",
+   "name": "FG1",
+   "atlasId": "FG1",
+   "sourceName": "Area FG1 (FusG)",
+   "sourceId": "107",
+   "leftLabel": 34,
+   "rightLabel": 1034,
+   "catalogStatus": "lesson-current",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "temporal lobe",
+     "fusiform gyrus"
+    ]
+   ],
+   "stream": "ventral",
+   "parent": "fusiform gyrus",
+   "color": "#d78c60",
+   "opacity": 0.14,
+   "meshes": {
+    "L": {
+     "file": "data/regions/fg1_L.obj",
+     "verts": 1798,
+     "centroid": [
+      -30.0,
+      -69.2,
+      -10.9
+     ]
+    },
+    "R": {
+     "file": "data/regions/fg1_R.obj",
+     "verts": 1807,
+     "centroid": [
+      33.1,
+      -65.9,
+      -10.6
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-035",
+   "entityId": "region.julich-035",
+   "name": "Area PGp (IPL)",
+   "atlasId": "Area-PGp",
+   "sourceName": "Area PGp (IPL)",
+   "sourceId": "108",
+   "leftLabel": 35,
+   "rightLabel": 1035,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "parietal lobe",
+     "inferior parietal lobule"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "inferior parietal lobule",
+   "color": "#5c7453",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-035_L.obj",
+     "verts": 2994,
+     "centroid": [
+      -43.6,
+      -74.5,
+      32.0
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-035_R.obj",
+     "verts": 2998,
+     "centroid": [
+      47.1,
+      -68.9,
+      34.9
+     ]
+    }
+   }
+  },
+  {
+   "id": "pft",
+   "entityId": "region.pft",
+   "name": "PFt",
+   "atlasId": "PFt",
+   "sourceName": "Area PFt (IPL)",
+   "sourceId": "109",
+   "leftLabel": 36,
+   "rightLabel": 1036,
+   "catalogStatus": "lesson-current",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "parietal lobe",
+     "inferior parietal lobule"
+    ]
+   ],
+   "stream": "parietal",
+   "parent": "inferior parietal",
+   "color": "#77d78c",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/pft_L.obj",
+     "verts": 2998,
+     "centroid": [
+      -55.1,
+      -26.6,
+      39.2
+     ]
+    },
+    "R": {
+     "file": "data/regions/pft_R.obj",
+     "verts": 3000,
+     "centroid": [
+      54.9,
+      -22.3,
+      41.0
+     ]
+    }
+   }
+  },
+  {
+   "id": "pga",
+   "entityId": "region.pga",
+   "name": "PGa",
+   "atlasId": "PGa",
+   "sourceName": "Area PGa (IPL)",
+   "sourceId": "110",
+   "leftLabel": 37,
+   "rightLabel": 1037,
+   "catalogStatus": "lesson-current",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "parietal lobe",
+     "inferior parietal lobule"
+    ]
+   ],
+   "stream": "parietal",
+   "parent": "inferior parietal",
+   "color": "#53cd89",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/pga_L.obj",
+     "verts": 2998,
+     "centroid": [
+      -47.6,
+      -61.8,
+      42.3
+     ]
+    },
+    "R": {
+     "file": "data/regions/pga_R.obj",
+     "verts": 2994,
+     "centroid": [
+      54.7,
+      -53.4,
+      35.1
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-038",
+   "entityId": "region.julich-038",
+   "name": "Area PFop (IPL)",
+   "atlasId": "Area-PFop",
+   "sourceName": "Area PFop (IPL)",
+   "sourceId": "111",
+   "leftLabel": 38,
+   "rightLabel": 1038,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "parietal lobe",
+     "inferior parietal lobule"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "inferior parietal lobule",
+   "color": "#9299b1",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-038_L.obj",
+     "verts": 1800,
+     "centroid": [
+      -60.1,
+      -24.8,
+      26.2
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-038_R.obj",
+     "verts": 2312,
+     "centroid": [
+      58.0,
+      -18.4,
+      27.0
+     ]
+    }
+   }
+  },
+  {
+   "id": "pfm",
+   "entityId": "region.pfm",
+   "name": "PFm",
+   "atlasId": "PFm",
+   "sourceName": "Area PFm (IPL)",
+   "sourceId": "112",
+   "leftLabel": 39,
+   "rightLabel": 1039,
+   "catalogStatus": "lesson-current",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "parietal lobe",
+     "inferior parietal lobule"
+    ]
+   ],
+   "stream": "parietal",
+   "parent": "inferior parietal",
+   "color": "#65d289",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/pfm_L.obj",
+     "verts": 2992,
+     "centroid": [
+      -54.0,
+      -53.2,
+      41.5
+     ]
+    },
+    "R": {
+     "file": "data/regions/pfm_R.obj",
+     "verts": 2998,
+     "centroid": [
+      56.3,
+      -42.5,
+      40.8
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-040",
+   "entityId": "region.julich-040",
+   "name": "Area PFcm (IPL)",
+   "atlasId": "Area-PFcm",
+   "sourceName": "Area PFcm (IPL)",
+   "sourceId": "113",
+   "leftLabel": 40,
+   "rightLabel": 1040,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "parietal lobe",
+     "inferior parietal lobule"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "inferior parietal lobule",
+   "color": "#628078",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-040_L.obj",
+     "verts": 2826,
+     "centroid": [
+      -51.6,
+      -37.7,
+      24.1
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-040_R.obj",
+     "verts": 2444,
+     "centroid": [
+      52.0,
+      -29.0,
+      25.8
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-041",
+   "entityId": "region.julich-041",
+   "name": "Area Ig2 (Insula)",
+   "atlasId": "Area-Ig2",
+   "sourceName": "Area Ig2 (Insula)",
+   "sourceId": "114",
+   "leftLabel": 41,
+   "rightLabel": 1041,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "insula",
+     "granular insula"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "granular insula",
+   "color": "#693d52",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-041_L.obj",
+     "verts": 798,
+     "centroid": [
+      -37.4,
+      -19.0,
+      6.0
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-041_R.obj",
+     "verts": 924,
+     "centroid": [
+      38.0,
+      -16.4,
+      5.9
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-042",
+   "entityId": "region.julich-042",
+   "name": "Area Ig1 (Insula)",
+   "atlasId": "Area-Ig1",
+   "sourceName": "Area Ig1 (Insula)",
+   "sourceId": "115",
+   "leftLabel": 42,
+   "rightLabel": 1042,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "insula",
+     "granular insula"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "granular insula",
+   "color": "#126f28",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-042_L.obj",
+     "verts": 674,
+     "centroid": [
+      -33.8,
+      -25.6,
+      8.8
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-042_R.obj",
+     "verts": 658,
+     "centroid": [
+      34.3,
+      -23.7,
+      9.3
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-043",
+   "entityId": "region.julich-043",
+   "name": "Area Id1 (Insula)",
+   "atlasId": "Area-Id1",
+   "sourceName": "Area Id1 (Insula)",
+   "sourceId": "116",
+   "leftLabel": 43,
+   "rightLabel": 1043,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "insula",
+     "dysgranular insula"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "dysgranular insula",
+   "color": "#8d70d8",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-043_L.obj",
+     "verts": 746,
+     "centroid": [
+      -40.8,
+      -19.6,
+      -4.8
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-043_R.obj",
+     "verts": 684,
+     "centroid": [
+      39.4,
+      -17.1,
+      -4.9
+     ]
+    }
+   }
+  },
+  {
+   "id": "lop",
+   "entityId": "region.lop",
+   "name": "LOC-p",
+   "atlasId": "hOc4lp",
+   "sourceName": "Area hOc4lp (LOC)",
+   "sourceId": "117",
+   "leftLabel": 44,
+   "rightLabel": 1044,
+   "catalogStatus": "lesson-current",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "occiptal lobe",
+     "lateral occipital cortex"
+    ]
+   ],
+   "stream": "ventral",
+   "parent": "occipital cortex",
+   "color": "#da8d6c",
+   "opacity": 0.14,
+   "meshes": {
+    "L": {
+     "file": "data/regions/lop_L.obj",
+     "verts": 3002,
+     "centroid": [
+      -34.1,
+      -89.2,
+      6.8
+     ]
+    },
+    "R": {
+     "file": "data/regions/lop_R.obj",
+     "verts": 3002,
+     "centroid": [
+      36.8,
+      -86.6,
+      6.8
+     ]
+    }
+   }
+  },
+  {
+   "id": "loa",
+   "entityId": "region.loa",
+   "name": "LOC-a",
+   "atlasId": "hOc4la",
+   "sourceName": "Area hOc4la (LOC)",
+   "sourceId": "118",
+   "leftLabel": 45,
+   "rightLabel": 1045,
+   "catalogStatus": "lesson-current",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "occiptal lobe",
+     "lateral occipital cortex"
+    ]
+   ],
+   "stream": "ventral",
+   "parent": "occipital cortex",
+   "color": "#dd8f78",
+   "opacity": 0.14,
+   "meshes": {
+    "L": {
+     "file": "data/regions/loa_L.obj",
+     "verts": 2998,
+     "centroid": [
+      -45.0,
+      -79.2,
+      -0.0
+     ]
+    },
+    "R": {
+     "file": "data/regions/loa_R.obj",
+     "verts": 3002,
+     "centroid": [
+      48.1,
+      -74.6,
+      -0.9
+     ]
+    }
+   }
+  },
+  {
+   "id": "v3a",
+   "entityId": "region.v3a",
+   "name": "V3A",
+   "atlasId": "hOc4d",
+   "sourceName": "Area hOc4d (Cuneus)",
+   "sourceId": "119",
+   "leftLabel": 46,
+   "rightLabel": 1046,
+   "catalogStatus": "lesson-current",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "occiptal lobe",
+     "dorsal occipital cortex"
+    ]
+   ],
+   "stream": "dorsal",
+   "parent": "occipital cortex",
+   "color": "#85c9e0",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/v3a_L.obj",
+     "verts": 2996,
+     "centroid": [
+      -17.8,
+      -88.3,
+      25.9
+     ]
+    },
+    "R": {
+     "file": "data/regions/v3a_R.obj",
+     "verts": 2990,
+     "centroid": [
+      20.3,
+      -86.6,
+      26.0
+     ]
+    }
+   }
+  },
+  {
+   "id": "v3d",
+   "entityId": "region.v3d",
+   "name": "V3d",
+   "atlasId": "hOc3d",
+   "sourceName": "Area hOc3d (Cuneus)",
+   "sourceId": "120",
+   "leftLabel": 47,
+   "rightLabel": 1047,
+   "catalogStatus": "lesson-current",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "occiptal lobe",
+     "dorsal occipital cortex"
+    ]
+   ],
+   "stream": "early",
+   "parent": "occipital cortex",
+   "color": "#3bc2ce",
+   "opacity": 0.15,
+   "meshes": {
+    "L": {
+     "file": "data/regions/v3d_L.obj",
+     "verts": 3000,
+     "centroid": [
+      -14.4,
+      -91.5,
+      21.5
+     ]
+    },
+    "R": {
+     "file": "data/regions/v3d_R.obj",
+     "verts": 2994,
+     "centroid": [
+      14.9,
+      -87.1,
+      23.6
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-048",
+   "entityId": "region.julich-048",
+   "name": "Area 4p (PreCG)",
+   "atlasId": "Area-4p",
+   "sourceName": "Area 4p (PreCG)",
+   "sourceId": "123",
+   "leftLabel": 48,
+   "rightLabel": 1048,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "frontal lobe",
+     "precentral gyrus "
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "precentral gyrus ",
+   "color": "#745c7c",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-048_L.obj",
+     "verts": 3002,
+     "centroid": [
+      -32.9,
+      -21.5,
+      50.2
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-048_R.obj",
+     "verts": 2842,
+     "centroid": [
+      34.1,
+      -18.3,
+      48.7
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-049",
+   "entityId": "region.julich-049",
+   "name": "Area 4a (PreCG)",
+   "atlasId": "Area-4a",
+   "sourceName": "Area 4a (PreCG)",
+   "sourceId": "124",
+   "leftLabel": 49,
+   "rightLabel": 1049,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "frontal lobe",
+     "precentral gyrus "
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "precentral gyrus ",
+   "color": "#76efb7",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-049_L.obj",
+     "verts": 2989,
+     "centroid": [
+      -20.0,
+      -24.2,
+      65.8
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-049_R.obj",
+     "verts": 2990,
+     "centroid": [
+      20.4,
+      -24.5,
+      64.5
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-050",
+   "entityId": "region.julich-050",
+   "name": "Area 1 (PostCG)",
+   "atlasId": "Area-1",
+   "sourceName": "Area 1 (PostCG)",
+   "sourceId": "125",
+   "leftLabel": 50,
+   "rightLabel": 1050,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "parietal lobe",
+     "postcentral gyrus"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "postcentral gyrus",
+   "color": "#e8b9fa",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-050_L.obj",
+     "verts": 2998,
+     "centroid": [
+      -44.1,
+      -25.5,
+      59.2
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-050_R.obj",
+     "verts": 2993,
+     "centroid": [
+      48.1,
+      -20.8,
+      54.0
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-051",
+   "entityId": "region.julich-051",
+   "name": "Area 3a (PostCG)",
+   "atlasId": "Area-3a",
+   "sourceName": "Area 3a (PostCG)",
+   "sourceId": "126",
+   "leftLabel": 51,
+   "rightLabel": 1051,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "parietal lobe",
+     "postcentral gyrus"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "postcentral gyrus",
+   "color": "#bb8532",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-051_L.obj",
+     "verts": 2998,
+     "centroid": [
+      -32.3,
+      -24.5,
+      44.6
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-051_R.obj",
+     "verts": 2896,
+     "centroid": [
+      34.4,
+      -20.2,
+      40.8
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-052",
+   "entityId": "region.julich-052",
+   "name": "Area 3b (PostCG)",
+   "atlasId": "Area-3b",
+   "sourceName": "Area 3b (PostCG)",
+   "sourceId": "127",
+   "leftLabel": 52,
+   "rightLabel": 1052,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "parietal lobe",
+     "postcentral gyrus"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "postcentral gyrus",
+   "color": "#eff69b",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-052_L.obj",
+     "verts": 3002,
+     "centroid": [
+      -37.7,
+      -23.4,
+      51.1
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-052_R.obj",
+     "verts": 2995,
+     "centroid": [
+      38.3,
+      -21.6,
+      49.6
+     ]
+    }
+   }
+  },
+  {
+   "id": "hip1",
+   "entityId": "region.hip1",
+   "name": "hIP1",
+   "atlasId": "hIP1",
+   "sourceName": "Area hIP1 (IPS)",
+   "sourceId": "128",
+   "leftLabel": 53,
+   "rightLabel": 1053,
+   "catalogStatus": "lesson-current",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "parietal lobe",
+     "intraparietal sulcus"
+    ]
+   ],
+   "stream": "dorsal",
+   "parent": "intraparietal sulcus",
+   "color": "#75b9dc",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/hip1_L.obj",
+     "verts": 2998,
+     "centroid": [
+      -36.6,
+      -50.4,
+      41.0
+     ]
+    },
+    "R": {
+     "file": "data/regions/hip1_R.obj",
+     "verts": 2788,
+     "centroid": [
+      38.2,
+      -48.1,
+      40.8
+     ]
+    }
+   }
+  },
+  {
+   "id": "hip2",
+   "entityId": "region.hip2",
+   "name": "hIP2",
+   "atlasId": "hIP2",
+   "sourceName": "Area hIP2 (IPS)",
+   "sourceId": "129",
+   "leftLabel": 54,
+   "rightLabel": 1054,
+   "catalogStatus": "lesson-current",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "parietal lobe",
+     "intraparietal sulcus"
+    ]
+   ],
+   "stream": "dorsal",
+   "parent": "intraparietal sulcus",
+   "color": "#70b3db",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/hip2_L.obj",
+     "verts": 2493,
+     "centroid": [
+      -45.6,
+      -42.2,
+      43.9
+     ]
+    },
+    "R": {
+     "file": "data/regions/hip2_R.obj",
+     "verts": 2194,
+     "centroid": [
+      44.7,
+      -37.9,
+      45.9
+     ]
+    }
+   }
+  },
+  {
+   "id": "spl5l",
+   "entityId": "region.spl5l",
+   "name": "5L",
+   "atlasId": "5L",
+   "sourceName": "Area 5L (SPL)",
+   "sourceId": "130",
+   "leftLabel": 55,
+   "rightLabel": 1055,
+   "catalogStatus": "lesson-current",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "parietal lobe",
+     "superior parietal lobule"
+    ]
+   ],
+   "stream": "dorsal",
+   "parent": "superior parietal lobule",
+   "color": "#4072cf",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/spl5l_L.obj",
+     "verts": 2998,
+     "centroid": [
+      -17.4,
+      -43.8,
+      66.8
+     ]
+    },
+    "R": {
+     "file": "data/regions/spl5l_R.obj",
+     "verts": 3002,
+     "centroid": [
+      14.4,
+      -47.4,
+      68.4
+     ]
+    }
+   }
+  },
+  {
+   "id": "spl5m",
+   "entityId": "region.spl5m",
+   "name": "5M",
+   "atlasId": "5M",
+   "sourceName": "Area 5M (SPL)",
+   "sourceId": "131",
+   "leftLabel": 56,
+   "rightLabel": 1056,
+   "catalogStatus": "lesson-current",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "parietal lobe",
+     "superior parietal lobule"
+    ]
+   ],
+   "stream": "dorsal",
+   "parent": "superior parietal lobule",
+   "color": "#3b6ace",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/spl5m_L.obj",
+     "verts": 2996,
+     "centroid": [
+      -6.9,
+      -40.7,
+      56.5
+     ]
+    },
+    "R": {
+     "file": "data/regions/spl5m_R.obj",
+     "verts": 2854,
+     "centroid": [
+      7.1,
+      -42.6,
+      58.8
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-057",
+   "entityId": "region.julich-057",
+   "name": "Area 7PC (SPL)",
+   "atlasId": "Area-7PC",
+   "sourceName": "Area 7PC (SPL)",
+   "sourceId": "132",
+   "leftLabel": 57,
+   "rightLabel": 1057,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "parietal lobe",
+     "superior parietal lobule"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "superior parietal lobule",
+   "color": "#fc591c",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-057_L.obj",
+     "verts": 2879,
+     "centroid": [
+      -35.0,
+      -46.3,
+      62.0
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-057_R.obj",
+     "verts": 3000,
+     "centroid": [
+      32.1,
+      -42.4,
+      58.6
+     ]
+    }
+   }
+  },
+  {
+   "id": "hip3",
+   "entityId": "region.hip3",
+   "name": "hIP3",
+   "atlasId": "hIP3",
+   "sourceName": "Area hIP3 (IPS)",
+   "sourceId": "133",
+   "leftLabel": 58,
+   "rightLabel": 1058,
+   "catalogStatus": "lesson-current",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "parietal lobe",
+     "intraparietal sulcus"
+    ]
+   ],
+   "stream": "dorsal",
+   "parent": "intraparietal sulcus",
+   "color": "#6aadda",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/hip3_L.obj",
+     "verts": 2998,
+     "centroid": [
+      -31.0,
+      -50.3,
+      46.6
+     ]
+    },
+    "R": {
+     "file": "data/regions/hip3_R.obj",
+     "verts": 2998,
+     "centroid": [
+      33.8,
+      -49.5,
+      50.5
+     ]
+    }
+   }
+  },
+  {
+   "id": "spl7a",
+   "entityId": "region.spl7a",
+   "name": "7A",
+   "atlasId": "7A",
+   "sourceName": "Area 7A (SPL)",
+   "sourceId": "134",
+   "leftLabel": 59,
+   "rightLabel": 1059,
+   "catalogStatus": "lesson-current",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "parietal lobe",
+     "superior parietal lobule"
+    ]
+   ],
+   "stream": "dorsal",
+   "parent": "superior parietal lobule",
+   "color": "#4b82d2",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/spl7a_L.obj",
+     "verts": 2985,
+     "centroid": [
+      -20.0,
+      -59.4,
+      62.1
+     ]
+    },
+    "R": {
+     "file": "data/regions/spl7a_R.obj",
+     "verts": 2998,
+     "centroid": [
+      22.9,
+      -59.6,
+      60.7
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-060",
+   "entityId": "region.julich-060",
+   "name": "Area 7M (SPL)",
+   "atlasId": "Area-7M",
+   "sourceName": "Area 7M (SPL)",
+   "sourceId": "135",
+   "leftLabel": 60,
+   "rightLabel": 1060,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "parietal lobe",
+     "superior parietal lobule"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "superior parietal lobule",
+   "color": "#cd3dec",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-060_L.obj",
+     "verts": 1047,
+     "centroid": [
+      -2.0,
+      -77.2,
+      37.4
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-060_R.obj",
+     "verts": 908,
+     "centroid": [
+      2.8,
+      -75.8,
+      39.5
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-061",
+   "entityId": "region.julich-061",
+   "name": "Area 5Ci (SPL)",
+   "atlasId": "Area-5Ci",
+   "sourceName": "Area 5Ci (SPL)",
+   "sourceId": "136",
+   "leftLabel": 61,
+   "rightLabel": 1061,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "parietal lobe",
+     "superior parietal lobule"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "superior parietal lobule",
+   "color": "#4ff292",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-061_L.obj",
+     "verts": 1228,
+     "centroid": [
+      -15.5,
+      -34.6,
+      43.0
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-061_R.obj",
+     "verts": 1960,
+     "centroid": [
+      12.7,
+      -36.1,
+      47.1
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-062",
+   "entityId": "region.julich-062",
+   "name": "Area Id7 (Insula)",
+   "atlasId": "Area-Id7",
+   "sourceName": "Area Id7 (Insula)",
+   "sourceId": "159",
+   "leftLabel": 62,
+   "rightLabel": 1062,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "insula",
+     "dysgranular insula"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "dysgranular insula",
+   "color": "#bcfad8",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-062_L.obj",
+     "verts": 1002,
+     "centroid": [
+      -31.3,
+      24.1,
+      5.5
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-062_R.obj",
+     "verts": 1258,
+     "centroid": [
+      33.1,
+      27.9,
+      3.1
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-063",
+   "entityId": "region.julich-063",
+   "name": "Area s24 (sACC)",
+   "atlasId": "Area-s24",
+   "sourceName": "Area s24 (sACC)",
+   "sourceId": "183",
+   "leftLabel": 63,
+   "rightLabel": 1063,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "limbic lobe",
+     "cingulate gyrus, frontal part"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "cingulate gyrus, frontal part",
+   "color": "#8522c9",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-063_L.obj",
+     "verts": 1510,
+     "centroid": [
+      -4.0,
+      25.1,
+      -11.4
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-063_R.obj",
+     "verts": 1425,
+     "centroid": [
+      3.0,
+      25.4,
+      -10.1
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-064",
+   "entityId": "region.julich-064",
+   "name": "Area 25 (sACC)",
+   "atlasId": "Area-25",
+   "sourceName": "Area 25 (sACC)",
+   "sourceId": "184",
+   "leftLabel": 64,
+   "rightLabel": 1064,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "limbic lobe",
+     "cingulate gyrus, frontal part"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "cingulate gyrus, frontal part",
+   "color": "#aa44dc",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-064_L.obj",
+     "verts": 602,
+     "centroid": [
+      -4.3,
+      13.3,
+      -11.3
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-064_R.obj",
+     "verts": 564,
+     "centroid": [
+      2.5,
+      12.8,
+      -11.8
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-065",
+   "entityId": "region.julich-065",
+   "name": "SF (Amygdala)",
+   "atlasId": "SF",
+   "sourceName": "SF (Amygdala)",
+   "sourceId": "185",
+   "leftLabel": 65,
+   "rightLabel": 1065,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral nuclei",
+     "amygdala",
+     "amygdaloid groups"
+    ],
+    [
+     "telencephalon",
+     "cerebral nuclei",
+     "amygdala",
+     "amygdaloid groups"
+    ],
+    [
+     "telencephalon",
+     "cerebral nuclei",
+     "amygdala",
+     "amygdaloid groups"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "amygdaloid groups",
+   "color": "#16ccc2",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-065_L.obj",
+     "verts": 888,
+     "centroid": [
+      -16.5,
+      -2.3,
+      -20.4
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-065_R.obj",
+     "verts": 997,
+     "centroid": [
+      17.6,
+      -0.3,
+      -20.4
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-066",
+   "entityId": "region.julich-066",
+   "name": "LB (Amygdala)",
+   "atlasId": "LB",
+   "sourceName": "LB (Amygdala)",
+   "sourceId": "187",
+   "leftLabel": 66,
+   "rightLabel": 1066,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral nuclei",
+     "amygdala",
+     "amygdaloid groups"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "amygdaloid groups",
+   "color": "#8d8afe",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-066_L.obj",
+     "verts": 1216,
+     "centroid": [
+      -25.2,
+      -3.8,
+      -23.6
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-066_R.obj",
+     "verts": 1166,
+     "centroid": [
+      24.8,
+      -2.2,
+      -23.9
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-067",
+   "entityId": "region.julich-067",
+   "name": "Subiculum (Hippocampus)",
+   "atlasId": "Subiculum",
+   "sourceName": "Subiculum (Hippocampus)",
+   "sourceId": "192",
+   "leftLabel": 67,
+   "rightLabel": 1067,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "limbic lobe",
+     "hippocampal formation"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "hippocampal formation",
+   "color": "#0000ff",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-067_L.obj",
+     "verts": 2996,
+     "centroid": [
+      -19.8,
+      -26.1,
+      -16.5
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-067_R.obj",
+     "verts": 2998,
+     "centroid": [
+      21.5,
+      -22.2,
+      -18.0
+     ]
+    }
+   }
+  },
+  {
+   "id": "pf",
+   "entityId": "region.pf",
+   "name": "PF",
+   "atlasId": "PF",
+   "sourceName": "Area PF (IPL)",
+   "sourceId": "206",
+   "leftLabel": 68,
+   "rightLabel": 1068,
+   "catalogStatus": "lesson-current",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "parietal lobe",
+     "inferior parietal lobule"
+    ]
+   ],
+   "stream": "parietal",
+   "parent": "inferior parietal",
+   "color": "#88dd92",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/pf_L.obj",
+     "verts": 3000,
+     "centroid": [
+      -59.5,
+      -37.6,
+      40.8
+     ]
+    },
+    "R": {
+     "file": "data/regions/pf_R.obj",
+     "verts": 2997,
+     "centroid": [
+      62.9,
+      -31.1,
+      32.4
+     ]
+    }
+   }
+  },
+  {
+   "id": "spl7p",
+   "entityId": "region.spl7p",
+   "name": "7P",
+   "atlasId": "7P",
+   "sourceName": "Area 7P (SPL)",
+   "sourceId": "208",
+   "leftLabel": 69,
+   "rightLabel": 1069,
+   "catalogStatus": "lesson-current",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "parietal lobe",
+     "superior parietal lobule"
+    ]
+   ],
+   "stream": "dorsal",
+   "parent": "superior parietal lobule",
+   "color": "#467ad1",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/spl7p_L.obj",
+     "verts": 2916,
+     "centroid": [
+      -8.4,
+      -75.6,
+      51.9
+     ]
+    },
+    "R": {
+     "file": "data/regions/spl7p_R.obj",
+     "verts": 2998,
+     "centroid": [
+      14.7,
+      -72.5,
+      55.3
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-070",
+   "entityId": "region.julich-070",
+   "name": "Area Fp2 (FPole)",
+   "atlasId": "Area-Fp2",
+   "sourceName": "Area Fp2 (FPole)",
+   "sourceId": "211",
+   "leftLabel": 70,
+   "rightLabel": 1070,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "frontal lobe",
+     "frontal pole"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "frontal pole",
+   "color": "#ef89d3",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-070_L.obj",
+     "verts": 2916,
+     "centroid": [
+      -5.8,
+      58.8,
+      -4.6
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-070_R.obj",
+     "verts": 3000,
+     "centroid": [
+      4.5,
+      60.0,
+      -4.8
+     ]
+    }
+   }
+  },
+  {
+   "id": "fp1",
+   "entityId": "region.fp1",
+   "name": "Fp1 (pole)",
+   "atlasId": "Fp1",
+   "sourceName": "Area Fp1 (FPole)",
+   "sourceId": "212",
+   "leftLabel": 71,
+   "rightLabel": 1071,
+   "catalogStatus": "lesson-current",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "frontal lobe",
+     "frontal pole"
+    ]
+   ],
+   "stream": "frontal",
+   "parent": "frontal pole",
+   "color": "#cc6595",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/fp1_L.obj",
+     "verts": 2998,
+     "centroid": [
+      -17.6,
+      64.5,
+      -2.3
+     ]
+    },
+    "R": {
+     "file": "data/regions/fp1_R.obj",
+     "verts": 3002,
+     "centroid": [
+      16.7,
+      65.4,
+      -1.8
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-072",
+   "entityId": "region.julich-072",
+   "name": "Fastigial Nucleus (Cerebellum)",
+   "atlasId": "Fastigial-Nucleus",
+   "sourceName": "Fastigial Nucleus (Cerebellum)",
+   "sourceId": "219",
+   "leftLabel": 72,
+   "rightLabel": 1072,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "metencephalon",
+     "cerebellum",
+     "cerebellar nuclei",
+     "fastigial nucleus"
+    ]
+   ],
+   "stream": "atlas-metencephalon",
+   "parent": "fastigial nucleus",
+   "color": "#4d030f",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-072_L.obj",
+     "verts": 474,
+     "centroid": [
+      -4.4,
+      -54.1,
+      -30.3
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-072_R.obj",
+     "verts": 588,
+     "centroid": [
+      1.5,
+      -54.3,
+      -29.9
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-073",
+   "entityId": "region.julich-073",
+   "name": "VTM (Amygdala)",
+   "atlasId": "VTM",
+   "sourceName": "VTM (Amygdala)",
+   "sourceId": "228",
+   "leftLabel": 73,
+   "rightLabel": 1073,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral nuclei",
+     "amygdala",
+     "fiber masses"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "fiber masses",
+   "color": "#3c1c64",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-073_L.obj",
+     "verts": 180,
+     "centroid": [
+      -24.4,
+      -10.4,
+      -15.8
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-073_R.obj",
+     "verts": 240,
+     "centroid": [
+      23.0,
+      -9.1,
+      -18.3
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-074",
+   "entityId": "region.julich-074",
+   "name": "Area p24ab (pACC)",
+   "atlasId": "Area-p24ab",
+   "sourceName": "Area p24ab (pACC)",
+   "sourceId": "231",
+   "leftLabel": 74,
+   "rightLabel": 1074,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "limbic lobe",
+     "cingulate gyrus, frontal part"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "cingulate gyrus, frontal part",
+   "color": "#99c3e5",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-074_L.obj",
+     "verts": 2110,
+     "centroid": [
+      -3.1,
+      39.1,
+      4.9
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-074_R.obj",
+     "verts": 2617,
+     "centroid": [
+      3.7,
+      37.8,
+      9.4
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-075",
+   "entityId": "region.julich-075",
+   "name": "Area p24c (pACC)",
+   "atlasId": "Area-p24c",
+   "sourceName": "Area p24c (pACC)",
+   "sourceId": "232",
+   "leftLabel": 75,
+   "rightLabel": 1075,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "limbic lobe",
+     "cingulate gyrus, frontal part"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "cingulate gyrus, frontal part",
+   "color": "#f1a4c3",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-075_L.obj",
+     "verts": 1463,
+     "centroid": [
+      -10.0,
+      42.0,
+      10.1
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-075_R.obj",
+     "verts": 2180,
+     "centroid": [
+      9.5,
+      42.7,
+      9.7
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-076",
+   "entityId": "region.julich-076",
+   "name": "MF (Amygdala)",
+   "atlasId": "MF",
+   "sourceName": "MF (Amygdala)",
+   "sourceId": "235",
+   "leftLabel": 76,
+   "rightLabel": 1076,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral nuclei",
+     "amygdala",
+     "fiber masses"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "fiber masses",
+   "color": "#78b3e6",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-076_L.obj",
+     "verts": 172,
+     "centroid": [
+      -19.5,
+      -8.4,
+      -15.7
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-076_R.obj",
+     "verts": 124,
+     "centroid": [
+      20.1,
+      -6.5,
+      -15.1
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-077",
+   "entityId": "region.julich-077",
+   "name": "IF (Amygdala)",
+   "atlasId": "IF",
+   "sourceName": "IF (Amygdala)",
+   "sourceId": "237",
+   "leftLabel": 77,
+   "rightLabel": 1077,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral nuclei",
+     "amygdala",
+     "fiber masses"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "fiber masses",
+   "color": "#cc5211",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-077_L.obj",
+     "verts": 268,
+     "centroid": [
+      -28.0,
+      -1.6,
+      -19.0
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-077_R.obj",
+     "verts": 268,
+     "centroid": [
+      27.3,
+      -0.2,
+      -18.6
+     ]
+    }
+   }
+  },
+  {
+   "id": "fg4",
+   "entityId": "region.fg4",
+   "name": "FG4",
+   "atlasId": "FG4",
+   "sourceName": "Area FG4 (FusG)",
+   "sourceId": "238",
+   "leftLabel": 78,
+   "rightLabel": 1078,
+   "catalogStatus": "lesson-current",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "temporal lobe",
+     "fusiform gyrus"
+    ]
+   ],
+   "stream": "ventral",
+   "parent": "fusiform gyrus",
+   "color": "#ce913b",
+   "opacity": 0.14,
+   "meshes": {
+    "L": {
+     "file": "data/regions/fg4_L.obj",
+     "verts": 3002,
+     "centroid": [
+      -43.2,
+      -47.8,
+      -19.5
+     ]
+    },
+    "R": {
+     "file": "data/regions/fg4_R.obj",
+     "verts": 2628,
+     "centroid": [
+      43.2,
+      -45.2,
+      -21.5
+     ]
+    }
+   }
+  },
+  {
+   "id": "fg3",
+   "entityId": "region.fg3",
+   "name": "FG3",
+   "atlasId": "FG3",
+   "sourceName": "Area FG3 (FusG)",
+   "sourceId": "239",
+   "leftLabel": 79,
+   "rightLabel": 1079,
+   "catalogStatus": "lesson-current",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "temporal lobe",
+     "fusiform gyrus"
+    ]
+   ],
+   "stream": "ventral",
+   "parent": "fusiform gyrus",
+   "color": "#d18e47",
+   "opacity": 0.14,
+   "meshes": {
+    "L": {
+     "file": "data/regions/fg3_L.obj",
+     "verts": 3000,
+     "centroid": [
+      -30.9,
+      -46.6,
+      -15.7
+     ]
+    },
+    "R": {
+     "file": "data/regions/fg3_R.obj",
+     "verts": 2350,
+     "centroid": [
+      31.7,
+      -46.3,
+      -15.5
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-080",
+   "entityId": "region.julich-080",
+   "name": "Dorsal Dentate Nucleus (Cerebellum)",
+   "atlasId": "Dorsal-Dentate-Nucleus",
+   "sourceName": "Dorsal Dentate Nucleus (Cerebellum)",
+   "sourceId": "240",
+   "leftLabel": 80,
+   "rightLabel": 1080,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "metencephalon",
+     "cerebellum",
+     "cerebellar nuclei",
+     "dentate nucleus"
+    ]
+   ],
+   "stream": "atlas-metencephalon",
+   "parent": "dentate nucleus",
+   "color": "#85b372",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-080_L.obj",
+     "verts": 2022,
+     "centroid": [
+      -16.0,
+      -59.1,
+      -38.1
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-080_R.obj",
+     "verts": 1714,
+     "centroid": [
+      13.8,
+      -60.0,
+      -37.2
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-081",
+   "entityId": "region.julich-081",
+   "name": "Ventral Dentate Nucleus (Cerebellum)",
+   "atlasId": "Ventral-Dentate-Nucleus",
+   "sourceName": "Ventral Dentate Nucleus (Cerebellum)",
+   "sourceId": "241",
+   "leftLabel": 81,
+   "rightLabel": 1081,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "metencephalon",
+     "cerebellum",
+     "cerebellar nuclei",
+     "dentate nucleus"
+    ]
+   ],
+   "stream": "atlas-metencephalon",
+   "parent": "dentate nucleus",
+   "color": "#60effa",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-081_L.obj",
+     "verts": 710,
+     "centroid": [
+      -13.1,
+      -59.2,
+      -31.0
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-081_R.obj",
+     "verts": 992,
+     "centroid": [
+      10.1,
+      -58.8,
+      -31.4
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-082",
+   "entityId": "region.julich-082",
+   "name": "Area TeI (STG)",
+   "atlasId": "Area-TeI",
+   "sourceName": "Area TeI (STG)",
+   "sourceId": "242",
+   "leftLabel": 82,
+   "rightLabel": 1082,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "temporal lobe",
+     "temporal-insula"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "temporal-insula",
+   "color": "#174e5c",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-082_L.obj",
+     "verts": 1668,
+     "centroid": [
+      -49.1,
+      -5.6,
+      -3.5
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-082_R.obj",
+     "verts": 1790,
+     "centroid": [
+      49.2,
+      -2.1,
+      -5.4
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-083",
+   "entityId": "region.julich-083",
+   "name": "Area TI (STG)",
+   "atlasId": "Area-TI",
+   "sourceName": "Area TI (STG)",
+   "sourceId": "243",
+   "leftLabel": 83,
+   "rightLabel": 1083,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "temporal lobe",
+     "temporal-insula"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "temporal-insula",
+   "color": "#566516",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-083_L.obj",
+     "verts": 1517,
+     "centroid": [
+      -46.7,
+      -2.9,
+      -10.3
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-083_R.obj",
+     "verts": 1596,
+     "centroid": [
+      45.5,
+      0.1,
+      -12.5
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-084",
+   "entityId": "region.julich-084",
+   "name": "Area IFS1 (IFS)",
+   "atlasId": "Area-IFS1",
+   "sourceName": "Area IFS1 (IFS)",
+   "sourceId": "244",
+   "leftLabel": 84,
+   "rightLabel": 1084,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "frontal lobe",
+     "inferior frontal sulcus"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "inferior frontal sulcus",
+   "color": "#7030a0",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-084_L.obj",
+     "verts": 1136,
+     "centroid": [
+      -40.7,
+      25.3,
+      22.7
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-084_R.obj",
+     "verts": 870,
+     "centroid": [
+      38.4,
+      25.3,
+      24.5
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-085",
+   "entityId": "region.julich-085",
+   "name": "Area IFS2 (IFS)",
+   "atlasId": "Area-IFS2",
+   "sourceName": "Area IFS2 (IFS)",
+   "sourceId": "245",
+   "leftLabel": 85,
+   "rightLabel": 1085,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "frontal lobe",
+     "inferior frontal sulcus"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "inferior frontal sulcus",
+   "color": "#ff0000",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-085_L.obj",
+     "verts": 86,
+     "centroid": [
+      -45.5,
+      24.3,
+      19.3
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-085_R.obj",
+     "verts": 386,
+     "centroid": [
+      44.1,
+      23.6,
+      22.8
+     ]
+    }
+   }
+  },
+  {
+   "id": "dlpfc",
+   "entityId": "region.dlpfc",
+   "name": "DLPFC",
+   "atlasId": "IFS3",
+   "sourceName": "Area IFS3 (IFS)",
+   "sourceId": "246",
+   "leftLabel": 86,
+   "rightLabel": 1086,
+   "catalogStatus": "lesson-current",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "frontal lobe",
+     "inferior frontal sulcus"
+    ]
+   ],
+   "stream": "frontal",
+   "parent": "inferior frontal sulcus",
+   "color": "#d279ae",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/dlpfc_L.obj",
+     "verts": 934,
+     "centroid": [
+      -40.7,
+      19.6,
+      28.6
+     ]
+    },
+    "R": {
+     "file": "data/regions/dlpfc_R.obj",
+     "verts": 956,
+     "centroid": [
+      37.5,
+      21.7,
+      31.0
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-087",
+   "entityId": "region.julich-087",
+   "name": "Area IFS4 (IFS)",
+   "atlasId": "Area-IFS4",
+   "sourceName": "Area IFS4 (IFS)",
+   "sourceId": "247",
+   "leftLabel": 87,
+   "rightLabel": 1087,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "frontal lobe",
+     "inferior frontal sulcus"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "inferior frontal sulcus",
+   "color": "#1f497d",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-087_L.obj",
+     "verts": 636,
+     "centroid": [
+      -43.5,
+      18.6,
+      24.2
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-087_R.obj",
+     "verts": 596,
+     "centroid": [
+      41.6,
+      20.1,
+      27.8
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-088",
+   "entityId": "region.julich-088",
+   "name": "Area IFJ1 (IFS,PreCS)",
+   "atlasId": "Area-IFJ1",
+   "sourceName": "Area IFJ1 (IFS,PreCS)",
+   "sourceId": "248",
+   "leftLabel": 88,
+   "rightLabel": 1088,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "frontal lobe",
+     "inferior frontal sulcus"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "inferior frontal sulcus",
+   "color": "#e500a0",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-088_L.obj",
+     "verts": 796,
+     "centroid": [
+      -39.5,
+      14.8,
+      27.9
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-088_R.obj",
+     "verts": 780,
+     "centroid": [
+      43.4,
+      16.1,
+      28.6
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-089",
+   "entityId": "region.julich-089",
+   "name": "Area IFJ2 (IFS,PreCS)",
+   "atlasId": "Area-IFJ2",
+   "sourceName": "Area IFJ2 (IFS,PreCS)",
+   "sourceId": "249",
+   "leftLabel": 89,
+   "rightLabel": 1089,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "frontal lobe",
+     "inferior frontal sulcus"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "inferior frontal sulcus",
+   "color": "#df6a16",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-089_L.obj",
+     "verts": 1276,
+     "centroid": [
+      -40.4,
+      7.5,
+      29.3
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-089_R.obj",
+     "verts": 1393,
+     "centroid": [
+      43.8,
+      12.3,
+      24.1
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-090",
+   "entityId": "region.julich-090",
+   "name": "Interposed Nucleus (Cerebellum)",
+   "atlasId": "Interposed-Nucleus",
+   "sourceName": "Interposed Nucleus (Cerebellum)",
+   "sourceId": "251",
+   "leftLabel": 90,
+   "rightLabel": 1090,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "metencephalon",
+     "cerebellum",
+     "cerebellar nuclei",
+     "globose nucleus"
+    ],
+    [
+     "metencephalon",
+     "cerebellum",
+     "cerebellar nuclei",
+     "emboliform nucleus"
+    ]
+   ],
+   "stream": "atlas-metencephalon",
+   "parent": "globose nucleus",
+   "color": "#ba3595",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-090_L.obj",
+     "verts": 510,
+     "centroid": [
+      -8.3,
+      -56.2,
+      -31.1
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-090_R.obj",
+     "verts": 756,
+     "centroid": [
+      5.7,
+      -56.6,
+      -31.4
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-091",
+   "entityId": "region.julich-091",
+   "name": "Area 2 (PostCS)",
+   "atlasId": "Area-2",
+   "sourceName": "Area 2 (PostCS)",
+   "sourceId": "252",
+   "leftLabel": 91,
+   "rightLabel": 1091,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "parietal lobe",
+     "postcentral gyrus"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "postcentral gyrus",
+   "color": "#170d23",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-091_L.obj",
+     "verts": 3000,
+     "centroid": [
+      -42.2,
+      -31.1,
+      52.0
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-091_R.obj",
+     "verts": 2994,
+     "centroid": [
+      40.0,
+      -30.3,
+      53.7
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-092",
+   "entityId": "region.julich-092",
+   "name": "Ch 4 (Basal Forebrain)",
+   "atlasId": "Ch-4",
+   "sourceName": "Ch 4 (Basal Forebrain)",
+   "sourceId": "264",
+   "leftLabel": 92,
+   "rightLabel": 1092,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral nuclei",
+     "basal forebrain",
+     "hippocampal formation"
+    ],
+    [
+     "telencephalon",
+     "cerebral nuclei",
+     "basal forebrain",
+     "sublenticular part of basal forebrain"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "hippocampal formation",
+   "color": "#ab47aa",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-092_L.obj",
+     "verts": 1164,
+     "centroid": [
+      -18.1,
+      -4.2,
+      -11.5
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-092_R.obj",
+     "verts": 879,
+     "centroid": [
+      18.8,
+      -3.6,
+      -10.7
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-093",
+   "entityId": "region.julich-093",
+   "name": "Area STS1 (STS)",
+   "atlasId": "Area-STS1",
+   "sourceName": "Area STS1 (STS)",
+   "sourceId": "271",
+   "leftLabel": 93,
+   "rightLabel": 1093,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "temporal lobe",
+     "superior temporal sulcus"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "superior temporal sulcus",
+   "color": "#cde404",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-093_L.obj",
+     "verts": 3002,
+     "centroid": [
+      -54.9,
+      -17.5,
+      -6.3
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-093_R.obj",
+     "verts": 3004,
+     "centroid": [
+      54.6,
+      -16.6,
+      -5.6
+     ]
+    }
+   }
+  },
+  {
+   "id": "sts2",
+   "entityId": "region.sts2",
+   "name": "STS2",
+   "atlasId": "STS2",
+   "sourceName": "Area STS2 (STS)",
+   "sourceId": "272",
+   "leftLabel": 94,
+   "rightLabel": 1094,
+   "catalogStatus": "lesson-current",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "temporal lobe",
+     "superior temporal sulcus"
+    ]
+   ],
+   "stream": "temporal",
+   "parent": "superior temporal sulcus",
+   "color": "#e0b685",
+   "opacity": 0.15,
+   "meshes": {
+    "L": {
+     "file": "data/regions/sts2_L.obj",
+     "verts": 2998,
+     "centroid": [
+      -57.2,
+      -9.6,
+      -14.7
+     ]
+    },
+    "R": {
+     "file": "data/regions/sts2_R.obj",
+     "verts": 3001,
+     "centroid": [
+      58.0,
+      -9.3,
+      -14.9
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-095",
+   "entityId": "region.julich-095",
+   "name": "Area Op8 (Frontal Operculum)",
+   "atlasId": "Area-Op8",
+   "sourceName": "Area Op8 (Frontal Operculum)",
+   "sourceId": "273",
+   "leftLabel": 95,
+   "rightLabel": 1095,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "frontal lobe",
+     "frontal operculum "
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "frontal operculum ",
+   "color": "#1d4ca8",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-095_L.obj",
+     "verts": 1474,
+     "centroid": [
+      -41.4,
+      17.8,
+      6.3
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-095_R.obj",
+     "verts": 1682,
+     "centroid": [
+      43.0,
+      16.9,
+      6.0
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-096",
+   "entityId": "region.julich-096",
+   "name": "Area Op9 (Frontal Operculum)",
+   "atlasId": "Area-Op9",
+   "sourceName": "Area Op9 (Frontal Operculum)",
+   "sourceId": "274",
+   "leftLabel": 96,
+   "rightLabel": 1096,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "frontal lobe",
+     "frontal operculum "
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "frontal operculum ",
+   "color": "#af7b22",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-096_L.obj",
+     "verts": 1629,
+     "centroid": [
+      -44.8,
+      26.9,
+      4.6
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-096_R.obj",
+     "verts": 1834,
+     "centroid": [
+      41.9,
+      28.3,
+      2.1
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-097",
+   "entityId": "region.julich-097",
+   "name": "Ch 123 (Basal Forebrain)",
+   "atlasId": "Ch-123",
+   "sourceName": "Ch 123 (Basal Forebrain)",
+   "sourceId": "286",
+   "leftLabel": 97,
+   "rightLabel": 1097,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral nuclei",
+     "basal forebrain",
+     "magnocellular group"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "magnocellular group",
+   "color": "#a19447",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-097_L.obj",
+     "verts": 694,
+     "centroid": [
+      -3.5,
+      2.3,
+      -10.5
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-097_R.obj",
+     "verts": 713,
+     "centroid": [
+      2.3,
+      4.2,
+      -8.8
+     ]
+    }
+   }
+  },
+  {
+   "id": "pcg6",
+   "entityId": "region.pcg6",
+   "name": "6d1 (premotor)",
+   "atlasId": "6d1",
+   "sourceName": "Area 6d1 (PreCG)",
+   "sourceId": "287",
+   "leftLabel": 98,
+   "rightLabel": 1098,
+   "catalogStatus": "lesson-current",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "frontal lobe",
+     "dorsal precentral gyrus"
+    ]
+   ],
+   "stream": "frontal",
+   "parent": "precentral",
+   "color": "#c2476a",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/pcg6_L.obj",
+     "verts": 2994,
+     "centroid": [
+      -19.8,
+      -13.0,
+      67.8
+     ]
+    },
+    "R": {
+     "file": "data/regions/pcg6_R.obj",
+     "verts": 2994,
+     "centroid": [
+      20.7,
+      -11.8,
+      66.2
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-099",
+   "entityId": "region.julich-099",
+   "name": "Area 6d2 (PreCG)",
+   "atlasId": "Area-6d2",
+   "sourceName": "Area 6d2 (PreCG)",
+   "sourceId": "288",
+   "leftLabel": 99,
+   "rightLabel": 1099,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "frontal lobe",
+     "dorsal precentral gyrus"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "dorsal precentral gyrus",
+   "color": "#aa97b4",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-099_L.obj",
+     "verts": 3002,
+     "centroid": [
+      -15.7,
+      4.1,
+      67.8
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-099_R.obj",
+     "verts": 2998,
+     "centroid": [
+      15.2,
+      6.3,
+      67.3
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-100",
+   "entityId": "region.julich-100",
+   "name": "Area 6d3 (SFS)",
+   "atlasId": "Area-6d3",
+   "sourceName": "Area 6d3 (SFS)",
+   "sourceId": "289",
+   "leftLabel": 100,
+   "rightLabel": 1100,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "frontal lobe",
+     "superior frontal sulcus"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "superior frontal sulcus",
+   "color": "#37ef15",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-100_L.obj",
+     "verts": 3004,
+     "centroid": [
+      -23.5,
+      1.4,
+      52.8
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-100_R.obj",
+     "verts": 3002,
+     "centroid": [
+      24.5,
+      3.1,
+      54.1
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-101",
+   "entityId": "region.julich-101",
+   "name": "CM (Amygdala)",
+   "atlasId": "CM",
+   "sourceName": "CM (Amygdala)",
+   "sourceId": "290",
+   "leftLabel": 101,
+   "rightLabel": 1101,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral nuclei",
+     "amygdala",
+     "amygdaloid groups"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "amygdaloid groups",
+   "color": "#838f73",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-101_L.obj",
+     "verts": 524,
+     "centroid": [
+      -21.7,
+      -5.5,
+      -13.0
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-101_R.obj",
+     "verts": 494,
+     "centroid": [
+      21.3,
+      -4.6,
+      -12.9
+     ]
+    }
+   }
+  },
+  {
+   "id": "v6",
+   "entityId": "region.v6",
+   "name": "V6",
+   "atlasId": "hOc6",
+   "sourceName": "Area hOc6 (POS)",
+   "sourceId": "291",
+   "leftLabel": 102,
+   "rightLabel": 1102,
+   "catalogStatus": "lesson-current",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "occiptal lobe",
+     "dorsal occipital cortex"
+    ]
+   ],
+   "stream": "dorsal",
+   "parent": "occipital cortex",
+   "color": "#7fc4df",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/v6_L.obj",
+     "verts": 990,
+     "centroid": [
+      -17.3,
+      -72.2,
+      15.4
+     ]
+    },
+    "R": {
+     "file": "data/regions/v6_R.obj",
+     "verts": 758,
+     "centroid": [
+      18.3,
+      -68.5,
+      18.2
+     ]
+    }
+   }
+  },
+  {
+   "id": "hip6",
+   "entityId": "region.hip6",
+   "name": "hIP6",
+   "atlasId": "hIP6",
+   "sourceName": "Area hIP6 (IPS)",
+   "sourceId": "292",
+   "leftLabel": 103,
+   "rightLabel": 1103,
+   "catalogStatus": "lesson-current",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "parietal lobe",
+     "intraparietal sulcus"
+    ]
+   ],
+   "stream": "dorsal",
+   "parent": "intraparietal sulcus",
+   "color": "#5b99d6",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/hip6_L.obj",
+     "verts": 2691,
+     "centroid": [
+      -31.4,
+      -66.4,
+      46.3
+     ]
+    },
+    "R": {
+     "file": "data/regions/hip6_R.obj",
+     "verts": 2366,
+     "centroid": [
+      36.9,
+      -61.8,
+      46.0
+     ]
+    }
+   }
+  },
+  {
+   "id": "hip8",
+   "entityId": "region.hip8",
+   "name": "hIP8",
+   "atlasId": "hIP8",
+   "sourceName": "Area hIP8 (IPS)",
+   "sourceId": "293",
+   "leftLabel": 104,
+   "rightLabel": 1104,
+   "catalogStatus": "lesson-current",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "parietal lobe",
+     "intraparietal sulcus"
+    ]
+   ],
+   "stream": "dorsal",
+   "parent": "intraparietal sulcus",
+   "color": "#508ad3",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/hip8_L.obj",
+     "verts": 2721,
+     "centroid": [
+      -18.8,
+      -73.5,
+      42.9
+     ]
+    },
+    "R": {
+     "file": "data/regions/hip8_R.obj",
+     "verts": 2650,
+     "centroid": [
+      26.2,
+      -70.4,
+      41.0
+     ]
+    }
+   }
+  },
+  {
+   "id": "hip4",
+   "entityId": "region.hip4",
+   "name": "hIP4",
+   "atlasId": "hIP4",
+   "sourceName": "Area hIP4 (IPS)",
+   "sourceId": "294",
+   "leftLabel": 105,
+   "rightLabel": 1105,
+   "catalogStatus": "lesson-current",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "parietal lobe",
+     "intraparietal sulcus"
+    ]
+   ],
+   "stream": "dorsal",
+   "parent": "intraparietal sulcus",
+   "color": "#65a6d9",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/hip4_L.obj",
+     "verts": 2293,
+     "centroid": [
+      -31.4,
+      -80.5,
+      24.4
+     ]
+    },
+    "R": {
+     "file": "data/regions/hip4_R.obj",
+     "verts": 2193,
+     "centroid": [
+      37.8,
+      -75.2,
+      22.6
+     ]
+    }
+   }
+  },
+  {
+   "id": "hip5",
+   "entityId": "region.hip5",
+   "name": "hIP5",
+   "atlasId": "hIP5",
+   "sourceName": "Area hIP5 (IPS)",
+   "sourceId": "295",
+   "leftLabel": 106,
+   "rightLabel": 1106,
+   "catalogStatus": "lesson-current",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "parietal lobe",
+     "intraparietal sulcus"
+    ]
+   ],
+   "stream": "dorsal",
+   "parent": "intraparietal sulcus",
+   "color": "#60a0d7",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/hip5_L.obj",
+     "verts": 2631,
+     "centroid": [
+      -28.9,
+      -73.5,
+      36.6
+     ]
+    },
+    "R": {
+     "file": "data/regions/hip5_R.obj",
+     "verts": 2140,
+     "centroid": [
+      34.0,
+      -68.7,
+      34.7
+     ]
+    }
+   }
+  },
+  {
+   "id": "hip7",
+   "entityId": "region.hip7",
+   "name": "hIP7",
+   "atlasId": "hIP7",
+   "sourceName": "Area hIP7 (IPS)",
+   "sourceId": "296",
+   "leftLabel": 107,
+   "rightLabel": 1107,
+   "catalogStatus": "lesson-current",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "parietal lobe",
+     "intraparietal sulcus"
+    ]
+   ],
+   "stream": "dorsal",
+   "parent": "intraparietal sulcus",
+   "color": "#5591d5",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/hip7_L.obj",
+     "verts": 1435,
+     "centroid": [
+      -23.6,
+      -80.2,
+      30.0
+     ]
+    },
+    "R": {
+     "file": "data/regions/hip7_R.obj",
+     "verts": 2762,
+     "centroid": [
+      30.6,
+      -78.0,
+      27.1
+     ]
+    }
+   }
+  },
+  {
+   "id": "hpo1",
+   "entityId": "region.hpo1",
+   "name": "hPO1",
+   "atlasId": "hPO1",
+   "sourceName": "Area hPO1 (POS)",
+   "sourceId": "297",
+   "leftLabel": 108,
+   "rightLabel": 1108,
+   "catalogStatus": "lesson-current",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "parietal lobe",
+     "parieto-occipital sulcus"
+    ]
+   ],
+   "stream": "parietal",
+   "parent": "parieto-occipital sulcus",
+   "color": "#41c88b",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/hpo1_L.obj",
+     "verts": 2936,
+     "centroid": [
+      -16.7,
+      -82.4,
+      36.5
+     ]
+    },
+    "R": {
+     "file": "data/regions/hpo1_R.obj",
+     "verts": 2502,
+     "centroid": [
+      22.8,
+      -81.9,
+      37.2
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-109",
+   "entityId": "region.julich-109",
+   "name": "Area 6mp (SMA, mesial SFG)",
+   "atlasId": "Area-6mp",
+   "sourceName": "Area 6mp (SMA, mesial SFG)",
+   "sourceId": "298",
+   "leftLabel": 109,
+   "rightLabel": 1109,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "frontal lobe",
+     "mesial precentral gyrus"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "mesial precentral gyrus",
+   "color": "#4b5f57",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-109_L.obj",
+     "verts": 2363,
+     "centroid": [
+      -4.1,
+      -11.9,
+      59.0
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-109_R.obj",
+     "verts": 2271,
+     "centroid": [
+      4.8,
+      -12.7,
+      56.9
+     ]
+    }
+   }
+  },
+  {
+   "id": "presma",
+   "entityId": "region.presma",
+   "name": "preSMA",
+   "atlasId": "6ma",
+   "sourceName": "Area 6ma (preSMA, mesial SFG)",
+   "sourceId": "299",
+   "leftLabel": 110,
+   "rightLabel": 1110,
+   "catalogStatus": "lesson-current",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "frontal lobe",
+     "posterior medial superior frontal gyrus"
+    ]
+   ],
+   "stream": "frontal",
+   "parent": "medial superior frontal",
+   "color": "#d582b9",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/presma_L.obj",
+     "verts": 3002,
+     "centroid": [
+      -4.1,
+      5.6,
+      57.8
+     ]
+    },
+    "R": {
+     "file": "data/regions/presma_R.obj",
+     "verts": 3000,
+     "centroid": [
+      5.2,
+      4.2,
+      58.0
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-111",
+   "entityId": "region.julich-111",
+   "name": "HC-Transsubiculum (Hippocampus)",
+   "atlasId": "HC-Transsubiculum",
+   "sourceName": "HC-Transsubiculum (Hippocampus)",
+   "sourceId": "305",
+   "leftLabel": 111,
+   "rightLabel": 1111,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "limbic lobe",
+     "hippocampal formation"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "hippocampal formation",
+   "color": "#6dfbd4",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-111_L.obj",
+     "verts": 890,
+     "centroid": [
+      -15.9,
+      -39.0,
+      -11.2
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-111_R.obj",
+     "verts": 902,
+     "centroid": [
+      17.1,
+      -34.5,
+      -12.6
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-112",
+   "entityId": "region.julich-112",
+   "name": "Tuberculum (Basal Forebrain)",
+   "atlasId": "Tuberculum",
+   "sourceName": "Tuberculum (Basal Forebrain)",
+   "sourceId": "321",
+   "leftLabel": 112,
+   "rightLabel": 1112,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "limbic lobe",
+     "olfactory cortex"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "olfactory cortex",
+   "color": "#335b31",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-112_L.obj",
+     "verts": 84,
+     "centroid": [
+      -10.0,
+      6.3,
+      -15.0
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-112_R.obj",
+     "verts": 232,
+     "centroid": [
+      11.4,
+      6.0,
+      -15.0
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-113",
+   "entityId": "region.julich-113",
+   "name": "Terminal islands (Basal Forebrain)",
+   "atlasId": "Terminal-islands",
+   "sourceName": "Terminal islands (Basal Forebrain)",
+   "sourceId": "322",
+   "leftLabel": 113,
+   "rightLabel": 1113,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "limbic lobe",
+     "olfactory cortex"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "olfactory cortex",
+   "color": "#1d7cfa",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-113_L.obj",
+     "verts": 498,
+     "centroid": [
+      -12.5,
+      4.9,
+      -12.7
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-113_R.obj",
+     "verts": 615,
+     "centroid": [
+      12.3,
+      6.0,
+      -12.8
+     ]
+    }
+   }
+  },
+  {
+   "id": "ofc",
+   "entityId": "region.ofc",
+   "name": "OFC",
+   "atlasId": "Fo4",
+   "sourceName": "Area Fo4 (OFC)",
+   "sourceId": "324",
+   "leftLabel": 114,
+   "rightLabel": 1114,
+   "catalogStatus": "lesson-current",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "frontal lobe",
+     "lateral orbitofrontal cortex"
+    ]
+   ],
+   "stream": "frontal",
+   "parent": "orbitofrontal cortex",
+   "color": "#d98cc3",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/ofc_L.obj",
+     "verts": 1462,
+     "centroid": [
+      -28.9,
+      53.0,
+      -14.7
+     ]
+    },
+    "R": {
+     "file": "data/regions/ofc_R.obj",
+     "verts": 1596,
+     "centroid": [
+      33.0,
+      54.5,
+      -15.6
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-115",
+   "entityId": "region.julich-115",
+   "name": "Area Fo5 (OFC)",
+   "atlasId": "Area-Fo5",
+   "sourceName": "Area Fo5 (OFC)",
+   "sourceId": "325",
+   "leftLabel": 115,
+   "rightLabel": 1115,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "frontal lobe",
+     "lateral orbitofrontal cortex"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "lateral orbitofrontal cortex",
+   "color": "#db0b5b",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-115_L.obj",
+     "verts": 1180,
+     "centroid": [
+      -38.6,
+      57.3,
+      -10.5
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-115_R.obj",
+     "verts": 1726,
+     "centroid": [
+      38.2,
+      59.8,
+      -5.1
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-116",
+   "entityId": "region.julich-116",
+   "name": "Area Fo6 (OFC)",
+   "atlasId": "Area-Fo6",
+   "sourceName": "Area Fo6 (OFC)",
+   "sourceId": "326",
+   "leftLabel": 116,
+   "rightLabel": 1116,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "frontal lobe",
+     "lateral orbitofrontal cortex"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "lateral orbitofrontal cortex",
+   "color": "#c79cbb",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-116_L.obj",
+     "verts": 2096,
+     "centroid": [
+      -44.7,
+      43.0,
+      -14.8
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-116_R.obj",
+     "verts": 2358,
+     "centroid": [
+      46.1,
+      41.6,
+      -14.7
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-117",
+   "entityId": "region.julich-117",
+   "name": "Area Fo7 (OFC)",
+   "atlasId": "Area-Fo7",
+   "sourceName": "Area Fo7 (OFC)",
+   "sourceId": "327",
+   "leftLabel": 117,
+   "rightLabel": 1117,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "frontal lobe",
+     "lateral orbitofrontal cortex"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "lateral orbitofrontal cortex",
+   "color": "#40d3ba",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-117_L.obj",
+     "verts": 1712,
+     "centroid": [
+      -36.3,
+      38.3,
+      -13.1
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-117_R.obj",
+     "verts": 1650,
+     "centroid": [
+      36.1,
+      39.7,
+      -13.4
+     ]
+    }
+   }
+  },
+  {
+   "id": "sfg8",
+   "entityId": "region.sfg8",
+   "name": "8d1 (SFG)",
+   "atlasId": "8d1",
+   "sourceName": "Area 8d1 (SFG)",
+   "sourceId": "332",
+   "leftLabel": 118,
+   "rightLabel": 1118,
+   "catalogStatus": "lesson-current",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "frontal lobe",
+     "superior frontal gyrus"
+    ]
+   ],
+   "stream": "frontal",
+   "parent": "superior frontal",
+   "color": "#c85b88",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/sfg8_L.obj",
+     "verts": 3002,
+     "centroid": [
+      -14.9,
+      24.8,
+      60.3
+     ]
+    },
+    "R": {
+     "file": "data/regions/sfg8_R.obj",
+     "verts": 2996,
+     "centroid": [
+      15.2,
+      26.5,
+      60.1
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-119",
+   "entityId": "region.julich-119",
+   "name": "Area 8d2 (SFG)",
+   "atlasId": "Area-8d2",
+   "sourceName": "Area 8d2 (SFG)",
+   "sourceId": "333",
+   "leftLabel": 119,
+   "rightLabel": 1119,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "frontal lobe",
+     "superior frontal gyrus"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "superior frontal gyrus",
+   "color": "#c0bae1",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-119_L.obj",
+     "verts": 2960,
+     "centroid": [
+      -23.1,
+      26.2,
+      44.3
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-119_R.obj",
+     "verts": 2534,
+     "centroid": [
+      22.0,
+      26.4,
+      45.8
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-120",
+   "entityId": "region.julich-120",
+   "name": "Area 8v2 (MFG)",
+   "atlasId": "Area-8v2",
+   "sourceName": "Area 8v2 (MFG)",
+   "sourceId": "334",
+   "leftLabel": 120,
+   "rightLabel": 1120,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "frontal lobe",
+     "middle frontal gyrus"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "middle frontal gyrus",
+   "color": "#1d6d13",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-120_L.obj",
+     "verts": 2600,
+     "centroid": [
+      -35.5,
+      26.4,
+      39.0
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-120_R.obj",
+     "verts": 2244,
+     "centroid": [
+      32.2,
+      23.9,
+      42.6
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-121",
+   "entityId": "region.julich-121",
+   "name": "Area 8v1 (MFG)",
+   "atlasId": "Area-8v1",
+   "sourceName": "Area 8v1 (MFG)",
+   "sourceId": "335",
+   "leftLabel": 121,
+   "rightLabel": 1121,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "frontal lobe",
+     "middle frontal gyrus"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "middle frontal gyrus",
+   "color": "#a9bbb4",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-121_L.obj",
+     "verts": 3004,
+     "centroid": [
+      -34.2,
+      23.8,
+      52.5
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-121_R.obj",
+     "verts": 3010,
+     "centroid": [
+      34.3,
+      23.1,
+      53.9
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-122",
+   "entityId": "region.julich-122",
+   "name": "Area Ig3 (Insula)",
+   "atlasId": "Area-Ig3",
+   "sourceName": "Area Ig3 (Insula)",
+   "sourceId": "336",
+   "leftLabel": 122,
+   "rightLabel": 1122,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "insula",
+     "granular insula"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "granular insula",
+   "color": "#69fdc5",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-122_L.obj",
+     "verts": 499,
+     "centroid": [
+      -38.4,
+      -14.1,
+      14.0
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-122_R.obj",
+     "verts": 584,
+     "centroid": [
+      38.2,
+      -13.0,
+      14.3
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-123",
+   "entityId": "region.julich-123",
+   "name": "Area Id4 (Insula)",
+   "atlasId": "Area-Id4",
+   "sourceName": "Area Id4 (Insula)",
+   "sourceId": "337",
+   "leftLabel": 123,
+   "rightLabel": 1123,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "insula",
+     "dysgranular insula"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "dysgranular insula",
+   "color": "#26ae71",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-123_L.obj",
+     "verts": 798,
+     "centroid": [
+      -37.3,
+      -4.6,
+      11.0
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-123_R.obj",
+     "verts": 1122,
+     "centroid": [
+      37.5,
+      -3.2,
+      10.5
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-124",
+   "entityId": "region.julich-124",
+   "name": "Area Id5 (Insula)",
+   "atlasId": "Area-Id5",
+   "sourceName": "Area Id5 (Insula)",
+   "sourceId": "338",
+   "leftLabel": 124,
+   "rightLabel": 1124,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "insula",
+     "dysgranular insula"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "dysgranular insula",
+   "color": "#700632",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-124_L.obj",
+     "verts": 1016,
+     "centroid": [
+      -38.8,
+      -4.5,
+      0.6
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-124_R.obj",
+     "verts": 1294,
+     "centroid": [
+      38.6,
+      -2.0,
+      0.2
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-125",
+   "entityId": "region.julich-125",
+   "name": "Area Ia1 (Insula)",
+   "atlasId": "Area-Ia1",
+   "sourceName": "Area Ia1 (Insula)",
+   "sourceId": "339",
+   "leftLabel": 125,
+   "rightLabel": 1125,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "insula",
+     "agranular insula"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "agranular insula",
+   "color": "#47d93e",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-125_L.obj",
+     "verts": 394,
+     "centroid": [
+      -40.7,
+      -3.9,
+      -6.8
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-125_R.obj",
+     "verts": 484,
+     "centroid": [
+      40.9,
+      -0.4,
+      -7.3
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-126",
+   "entityId": "region.julich-126",
+   "name": "Area Id6 (Insula)",
+   "atlasId": "Area-Id6",
+   "sourceName": "Area Id6 (Insula)",
+   "sourceId": "340",
+   "leftLabel": 126,
+   "rightLabel": 1126,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "insula",
+     "dysgranular insula"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "dysgranular insula",
+   "color": "#8a7f77",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-126_L.obj",
+     "verts": 2476,
+     "centroid": [
+      -36.1,
+      9.9,
+      3.6
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-126_R.obj",
+     "verts": 2400,
+     "centroid": [
+      35.9,
+      11.8,
+      4.7
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-127",
+   "entityId": "region.julich-127",
+   "name": "Area SFS1 (SFS)",
+   "atlasId": "Area-SFS1",
+   "sourceName": "Area SFS1 (SFS)",
+   "sourceId": "341",
+   "leftLabel": 127,
+   "rightLabel": 1127,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "frontal lobe",
+     "superior frontal sulcus"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "superior frontal sulcus",
+   "color": "#00a5e2",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-127_L.obj",
+     "verts": 790,
+     "centroid": [
+      -25.7,
+      48.1,
+      21.0
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-127_R.obj",
+     "verts": 1572,
+     "centroid": [
+      25.3,
+      54.5,
+      21.2
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-128",
+   "entityId": "region.julich-128",
+   "name": "Area SFS2 (SFS)",
+   "atlasId": "Area-SFS2",
+   "sourceName": "Area SFS2 (SFS)",
+   "sourceId": "342",
+   "leftLabel": 128,
+   "rightLabel": 1128,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "frontal lobe",
+     "superior frontal sulcus"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "superior frontal sulcus",
+   "color": "#f29400",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-128_L.obj",
+     "verts": 896,
+     "centroid": [
+      -31.0,
+      46.9,
+      26.1
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-128_R.obj",
+     "verts": 1848,
+     "centroid": [
+      28.5,
+      51.0,
+      22.0
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-129",
+   "entityId": "region.julich-129",
+   "name": "Area MFG1 (MFG)",
+   "atlasId": "Area-MFG1",
+   "sourceName": "Area MFG1 (MFG)",
+   "sourceId": "343",
+   "leftLabel": 129,
+   "rightLabel": 1129,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "frontal lobe",
+     "middle frontal gyrus"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "middle frontal gyrus",
+   "color": "#622181",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-129_L.obj",
+     "verts": 1559,
+     "centroid": [
+      -37.5,
+      51.6,
+      22.4
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-129_R.obj",
+     "verts": 1789,
+     "centroid": [
+      38.6,
+      53.1,
+      20.2
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-130",
+   "entityId": "region.julich-130",
+   "name": "Area MFG2 (MFG)",
+   "atlasId": "Area-MFG2",
+   "sourceName": "Area MFG2 (MFG)",
+   "sourceId": "344",
+   "leftLabel": 130,
+   "rightLabel": 1130,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "frontal lobe",
+     "fronto-marginal sulcus"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "fronto-marginal sulcus",
+   "color": "#ffec00",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-130_L.obj",
+     "verts": 1454,
+     "centroid": [
+      -26.4,
+      52.1,
+      16.3
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-130_R.obj",
+     "verts": 1630,
+     "centroid": [
+      30.1,
+      56.6,
+      11.4
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-131",
+   "entityId": "region.julich-131",
+   "name": "Area Op5 (Frontal Operculum)",
+   "atlasId": "Area-Op5",
+   "sourceName": "Area Op5 (Frontal Operculum)",
+   "sourceId": "348",
+   "leftLabel": 131,
+   "rightLabel": 1131,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "frontal lobe",
+     "frontal operculum "
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "frontal operculum ",
+   "color": "#de4efd",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-131_L.obj",
+     "verts": 1648,
+     "centroid": [
+      -44.4,
+      -4.5,
+      13.5
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-131_R.obj",
+     "verts": 2222,
+     "centroid": [
+      45.6,
+      -0.6,
+      10.9
+     ]
+    }
+   }
+  },
+  {
+   "id": "op6",
+   "entityId": "region.op6",
+   "name": "Op6 (operc.)",
+   "atlasId": "Op6",
+   "sourceName": "Area Op6 (Frontal Operculum)",
+   "sourceId": "349",
+   "leftLabel": 132,
+   "rightLabel": 1132,
+   "catalogStatus": "lesson-current",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "frontal lobe",
+     "frontal operculum "
+    ]
+   ],
+   "stream": "frontal",
+   "parent": "frontal operculum",
+   "color": "#c55179",
+   "opacity": 0.13,
+   "meshes": {
+    "L": {
+     "file": "data/regions/op6_L.obj",
+     "verts": 2129,
+     "centroid": [
+      -51.5,
+      4.4,
+      5.2
+     ]
+    },
+    "R": {
+     "file": "data/regions/op6_R.obj",
+     "verts": 1570,
+     "centroid": [
+      53.7,
+      6.9,
+      3.8
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-133",
+   "entityId": "region.julich-133",
+   "name": "Area Op7 (Frontal Operculum)",
+   "atlasId": "Area-Op7",
+   "sourceName": "Area Op7 (Frontal Operculum)",
+   "sourceId": "350",
+   "leftLabel": 133,
+   "rightLabel": 1133,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "frontal lobe",
+     "frontal operculum "
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "frontal operculum ",
+   "color": "#8674c0",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-133_L.obj",
+     "verts": 1084,
+     "centroid": [
+      -39.7,
+      8.9,
+      9.2
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-133_R.obj",
+     "verts": 716,
+     "centroid": [
+      37.3,
+      14.0,
+      10.7
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-134",
+   "entityId": "region.julich-134",
+   "name": "Area Ph1 (PhG)",
+   "atlasId": "Area-Ph1",
+   "sourceName": "Area Ph1 (PhG)",
+   "sourceId": "355",
+   "leftLabel": 134,
+   "rightLabel": 1134,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "temporal lobe",
+     "parahippocampal gyrus"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "parahippocampal gyrus",
+   "color": "#008000",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-134_L.obj",
+     "verts": 1756,
+     "centroid": [
+      -23.7,
+      -54.3,
+      -7.1
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-134_R.obj",
+     "verts": 1772,
+     "centroid": [
+      25.4,
+      -53.7,
+      -10.2
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-135",
+   "entityId": "region.julich-135",
+   "name": "Area Ph2 (PhG)",
+   "atlasId": "Area-Ph2",
+   "sourceName": "Area Ph2 (PhG)",
+   "sourceId": "356",
+   "leftLabel": 135,
+   "rightLabel": 1135,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "temporal lobe",
+     "parahippocampal gyrus"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "parahippocampal gyrus",
+   "color": "#808000",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-135_L.obj",
+     "verts": 1830,
+     "centroid": [
+      -27.9,
+      -40.0,
+      -13.3
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-135_R.obj",
+     "verts": 1246,
+     "centroid": [
+      30.9,
+      -38.3,
+      -12.7
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-136",
+   "entityId": "region.julich-136",
+   "name": "Area Ph3 (PhG)",
+   "atlasId": "Area-Ph3",
+   "sourceName": "Area Ph3 (PhG)",
+   "sourceId": "357",
+   "leftLabel": 136,
+   "rightLabel": 1136,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "temporal lobe",
+     "parahippocampal gyrus"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "parahippocampal gyrus",
+   "color": "#800000",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-136_L.obj",
+     "verts": 1060,
+     "centroid": [
+      -17.2,
+      -53.1,
+      -9.5
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-136_R.obj",
+     "verts": 1094,
+     "centroid": [
+      18.4,
+      -50.6,
+      -9.5
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-137",
+   "entityId": "region.julich-137",
+   "name": "Area CoS1 (CoS)",
+   "atlasId": "Area-CoS1",
+   "sourceName": "Area CoS1 (CoS)",
+   "sourceId": "358",
+   "leftLabel": 137,
+   "rightLabel": 1137,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "temporal lobe",
+     "collateral sulcus "
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "collateral sulcus ",
+   "color": "#000080",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-137_L.obj",
+     "verts": 752,
+     "centroid": [
+      -38.8,
+      -28.5,
+      -20.1
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-137_R.obj",
+     "verts": 679,
+     "centroid": [
+      36.7,
+      -31.5,
+      -19.4
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-138",
+   "entityId": "region.julich-138",
+   "name": "Medial Accumbens, ventral Striatum (Basal Ganglia)",
+   "atlasId": "AcbM",
+   "sourceName": "Medial Accumbens, ventral Striatum (Basal Ganglia)",
+   "sourceId": "359",
+   "leftLabel": 138,
+   "rightLabel": 1138,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "unresolved",
+   "hierarchyPaths": [],
+   "stream": "atlas-unresolved-hierarchy",
+   "parent": "Unresolved hierarchy",
+   "color": "#4ab929",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-138_L.obj",
+     "verts": 278,
+     "centroid": [
+      -7.6,
+      8.1,
+      -8.1
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-138_R.obj",
+     "verts": 290,
+     "centroid": [
+      6.4,
+      8.8,
+      -7.6
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-139",
+   "entityId": "region.julich-139",
+   "name": "Fundus of Caudate Nucleus, ventral Striatum (Basal Ganglia)",
+   "atlasId": "FuCd",
+   "sourceName": "Fundus of Caudate Nucleus, ventral Striatum (Basal Ganglia)",
+   "sourceId": "360",
+   "leftLabel": 139,
+   "rightLabel": 1139,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "unresolved",
+   "hierarchyPaths": [],
+   "stream": "atlas-unresolved-hierarchy",
+   "parent": "Unresolved hierarchy",
+   "color": "#b13541",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-139_L.obj",
+     "verts": 1190,
+     "centroid": [
+      -11.8,
+      15.6,
+      -4.7
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-139_R.obj",
+     "verts": 1176,
+     "centroid": [
+      11.0,
+      17.1,
+      -4.8
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-140",
+   "entityId": "region.julich-140",
+   "name": "Fundus of Putamen, Ventral Striatum (Basal Ganglia)",
+   "atlasId": "FuP",
+   "sourceName": "Fundus of Putamen, Ventral Striatum (Basal Ganglia)",
+   "sourceId": "361",
+   "leftLabel": 140,
+   "rightLabel": 1140,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "unresolved",
+   "hierarchyPaths": [],
+   "stream": "atlas-unresolved-hierarchy",
+   "parent": "Unresolved hierarchy",
+   "color": "#c4f8d0",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-140_L.obj",
+     "verts": 1464,
+     "centroid": [
+      -23.6,
+      7.1,
+      -8.5
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-140_R.obj",
+     "verts": 1606,
+     "centroid": [
+      23.2,
+      8.4,
+      -7.7
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-141",
+   "entityId": "region.julich-141",
+   "name": "Lateral Accumbens, ventral Striatum (Basal Ganglia)",
+   "atlasId": "AcbL",
+   "sourceName": "Lateral Accumbens, ventral Striatum (Basal Ganglia)",
+   "sourceId": "362",
+   "leftLabel": 141,
+   "rightLabel": 1141,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "unresolved",
+   "hierarchyPaths": [],
+   "stream": "atlas-unresolved-hierarchy",
+   "parent": "Unresolved hierarchy",
+   "color": "#91503e",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-141_L.obj",
+     "verts": 518,
+     "centroid": [
+      -11.9,
+      10.9,
+      -11.7
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-141_R.obj",
+     "verts": 430,
+     "centroid": [
+      11.3,
+      11.4,
+      -11.7
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-142",
+   "entityId": "region.julich-142",
+   "name": "VP, ventral Pallidum (Basal Ganglia)",
+   "atlasId": "VP",
+   "sourceName": "VP, ventral Pallidum (Basal Ganglia)",
+   "sourceId": "363",
+   "leftLabel": 142,
+   "rightLabel": 1142,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "unresolved",
+   "hierarchyPaths": [],
+   "stream": "atlas-unresolved-hierarchy",
+   "parent": "Unresolved hierarchy",
+   "color": "#28b203",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-142_L.obj",
+     "verts": 710,
+     "centroid": [
+      -12.8,
+      1.5,
+      -8.1
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-142_R.obj",
+     "verts": 832,
+     "centroid": [
+      12.5,
+      1.6,
+      -8.1
+     ]
+    }
+   }
+  },
+  {
+   "id": "lgn",
+   "entityId": "region.lgn",
+   "name": "LGN",
+   "atlasId": "CGL",
+   "sourceName": "CGL (Metathalamus)",
+   "sourceId": "367",
+   "leftLabel": 143,
+   "rightLabel": 1143,
+   "catalogStatus": "lesson-current",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "diencephalon",
+     "thalamus",
+     "metathalamus",
+     "lateral geniculate body"
+    ]
+   ],
+   "stream": "subcortical",
+   "parent": "metathalamus",
+   "color": "#b785e0",
+   "opacity": 0.24,
+   "meshes": {
+    "L": {
+     "file": "data/regions/lgn_L.obj",
+     "verts": 666,
+     "centroid": [
+      -23.7,
+      -24.3,
+      -7.9
+     ]
+    },
+    "R": {
+     "file": "data/regions/lgn_R.obj",
+     "verts": 556,
+     "centroid": [
+      23.6,
+      -22.5,
+      -7.7
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-144",
+   "entityId": "region.julich-144",
+   "name": "CGM (Metathalamus)",
+   "atlasId": "CGM",
+   "sourceName": "CGM (Metathalamus)",
+   "sourceId": "368",
+   "leftLabel": 144,
+   "rightLabel": 1144,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "diencephalon",
+     "thalamus",
+     "metathalamus",
+     "medial geniculate body"
+    ]
+   ],
+   "stream": "atlas-diencephalon",
+   "parent": "medial geniculate body",
+   "color": "#6cf1cc",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-144_L.obj",
+     "verts": 1576,
+     "centroid": [
+      -12.3,
+      -28.3,
+      -6.8
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-144_R.obj",
+     "verts": 1720,
+     "centroid": [
+      12.1,
+      -27.5,
+      -8.1
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-145",
+   "entityId": "region.julich-145",
+   "name": "STN (Subthalamus)",
+   "atlasId": "STN",
+   "sourceName": "STN (Subthalamus)",
+   "sourceId": "369",
+   "leftLabel": 145,
+   "rightLabel": 1145,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "unresolved",
+   "hierarchyPaths": [],
+   "stream": "atlas-unresolved-hierarchy",
+   "parent": "Unresolved hierarchy",
+   "color": "#40d038",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-145_L.obj",
+     "verts": 1788,
+     "centroid": [
+      -8.5,
+      -14.6,
+      -11.2
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-145_R.obj",
+     "verts": 2265,
+     "centroid": [
+      8.4,
+      -13.8,
+      -11.9
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-146",
+   "entityId": "region.julich-146",
+   "name": "Area Id9 (Insula)",
+   "atlasId": "Area-Id9",
+   "sourceName": "Area Id9 (Insula)",
+   "sourceId": "373",
+   "leftLabel": 146,
+   "rightLabel": 1146,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "insula",
+     "dysgranular insula"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "dysgranular insula",
+   "color": "#1736aa",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-146_L.obj",
+     "verts": 878,
+     "centroid": [
+      -40.7,
+      6.8,
+      -8.7
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-146_R.obj",
+     "verts": 1041,
+     "centroid": [
+      41.4,
+      10.5,
+      -8.4
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-147",
+   "entityId": "region.julich-147",
+   "name": "Area Ia3 (Insula)",
+   "atlasId": "Area-Ia3",
+   "sourceName": "Area Ia3 (Insula)",
+   "sourceId": "374",
+   "leftLabel": 147,
+   "rightLabel": 1147,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "insula",
+     "agranular insula"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "agranular insula",
+   "color": "#31f75a",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-147_L.obj",
+     "verts": 484,
+     "centroid": [
+      -39.3,
+      1.4,
+      -14.4
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-147_R.obj",
+     "verts": 386,
+     "centroid": [
+      39.3,
+      4.3,
+      -14.8
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-148",
+   "entityId": "region.julich-148",
+   "name": "Area Ia2 (Insula)",
+   "atlasId": "Area-Ia2",
+   "sourceName": "Area Ia2 (Insula)",
+   "sourceId": "375",
+   "leftLabel": 148,
+   "rightLabel": 1148,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "insula",
+     "agranular insula"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "agranular insula",
+   "color": "#741802",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-148_L.obj",
+     "verts": 332,
+     "centroid": [
+      -42.2,
+      1.3,
+      -21.0
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-148_R.obj",
+     "verts": 276,
+     "centroid": [
+      40.1,
+      2.7,
+      -20.7
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-149",
+   "entityId": "region.julich-149",
+   "name": "Area Id8 (Insula)",
+   "atlasId": "Area-Id8",
+   "sourceName": "Area Id8 (Insula)",
+   "sourceId": "376",
+   "leftLabel": 149,
+   "rightLabel": 1149,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "insula",
+     "dysgranular insula"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "dysgranular insula",
+   "color": "#4fbb2a",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-149_L.obj",
+     "verts": 1050,
+     "centroid": [
+      -34.6,
+      19.5,
+      -5.9
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-149_R.obj",
+     "verts": 1188,
+     "centroid": [
+      35.4,
+      23.8,
+      -4.6
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-150",
+   "entityId": "region.julich-150",
+   "name": "Area Id10 (Insula)",
+   "atlasId": "Area-Id10",
+   "sourceName": "Area Id10 (Insula)",
+   "sourceId": "377",
+   "leftLabel": 150,
+   "rightLabel": 1150,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "insula",
+     "dysgranular insula"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "dysgranular insula",
+   "color": "#b365c0",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-150_L.obj",
+     "verts": 1384,
+     "centroid": [
+      -29.1,
+      18.2,
+      -13.1
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-150_R.obj",
+     "verts": 1526,
+     "centroid": [
+      29.0,
+      19.4,
+      -14.8
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-151",
+   "entityId": "region.julich-151",
+   "name": "BST (Bed Nucleus)",
+   "atlasId": "BST",
+   "sourceName": "BST (Bed Nucleus)",
+   "sourceId": "378",
+   "leftLabel": 151,
+   "rightLabel": 1151,
+   "catalogStatus": "atlas-available",
+   "gapMap": false,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral nuclei",
+     "basal forebrain",
+     "bed nucleus"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "bed nucleus",
+   "color": "#d6782a",
+   "opacity": 0.1,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-151_L.obj",
+     "verts": 1240,
+     "centroid": [
+      -5.6,
+      -1.7,
+      1.3
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-151_R.obj",
+     "verts": 1044,
+     "centroid": [
+      5.2,
+      -0.2,
+      -0.2
+     ]
+    }
+   }
+  },
+  {
+   "id": "gap_fi",
+   "entityId": "region.gap-fi",
+   "name": "Frontal (unparc.)",
+   "atlasId": "Frontal-I",
+   "sourceName": "Frontal-I (GapMap)",
+   "sourceId": "500",
+   "leftLabel": 152,
+   "rightLabel": 1152,
+   "catalogStatus": "lesson-current",
+   "gapMap": true,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "frontal lobe",
+     "frontal lobe"
+    ]
+   ],
+   "stream": "gap",
+   "parent": "GapMap",
+   "color": "#a6b6bf",
+   "opacity": 0.07,
+   "meshes": {
+    "L": {
+     "file": "data/regions/gap_fi_L.obj",
+     "verts": 2998,
+     "centroid": [
+      -25.9,
+      41.8,
+      25.6
+     ]
+    },
+    "R": {
+     "file": "data/regions/gap_fi_R.obj",
+     "verts": 2997,
+     "centroid": [
+      26.0,
+      42.5,
+      24.3
+     ]
+    }
+   }
+  },
+  {
+   "id": "gap_fii",
+   "entityId": "region.gap-fii",
+   "name": "Frontal-II (unparc.)",
+   "atlasId": "Frontal-II",
+   "sourceName": "Frontal-II (GapMap)",
+   "sourceId": "501",
+   "leftLabel": 153,
+   "rightLabel": 1153,
+   "catalogStatus": "lesson-current",
+   "gapMap": true,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "frontal lobe",
+     "frontal lobe"
+    ]
+   ],
+   "stream": "gap",
+   "parent": "GapMap",
+   "color": "#95a3b2",
+   "opacity": 0.07,
+   "meshes": {
+    "L": {
+     "file": "data/regions/gap_fii_L.obj",
+     "verts": 2994,
+     "centroid": [
+      -44.8,
+      -3.3,
+      44.4
+     ]
+    },
+    "R": {
+     "file": "data/regions/gap_fii_R.obj",
+     "verts": 2975,
+     "centroid": [
+      40.9,
+      -0.7,
+      43.9
+     ]
+    }
+   }
+  },
+  {
+   "id": "gap_tp",
+   "entityId": "region.gap-tp",
+   "name": "Temporo-parietal (unparc.)",
+   "atlasId": "Temporal-to-Parietal",
+   "sourceName": "Temporal-to-Parietal (GapMap)",
+   "sourceId": "503",
+   "leftLabel": 154,
+   "rightLabel": 1154,
+   "catalogStatus": "lesson-current",
+   "gapMap": true,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "Temporal-to-Parietal",
+     "Temporal-to-Parietal"
+    ]
+   ],
+   "stream": "gap",
+   "parent": "GapMap",
+   "color": "#717998",
+   "opacity": 0.07,
+   "meshes": {
+    "L": {
+     "file": "data/regions/gap_tp_L.obj",
+     "verts": 2990,
+     "centroid": [
+      -47.9,
+      -27.9,
+      -14.8
+     ]
+    },
+    "R": {
+     "file": "data/regions/gap_tp_R.obj",
+     "verts": 2975,
+     "centroid": [
+      43.0,
+      -33.8,
+      -9.3
+     ]
+    }
+   }
+  },
+  {
+   "id": "gap_fo",
+   "entityId": "region.gap-fo",
+   "name": "Fronto-occipital (unparc.)",
+   "atlasId": "Frontal-to-Occipital",
+   "sourceName": "Frontal-to-Occipital (GapMap)",
+   "sourceId": "504",
+   "leftLabel": 155,
+   "rightLabel": 1155,
+   "catalogStatus": "lesson-current",
+   "gapMap": true,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "Frontal-to-Occipital",
+     "Frontal-to-Occipital"
+    ]
+   ],
+   "stream": "gap",
+   "parent": "GapMap",
+   "color": "#838fa5",
+   "opacity": 0.07,
+   "meshes": {
+    "L": {
+     "file": "data/regions/gap_fo_L.obj",
+     "verts": 2990,
+     "centroid": [
+      -10.2,
+      -30.6,
+      30.7
+     ]
+    },
+    "R": {
+     "file": "data/regions/gap_fo_R.obj",
+     "verts": 2993,
+     "centroid": [
+      9.5,
+      -34.3,
+      33.5
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-156",
+   "entityId": "region.julich-156",
+   "name": "Frontal-to-Temporal-I (GapMap)",
+   "atlasId": "Frontal-to-Temporal-I",
+   "sourceName": "Frontal-to-Temporal-I (GapMap)",
+   "sourceId": "505",
+   "leftLabel": 156,
+   "rightLabel": 1156,
+   "catalogStatus": "atlas-available",
+   "gapMap": true,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "Frontal-to-Temporal",
+     "Frontal-to-Temporal"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "Frontal-to-Temporal",
+   "color": "#407e64",
+   "opacity": 0.07,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-156_L.obj",
+     "verts": 3004,
+     "centroid": [
+      -40.9,
+      26.4,
+      -9.4
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-156_R.obj",
+     "verts": 3000,
+     "centroid": [
+      41.2,
+      26.6,
+      -12.8
+     ]
+    }
+   }
+  },
+  {
+   "id": "julich-157",
+   "entityId": "region.julich-157",
+   "name": "Frontal-to-Temporal-II (GapMap)",
+   "atlasId": "Frontal-to-Temporal-II",
+   "sourceName": "Frontal-to-Temporal-II (GapMap)",
+   "sourceId": "506",
+   "leftLabel": 157,
+   "rightLabel": 1157,
+   "catalogStatus": "atlas-available",
+   "gapMap": true,
+   "hierarchyStatus": "mapped",
+   "hierarchyPaths": [
+    [
+     "telencephalon",
+     "cerebral cortex",
+     "Frontal-to-Temporal",
+     "Frontal-to-Temporal"
+    ]
+   ],
+   "stream": "atlas-telencephalon",
+   "parent": "Frontal-to-Temporal",
+   "color": "#a1184a",
+   "opacity": 0.07,
+   "meshes": {
+    "L": {
+     "file": "data/regions/julich-157_L.obj",
+     "verts": 2991,
+     "centroid": [
+      -26.9,
+      -13.1,
+      -13.6
+     ]
+    },
+    "R": {
+     "file": "data/regions/julich-157_R.obj",
+     "verts": 2988,
+     "centroid": [
+      20.0,
+      -12.6,
+      -10.3
+     ]
+    }
+   }
+  }
+ ]
+}

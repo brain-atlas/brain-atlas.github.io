@@ -2251,12 +2251,13 @@ async function start() {
     app.dataset.state = 'loading';
     setTopbarStatus();
     setModelStatus('Loading atlas data…');
-    const [entities, fidelity, fibreFilterPresets] = await Promise.all([
+    const [entities, fidelity, fibreFilterPresets, julichRegions] = await Promise.all([
       fetchJson('/data/entities.json'),
       fetchJson('/data/fidelity.json'),
       fetchJson('/data/fibre_filter_presets.json'),
+      fetchJson('/data/julich_regions.json'),
     ]);
-    catalog = createLessonCatalog(entities, fidelity, fibreFilterPresets);
+    catalog = createLessonCatalog(entities, fidelity, fibreFilterPresets, julichRegions);
     lessonLibrary = createLessonLibrary(libraryRecords, lessonSources, catalog);
     historySerial = Number.isInteger(history.state?.serial) ? history.state.serial : 0;
     const initialIntent = workspaceLocationIntent();

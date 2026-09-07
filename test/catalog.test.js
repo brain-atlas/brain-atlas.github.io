@@ -41,6 +41,28 @@ test('current entity catalog binds every region and tract manifest ID exactly on
   assert.equal(Object.isFrozen(catalog), true);
 });
 
+test('complete Jülich catalog extends canonical entities but not legacy endpoint selectors', async () => {
+  const [entities, fidelity, , , presets] = await manifests();
+  const julichRegions = await json('../public/data/julich_regions.json');
+  const catalog = createLessonCatalog(entities, fidelity, presets, julichRegions);
+  const regionIds = catalog.entityIds.filter((id) => id.startsWith('region.'));
+  const defaultRegionIds = catalog.atlasDefaultEntityIds.filter((id) => id.startsWith('region.'));
+  const filterRegionIds = catalog.fibreFilterSelectorIds.filter((id) => id.startsWith('region.'));
+
+  assert.equal(julichRegions.regions.length, 157);
+  assert.equal(regionIds.length, 157);
+  assert.equal(defaultRegionIds.length, 45);
+  assert.deepEqual(
+    defaultRegionIds.sort(),
+    entities.entities.filter(({ type }) => type === 'region').map(({ id }) => id).sort(),
+  );
+  assert.deepEqual(filterRegionIds.sort(), defaultRegionIds.sort());
+  assert.equal(julichRegions.regions.filter(({ gapMap }) => gapMap).length, 6);
+  assert.equal(julichRegions.regions.filter(({ hierarchyStatus }) => hierarchyStatus === 'unresolved').length, 6);
+  assert.equal(julichRegions.regions.reduce((sum, { hierarchyPaths }) => sum + hierarchyPaths.length, 0), 155);
+  assert.equal(Object.isFrozen(catalog.entitiesById[regionIds.at(-1)]), true);
+});
+
 test('catalog validates and freezes the four endpoint-filter presets against region selectors', async () => {
   const [entities, fidelity, , , presets] = await manifests();
   const catalog = createLessonCatalog(entities, fidelity, presets);

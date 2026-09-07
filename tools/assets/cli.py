@@ -147,19 +147,30 @@ def _run_builder(args: argparse.Namespace, manifest: dict[str, Any]) -> dict[str
             raise ContractError("generated cortical shell differs from the checked output")
         generated = [output.name]
     elif args.asset == "regions":
-        from .regions import build_regions_from_image
+        from .regions import build_complete_regions_from_image, build_julich_catalog
 
         parameters = pipeline["parameters"]
-        details = build_regions_from_image(
+        catalog = build_julich_catalog(
+            inputs["julich-terminology-xml"],
+            inputs["julich-hierarchy"],
+            parameters["regions"],
+            parameters["unresolvedAtlasIds"],
+        )
+        details = build_complete_regions_from_image(
             inputs["julich-mpm"],
             output_root,
-            parameters["regions"],
+            catalog,
             parameters["streams"],
+            legacy_regions=parameters["regions"],
         )
-        expected_manifest = _record_by_id(manifest["outputs"], "region-manifest")
-        region_manifest = output_root / "regions.json"
-        if region_manifest.stat().st_size != expected_manifest["bytes"] or sha256_file(region_manifest) != expected_manifest["sha256"]:
-            raise ContractError("generated region manifest differs from the checked output")
+        for output_id, filename in (
+            ("region-manifest", "regions.json"),
+            ("julich-region-catalog", "julich_regions.json"),
+        ):
+            expected_manifest = _record_by_id(manifest["outputs"], output_id)
+            actual_manifest = output_root / filename
+            if actual_manifest.stat().st_size != expected_manifest["bytes"] or sha256_file(actual_manifest) != expected_manifest["sha256"]:
+                raise ContractError(f"generated {output_id} differs from the checked output")
         obj_entries = [(path.name, path.read_bytes()) for path in output_root.glob("*.obj")]
         expected_tree = _record_by_id(manifest["outputs"], "region-mesh-tree")
         if len(obj_entries) != expected_tree["fileCount"] or sum(len(payload) for _, payload in obj_entries) != expected_tree["bytes"]:

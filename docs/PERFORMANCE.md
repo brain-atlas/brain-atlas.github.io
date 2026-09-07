@@ -1,6 +1,6 @@
 # Runtime performance
 
-**Last measured:** 2026-07-23
+**Last measured:** 2026-09-06 (Jülich catalog); historical baseline below: 2026-07-23
 
 **Tracking:** `brain-atlas-zmq.9`; re-profiled for `brain-atlas-zmq.31`; render policy hardened by `brain-atlas-zmq.19`
 **Profile:** `scripts/browser/performance.spec.cjs`
@@ -11,7 +11,7 @@ The WebGL gate keeps Three.js and anatomical assets out of no-WebGL sessions. Af
 
 - cortical GLB;
 - optic-radiation JSON;
-- the 21 kB region manifest;
+- the unchanged 21 kB legacy region manifest plus the 137 kB complete Jülich catalog;
 - the checked 1.4 kB geometry-free association metadata projection used by readiness and the Viewer panel;
 - the compact endpoint-classification tuples used by association and SWM queries; and
 - the renderer bundle.
@@ -20,13 +20,13 @@ The lesson shell also loads the small authored endpoint-filter preset catalog wi
 
 The first canonical visibility snapshot starts independently packaged optional geometry:
 
-- each bilateral region OBJ pair loads once, when its stable region ID first becomes visible;
+- each bilateral region OBJ pair loads when its stable region ID first becomes visible; successful hemispheres stay retained and failed hemispheres can retry;
 - the 2.8 MB SWM JSON loads once, when `layer.swm` first becomes visible; and
 - the unchanged 2.4 MB `tracts.json`, association activity metadata, and endpoint-backed event pools load once when any named association tract first becomes visible.
 
 `public/data/tracts_metadata.json` is the exact geometry-free projection of `space`, `source`, and each tract's `id`, `name`, `stream`, `color`, and point count. `src/tract-metadata.js` owns projection and runtime matching, `scripts/project-tract-metadata.mjs` deterministically prints the projection, and `test/tract-metadata.test.js` rejects source, space, or record drift from `tracts.json` before geometry can bind. Placeholder tract groups retain canonical visibility, hemisphere, selection, and inspection state while geometry is absent, so late children inherit the current material factors rather than creating another state path.
 
-Atlas Home's authored default shows every region, tract, and SWM, so it still requests the complete set immediately after the first canonical snapshot. A direct `?lesson=retina-to-v1` entry needs cortex, optic radiation, LGN, V1, V2, V3v, V3d, and SWM because the topic overview displays the shared-early endpoint subset, but it does not request association geometry until the first downstream scene shows ILF/IFOF. Later scenes request only their additional regions through the same canonical visibility binding. This policy changes request timing only; it adds no renderer, filter path, coordinate transform, geometry change, or scientific claim. Packaging region text meshes into one indexed binary GLB remains future work.
+Atlas Home's authored default shows the established 45 regions, every tract, and SWM. The other 112 Jülich regions start hidden and load only after explicit activation, not catalog discovery. A direct `?lesson=retina-to-v1` entry needs cortex, optic radiation, LGN, V1, V2, V3v, V3d, and SWM because the topic overview displays the shared-early endpoint subset, but it does not request association geometry until the first downstream scene shows ILF/IFOF. Later scenes request only their additional regions through the same canonical visibility binding. This policy changes request timing only; it adds no renderer, filter path, coordinate transform, geometry change, or scientific claim. Packaging region text meshes into one indexed binary GLB remains future work.
 
 ## Runtime render policy
 
@@ -53,7 +53,63 @@ DOM identity, delayed geometry, immediate Skip, image/no-WebGL resume, and rayca
 These are deterministic avoided-work checks, not timing or physical-device measurements.
 The historical loading/frame measurements below have not been remeasured for this change.
 
-## Mobile-emulation evidence
+## Complete Jülich catalog measurements (2026-09-06)
+
+`brain-atlas-yum.14.2` retains separate OBJ pairs. The catalog costs 136,981 bytes
+(13,477 gzip-9); 90 unchanged default meshes cost 11,648,359 bytes. The additional
+224 meshes cost 17,549,664 bytes, for 314 files / 29,198,023 bytes total. One measured
+Medial Accumbens pair costs 23,709 bytes. Search alone requests no optional mesh.
+
+`scripts/browser/julich-performance.cjs` samples default, one pair, then all optional
+regions enabled through the existing controls. Chromium 152.0.7977.64 on this Mac
+uses 390×844 touch/mobile emulation, DPR 3 (renderer capped at 2), CPU 4×, 10/5 Mbit/s,
+and 80 ms latency. These are one-run observations, not device budgets or medians.
+
+| Measure | Default | + one pair | All 157 regions visible/retained |
+|---|---:|---:|---:|
+| Region requests | 90 | 92 | 314 |
+| Region bytes (preview, uncompressed) | 11,648,359 | 11,672,068 | 29,198,023 |
+| Draw calls per sampled frame (dev) | 142 | 144 | 366 |
+| Submitted triangles per frame (dev) | 636,534 | 637,662 | 1,364,254 |
+| Renderer geometries (dev) | 139 | 141 | 363 |
+| Geometry attribute/index bytes (dev) | 42,672,360 | 42,753,576 | 95,068,200 |
+| JS heap bytes (production) | 96,025,007 | 109,262,333 | 195,171,126 |
+| Two-second rAF p95 interval (production) | 16.8 ms | 16.7 ms | 16.7 ms |
+| Cumulative region-transfer completion (production) | 11.990 s | 14.141 s | 30.035 s |
+
+Production shell readiness was 1.201 s. Cumulative times include intervening
+2-second samples and command work; subtracting them is **not** pure pair latency.
+All three states had zero page/console errors and no horizontal overflow.
+Geometry metrics use the existing development scene's `onAfterRender` callback to
+read `renderer.info`; production exposes no diagnostics. Attribute/index bytes are
+CPU buffer sizes approximating geometry upload storage, **not total GPU allocation**:
+they exclude driver overhead, render targets, textures, and duplicate driver storage.
+Submitted triangles include multipass drawing and differ from unique mesh triangles.
+The rAF sample measures scheduling, not GPU frame completion. Heap readings depend
+on GC. This is mobile emulation on desktop hardware, not physical-phone evidence.
+
+**Shipping decision:** ship the complete set as optional independent pairs, retain
+the 90-request default, and provide no optional bulk-enable control. Successful
+geometry remains resident until reload, including after hiding it: sequential
+exploration can reach the measured worst case. The 95 MB geometry-buffer estimate
+and 366 draw calls are not certified for phone GPUs. Physical-device memory/context
+loss and sustained frame pacing remain unverified; use a few regions at once and
+reload to reclaim retained geometry. No bundled-format gain is claimed.
+
+Replay with an external `playwright-core` installation (no app dependency added):
+
+```bash
+NODE_PATH=/path/to/external/node_modules \\
+PLAYWRIGHT_EXECUTABLE_PATH=/path/to/chromium \\
+BRAIN_ATLAS_URL=http://localhost:5180/ node scripts/browser/julich-performance.cjs
+# Repeat against the development server for renderer metrics.
+# Guided-lesson failure/retry regression:
+NODE_PATH=/path/to/external/node_modules \\
+PLAYWRIGHT_EXECUTABLE_PATH=/path/to/chromium \\
+BRAIN_ATLAS_URL=http://localhost:5180/ node scripts/browser/region-recovery.cjs
+```
+
+## Historical mobile-emulation evidence (2026-07-23)
 
 The checked profile runs the static production preview in system Chromium with:
 

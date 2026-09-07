@@ -17,7 +17,7 @@ Scientific interpretation and model limitations are inventoried separately in
 |---|---|---|
 | `src/lessons/retina-to-v1.md`, `src/lessons/library.json` | Original project lesson prose and library metadata; citations and review limits in `docs/lessons/retina-to-v1-validation.md`; no supplementary images declared | [AGPL-3.0-only](LICENSE); displayed atlas assets retain their separate terms below |
 | `public/models/brain_mni.glb` | MNI152NLin2009cAsym brain mask via TemplateFlow | MNI notice reproduced below |
-| `public/data/regions.json`, `public/data/regions/*.obj` | Jülich-Brain Atlas v3.0.3 maximum probability map | [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) |
+| `public/data/regions.json`, `public/data/julich_regions.json`, `public/data/regions/*.obj` | Jülich-Brain Atlas v3.0.3 maximum probability map plus licensed XML identities and terminology hierarchy | [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) |
 | `public/data/tracts.json`, `public/data/tracts_metadata.json` | HCP-1065 population-averaged tractography atlas and its geometry-free runtime projection | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) and WU-Minn HCP Open Access Data Use Terms |
 | `public/data/tract_activity.json`, `public/data/fibre_filter_presets.json` | Project-authored activity assumptions, source links, and endpoint-query presets; no anatomical geometry | [AGPL-3.0-only](LICENSE) |
 | `public/data/fibre_endpoints.json` | Categorical assignments combining the Jülich-Brain v3.0.3 MPM with HCP-1065 association/SWM contour endpoints | [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/), [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/), and WU-Minn HCP Open Access Data Use Terms |
@@ -70,11 +70,16 @@ The source template carries this notice:
 
 ## Jülich-Brain region surfaces
 
-`public/data/regions.json` and `public/data/regions/*.obj` are adapted from the
-**Jülich-Brain Atlas, cytoarchitectonic maps v3.0.3** maximum probability map.
-The project extracted selected regions, separated hemispheres, converted
-volumetric labels to marching-cubes surfaces, and simplified the meshes for web
-rendering. These files are modified data, not original atlas files.
+`public/data/regions.json`, `public/data/julich_regions.json`, and
+`public/data/regions/*.obj` are adapted from the **Jülich-Brain Atlas,
+cytoarchitectonic maps v3.0.3** maximum probability map and its licensed XML and
+terminology hierarchy. The project extracted all 157 base regions as 314 real
+left/right marching-cubes surfaces and simplified them for web rendering. The
+complete catalog retains source XML IDs/names, bilateral MPM labels, six
+GapMaps, and all 155 licensed hierarchy path occurrences. Six XML identities have
+no hierarchy leaf and are marked unresolved rather than assigned invented edges.
+The legacy 45-region manifest remains unchanged for endpoint-artifact compatibility.
+These files are modified data, not original atlas files.
 
 Source and citation:
 

@@ -33,6 +33,7 @@ import {
 import { createRendererAdapter } from './lesson/index.js';
 import { createCameraTransition, sampleCameraTransition } from './ui/camera-transition.js';
 import { createVisibilityTransition, sampleVisibilityTransition } from './ui/visibility-transition.js';
+import { createRegionCatalogGroups } from './ui/region-catalog.js';
 import {
   deriveViewerPowerState,
   latestStageIntersection,
@@ -214,6 +215,7 @@ const regionGroup = new THREE.Group(); mniGroup.add(regionGroup);
 const regionsById = {};
 const regionMetadataById = {};
 const regionMeshLoads = new Set();
+const regionMeshFailures = new Map();
 const orLines = {}, orCaps = {};
 const hemiState = { L: true, R: true };     // global master L/R filter (ANDs with per-item)
 const regionHemi = {};                      // id -> {L,R} per-region hemisphere visibility
@@ -267,15 +269,43 @@ function makeRegionMaterial(hex, opacity) {
     transparent: true, depthWrite: false, side: THREE.DoubleSide,
   });
 }
+function refreshRegionFailureControls(reg) {
+  const recovery = $('region-load-failures');
+  for (const hemi of ['L', 'R']) {
+    const key = `${reg.id}:${hemi}`;
+    const existing = recovery.querySelector(`[data-retry-key="${key}"]`);
+    if (!regionMeshFailures.has(key)) {
+      existing?.remove();
+      continue;
+    }
+    if (existing) continue;
+    const retry = document.createElement('button');
+    retry.type = 'button';
+    retry.className = 'region-load-retry';
+    retry.dataset.retryKey = key;
+    retry.textContent = `Retry ${reg.name} ${hemi} mesh`;
+    retry.addEventListener('click', () => loadRegionMeshes(reg));
+    recovery.appendChild(retry);
+  }
+  recovery.hidden = !recovery.childElementCount;
+}
 function loadRegionMeshes(reg) {
-  if (regionMeshLoads.has(reg.id)) return;
-  regionMeshLoads.add(reg.id);
   const group = regionsById[reg.id];
   const mat = makeRegionMaterial(reg.color, reg.opacity);
   for (const hemi of Object.keys(reg.meshes)) {
+    const loadKey = `${reg.id}:${hemi}`;
+    if (regionMeshLoads.has(loadKey)) continue;
+    regionMeshLoads.add(loadKey);
     new OBJLoader().load('/' + reg.meshes[hemi].file, (obj) => {
       let geom = null; obj.traverse((n) => { if (n.isMesh && !geom) geom = n.geometry; });
-      if (!geom) return;
+      if (!geom) {
+        regionMeshLoads.delete(loadKey);
+        regionMeshFailures.set(loadKey, reg);
+        refreshRegionFailureControls(reg);
+        return;
+      }
+      regionMeshFailures.delete(loadKey);
+      refreshRegionFailureControls(reg);
       if (!geom.attributes.normal) geom.computeVertexNormals();
       const mesh = new THREE.Mesh(geom, mat); mesh.frustumCulled = false; mesh.userData = { hemi };
       mesh.visible = hemiState[hemi] && (regionHemi[reg.id] ? regionHemi[reg.id][hemi] : true);
@@ -283,11 +313,25 @@ function loadRegionMeshes(reg) {
       reapplyLessonMaterialFactors(group);
       applyRegionMesh(reg.id);
       anatomyGeometryChanged();
-    }, undefined, (e) => console.warn('region mesh failed:', reg.meshes[hemi].file, e));
+    }, undefined, (error) => {
+      regionMeshLoads.delete(loadKey);
+      regionMeshFailures.set(loadKey, reg);
+      refreshRegionFailureControls(reg);
+      $('announcer').textContent = `${reg.name} ${hemi} mesh failed to load. Retry available.`;
+      console.warn('region mesh failed:', reg.meshes[hemi].file, error);
+    });
   }
 }
 function loadRegions() {
-  fetch('/data/regions.json').then((r) => r.json()).then(({ regions }) => {
+  Promise.all([
+    fetch('/data/regions.json').then((response) => response.json()),
+    fetch('/data/julich_regions.json').then((response) => response.json()),
+  ]).then(([legacy, complete]) => {
+    const completeById = new Map(complete.regions.map((region) => [region.id, region]));
+    const regions = [
+      ...legacy.regions.map((region) => completeById.get(region.id)),
+      ...complete.regions.filter(({ catalogStatus }) => catalogStatus === 'atlas-available'),
+    ];
     for (const reg of regions) {
       const group = new THREE.Group(); group.userData = { id: reg.id, name: reg.name, parent: reg.parent };
       regionGroup.add(group);
@@ -1442,6 +1486,11 @@ function buildPanel(regions, tracts, { initialize = !panelInitialized } = {}) {
   if (initialize) {
     sceneState.visible.clear();
     Object.keys(layerObjs).forEach((id) => sceneState.visible.add(id));
+    for (const reg of regions.filter(({ catalogStatus }) => catalogStatus === 'atlas-available')) {
+      sceneState.visible.delete(reg.id);
+      regionHemi[reg.id] = { L: false, R: false };
+      layerObjs[reg.id].visible = false;
+    }
     for (const id of DEFAULT_OFF) { sceneState.visible.delete(id); if (layerObjs[id]) layerObjs[id].visible = false; }
     panelInitialized = true;
   }
@@ -1459,13 +1508,13 @@ function buildPanel(regions, tracts, { initialize = !panelInitialized } = {}) {
     row.append(cb, sw, t); return { row, cb };
   };
   // One collapsible stream group of L/R-pill rows — used for both regions and tracts.
-  const streamBlock = (stream, label, items, hemiMap, applyFn, rendererKind) => {
+  const streamBlock = (stream, label, items, hemiMap, applyFn, rendererKind, allowBulk = true) => {
     const wrap = document.createElement('div'); wrap.className = 'lyr-grpwrap collapsed';
     wrap.dataset.groupId = `${rendererKind}-${stream}`;
     const head = document.createElement('div'); head.className = 'lyr lyr-group';
     const checkboxTarget = document.createElement('label'); checkboxTarget.className = 'layer-checkbox-target';
     const cb = document.createElement('input'); cb.type = 'checkbox'; cb.setAttribute('aria-label', `Show all ${label}`);
-    checkboxTarget.append(cb);
+    checkboxTarget.append(cb); checkboxTarget.hidden = !allowBulk;
     const disclosure = document.createElement('button'); disclosure.type = 'button'; disclosure.className = 'lyr-disclosure';
     const kidsId = `layer-group-${rendererKind}-${stream}`;
     disclosure.setAttribute('aria-expanded', 'false'); disclosure.setAttribute('aria-controls', kidsId);
@@ -1478,12 +1527,16 @@ function buildPanel(regions, tracts, { initialize = !panelInitialized } = {}) {
       hemiMap[it.id] = hemiMap[it.id] || { L: true, R: true };
       const row = document.createElement('div'); row.className = 'lyr lyr-child';
       const sw = document.createElement('span'); sw.className = 'swatch'; sw.style.background = it.color; sw.style.color = it.color;
-      const nm = document.createElement('button'); nm.type = 'button'; nm.className = 'lyr-t layer-entity-toggle'; nm.textContent = it.name;
+      const nm = document.createElement('button'); nm.type = 'button'; nm.className = 'lyr-t layer-entity-toggle';
+      nm.textContent = it.catalogStatus === 'atlas-available'
+        ? `${it.name} · ${it.parent}${it.gapMap ? ' · GapMap' : ''}`
+        : it.name;
       nm.setAttribute('aria-label', `Show ${it.name} in both hemispheres`);
       const pills = document.createElement('span'); pills.className = 'hemi-pills';
       const pill = {};
       const entityId = entityIdForRenderer(rendererKind, it.id);
       row.dataset.rendererId = it.id;
+      if (rendererKind === 'region') row.dataset.regionLoadId = it.id;
       if (entityId) row.dataset.entityId = entityId;
       const entityState = () => explorePanelModel?.entities[entityId] ?? hemiMap[it.id];
       const applyEntityState = (state) => {
@@ -1493,6 +1546,7 @@ function buildPanel(regions, tracts, { initialize = !panelInitialized } = {}) {
         ] : [];
         if (dispatchExploreCommands(commands)) return;
         hemiMap[it.id] = { L: state.L, R: state.R };
+        if (rendererKind === 'region' && (state.L || state.R)) loadRegionMeshes(it);
         applyFn(it.id);
         syncEntityHemisphereToggle(nm, state);
         for (const h of ['L', 'R']) {
@@ -1518,9 +1572,10 @@ function buildPanel(regions, tracts, { initialize = !panelInitialized } = {}) {
         applyEntityState({ L: on, R: on });
       });
       row.append(sw, nm, pills); kids.appendChild(row);
+      if (rendererKind === 'region') refreshRegionFailureControls(it);
       syncers.push({ id: it.id, pill, entityToggle: nm });
     }
-    cb.addEventListener('change', () => {
+    if (allowBulk) cb.addEventListener('change', () => {
       const on = cb.checked;
       const commands = [];
       for (const s of syncers) {
@@ -1576,7 +1631,32 @@ function buildPanel(regions, tracts, { initialize = !panelInitialized } = {}) {
   }
   hemisphereRoot.appendChild(hrow);
 
-  streamSection('Structures', regions, regionHemi, applyRegionMesh, 'region');
+  sec('Structures');
+  const searchLabel = document.createElement('label'); searchLabel.className = 'region-search';
+  const searchText = document.createElement('span'); searchText.textContent = 'Search Jülich regions';
+  const searchInput = document.createElement('input'); searchInput.type = 'search'; searchInput.placeholder = 'Name, atlas ID, or hierarchy';
+  searchInput.autocomplete = 'off';
+  const searchStatus = document.createElement('span'); searchStatus.className = 'region-search-status'; searchStatus.setAttribute('aria-live', 'polite');
+  const regionGroups = document.createElement('div'); regionGroups.className = 'region-catalog-groups';
+  searchLabel.append(searchText, searchInput); root.append(searchLabel, searchStatus, regionGroups);
+  const streamLabels = Object.fromEntries(STREAM_ORDER);
+  const renderRegionGroups = () => {
+    const groups = createRegionCatalogGroups(regions, streamLabels, searchInput.value);
+    regionGroups.replaceChildren(...groups.map((group) => streamBlock(
+      group.id,
+      group.kind === 'atlas-available' ? `Optional atlas · ${group.label}` : group.label,
+      group.regions,
+      regionHemi,
+      applyRegionMesh,
+      'region',
+      group.kind === 'lesson-current',
+    )));
+    const matchCount = groups.reduce((sum, group) => sum + group.regions.length, 0);
+    searchStatus.textContent = `${matchCount} region${matchCount === 1 ? '' : 's'}`;
+    if (explorePanelModel) syncPanelControls(explorePanelModel);
+  };
+  searchInput.addEventListener('input', renderRegionGroups);
+  renderRegionGroups();
   if (tracts && tracts.length) streamSection('White-matter tracts', tracts, tractHemi, applyTractMesh, 'tract');
 
   const leafSec = (title, leaves) => { sec(title); for (const lf of leaves) { const lr = leafRow(lf.id, lf.label, { color: lf.color, dim: lf.dim }); lr.cb.addEventListener('change', () => {
@@ -1609,6 +1689,7 @@ function syncPanelControls(model) {
       .map((row) => model.entities[row.dataset.entityId])
       .filter(Boolean);
     const checkbox = group.querySelector('.lyr-group input[type="checkbox"]');
+    if (!checkbox) continue;
     const allOn = states.length > 0 && states.every(({ L, R }) => L && R);
     const allOff = states.every(({ L, R }) => !L && !R);
     checkbox.checked = allOn;

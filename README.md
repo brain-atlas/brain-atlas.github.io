@@ -108,8 +108,10 @@ scientific traceability inventory below.
 ### Loading and mobile limits
 
 No-WebGL sessions load neither Three.js nor anatomical geometry. After the WebGL gate,
-Atlas Home requests the complete authored dataset. A direct checked lesson loads only
-the region meshes and independently packaged fibre layers in its active view; each
+Atlas Home requests the complete authored default: the established 45 bilateral Jülich
+region pairs plus fibre layers. Another 112 bilateral Jülich regions are indexed but hidden;
+their OBJ pairs are requested only when explicitly enabled. A direct checked lesson loads
+only the region meshes and independently packaged fibre layers in its active view; each
 deferred asset loads at most once through the canonical visibility path. A checked 1.4 kB
 projection supplies association names, grouping, colors, and point counts for readiness
 and the Viewer panel. The unchanged `tracts.json` geometry and activity metadata load
@@ -404,8 +406,15 @@ bounded stacked panel. Viewer actions, filters,
 ranges, label-backed checkboxes, panel close actions, the local-file picker, and
 standalone brand/skip/footer navigation links expose at least 44×44 CSS-pixel effective
 targets. Inline scientific citations remain ordinary text links within prose.
-Structure disclosures, focus, and scroll remain stable while L/R filters change. Every structure row names its L/R
-controls in context and provides a keyboard-operable combined-hemisphere toggle.
+Structure disclosures, focus, and scroll remain stable while L/R filters change. **Search
+Jülich regions** finds all 157 source regions by name, atlas ID, or licensed hierarchy path.
+The established 45 remain grouped by teaching stream and enabled by default; 112 optional
+atlas regions are grouped by source hierarchy, start hidden, and have no bulk-enable control.
+Every structure row names its L/R controls in context and provides a keyboard-operable
+combined-hemisphere toggle. Failed hemisphere loads expose keyboard-accessible retry
+controls even in guided lessons. Loaded meshes stay in memory after hiding; reload
+reclaims them. Prefer a few optional regions at once on constrained devices; physical
+phone GPU limits remain unverified. See [performance measurements](docs/PERFORMANCE.md).
 Selecting no visualizations is a
 valid, labelled state, and any layer can be re-enabled without reloading. Counts and
 known/unknown/ambiguous assignment quality update in an accessible status summary.
@@ -582,9 +591,12 @@ Principal sources:
   contours re-tracked on the same HCP-1065 FIB from a 2009c TemplateFlow-derived
   superficial-WM seed with matched qform/sform world matrices, filtered by
   cortical-ribbon endpoints, deterministically sampled, and resampled.
-- Region shells (`public/data/regions/*.obj`): adapted from the
-  **Jülich-Brain v3.0.3** maximum probability map by extracting regions and
-  converting volumetric labels to simplified surface meshes.
+- Region shells (`public/data/regions/*.obj`): 314 bilateral meshes adapted from all
+  157 base regions in the **Jülich-Brain v3.0.3** maximum probability map. The checked
+  `public/data/julich_regions.json` binds source XML identities, bilateral labels, six
+  GapMaps, and licensed hierarchy paths; six identities absent from that hierarchy stay
+  explicitly unresolved. Legacy `public/data/regions.json` retains the original 45-region
+  teaching/default projection for endpoint-artifact compatibility.
 - Fibre endpoint classes (`public/data/fibre_endpoints.json`): deterministically
   generated from the same exact Jülich MPM plus the checked association/SWM order and
   preset catalog. The source NIfTI is hash-verified during offline generation and is

@@ -160,6 +160,40 @@
       "coordinateFrame": "anatomy"
     },
     {
+      "id": "julich-terminology-xml",
+      "filename": "JulichBrainAtlas_3.0_areas_MPM_b_N10_nlin2ICBM152asym2009c_public_11035603b4744231e17e87fd8ebcaf1a.xml",
+      "url": "https://data-proxy.ebrains.eu/api/v1/public/buckets/d-d69b70e2-3002-4eaf-9c61-9c56f019bbc8/maximum_probability_maps_MPMs_157areas/JulichBrainAtlas_3.0_areas_MPM_b_N10_nlin2ICBM152asym2009c_public_11035603b4744231e17e87fd8ebcaf1a.xml",
+      "bytes": 20165,
+      "sha256": "b6d153f3dc47f17d26fe0c3065b65ff949640821392804a2bcc375ed53f735a4",
+      "dataset": "Jülich-Brain v3.0.3 MPM terminology",
+      "version": "3.0.3",
+      "terms": {
+        "id": "CC BY-NC-SA 4.0",
+        "url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+      },
+      "verifiedOn": "2026-09-06",
+      "acceptanceRequired": false,
+      "redistribution": "adapted compact terminology retained with attribution and ShareAlike",
+      "coordinateFrame": "nonspatial terminology for anatomy"
+    },
+    {
+      "id": "julich-hierarchy",
+      "filename": "JulichBrainAtlas_3.0_157areas_terminology.json",
+      "url": "https://data-proxy.ebrains.eu/api/v1/public/buckets/d-d69b70e2-3002-4eaf-9c61-9c56f019bbc8/JulichBrainAtlas_3.0_157areas_terminology.json",
+      "bytes": 30925,
+      "sha256": "5815cc0595f8f226814c7023ab811c022db60f4706da5a0a4b0b381192f1ed02",
+      "dataset": "Jülich-Brain v3.0 licensed terminology hierarchy",
+      "version": "3.0.3",
+      "terms": {
+        "id": "CC BY-NC-SA 4.0",
+        "url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+      },
+      "verifiedOn": "2026-09-06",
+      "acceptanceRequired": false,
+      "redistribution": "adapted compact hierarchy paths retained with attribution and ShareAlike",
+      "coordinateFrame": "nonspatial terminology for anatomy"
+    },
+    {
       "id": "julich-v1-left",
       "filename": "Area-hOc1_pmap_l_N10_nlin2ICBM152asym2009c_4.2_public_258e8c1d846f92be76922b20287344ae.nii.gz",
       "url": "https://raw.githubusercontent.com/canlab/Neuroimaging_Pattern_Masks/master/Atlases_and_parcellations/2020_JulichBrain_v3.0.3/probabilistic_maps_pmaps_157areas/Area-hOc1/Area-hOc1_pmap_l_N10_nlin2ICBM152asym2009c_4.2_public_258e8c1d846f92be76922b20287344ae.nii.gz",
@@ -378,7 +412,9 @@
     {
       "id": "regions",
       "sourceIds": [
-        "julich-mpm"
+        "julich-mpm",
+        "julich-terminology-xml",
+        "julich-hierarchy"
       ],
       "parameters": {
         "pad": 2,
@@ -387,6 +423,14 @@
         "maxFaces": 6000,
         "simplifierAgg": 7.0,
         "rightLabelOffset": 1000,
+        "unresolvedAtlasIds": {
+          "138": "AcbM",
+          "139": "FuCd",
+          "140": "FuP",
+          "141": "AcbL",
+          "142": "VP",
+          "145": "STN"
+        },
         "streamOrder": [
           "subcortical",
           "early",
@@ -1187,11 +1231,19 @@
       ]
     },
     {
+      "id": "julich-region-catalog",
+      "path": "public/data/julich_regions.json",
+      "bytes": 136981,
+      "sha256": "954bb2c7a97e0dc21f54f7956b29d13e7071dc0dfca8d11f1367c27e2f442745",
+      "pipelineId": "regions",
+      "autoReplacePublicAsset": false
+    },
+    {
       "id": "region-mesh-tree",
       "path": "public/data/regions",
-      "bytes": 11648359,
-      "fileCount": 90,
-      "sha256": "c3aadb2f71f7c0b94065cf70656f34894b380c908a3008245e7d948486c97dc7",
+      "bytes": 29198023,
+      "fileCount": 314,
+      "sha256": "9e8236de81ff2e55c7577e5f84102141f5a9c07139ef488e7572429d91abda5e",
       "pipelineId": "regions",
       "autoReplacePublicAsset": false
     },
@@ -1307,11 +1359,13 @@
       "notLegalAdvice": true
     },
     {
-      "outputId": "region-mesh-tree",
+      "outputId": "julich-region-catalog",
       "sourceIds": [
-        "julich-mpm"
+        "julich-mpm",
+        "julich-terminology-xml",
+        "julich-hierarchy"
       ],
-      "determination": "adapted data permitted for noncommercial use under CC BY-NC-SA 4.0",
+      "determination": "adapted data and terminology permitted for noncommercial use under CC BY-NC-SA 4.0",
       "blocking": false,
       "obligations": [
         "attribution",
@@ -1324,7 +1378,30 @@
         "DATA_LICENSES.md#Jülich-Brain-region-surfaces"
       ],
       "reviewer": "Brain Atlas provenance audit",
-      "reviewedOn": "2026-07-22",
+      "reviewedOn": "2026-09-06",
+      "notLegalAdvice": true
+    },
+    {
+      "outputId": "region-mesh-tree",
+      "sourceIds": [
+        "julich-mpm",
+        "julich-terminology-xml",
+        "julich-hierarchy"
+      ],
+      "determination": "adapted data and source-derived filenames permitted for noncommercial use under CC BY-NC-SA 4.0",
+      "blocking": false,
+      "obligations": [
+        "attribution",
+        "identify modifications",
+        "noncommercial use",
+        "ShareAlike"
+      ],
+      "evidence": [
+        "https://search.kg.ebrains.eu/instances/d69b70e2-3002-4eaf-9c61-9c56f019bbc8",
+        "DATA_LICENSES.md#Jülich-Brain-region-surfaces"
+      ],
+      "reviewer": "Brain Atlas provenance audit",
+      "reviewedOn": "2026-09-06",
       "notLegalAdvice": true
     },
     {
