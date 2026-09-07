@@ -109,3 +109,12 @@ Inspect each individually. Do not overwrite original evaluation outputs. Two nat
 runs must be byte-identical. Record native parsing as resolved but keep any geometric,
 coverage, rights or anatomical-domain adoption gaps open; reading MINC2 is not validation
 of all anatomy.
+
+## Next work selected by owner
+
+Decision `brain-atlas-bs4u` requires validated offline symmetric-to-asymmetric
+conversion before anatomical domain assignment. Future design belongs to
+`brain-atlas-yum.14.9` and its [draft decision brief](brain-atlas-yum.14.9-cerebra-conversion-design-plan.md),
+not this completed diagnostic method. No registration execution or coarse common-RAS
+adoption was approved. Keep `.6` partial until accepted design and a separately
+approved conversion implementation supply the missing validation evidence.

@@ -8,6 +8,12 @@ Numerical policy: [frozen design-plan](../../plans/brain-atlas-yum.14.6-domain-a
 Independent [reviews](review.md): numerical/native-parser PASS, full acceptance NOT MET.
 Native-template supplement below resolves the earlier missing-parser blocker.
 
+**Next direction selected by owner:** `brain-atlas-bs4u` requires validated offline
+symmetric-to-asymmetric conversion before domain assignment. Follow-up design is
+`brain-atlas-yum.14.9`, with [draft decision brief](../../plans/brain-atlas-yum.14.9-cerebra-conversion-design-plan.md).
+No coarse common-RAS adoption, registration execution or acceptance relaxation was
+approved. Full `.6` stays open pending design and separately approved implementation.
+
 ## Results and decision
 
 Retain CerebrA as **independent source-labelled corroboration**, not an anatomical
