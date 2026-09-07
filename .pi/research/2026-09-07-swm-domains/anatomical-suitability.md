@@ -1,7 +1,7 @@
 # Carpet anatomical suitability — initial empirical checkpoint
 
 - Work: `brain-atlas-yum.14.3`; approval: `brain-atlas-n401`.
-- Date: 2026-09-07. **Partial audit; no SWM classification or public replacement.**
+- Date: 2026-09-07. **Initial partial checkpoint, retained as historical evidence.** The subsequent [full source-labelled SWM audit](audit-results.md) completes displayed-point accounting/sensitivity and curation review. No public replacement; the limitations below remain operative.
 - Evidence basis: independently hash-checked carpet and T1, matching NIfTI forms,
   23 fixed slices across three planes, whole-volume compartment diagnostics,
   parent image inspection and independent read-only peer review.

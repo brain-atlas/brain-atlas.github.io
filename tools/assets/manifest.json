@@ -300,6 +300,25 @@
       "acceptanceRequired": true,
       "redistribution": "FIB not redistributed; derived fibres remain under HCP terms",
       "coordinateFrame": "orSwm"
+    },
+    {
+      "id": "templateflow-carpet",
+      "filename": "tpl-MNI152NLin2009cAsym_res-01_desc-carpet_dseg.nii.gz",
+      "url": "https://osf.io/download/gwndz/",
+      "bytes": 451304,
+      "sha256": "52eded597985fee7806699dfd276d32b1d53293dff04326773e4fe84864752c7",
+      "dataset": "TemplateFlow carpet coarse screening compartments",
+      "version": "15d7c02160f79f5218d2545b4febebeecc11531d",
+      "terms": {
+        "id": "MNI repository notice; unresolved upstream segmentation rights",
+        "url": "https://raw.githubusercontent.com/templateflow/tpl-MNI152NLin2009cAsym/15d7c02160f79f5218d2545b4febebeecc11531d/LICENSE",
+        "scope": "Local screening audit only under brain-atlas-n401; no source redistribution or shipped classifications; retain copyright notice."
+      },
+      "verifiedOn": "2026-09-07",
+      "acceptanceRequired": true,
+      "redistribution": "not authorized; local audit only",
+      "coordinateFrame": "anatomy",
+      "construction": "Historical candidate residual-mask generator unbound to selected bytes; source label255 remains Cerebellum and Midbrain, not ground truth."
     }
   ],
   "intermediates": [
@@ -1205,6 +1224,53 @@
         "templateflow-wm",
         "templateflow-gm"
       ]
+    },
+    {
+      "id": "swm-domains",
+      "sourceIds": [
+        "templateflow-carpet"
+      ],
+      "parameters": {
+        "methodVersion": "swm-domain-screen-v1",
+        "approval": "brain-atlas-n401",
+        "scope": "private-source-compartment-screening-only",
+        "shippedClassifications": false,
+        "repositoryInputs": [
+          {
+            "path": "public/data/fibre_endpoints.json",
+            "bytes": 476050,
+            "sha256": "b1c358023ab239dbf574f9de68cf5d1e018e08bb6d827b62779297b6642caa26"
+          },
+          {
+            "path": "public/data/fibre_filter_presets.json",
+            "bytes": 3472,
+            "sha256": "ca360a16c8c2321294a8c596fd78d9f0fdae80d160f7fcdaf95ac46e550c36a5"
+          },
+          {
+            "path": "public/data/tracts.json",
+            "bytes": 2425216,
+            "sha256": "568d8848a6dfe4cb859d9c7ec8e572a90cf0d71d0b7c741c4a1e1e2e4471b213"
+          },
+          {
+            "path": "public/data/swm_fibres.json",
+            "bytes": 2758578,
+            "sha256": "81529a410c9053731416124e346dce21e85d96c85fb8b3bad151735a4b1f81fb"
+          }
+        ],
+        "baseline": "nearest-even",
+        "alternate": "floor(v+0.5)",
+        "roundingCellMm": 0.05,
+        "gridOffsetsVoxels": [
+          -0.5,
+          0,
+          0.5
+        ],
+        "interiorDistanceMm": 2.0,
+        "fibreCount": 15000,
+        "pointsPerFibre": 8,
+        "sourceIndexLineage": "not available in this audit; separate brain-atlas-yum.14.7"
+      },
+      "outputs": "isolated swm-domain-records.json and swm-domain-summary.json; never public assets"
     }
   ],
   "outputs": [

@@ -590,7 +590,12 @@ Principal sources:
 - Superficial white matter (`public/data/swm_fibres.json`): short bilateral
   contours re-tracked on the same HCP-1065 FIB from a 2009c TemplateFlow-derived
   superficial-WM seed with matched qform/sform world matrices, filtered by
-  cortical-ribbon endpoints, deterministically sampled, and resampled.
+  GM-ribbon endpoints, deterministically sampled, and resampled. The seed/ribbon
+  used whole-volume GM/WM maps, not a cerebral-only exclusion. A pinned offline
+  coarse-compartment audit found 3,447 of 15,000 contours touching the combined
+  source “Cerebellum and Midbrain” compartment; this is screening evidence, not
+  certified anatomy. Public geometry and endpoint filters remain unchanged.
+  See [audit scope and limits](docs/TRACT_SPACE_PROVENANCE.md#swm-source-compartment-screening).
 - Region shells (`public/data/regions/*.obj`): 314 bilateral meshes adapted from all
   157 base regions in the **Jülich-Brain v3.0.3** maximum probability map. The checked
   `public/data/julich_regions.json` binds source XML identities, bilateral labels, six

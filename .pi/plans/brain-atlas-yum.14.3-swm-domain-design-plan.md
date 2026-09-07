@@ -1,11 +1,11 @@
 # SWM anatomical-domain audit design-plan
 
 - **Work:** `brain-atlas-yum.14.3`.
-- **Status:** **Approved bounded screening audit; initial empirical source diagnostic implemented and reviewed. Full SWM audit and sensitivity not implemented.**
+- **Status:** **Implemented bounded source-labelled audit; design retained for traceability. Full displayed-point accounting, sensitivity and curation review are recorded below; replacement is not authorized. Beads owns work/closeout status.**
 - **Approval:** `brain-atlas-m195`, amended by `brain-atlas-n401` after explicit human agreement in the current conversation, 2026-09-07.
 - **Date:** 2026-09-07.
 - **Branch:** current `main`; optional approved branch creation was not used. No merge or integration authority.
-- **Evidence:** [source-gate record](../research/2026-09-07-swm-domains/source-gate.md); [initial anatomical suitability and specific unsuitability register](../research/2026-09-07-swm-domains/anatomical-suitability.md). The latter supports provisional source-named screening only, not anatomical ground truth or replacement.
+- **Evidence:** [source-gate record](../research/2026-09-07-swm-domains/source-gate.md); [initial anatomical suitability and specific unsuitability register](../research/2026-09-07-swm-domains/anatomical-suitability.md). The initial register is supplemented by [full audit results and curation recommendation](../research/2026-09-07-swm-domains/audit-results.md). Evidence supports source-named screening only, not anatomical ground truth or replacement.
 - **Source decision:** `brain-atlas-5czc` initially required targeted provenance research. Follow-up recovered a historical candidate generator and provider-declared target hash, but no exact generation binding. **`brain-atlas-n401` supersedes the complete construction-binding stop condition**, accepting the published map as a coarse screening reference subject to empirical checks and explicit uncertainty. The historical gap remains documented, not resolved.
 - **Prerequisite:** [source-bound fibre-accounting research](brain-atlas-yum.14.1-siibra-fibre-accounting.md). This child does not supersede its wider accounting proposal or current `tools/assets/SPEC.md`.
 
@@ -25,7 +25,16 @@ The human accepted small disclosed provenance gaps for this educational tool **p
 
 Published repository terms support the approved local-audit scope with notice retention and disclosed upstream rights gaps; this is not a third-party rights waiver or authority to redistribute the source map or ship derived classifications. Existing one-frame, scientific-honesty, hash-checking and public-replacement invariants remain unchanged. A reviewed curation recommendation may retain limitations, but any cerebral-only replacement needs independent anatomical corroboration and separate approval.
 
-## Planned implementation sequence
+## Approved implementation sequence (retained design)
+
+Execution: `audit swm-domains` now exists in `tools/assets/`. Exact output hashes,
+counts, sensitivity, reviewed recommendation and command are in the audit record.
+Material scope clarification: isolated audit files are not public manifest outputs;
+existing public-output rights gates are unchanged. Optional exact recovered-index
+comparison lacks the local pinned GM parent and is separately tracked as
+`brain-atlas-yum.14.7`; independent corroboration and public naming belong to
+`.14.6` and `.14.8`. The private initial suitability probe remains historical
+source evidence, not an alternative production classifier.
 
 ### 1. Resolve source suitability
 
@@ -33,7 +42,7 @@ Verify primary source records and retain exact version, bytes, hashes, terms, la
 
 ### 2. Add the smallest offline audit
 
-Under the amended source gate, add an audit module under `tools/assets/`, thin CLI dispatch in `tools/assets/cli.py`, manifest/schema changes only as required, and focused tests. Exact command spelling remains to be chosen; no nonexistent command is claimed here. Every output must state the screening assumption, construction/rights gaps, mixed-template comparison and absence of public replacement.
+Under the amended source gate, add an audit module under `tools/assets/`, thin CLI dispatch in `tools/assets/cli.py`, manifest/schema changes only as required, and focused tests. The implemented command is `audit swm-domains`, with explicit local-screening terms acknowledgment. Every output must state the screening assumption, construction/rights gaps, mixed-template comparison and absence of public replacement.
 
 Freeze numerical rules in `tools/assets/SPEC.md` and tests before production counts:
 
@@ -61,7 +70,7 @@ uv run --python 3.13.1 --offline --with-requirements tools/assets/requirements.l
 git diff --check
 ```
 
-The focused audit/reproduction commands must be recorded once their approved implementation interface exists. Build/browser verification is required for any later accepted user-visible behavior, not evidence supplied by this offline research checkpoint.
+Focused tests are `node --test test/swm-domain-assets.test.js`; exact audit/reproduction commands and evidence are recorded in the linked audit results. Build/browser verification is required for any later accepted user-visible behavior, not evidence supplied by this offline research checkpoint.
 
 ### 4. Documentation and closeout
 

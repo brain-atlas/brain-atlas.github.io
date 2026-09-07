@@ -313,6 +313,40 @@ World-coordinate distance from each actual rounded endpoint to the undilated
 maximum 1.631 mm. This ribbon criterion does not establish histological U-fibre
 identity or named cortical endpoints.
 
+### SWM source-compartment screening
+
+The original seed/ribbon used whole-volume GM/WM maps without a cerebral-only
+exclusion. Later `audit swm-domains` (2026-09-07) samples all 120,000 stored points
+and 30,000 geometric endpoints against the pinned TemplateFlow 2009c carpet map:
+451,304 bytes, SHA-256
+`52eded597985fee7806699dfd276d32b1d53293dff04326773e4fe84864752c7`, matching
+code-4 qform/sform, 193×229×193 at 1 mm, origin [-96,-132,-78]. Its source identity,
+local-only terms and construction gaps are recorded in `tools/assets/manifest.json`
+and [DATA_LICENSES](../DATA_LICENSES.md#local-only-anatomical-screening-reference).
+
+Nearest-even lookup reproduces **3,391 contours with a source255 endpoint**
+(6,472 endpoint samples), **3,447 with any source255 sample**, and **4,253** with
+any source255, source5, subcortical-gray or lateral-ventricle sample. Label255 means
+combined **Cerebellum and Midbrain**; these are source-compartment encounters,
+not certified anatomical contamination. The map's cortical labels are not a
+precise tissue ribbon, its background includes internal locations, and lateral
+ventricles do not exhaust fluid spaces. No template warp was applied.
+
+For source255, 3,399 contours have a hit stable across all closed ±0.05 mm
+rounding-cell possibilities and all 27 ±0.5-voxel probes, with that baseline voxel
+centre at least 2 mm from an outside-compartment centre; 21 have a stable hit but
+no such interior hit, and 27 have only boundary-sensitive hits. The broader union
+has 3,841 / 151 / 261 respectively. These grid diagnostics are not measured
+registration uncertainty or anatomical confidence. Every count refers to eight
+stored samples, not the continuous contour. Full methods/partitions and reviewed
+curation consequences are in the [audit record](../.pi/research/2026-09-07-swm-domains/audit-results.md).
+
+Recommendation: retain current geometry and legacy filters; keep source-named
+partitions private for targeted independent corroboration. The audit changes no
+public classification, presets or activity. `brain-atlas-yum.14.6` owns independent
+domain evidence, `.14.7` exact recovered-index comparison, `.14.8` public naming
+review, and `.13` source-bound retracking. Any replacement remains separately gated.
+
 ### Categorical endpoint assignment — `fibre_endpoints.json`
 
 The checked endpoint builder consumes the exact 335,280-byte Jülich-Brain v3.0.3

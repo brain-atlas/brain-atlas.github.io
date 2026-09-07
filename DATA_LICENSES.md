@@ -165,7 +165,28 @@ unrounded endpoints in a dilated cortical ribbon, deterministically sampled and
 resampled contours, and stored original and local-neighbour mean length measures
 used by the activity texture. These are real bilateral data and are not mirrored.
 Neither FIB-derived asset underwent a 2009a→2009c template warp; its decoded
-RAS+ coordinate frame was retained through resampling.
+RAS+ coordinate frame was retained through resampling. The SWM GM/WM seed and
+ribbon used whole-volume maps, not a cerebral-only exclusion; ribbon retention is
+not certification of superficial cerebral white matter.
+
+### Local-only anatomical screening reference
+
+The offline `audit swm-domains` command additionally uses the TemplateFlow carpet
+map at repository revision `15d7c02160f79f5218d2545b4febebeecc11531d`,
+[OSF record](https://api.osf.io/v2/files/5bc6475753cec40019ade131/), 451,304 bytes,
+SHA-256 `52eded597985fee7806699dfd276d32b1d53293dff04326773e4fe84864752c7`.
+It performs categorical lookup on existing displayed points only. The
+[published repository notice](https://raw.githubusercontent.com/templateflow/tpl-MNI152NLin2009cAsym/15d7c02160f79f5218d2545b4febebeecc11531d/LICENSE)
+is retained with local inputs. Exact upstream segmentation construction and rights
+remain unresolved; approval `brain-atlas-n401` permits bounded local screening,
+not a third-party rights waiver. Neither the carpet volume nor its per-contour
+classifications/overlays are distributed. This source does not generate or replace
+any shipped geometry, and the public asset terms remain unchanged. Source label
+255 remains combined Cerebellum and Midbrain, not anatomical ground truth.
+[Methods and limitations](docs/TRACT_SPACE_PROVENANCE.md#swm-source-compartment-screening)
+distinguish descriptive counts from validated tissue membership.
+
+### Recovered FIB-derived asset reproducibility
 
 Checked offline preparation and post-processing now reproduce the current OR and
 SWM files byte-for-byte from exact, non-redistributed recovered TrackVis

@@ -38,6 +38,7 @@ uv run --python 3.13.1 --offline \
 
 | Command | Contract |
 |---|---|
+| `audit swm-domains --inputs <dir> --repo <path> --output <empty-dir>` | Private source-compartment audit of all displayed SWM points; requires `--accept-local-screening-terms`. Hash/environment gates, no public output or source redistribution. |
 | `check-manifest` | Validate schema/semantics/references/rights and the lock identity without network access. |
 | `verify-current --repo <path>` | Verify exact current files, region tree, metadata, geometry payloads, and runtime mirror disclosure without regeneration. |
 | `build cortex` | Generate the cortical GLB from the exact TemplateFlow brain mask. |
@@ -72,6 +73,24 @@ All commands fail closed with a nonzero status. JSON reports contain no raw thir
 | INV-12 | Runtime remains one proper transform. OR JSON contains 220 left fibres; `src/main.js` supplies the disclosed right `x → -x` mirror without changing fibre/point order. | Current-output/runtime structural tests. |
 | INV-13 | Endpoint classification uses the original Jülich v3.0.3 categorical MPM, exact checked displayed fibre order, and one frozen 2.0 mm nearest-nonzero/0.5 mm distinct-label ambiguity rule in RAS world millimetres. It emits only stable project region IDs or explicit ambiguous/unknown status; stored endpoint A/B is unordered geometry, probability is unavailable, and no streamline polarity, termination, connection strength, shared voxel grid, or template warp is inferred. | Synthetic classifier tests, exact generation, artifact/current-output validation, preset-count drift tests, and scientific review. |
 | INV-14 | Complete region generation parses the licensed v3.0 XML identity list and hierarchy exactly: 157 base identities, 314 real L/R meshes, six GapMaps, 151 hierarchy-matched identities across 155 path occurrences, and six explicitly unresolved identities. Duplicate paths stay duplicated; no configuration-only edge is copied. The 45-region legacy manifest remains byte-identical. | Parser/builder fixtures, exact regeneration, catalog tests, and current-output hashes. |
+
+### Private SWM screening boundary
+
+**INV-15 / FAIL-13:** `audit swm-domains` consumes manifest-pinned carpet bytes and
+four compatibility-pinned repository files, validates categorical labels and exact
+193×229×193 mm/code-4 forms, and accounts for every stored point/contour without
+changing geometry, legacy endpoint tuples or presets. Nonfinite points, unknown
+source labels, hash/form drift or unsafe outputs fail closed. The test is
+`test/swm-domain-assets.test.js`.
+
+This command emits private audit reports, not entries in the public `outputs` or
+public-output rights inventory. Approval `brain-atlas-n401` permits published
+repository terms for this local screening scope only; the explicit terms flag
+acknowledges that restriction, not a rights waiver. Source redistribution and
+shipped classifications remain unapproved. INV-2/FAIL-7 public derivative-rights
+gates remain unchanged. The source's exact construction and upstream rights gaps
+are retained in manifest/report metadata and the linked
+[anatomical suitability register](../../.pi/research/2026-09-07-swm-domains/anatomical-suitability.md).
 
 ## Equality contracts
 
@@ -141,6 +160,61 @@ Literal fixtures cover empty, regular file, file symlink, directory symlink, non
 Fixtures cover non-ASCII/escaping, negative zero, integer-like floats, scientific notation, insertion order, newline policy, NIfTI header/container bytes, and a tiny GLB.
 
 ## Numerical contracts
+
+### SWM source-compartment audit (v1)
+
+Freeze these rules before real counts; they describe source labels, not validated
+anatomical membership. No template warp or registration-error estimate is supplied.
+
+- Consume all 15,000 contours × 8 stored points, with first/last giving 30,000
+  unordered endpoints. Source label 0 is background; -1 is an outside-grid sentinel.
+  Unknown labels are rejected, not silently mapped. `unresolved` stays an explicit
+  zero-capable outcome; anatomical interpretation of background remains unresolved.
+- Pool source labels: 1/2 cerebral WM; 3/4 lateral ventricles; 5 source brain-stem;
+  34–37,39–41,45–51 subcortical gray including hippocampus/amygdala; 101–196 cortical
+  source labels (not a tissue ribbon); 255 combined Cerebellum and Midbrain.
+- Apply the inverse pinned RAS affine once offline for voxel lookup. Baseline
+  `rint` is nearest-even; alternate is `floor(v+0.5)`, including negatives. Test
+  bounds after rounding and before integer conversion. No nearest-nonzero fallback.
+- Unordered endpoint pairs, strict majority (at least 5/8)/no-majority, and
+  all-eight-same/mixed each partition contours. Point and endpoint totals partition
+  120,000 and 30,000. Any-point domain counts overlap, each denominator 15,000.
+  “All” and “majority” refer only to eight samples, never full continuous paths or
+  length fractions.
+- Hemisphere is sign of float64 mean displayed x, zero R; require exact agreement
+  with legacy artifact. Length bins use shipped `len`: [8,15),[15,25),[25,40),[40,55].
+  Spatial cells are `floor(mean(displayed xyz)/20)` in RAS mm, including negatives.
+  Legacy quality uses existing status classes with ambiguous > unknown > known.
+  Each stratum records the same partitions and preserves baseline strata during probes.
+- Rounding bounds are the closed component-wise ±0.05 mm box. The pinned grid has
+  integer origin and unit axis scales and displayed coordinates are decimal tenths;
+  express bounds in integer twentieths, determine reachable nearest-even integer
+  intervals per axis, and enumerate their Cartesian product. This includes all
+  reachable cells, not an unsupported corner-only heuristic.
+- Grid probes are all 27 offsets in {-0.5,0,+0.5}³, with each offset uniformly
+  applied to every point in a contour. Retain per-point domain possibility bitmasks,
+  source-label/domain change counts, and per-probe summaries. They are sensitivity
+  probes, not measured localization/registration uncertainty. Source-label changes
+  within the same pooled domain remain distinguishable from domain changes.
+- For source255 and the broader union (ventricle, source5, subcortical gray, source255),
+  a stable hit has at least one baseline target point whose full rounding/grid
+  domain options remain inside that target. A stable-interior hit additionally has
+  that point's baseline voxel centre at least 2 mm from an outside-target voxel
+  centre (Euclidean EDT on the target mask with one outside padding layer).
+  Partition each target population into no-baseline-hit, stable-interior-hit,
+  probe-stable-hit-only, boundary-sensitive-hit-only. Stability is not anatomical
+  accuracy. Distances are not voxel-face distances. Compare unrounded float64
+  distances; no threshold is adjusted after seeing counts.
+- Records preserve baseline raw source labels, endpoint labels, domain IDs,
+  rounding/grid option masks, strata and target statuses by original contour index.
+  Compact deterministic JSON uses sorted keys, UTF-8, no NaN, separators `(',',':')`
+  and one trailing newline. Summaries carry source/method/module/environment hashes,
+  explicit assumptions/rights and lineage limits. Compare complete output bytes on
+  rerun; public assets remain compatibility-pinned.
+- Original retention was whole-volume unrounded GM>0.40 plus one-voxel dilation,
+  then inclusive 8–55 mm and seeded sampling. It is not this later categorical
+  lookup. Exact retained-index reconstruction is not approximated; missing pinned
+  GM input is tracked separately in `brain-atlas-yum.14.7`.
 
 ### Shared contour resampling
 
