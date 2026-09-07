@@ -43,6 +43,13 @@ This subsystem does **not** render Markdown, own scrolling, import files, fetch 
 - `public/data/fibre_filter_presets.json` — strict authored endpoint-query presets loaded before the WebGL gate; generated tuple/count evidence remains in renderer data `fibre_endpoints.json`.
 - `public/data/fidelity.json` — curated geometry/activity disclosure records.
 
+The legacy `layer.swm` / `fidelity.superficial-white-matter` IDs present as
+**Short-range tractography contours** (compact: **Short-range contours**).
+Whole-volume GM/WM selection is historical provenance, not certification of
+superficial white matter or U-fibre identity. Material fidelity limits disclose
+that coarse source-map screening is not anatomical validation; naming never
+changes canonical bindings, endpoint queries, geometry, or activity (INV-8).
+
 ## Public interface
 
 Import consumer APIs from `src/lesson/index.js`.

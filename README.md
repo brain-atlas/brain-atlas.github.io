@@ -101,9 +101,15 @@ segment is schematic. The cited anatomy inspector separates literature-curated,
 schematic, and displayed-dataset relationships. Association links are only
 undirected, low-confidence endpoint proximity for the checked display sample—not
 terminations, strengths, functions, or input/output direction. A separate categorical
-endpoint filter can subset association and superficial fibres by displayed Jülich labels;
+endpoint filter can subset association and short-range contours by displayed Jülich labels;
 it makes no connectivity or polarity claim. See “What's real vs schematic” and the
 scientific traceability inventory below.
+
+**Short-range tractography contours** (compact control: **Short-range contours**)
+is the public name for the legacy `swm` layer. Historical selection used whole-volume
+GM/WM maps without a cerebral-only exclusion; it does not certify superficial white
+matter or U-fibre identity. Coarse source-map screening is not anatomical validation.
+Model & sources explains these limits; endpoint subsets remain geometric context.
 
 ### Loading and mobile limits
 
@@ -275,11 +281,11 @@ and representation dependencies are recorded separately in
 The optional Draft marker was removed after explicit human review; under v1, absence of
 `status` makes no machine-readable reviewed or published claim. `src/bootstrap.js` parses
 the lesson through the same contract used for local content. An unnumbered topic entry
-adds V2, V3v, V3d, and the 794 superficial contours that touch the shared early-region
+adds V2, V3v, V3d, and the 794 short-range contours that touch the shared early-region
 set before scrolling activates eight instructional scenes. The conclusion exactly
 reprises that opening snapshot and lesion prediction. The LGN scene uses an authored
 oblique view that keeps schematic incoming context, the optic radiation, V1, and 22
-superficial contours with at least one unordered geometric endpoint assigned to LGN in
+short-range contours with at least one unordered geometric endpoint assigned to LGN in
 frame. The optic-radiation, V1, ventral, and dorsal
 scenes use a centered half-shell cortical cut and hide right-hemisphere objects to reduce
 duplicate visual load; directed LGN→V1 motion remains visible on the independently
@@ -287,9 +293,9 @@ derived left contours.
 
 V1 and the three cortical-stream scenes add endpoint-filtered SWM and every named tract
 group with a nonzero match under each scene's endpoint and hemisphere policy. The
-shared-early query selects 445 association and 794 superficial contours bilaterally;
+shared-early query selects 445 association and 794 short-range contours bilaterally;
 the left-only V1, ventral, and dorsal views select 138/259, 381/511, and 559/940
-association/superficial contours. The filter tests unordered geometric endpoint
+association/short-range contours. The filter tests unordered geometric endpoint
 membership against displayed Jülich labels; it does not prove termination or connection
 among highlighted regions. Long-tract impulses still use the disclosed 50/50 direction
 assumption, and SWM keeps zero-mean vibration.
@@ -456,7 +462,7 @@ overall anatomy reads correctly**:
   but illustrative firing model (superposition + thinning, with refractoriness and
   bursts), not recorded spikes. Biological time is dilated for legibility; the common
   travel speed is not a measured or universal conduction velocity.
-- **Undirected activity:** superficial-WM/U-fibre dots follow bounded sinusoids
+- **Undirected activity:** dots on short-range contours follow bounded sinusoids
   around fixed homes on real bilateral contours. Amplitude derives from local
   fibre-length structure, random phase prevents coherent travel, and no endpoint
   clipping biases the contour-parameter mean or assigns a travel direction.
@@ -471,7 +477,7 @@ overall anatomy reads correctly**:
   strength, function, probability, or individual anatomy.
 - **Mirrored:** the right optic radiation is a sagittal mirror of the left until
   independently generated right-side streamlines replace it. Region,
-  association-tract, and superficial-WM geometry are real bilateral data.
+  association-tract, and short-range contour geometry are real bilateral data.
 
 ## Development
 
@@ -587,9 +593,9 @@ Principal sources:
   full geometry until a named tract is visible. `tools/map_tract_regions.py` compares
   their unordered display endpoints with the shipped Jülich shell triangles offline;
   `public/data/tract_region_mapping.json` freezes the descriptive result.
-- Superficial white matter (`public/data/swm_fibres.json`): short bilateral
+- Short-range tractography contours (legacy SWM, `public/data/swm_fibres.json`): short bilateral
   contours re-tracked on the same HCP-1065 FIB from a 2009c TemplateFlow-derived
-  superficial-WM seed with matched qform/sform world matrices, filtered by
+  historically named superficial-WM seed with matched qform/sform world matrices, filtered by
   GM-ribbon endpoints, deterministically sampled, and resampled. The seed/ribbon
   used whole-volume GM/WM maps, not a cerebral-only exclusion. A pinned offline
   coarse-compartment audit found 3,447 of 15,000 contours touching the combined
@@ -638,10 +644,10 @@ or models, which remain under their respective terms.
 ## Project status
 
 The viewer currently renders the MNI cortical shell, real bilateral Jülich region
-meshes, optic-radiation streamlines, association tracts, and superficial
-white-matter fibres. The biologically directed visual pathway retains one-way
+meshes, optic-radiation streamlines, association tracts, and short-range
+tractography contours. The biologically directed visual pathway retains one-way
 travel; every named long association tract uses disclosed stochastic 50/50
-population impulses; superficial U-fibres retain direction-neutral vibration.
+population impulses; short-range contours retain direction-neutral vibration.
 Atlas and lesson scenes can filter association/SWM lines, endpoints, and eligible
 activity through one categorical unordered-endpoint query without adding a transform.
 

@@ -270,13 +270,13 @@
     {
       "id": "layer.swm",
       "entity": "layer.swm",
-      "label": "Superficial white matter",
-      "shortLabel": "Superficial WM",
+      "label": "Short-range tractography contours",
+      "shortLabel": "Short-range contours",
       "renderer": {
         "kind": "layer",
         "id": "swm"
       },
-      "description": "The displayed superficial-white-matter layer is a broad sample of short bilateral tractography contours. The viewer can subset contours by unordered geometric endpoint assignments to selected J\u00fclich maximum-probability labels, but those assignments do not establish named U-fibres, biological terminations, or region-to-region connections.",
+      "description": "A broad sample of short bilateral tractography contours. Historical selection used whole-volume GM/WM maps without a cerebral-only exclusion; it does not certify superficial white matter or U-fibre identity. The viewer can subset contours by unordered geometric endpoint assignments to selected J\u00fclich maximum-probability labels, but those assignments do not establish named U-fibres, biological terminations, or region-to-region connections.",
       "relationships": [],
       "sources": [
         {
@@ -1465,7 +1465,7 @@
     {
       "id": "layer.swm",
       "type": "layer",
-      "label": "Superficial white matter",
+      "label": "Short-range tractography contours",
       "renderer": {
         "kind": "layer",
         "id": "swm"

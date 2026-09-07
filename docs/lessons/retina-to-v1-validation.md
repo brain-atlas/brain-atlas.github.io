@@ -35,20 +35,34 @@ custom queries or audited presets rather than the all-fibre SWM population. Name
 visibility includes every tract group with a nonzero match in Scenes 4–7, subject to each
 scene's hemisphere policy.
 
+### Short-range contour naming review — 2026-09-07
+
+`brain-atlas-yum.14.8`, approved by `brain-atlas-iof0`, replaces public
+“superficial” contour names with **Short-range tractography contours** (compact:
+**Short-range contours**). The historical SWM seed/ribbon used whole-volume GM/WM
+maps without a cerebral-only exclusion. Selection does not certify superficial
+white matter or U-fibre identity. The [source-compartment screening record](../TRACT_SPACE_PROVENANCE.md#swm-source-compartment-screening)
+is evidence for this limitation, not anatomical validation of any contour.
+Lesson endpoint subsets do not independently validate anatomy. Opening and closing
+prose disclose this boundary; Model & sources retains it for every applicable scene.
+Scene snapshots, populations below, activity models, curriculum lifecycle, and
+teaching citations are unchanged. This naming review does not redo the clinical or
+curriculum review or grant publication approval.
+
 ## Section and scene review
 
 | Section | Review conclusion |
 |---|---|
 | Title and introduction | The shorter title states the pathway and cortical scope. The introduction frames vision as staged transformation, elicits a lesion prediction, and states five observable objectives. |
-| Topic entry | The unnumbered entry adds V2, V3v, and V3d to show the shared early cortical route. It displays the 794 superficial contours whose unordered endpoints touch at least one of V1, V2, V3v, or V3d; the 445 matching association contours remain hidden in this overview. Spatial juxtaposition does not prove connectivity. |
+| Topic entry | The unnumbered entry adds V2, V3v, and V3d to show the shared early cortical route. It displays the 794 short-range contours whose unordered endpoints touch at least one of V1, V2, V3v, or V3d; the 445 matching association contours remain hidden in this overview. Spatial juxtaposition does not prove connectivity. |
 | Retina and chiasm | Retinal parallel encoding and hemifield regrouping are both accurate but exceed one ideal scene-sized teaching job. The revised center-surround explanation states how center and surround drive ganglion-cell activity in opposite directions and why uniform illumination partly cancels. A thematic break marks the candidate future split. Expanding the retinal model or adding a dedicated visual remains future work; the nasal-only geometry omission stays explicit. Flow direction remains biological, but cumulative-distance speed and playback scaling remain illustrative. |
-| LGN | Revised prose introduces M, P, and K channels separately, avoids one-channel/one-percept claims, and distinguishes regulated relay from passive transfer. The 3D shell does not resolve layers or channels. The scene adds 22 bilateral superficial contours with at least one unordered endpoint assigned to LGN; it labels them as categorical spatial context, not a measured LGN projection. |
+| LGN | Revised prose introduces M, P, and K channels separately, avoids one-channel/one-percept claims, and distinguishes regulated relay from passive transfer. The 3D shell does not resolve layers or channels. The scene adds 22 bilateral short-range contours with at least one unordered endpoint assigned to LGN; it labels them as categorical spatial context, not a measured LGN projection. |
 | Optic radiation | The revised prose directly connects distinct temporal/parietal routes to visual-field localization and distinguishes inferior-retinal origin from the temporal-lobe course through Meyer's loop. Topographic organization, individual variability, mirrored-source limitations, and illustrative cumulative-distance timing remain aligned. The scene shows only the independently derived left contours with a centered half-shell cortical cutaway. |
-| V1 | Revised prose separates retinotopy, cortical magnification, local feature selectivity, historical animal evidence, and clinical localization. The centered left-only view adds 259 superficial and 138 association contours touching V1; ILF and IFOF are the only nonzero matching named groups. The view supplies anatomy and geometric endpoint context, not layers, columns, cell responses, a functional retinotopy map, termination, or tract polarity. |
-| Extrastriate cortex | The prose rejects a serial chain and describes graded recurrent processing. The scene uses the shared-early custom query over V1, V2, V3v, and V3d, retaining 794 superficial and 445 association contours bilaterally. ILF, IFOF, and VOF are the nonzero matching named groups. Its boundary distinguishes four claims: inspector relationships report only qualified low-confidence unordered endpoint proximity; the scene query reports categorical endpoint membership; association events use a separate 50/50 direction assumption and common illustrative 40 MNI mm/display-second base rate; and SWM amplitude depends partly on fibre-length structure while frequency/phase remain display choices. Neither proximity, categorical assignment, nor simultaneous display demonstrates terminations, connections, strengths, functions, or processing direction. |
-| Ventral stream preview | The shortened prose introduces object-quality and perception biases without expanding into downstream clinical or network detail. The scene names and displays V1, V2, V3v, V4v, LOA, LOp, and FG1–FG4. A left-only cut reduces duplicate visual load; the ventral preset retains 511 superficial and 381 association contours. ILF, IFOF, and VOF are all nonzero matching left named groups. The scene does not assert a connection among shown regions. |
-| Dorsal stream preview | The shortened prose introduces motion, spatial, and vision-for-action biases without expanding into downstream routes. The scene names and displays its V1/V2/V3d, V3A/V6/MT, intraparietal, and superior-parietal query areas. A left-only cut reduces duplicate visual load; the dorsal preset retains 940 superficial and 559 association contours. ILF, IFOF, SLF1–3, VOF, and MdLF are all nonzero matching left named groups. The scene does not assert a connection among shown regions. |
-| Conclusion | The eighth scene exactly reprises the updated opening snapshot, including the shared early-region shells and 794 filtered superficial contours. It returns to the lesion prediction, summarizes the retina→chiasm→LGN→optic-radiation→V1 transformations, then identifies V2 and parts of V3 as shared early cortical stages that contribute to multiple downstream routes rather than a hard two-stream fork. It ends with retrieval and treats later ventral/dorsal biases only as a brief downstream preview. |
+| V1 | Revised prose separates retinotopy, cortical magnification, local feature selectivity, historical animal evidence, and clinical localization. The centered left-only view adds 259 short-range and 138 association contours touching V1; ILF and IFOF are the only nonzero matching named groups. The view supplies anatomy and geometric endpoint context, not layers, columns, cell responses, a functional retinotopy map, termination, or tract polarity. |
+| Extrastriate cortex | The prose rejects a serial chain and describes graded recurrent processing. The scene uses the shared-early custom query over V1, V2, V3v, and V3d, retaining 794 short-range and 445 association contours bilaterally. ILF, IFOF, and VOF are the nonzero matching named groups. Its boundary distinguishes four claims: inspector relationships report only qualified low-confidence unordered endpoint proximity; the scene query reports categorical endpoint membership; association events use a separate 50/50 direction assumption and common illustrative 40 MNI mm/display-second base rate; and SWM amplitude depends partly on fibre-length structure while frequency/phase remain display choices. Neither proximity, categorical assignment, nor simultaneous display demonstrates terminations, connections, strengths, functions, or processing direction. |
+| Ventral stream preview | The shortened prose introduces object-quality and perception biases without expanding into downstream clinical or network detail. The scene names and displays V1, V2, V3v, V4v, LOA, LOp, and FG1–FG4. A left-only cut reduces duplicate visual load; the ventral preset retains 511 short-range and 381 association contours. ILF, IFOF, and VOF are all nonzero matching left named groups. The scene does not assert a connection among shown regions. |
+| Dorsal stream preview | The shortened prose introduces motion, spatial, and vision-for-action biases without expanding into downstream routes. The scene names and displays its V1/V2/V3d, V3A/V6/MT, intraparietal, and superior-parietal query areas. A left-only cut reduces duplicate visual load; the dorsal preset retains 940 short-range and 559 association contours. ILF, IFOF, SLF1–3, VOF, and MdLF are all nonzero matching left named groups. The scene does not assert a connection among shown regions. |
+| Conclusion | The eighth scene exactly reprises the updated opening snapshot, including the shared early-region shells and 794 filtered short-range contours. It returns to the lesion prediction, summarizes the retina→chiasm→LGN→optic-radiation→V1 transformations, then identifies V2 and parts of V3 as shared early cortical stages that contribute to multiple downstream routes rather than a hard two-stream fork. It ends with retrieval and treats later ventral/dorsal biases only as a brief downstream preview. |
 
 ## Teaching-claim evidence
 
@@ -81,16 +95,16 @@ population limits remain part of the supported scope.
   resection, or a source-geometry change.
 - The checked endpoint artifact yields these exact scene populations:
   - the bilateral shared-early query used by the overview, Scene 5, and conclusion
-    matches 445 association and 794 superficial contours (843 known-quality, 127
+    matches 445 association and 794 short-range contours (843 known-quality, 127
     unknown-quality, and 269 ambiguous-quality fibres); association tracts are hidden
     in the overview and conclusion;
-  - the bilateral LGN query matches 0 association and 22 superficial contours (5 known,
+  - the bilateral LGN query matches 0 association and 22 short-range contours (5 known,
     16 unknown, and 1 ambiguous);
-  - the left-only V1 query matches 138 association and 259 superficial contours (271
+  - the left-only V1 query matches 138 association and 259 short-range contours (271
     known, 60 unknown, and 66 ambiguous);
-  - the left-only ventral preset matches 381 association and 511 superficial contours
+  - the left-only ventral preset matches 381 association and 511 short-range contours
     (606 known, 100 unknown, and 186 ambiguous); and
-  - the left-only dorsal preset matches 559 association and 940 superficial contours
+  - the left-only dorsal preset matches 559 association and 940 short-range contours
     (960 known, 246 unknown, and 293 ambiguous).
 - Quality labels summarize both endpoints of each included fibre. A fibre can match
   because one endpoint is assigned to the query set while its other endpoint remains

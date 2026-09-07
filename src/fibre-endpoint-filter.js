@@ -367,7 +367,7 @@ export function formatFibreFilterSummary(result) {
     ? 'left and right'
     : (activeHemispheres[0] ?? 'none');
   return `${selected.total.toLocaleString('en-US')} of ${population.total.toLocaleString('en-US')} fibres match: `
-    + `${selected.association.toLocaleString('en-US')} association and ${selected.swm.toLocaleString('en-US')} superficial. `
+    + `${selected.association.toLocaleString('en-US')} association and ${selected.swm.toLocaleString('en-US')} short-range. `
     + `Active hemispheres: ${hemisphereText}. `
     + `Endpoint assignment quality among matches: ${quality.known.toLocaleString('en-US')} known, `
     + `${quality.unknown.toLocaleString('en-US')} unknown, and ${quality.ambiguous.toLocaleString('en-US')} ambiguous.`;

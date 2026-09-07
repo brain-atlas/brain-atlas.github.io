@@ -58,7 +58,7 @@ test('endpoint presets coherently filter geometry, activity, summaries, and cano
       ],
       setB: [],
     },
-    status: '3,180 of 17,880 fibres match: 1,178 association and 2,002 superficial. Active hemispheres: left and right. Endpoint assignment quality among matches: 1,986 known, 514 unknown, and 680 ambiguous.',
+    status: '3,180 of 17,880 fibres match: 1,178 association and 2,002 short-range. Active hemispheres: left and right. Endpoint assignment quality among matches: 1,986 known, 514 unknown, and 680 ambiguous.',
   });
 
   await page.locator('.hemi-chip input').nth(1).uncheck();

@@ -749,9 +749,9 @@ function updateTractImpulses(dt, playing = st.flow) {
 
 
 // ---------------------------------------------------------------------------
-// Superficial white-matter (SWM) contour texture — the "grain" just under cortex.
-// Short fibres tracked in the superficial-WM shell (HCP-1065 FIB). Their
-// ORIENTATION is real but UNDIRECTED, so we render it honestly as a STATIC
+// Short-range tractography contour texture (legacy SWM IDs).
+// Whole-volume GM/WM selection does not certify superficial WM or U-fibre identity.
+// Data-derived ORIENTATION is UNDIRECTED, so we render it as a STATIC
 // tangent grain — one faint line per fibre, no motion. Activity is shown only as
 // dots that VIBRATE ALONG each contour: a zero-mean sinusoid with a random
 // per-dot phase, so there is no net travel and therefore NO implied flow
@@ -814,7 +814,7 @@ function loadSwm() {
       }) });
     });
     // Static tangent grain: faint additive lines in a desaturated violet so the
-    // superficial system reads as its own layer, distinct from the cool-white
+    // short-range sample reads as its own layer, distinct from the cool-white
     // surface and the amber/cyan directed flows. Overlap builds up where dense.
     const grainMat = new THREE.LineBasicMaterial({ color: 0x9a90c0, transparent: true, opacity: 0.08, blending: THREE.AdditiveBlending, depthWrite: false });
     for (const h of ['L', 'R']) {
@@ -1663,7 +1663,7 @@ function buildPanel(regions, tracts, { initialize = !panelInitialized } = {}) {
     const entityId = entityIdForRenderer('layer', lf.id);
     if (!entityId || !dispatchExploreCommands([{ type: 'visibility.set', entity: entityId, visible: lr.cb.checked }])) setLayer(lf.id, lr.cb.checked);
   }); root.appendChild(lr.row); } };
-  leafSec('Pathways', [{ id: 'or', label: 'Optic radiation', color: '#ffb060' }, { id: 'swm', label: 'Superficial fibres', color: '#9a90c0', dim: true }, { id: 'anterior', label: 'Anterior pathway', dim: true }]);
+  leafSec('Pathways', [{ id: 'or', label: 'Optic radiation', color: '#ffb060' }, { id: 'swm', label: 'Short-range contours', color: '#9a90c0', dim: true }, { id: 'anterior', label: 'Anterior pathway', dim: true }]);
   leafSec('Scene', [{ id: 'brain', label: 'Cortical surface' }, { id: 'labels', label: 'Labels' }]);
   applyHemi();
 }

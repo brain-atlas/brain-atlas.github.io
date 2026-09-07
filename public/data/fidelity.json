@@ -274,7 +274,7 @@
           "data-derived",
           "derived"
         ],
-        "summary": "Real bilateral short contours tracked on the HCP-1065 nonlinear ICBM152-2009a FIB, filtered with an exact TemplateFlow-derived 2009c cortical ribbon, and assigned unordered endpoint classes from the J\u00fclich-Brain v3.0.3 maximum-probability map in decoded RAS+ millimetres."
+        "summary": "Data-derived bilateral short-range tractography contours tracked on the HCP-1065 nonlinear ICBM152-2009a FIB. Historical seed/ribbon selection used whole-volume GM/WM maps from TemplateFlow 2009c. Unordered endpoint classes use the J\u00fclich-Brain v3.0.3 maximum-probability map in decoded RAS+ millimetres."
       },
       "activity": {
         "statuses": [
@@ -297,6 +297,10 @@
         "The categorical endpoint comparison overlays 2009a fibre coordinates with 2009c labels in common RAS millimetres without a template warp or a claim of voxel-grid equivalence."
       ],
       "limitations": [
+        {
+          "summary": "Historical selection used whole-volume GM/WM maps without a cerebral-only exclusion; it does not certify superficial white matter or U-fibre identity. Coarse source-map screening is not anatomical validation. Endpoint labels indicate geometric proximity, not biological connections.",
+          "material": true
+        },
         {
           "summary": "Vibration is not measured activity, firing rate, conduction, or literal bidirectional signaling by one axon.",
           "material": true
@@ -330,7 +334,7 @@
           "url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
         }
       ],
-      "reviewed": "2026-07-22"
+      "reviewed": "2026-09-07"
     },
     {
       "id": "fidelity.display-labels",

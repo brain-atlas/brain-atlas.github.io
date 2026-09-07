@@ -32,6 +32,12 @@ scenes briefly preview downstream ventral and dorsal processing. Keep your own l
 and right separate from the patient's left and right, and remember that a retinal
 image is reversed across both horizontal and vertical axes.
 
+> **Reading the contours:** The pale short-range tractography contours provide
+> geometric context, not measured connections. Historical selection used whole-volume
+> GM/WM maps without a cerebral-only exclusion; it does not certify superficial white matter or U-fibre identity.
+> Coarse source-map screening is not anatomical validation. Model & sources explains
+> these limits for each view.
+
 ```atlas-scene
 id: orientation
 title: Organize the early visual system
@@ -85,7 +91,7 @@ continues from each LGN to V1 in that hemisphere, around the calcarine sulcus. V
 ventral V3, and dorsal V3 continue the shared early cortical route before later
 processing develops stronger ventral and dorsal biases.
 
-The pale superficial contours in this overview have at least one unordered geometric
+The pale short-range contours in this overview have at least one unordered geometric
 endpoint assigned to V1, V2, V3v, or V3d. Their simultaneous display with these atlas
 shells supplies spatial context; it does not establish biological terminations or
 connections. Along the early visual route, the system preserves an orderly map of
@@ -222,7 +228,7 @@ the spatial organization needed by cortex.
 
 > **Scene limitations and boundaries:** This view keeps incoming schematic pathway
 > context, the population-atlas LGN source, the optic-radiation trajectory, and the V1
-> destination in frame. The endpoint query also retains 22 superficial contours with
+> destination in frame. The endpoint query also retains 22 short-range contours with
 > at least one unordered geometric endpoint assigned to LGN. This categorical
 > assignment does not turn those contours into a measured LGN projection or establish
 > biological termination. The view does not resolve LGN layers, parallel channels,
@@ -373,10 +379,10 @@ visual space from both eyes. The same model distinguishes four common lesion pat
 
 > **Scene boundaries and limitations:** The V1 shells are population-atlas boundaries,
 > not an individual's cortex or a map of eccentricity, polar angle, layers, columns, or
-> cell responses. The added superficial contours and ILF/IFOF samples each have at least
+> cell responses. The added short-range contours and ILF/IFOF samples each have at least
 > one unordered geometric endpoint assigned to V1. That assignment does not establish
 > biological termination, connection strength, or travel direction. Association-tract
-> events use the disclosed 50/50 modeled direction assumption; superficial dots vibrate
+> events use the disclosed 50/50 modeled direction assumption; short-range contour dots vibrate
 > with zero mean and no net travel. All event timing remains illustrative rather than
 > measured physiology.
 
@@ -456,7 +462,7 @@ dorsal networks.
 > 2009a fibre data with 2009c region labels without a template warp. It does not establish
 > grid equivalence, exact termination, pairwise connectivity, connection strength,
 > direction, processing order, or functional response. Bright tract events use a seeded
-> display model with a disclosed 50/50 direction assumption. Superficial-fibre vibration
+> display model with a disclosed 50/50 direction assumption. Short-range contour vibration
 > is analytically zero-mean: amplitude varies with a local-to-own fibre-length ratio, while
 > frequency and phase are display choices. Both animations remain illustrative.
 
@@ -512,7 +518,7 @@ layout: detail
 The ventral stream extends from occipital visual cortex toward lateral occipital and
 ventral temporal cortex. This scene highlights V1, V2, V3v, V4v, LOA, LOp, and
 fusiform areas FG1 through FG4. Its left-hemisphere filter retains 381 association and
-511 superficial contours with at least one unordered geometric endpoint assigned to
+511 short-range contours with at least one unordered geometric endpoint assigned to
 that area set. The shells identify the queried areas; they do not prove that a contour
 terminates there or connects two displayed regions.
 
@@ -586,7 +592,7 @@ layout: detail
 The dorsal stream extends from occipital visual cortex toward posterior parietal
 cortex. This scene highlights V1, V2, V3d, V3A, V6, MT/V5, the intraparietal areas,
 and the superior parietal areas. Its left-hemisphere filter retains 559 association and
-940 superficial contours with at least one unordered geometric endpoint assigned to
+940 short-range contours with at least one unordered geometric endpoint assigned to
 that area set. The shells identify the queried areas; they do not prove that a contour
 terminates there or connects two displayed regions.
 
@@ -680,8 +686,9 @@ them.
 > **Scene limitations and boundaries:** This closing view exactly reprises the opening
 > mixed-fidelity scene. The cortical and region meshes are population-atlas anatomy; the
 > left optic radiation is population tractography and the displayed right side is
-> mirrored; the anterior eye-to-LGN segment is schematic. The superficial contours have
+> mirrored; the anterior eye-to-LGN segment is schematic. The short-range contours have
 > at least one unordered geometric endpoint assigned to V1, V2, V3v, or V3d. They show
-> spatial context rather than measured termination or connectivity, and their dots have
-> zero-mean vibration rather than directed travel. All moving-event timing remains
+> spatial context rather than measured termination or connectivity. Historical GM/WM
+> selection does not certify superficial white matter or U-fibre identity. Their dots
+> have zero-mean vibration rather than directed travel. All moving-event timing remains
 > illustrative rather than measured physiology.

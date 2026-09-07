@@ -96,7 +96,7 @@ test('query results produce an accessible count and endpoint-quality summary', (
   const index = createFibreEndpointIndex(syntheticArtifact());
   const result = filterFibreEndpoints(index, query('touches-any', ['region.a']), { L: true, R: true });
   assert.equal(formatFibreFilterSummary(result),
-    '5 of 8 fibres match: 4 association and 1 superficial. Active hemispheres: left and right. Endpoint assignment quality among matches: 4 known, 1 unknown, and 0 ambiguous.');
+    '5 of 8 fibres match: 4 association and 1 short-range. Active hemispheres: left and right. Endpoint assignment quality among matches: 4 known, 1 unknown, and 0 ambiguous.');
 });
 
 test('query and artifact validation fail closed on malformed selectors, modes, tables, and counts', () => {

@@ -100,7 +100,7 @@ or relaxing the standalone loopback/authentication boundary.
   WebGL textures, `referrerpolicy="no-referrer"`, lazy loading, complete attribution,
   and accessible failure/retry handling; there is no arbitrary `fetch`, `eval`,
   dynamic script insertion, or third-party runtime code.
-- Tracer and superficial-fibre GPU buffers have explicit upper bounds. Canonical
+- Tracer and short-range contour GPU buffers have explicit upper bounds. Canonical
   visibility starts each bilateral region mesh pair and the SWM dataset at most once,
   so a direct lesson does not parse unrelated independently packaged geometry.
 - A restrictive meta Content Security Policy limits scripts and connections to

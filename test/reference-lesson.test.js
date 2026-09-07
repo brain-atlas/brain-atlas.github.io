@@ -28,6 +28,9 @@ test('reference lesson parses with an unnumbered entry view and eight complete s
   assert.equal(result.value.title, 'Early Vision: Retina to the Cortical Streams');
   assert.equal(result.value.status, null);
   assert.equal(result.value.entrySceneId, 'orientation');
+  // Entry-scene prose is not rendered: this limit must live in the visible introduction.
+  assert.match(result.value.introductionMarkdown, /short-range tractography contours/i);
+  assert.match(result.value.introductionMarkdown, /does not certify superficial white matter or U-fibre identity/);
   assert.deepEqual(result.value.scenes.map(({ id }) => id), [
     'orientation', 'nasal-crossing', 'lgn-relay', 'optic-radiation', 'v1-arrival',
     'extrastriate-branching', 'ventral-stream', 'dorsal-stream', 'conclusion',
@@ -250,7 +253,7 @@ test('conclusion reprises the opening pathway and resolves the opening predictio
   assert.doesNotMatch(conclusion.proseMarkdown, /moving friend|handshake|familiar mug|hard fork/i);
 });
 
-test('LGN scene retains incoming context and adds endpoint-filtered superficial fibres', async () => {
+test('LGN scene retains incoming context and adds endpoint-filtered short-range contours', async () => {
   const { result } = await loadReferenceLesson();
   const scene = result.value.scenes[2];
   assert.deepEqual(scene.snapshot.visibility.entities, [
@@ -269,7 +272,7 @@ test('LGN scene retains incoming context and adds endpoint-filtered superficial 
   assert.match(scene.proseMarkdown, /source.+destination|destination.+source/is);
   assert.match(scene.proseMarkdown, /incoming.+context/is);
   assert.match(scene.proseMarkdown, /optic.?radiation.+V1/is);
-  assert.match(scene.proseMarkdown, /22 superficial.+LGN|LGN.+22 superficial/is);
+  assert.match(scene.proseMarkdown, /22 short-range.+LGN|LGN.+22 short-range/is);
 });
 
 test('reference content keeps prose educational while curated records own sources', async () => {

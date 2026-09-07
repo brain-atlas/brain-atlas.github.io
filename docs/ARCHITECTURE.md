@@ -111,7 +111,7 @@ Every anatomical layer is a child of `mniGroup`:
 - directed anterior and optic-radiation flow;
 - seeded inhibited association-tract impulses, with direction sampled per event
   from explicit bilateral 50/50 metadata; and
-- zero-mean superficial-white-matter vibration.
+- zero-mean short-range contour vibration.
 
 Every directed contour uses a precomputed cumulative-distance profile. Anterior,
 optic-radiation, and association dots travel at the common base rate of 40 MNI mm
@@ -129,7 +129,7 @@ profile selection before `updateTractImpulses` uploads positions and colours.
 Endpoint-only geometric heuristics orient A/B labels independently of source array
 order. Equal channel counts keep JSON sampling density from becoming an
 activity-rate claim.
-Superficial-white-matter vibration remains separate. Each selected dot's structural
+Short-range contour vibration remains separate. Each selected dot's structural
 amplitude is sampled with a home interval that keeps the complete sinusoid inside
 contour margins, so `updateSwm` needs no asymmetric endpoint clipping; reduced
 motion settles each dot at its fixed home. Filtering changes contour eligibility but
@@ -148,7 +148,7 @@ produce positioned diagnostics and no partial lesson.
 
 `public/data/entities.json` maps stable prefixed domain IDs for the original 45-region teaching/filter boundary to current layer/region/tract renderer IDs and camera presets. `public/data/julich_regions.json` adds 112 source-bound region entities at catalog construction, while `atlasDefaultEntityIds` and endpoint selectors retain the original 45. `public/data/fibre_filter_presets.json` adds four strict authored endpoint queries over those region IDs plus explicit unknown/ambiguous selectors; the large generated endpoint tuple artifact remains renderer data. Its strict 33-record `inspectables` projection
 covers the early visual starters, all eight association bundles, the 19 region shells
-that pass the approved bilateral endpoint-proximity screen, and superficial white matter.
+that pass the approved bilateral endpoint-proximity screen, and short-range tractography contours (legacy SWM).
 Selection-only landmark IDs inherit availability and fidelity from `pathway.anterior`
 but do not enter canonical scene `entityIds` or visibility snapshots. Curated anatomy
 copy, relationship evidence, and HTTPS citations live with those stable records; every
@@ -233,7 +233,7 @@ After the WebGL gate, the renderer eagerly loads the cortical GLB, optic-radiati
 
 Offline tools must produce web-sized, co-registered assets; runtime fitting and heavy data processing do not belong in the viewer. `tools/map_tract_regions.py` separately parses the shipped association JSON and region OBJs, writes `public/data/tract_region_mapping.json`, and checks exact artifact drift. The browser does not fetch that evidence file: regression tests bind its robust relationship set to the strict entity catalog. `SCIENTIFIC_TRACEABILITY.md` records each asset's geometry and model provenance, while `docs/lessons/*-validation.md` records lesson teaching claims and review. `TRACT_REGION_MAPPING.md` owns relationship derivation and interpretation limits; `TRACT_SPACE_PROVENANCE.md` owns fibre source space, conversion history, and replay limits.
 
-`tools/assets/` is the offline anatomical-build boundary. Its schema-validated manifest binds source, intermediate, tool, environment, coordinate, output, rights, and limitation records. A pinned Python 3.13 environment generates cortex, region, association, and fibre-endpoint assets and prepares or post-processes OR/SWM data only in explicit empty output roots; it never downloads implicitly, writes into `public/`, or launches DSI Studio. The region builder parses the exact Jülich MPM plus licensed XML/hierarchy sources, preserves duplicate hierarchy occurrences and six unresolved identities, emits the unchanged legacy manifest plus complete catalog, and verifies 314 meshes. The endpoint builder remains pinned to the unchanged legacy region/entity inputs and emits exact preset/quality audits; the raw NIfTI is not retained. The printer emits a hash-checking v2 shell wrapper for human execution, and the verifier applies frozen TrackVis equality classes. Current OR/SWM JSON remains byte-exact only from recovered intermediates because accepted legacy DSI replays produced class 4 OR and class 3 SWM results. Exact-scope decision `brain-atlas-3ct` permits pipeline closeout without promoting either class or authorizing replacement; source/build-bound deterministic retracking remains separate work.
+`tools/assets/` is the offline anatomical-build boundary. Its schema-validated manifest binds source, intermediate, tool, environment, coordinate, output, rights, and limitation records. A pinned Python 3.13 environment generates cortex, region, association, and fibre-endpoint assets and prepares or post-processes OR/SWM data only in explicit empty output roots; it never downloads implicitly, writes into `public/`, or launches DSI Studio. The region builder parses the exact Jülich MPM plus licensed XML/hierarchy sources, preserves duplicate hierarchy occurrences and six unresolved identities, emits the unchanged legacy manifest plus complete catalog, and verifies 314 meshes. The endpoint builder remains pinned to historical region/entity inputs, not the current presentation catalog, and emits exact preset/quality audits; the raw NIfTI is not retained. The printer emits a hash-checking v2 shell wrapper for human execution, and the verifier applies frozen TrackVis equality classes. Current OR/SWM JSON remains byte-exact only from recovered intermediates because accepted legacy DSI replays produced class 4 OR and class 3 SWM results. Exact-scope decision `brain-atlas-3ct` permits pipeline closeout without promoting either class or authorizing replacement; source/build-bound deterministic retracking remains separate work.
 
 Ajv schemas compile offline through `npm run generate:lesson-validators`; the checked-in `src/lesson/generated-validators.js` is imported at runtime. This preserves the script/connect CSP without `unsafe-eval`, `new Function`, arbitrary fetches, or third-party code. The image policy intentionally permits HTTPS sources only for validated declared lesson images; external hosts are disclosed before activation and requests use no referrer.
 
@@ -259,7 +259,7 @@ The current design has no unnecessary service, state-management, or component la
 
 These changes are worthwhile but structural; implement them through a scoped Bead and a plan in `.pi/plans/`.
 
-1. **Move superficial-white-matter vibration into a vertex shader.** The CPU currently evaluates and uploads as many as 15,000 dot positions per frame. Per-dot phase, frequency, home position, and amplitude can become static attributes while a time uniform drives zero-mean displacement. Preserve the undirected representation exactly.
+1. **Move short-range contour vibration into a vertex shader.** The CPU currently evaluates and uploads as many as 15,000 dot positions per frame. Per-dot phase, frequency, home position, and amplitude can become static attributes while a time uniform drives zero-mean displacement. Preserve the undirected representation exactly.
 2. **Package region shells into one web-optimized GLB.** The current manifest starts many OBJ requests and parses text geometry in the browser. A single indexed, decimated binary asset could reduce requests, transfer size, parse time, and duplicated vertices while retaining real bilateral meshes and MNI coordinates.
 3. **Split runtime modules only along stable boundaries.** Good candidates are asset loading, activity models, and panel construction. Pass explicit state rather than introducing global registries or a framework.
 

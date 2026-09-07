@@ -159,15 +159,18 @@ three streamlines under its >18 mm V1-centroid rule. The viewer mirrors the
 resulting left-hemisphere fibres at runtime to depict the right optic radiation.
 
 `public/data/swm_fibres.json` was generated from the same FIB using a 2009c
-superficial-WM seed derived from TemplateFlow GM/WM probability maps with matched
+historically named superficial-WM seed derived from TemplateFlow GM/WM probability maps with matched
 qform/sform world matrices. The project retained short streamlines with both
-unrounded endpoints in a dilated cortical ribbon, deterministically sampled and
+unrounded endpoints in a dilated whole-volume GM ribbon, deterministically sampled and
 resampled contours, and stored original and local-neighbour mean length measures
 used by the activity texture. These are real bilateral data and are not mirrored.
 Neither FIB-derived asset underwent a 2009a→2009c template warp; its decoded
 RAS+ coordinate frame was retained through resampling. The SWM GM/WM seed and
 ribbon used whole-volume maps, not a cerebral-only exclusion; ribbon retention is
-not certification of superficial cerebral white matter.
+not certification of superficial cerebral white matter. Public presentation calls
+this unchanged asset **Short-range tractography contours** (compact: **Short-range
+contours**); `swm` filenames and IDs retain their historical meaning. Renaming does
+not change geometry, derivation, data terms, or redistribution scope.
 
 ### Local-only anatomical screening reference
 

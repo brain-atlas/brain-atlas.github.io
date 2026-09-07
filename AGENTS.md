@@ -39,7 +39,7 @@ This is the project's defining constraint.
   directed. Named long association tracts use modeled stochastic code events:
   source→endpoint probability comes from cited evidence where defensible and
   otherwise from a labelled 50/50 assumption. Never use streamline array order
-  as measured polarity. Superficial WM/U-fibres remain a static tangent grain
+  as measured polarity. Short-range tractography contours (legacy SWM layer) remain a static tangent grain
   with zero-mean along-contour vibration and no net travel.
 - **Fibre orientation is undirected.** Never average fibre direction vectors
   (average structure tensors if you must combine them).
@@ -48,6 +48,12 @@ This is the project's defining constraint.
   measured firing rate or axonal transmission.
 - **Label real vs schematic** in the legend. Approximate elements are acceptable
   only when labelled and the overall anatomy reads correctly.
+
+Public copy calls the legacy SWM layer **Short-range tractography contours**
+(compact: **Short-range contours**). Historical whole-volume GM/WM selection does
+not certify superficial cerebral white matter or U-fibre identity; coarse
+source-compartment screening is not anatomical validation. Preserve legacy IDs,
+filenames, geometry, filters, and zero-mean activity when updating presentation.
 
 ## Data provenance
 - Surface/region space: MNI152NLin2009cAsym (TemplateFlow), 1 mm grid.
@@ -59,7 +65,7 @@ This is the project's defining constraint.
 - Regions: Jülich-Brain v3.0.3 Maximum Probability Map (winner-take-all).
 - Association tracts: selected and resampled bilateral streamlines from the
   HCP-1065 population-averaged tractography atlas.
-- Optic radiation and superficial WM: tracked with DSI Studio on the official
+- Optic radiation and short-range contours (legacy SWM): tracked with DSI Studio on the official
   HCP-1065 `ICBM152_adult.1mm.fz`. A recovered OR trial reports header-srow
   alignment for the differing 2009c ROI grid; final OR masks and the SWM seed have
   identical qform/sform code 4 matrices. Manual legacy replays did not recreate the

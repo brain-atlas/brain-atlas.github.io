@@ -145,11 +145,11 @@ Counts precede scene layer and hemisphere visibility. `touches-any` may retain a
 
 This categorical comparison overlays 2009a fibre coordinates with 2009c MPM labels in common RAS millimetres without a template warp. It does not claim voxel-grid equivalence, biological termination, pairwise connectivity, strength, probability, function, direction, or individual anatomy. It creates no inspector relationship records.
 
-## Optic radiation and superficial white matter
+## Optic radiation and short-range contours
 
 The optic radiation remains a biologically directed LGN→V1 projection supported by literature and its existing tractography/fidelity record. The runtime endpoint artifact excludes it and does not reinterpret it as an undirected association bundle.
 
-Superficial white matter remains inspectable and has no relationship records. Its categorical endpoint classes support geometric subset queries only; they do not name individual contours as U-fibres connecting displayed region pairs.
+The short-range tractography contour layer (legacy SWM) remains inspectable and has no relationship records. Its categorical endpoint classes support geometric subset queries only; they do not name individual contours as U-fibres connecting displayed region pairs.
 
 ## Limitations
 

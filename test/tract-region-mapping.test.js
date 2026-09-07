@@ -138,6 +138,28 @@ test('runtime catalog projects exactly the robust inspector mapping set without 
   assert.match(swm.description, /do not establish named U-fibres.*region-to-region connections/i);
 });
 
+test('short-range contour presentation preserves legacy IDs and discloses anatomical uncertainty', () => { // Tests lesson INV-8
+  const entities = loadJson(entitiesUrl);
+  const entity = entities.entities.find(({ id }) => id === 'layer.swm');
+  const inspectable = entities.inspectables.find(({ id }) => id === 'layer.swm');
+  assert.equal(entity.label, 'Short-range tractography contours');
+  assert.equal(inspectable.label, entity.label);
+  assert.equal(inspectable.shortLabel, 'Short-range contours');
+  assert.deepEqual(entity.renderer, { kind: 'layer', id: 'swm' });
+  assert.equal(entity.fidelity, 'fidelity.superficial-white-matter');
+  assert.deepEqual(inspectable.relationships, []);
+  assert.match(inspectable.description, /does not certify superficial white matter or U-fibre identity/);
+
+  const record = loadJson(fidelityUrl).records.find(({ id }) => id === entity.fidelity);
+  assert.match(record.geometry.summary, /whole-volume GM\/WM/);
+  const limits = record.limitations.filter(({ material }) => material).map(({ summary }) => summary).join(' ');
+  assert.match(limits, /without a cerebral-only exclusion/);
+  assert.match(limits, /screening is not anatomical validation/);
+  assert.match(limits, /does not certify superficial white matter or U-fibre identity/);
+  assert.equal(record.activity.direction, 'undirected');
+  assert.match(record.activity.summary, /no assigned travel direction/);
+});
+
 test('reviewed arrow labels are removed and fidelity preserves endpoint and SWM limits', () => {
   const entities = loadJson(entitiesUrl);
   const regions = loadJson(regionsUrl);

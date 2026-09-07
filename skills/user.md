@@ -93,7 +93,7 @@ The retained panel lives in `#layers` inside `#viewer-console`. It is disabled w
 - **Structures / White-matter tracts** — each row has **L / R pill buttons**
   (`.pill`); click a pill to toggle that side, click the name to toggle both.
 - **Pathways / Scene** — plain checkboxes carrying `dataset.id`: `or` (optic
-  radiation), `swm` (superficial fibres), `anterior` (anterior pathway), `brain`
+  radiation), `swm` (short-range contours), `anterior` (anterior pathway), `brain`
   (cortical surface), `labels`.
 - **Fibre endpoints** — `#fibre-filter-preset`, `#fibre-filter-mode`, and the two
   multi-select region sets. `#fibre-filter-summary` announces matched association/SWM
@@ -135,14 +135,16 @@ Describe layers by what the data supports (this mirrors the honesty rule in
   MODELED stochastic code-like impulses. Each event independently samples one
   of two endpoint directions from an explicit 50/50 assumption; diffusion MRI
   does not measure polarity. Timing, inhibition, and speed are illustrative.
-- **Superficial fibres** (`swm`, violet) — REAL cortico-cortical short-fibre
+- **Short-range contours** (`swm`, violet) — data-derived short-contour
   ORIENTATION as a static grain; dots follow independently phased, bounded
   sinusoids around fixed contour homes with **no net direction** (none is
   measured). Swing width ∝ local fibre length. Categorical Jülich endpoint filters
   narrow the geometric sample; they do not establish named U-fibres or connections.
+  Whole-volume GM/WM selection does not certify superficial white matter or U-fibre
+  identity; coarse source-map screening is not anatomical validation.
 - **Anterior pathway** (`anterior`) — SCHEMATIC eye→chiasm→LGN and its flow dots.
 - **Structures** — Jülich-Brain MPM region shells (real bilateral, fresnel
   outlines).
 
 Never describe association streamline order as biological polarity or the 50/50
-model as measured anatomy. Never narrate SWM/U-fibre vibration as traveling flow.
+model as measured anatomy. Never narrate short-range contour vibration as traveling flow.

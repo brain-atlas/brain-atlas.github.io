@@ -347,12 +347,27 @@ public classification, presets or activity. `brain-atlas-yum.14.6` owns independ
 domain evidence, `.14.7` exact recovered-index comparison, `.14.8` public naming
 review, and `.13` source-bound retracking. Any replacement remains separately gated.
 
+The presentation review (`brain-atlas-yum.14.8`, approval `brain-atlas-iof0`)
+uses **Short-range tractography contours**, compact **Short-range contours**,
+instead of an unverified superficial-white-matter identity. SWM survives as a legacy
+identifier and historical method name. This wording change certifies neither
+superficial white matter nor U-fibres and introduces no anatomical partition.
+
 ### Categorical endpoint assignment — `fibre_endpoints.json`
 
 The checked endpoint builder consumes the exact 335,280-byte Jülich-Brain v3.0.3
 MPM (`SHA-256 3af71c8d467db42d8561115164e0f365b942dfaa3568740ce62846fa3a201aff`)
-and the hash-frozen association/SWM arrays, region/entity catalogs, and preset
-catalog. The source MPM has shape `193×229×193`, qform/sform code 1, and affine:
+and the hash-frozen association/SWM arrays, historical region/entity catalogs, and
+preset catalog. The generator pins historical `entities.json` bytes (74,121 bytes,
+SHA-256 `56c32db37cdae116e8e0947008a4f938aca3d0d9cffa8bbc96c7eba4b5be1480`),
+not today's runtime presentation catalog. Catalog changes already preceded the
+short-range naming review; replay requires the pinned historical input, and the
+builder must reject current catalog bytes. `git show 3158df4:public/data/entities.json`
+recovers the hash-matching historical catalog without changing the working tree.
+The frozen endpoint artifact and its input hashes are not rewritten to suggest
+regeneration from renamed presentation.
+
+The source MPM has shape `193×229×193`, qform/sform code 1, and affine:
 
 ```text
 [ 1  0  0  -96 ]
