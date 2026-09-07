@@ -1,12 +1,12 @@
 # SWM anatomical-domain audit design-plan
 
 - **Work:** `brain-atlas-yum.14.3`.
-- **Status:** **Approved scope; source gate unresolved. Not implemented.**
-- **Approval:** `brain-atlas-m195`, 2026-09-07.
+- **Status:** **Approved bounded screening audit; empirical suitability checks pending. Not implemented.**
+- **Approval:** `brain-atlas-m195`, amended by `brain-atlas-n401` after explicit human agreement in the current conversation, 2026-09-07.
 - **Date:** 2026-09-07.
 - **Branch:** current `main`; optional approved branch creation was not used. No merge or integration authority.
 - **Evidence:** [source-gate record](../research/2026-09-07-swm-domains/source-gate.md).
-- **Source decision:** `brain-atlas-5czc` chose targeted provenance research before implementation, not a diagnostic-only downgrade. Follow-up recovered a historical candidate generator and provider-declared target hash, but no exact generation binding; source gate remains unresolved.
+- **Source decision:** `brain-atlas-5czc` initially required targeted provenance research. Follow-up recovered a historical candidate generator and provider-declared target hash, but no exact generation binding. **`brain-atlas-n401` supersedes the complete construction-binding stop condition**, accepting the published map as a coarse screening reference subject to empirical checks and explicit uncertainty. The historical gap remains documented, not resolved.
 - **Prerequisite:** [source-bound fibre-accounting research](brain-atlas-yum.14.1-siibra-fibre-accounting.md). This child does not supersede its wider accounting proposal or current `tools/assets/SPEC.md`.
 
 ## Goal and boundary
@@ -17,21 +17,23 @@ Reuse the offline asset pipeline's explicit hash-checked nonsymlink inputs, new 
 
 ## Alternatives and approved choice
 
-1. **Source-gated audit implementation (approved):** verify TemplateFlow carpet source identity, label semantics, derivation and rights; stop if inadequate. Then implement reproducible offline accounting and review curation consequences.
+1. **Bounded screening audit implementation (approved, amended):** verify exact published TemplateFlow carpet bytes, headers and label semantics; inspect anatomical overlays and sensitivity before relying on results. Accept incomplete upstream construction history with explicit disclosure, not a claim of full regeneration. Then implement reproducible offline accounting and review curation consequences.
 2. Research/design only: lower implementation scope but no completed classification.
 3. Source retracking or cerebral-only replacement: separate design and approval; excluded here.
 
-The source gate found verified source label definitions and published repository terms but unresolved construction/upstream rights provenance. A source-named descriptive diagnostic with those gaps would be a narrower deliverable, not automatic satisfaction of the anatomical curation acceptance criteria. Resolve that distinction before implementation.
+The human accepted small disclosed provenance gaps for this educational tool **provided confidence is supported by evidence**. For this audit, treat the published carpet labels as coarse screening compartments rather than anatomical ground truth. No measured confidence threshold is invented. Byte/header checks, multi-plane anatomical overlays, spatial coherence and sensitivity diagnostics must support the interpretation; conflicting anatomy remains unresolved or stops reliance on the affected category. Missing historical build records alone no longer block implementation.
+
+Published repository terms support the approved local-audit scope with notice retention and disclosed upstream rights gaps; this is not a third-party rights waiver or authority to redistribute the source map or ship derived classifications. Existing one-frame, scientific-honesty, hash-checking and public-replacement invariants remain unchanged. A reviewed curation recommendation may retain limitations, but any cerebral-only replacement needs independent anatomical corroboration and separate approval.
 
 ## Planned implementation sequence
 
 ### 1. Resolve source suitability
 
-Verify primary source records and retain exact version, bytes, hashes, terms, label-to-category mapping and derivation limitations. Inspect NIfTI dimensions, unit codes, affine and both forms. Resolve conflicts before sampling. Do not infer provenance from filenames or cortical label names. Pin any approved source in `tools/assets/manifest.json`; do not silently choose another atlas.
+Verify primary source records and retain exact version, bytes, hashes, terms, label-to-category mapping and derivation limitations. Explicitly acquire the selected map and template reference; independently hash them. Inspect NIfTI dimensions, unit codes, affine and both forms. Resolve coordinate conflicts before sampling. Inspect multi-plane overlays against the pinned template anatomy, especially source label 255, to assess gross correctness without calling visual agreement a validation of every voxel. Do not infer provenance from filenames or cortical label names. Pin approved local-audit inputs in the audit contract/manifest without representing unknown upstream rights as cleared for shipping. Do not silently choose another atlas.
 
 ### 2. Add the smallest offline audit
 
-After the source gate passes, add an audit module under `tools/assets/`, thin CLI dispatch in `tools/assets/cli.py`, manifest/schema changes only as required, and focused tests. Exact command spelling remains to be chosen; no nonexistent command is claimed here.
+Under the amended source gate, add an audit module under `tools/assets/`, thin CLI dispatch in `tools/assets/cli.py`, manifest/schema changes only as required, and focused tests. Exact command spelling remains to be chosen; no nonexistent command is claimed here. Every output must state the screening assumption, construction/rights gaps, mixed-template comparison and absence of public replacement.
 
 Freeze numerical rules in `tools/assets/SPEC.md` and tests before production counts:
 
@@ -48,7 +50,7 @@ Keep audit records and candidate outputs isolated. No public candidate installat
 
 Observe focused synthetic tests fail before implementation and pass afterward. Cover half-ties and negative indices, nonfinite input, unknown label rejection, conflicting forms, counts, ties, contour reversal, unsafe output roots and changed source hashes. Run the real audit twice into distinct empty roots and compare bytes. Reproduce the pilot counts or explain differences without changing frozen rules.
 
-Independently review retain-and-partition, cerebral-only subset, rename and retracking consequences. Geometry replacement remains excluded regardless of recommendation. Current endpoint tuples, presets and public geometry hashes must remain unchanged.
+Independently review retain-and-partition, cerebral-only subset, rename and retracking consequences. Distinguish spatially coherent interior findings from boundary-sensitive outcomes; neither a reproduced count nor a plausible historical recipe proves fibre anatomy. Geometry replacement remains excluded regardless of recommendation. Current endpoint tuples, presets and public geometry hashes must remain unchanged.
 
 Existing verification commands:
 

@@ -3,7 +3,8 @@
 - Work: `brain-atlas-yum.14.3`.
 - Approval: `brain-atlas-m195` permits source-gated offline auditing, not public replacement.
 - Date: 2026-09-07.
-- Result: **Source gate unresolved; no classification or implementation performed.**
+- Research checkpoint result: **Exact construction provenance unresolved; no classification or implementation performed.**
+- **Subsequent scope amendment:** `brain-atlas-n401` accepts disclosed construction gaps for a bounded coarse-screening audit, conditional on byte/header, anatomical-overlay and sensitivity checks. It supersedes the implementation stop below, not the recorded evidence gaps. See the approved [amended design-plan](../../plans/brain-atlas-yum.14.3-swm-domain-design-plan.md).
 - Recovery: only `bd show brain-atlas-yum.14.2`, `bd show brain-atlas-yum.14.3`, their referenced artifacts and current relevant source. No prior transcript or unrelated Beads recovered.
 
 ## Independently verified primary records
@@ -78,6 +79,19 @@ Suggested maintainer question, **draft only**:
 > Which retained build record connects carpet SHA-256 `52eded597985fee7806699dfd276d32b1d53293dff04326773e4fe84864752c7` (451,304 bytes; OSF file `5bc6475753cec40019ade131`) to its generation script, exact parent atlas versions/checksums, reference/brainmask, invocation and any later edits? Is the niworkflows `parcellation.py` at `c19d04e096d228af7447fba127aabfb4377cbbe2` the actual generator? If so, what validates its residual-mask label 255 as “Cerebellum and Midbrain,” and which terms apply to the parent-derived map?
 
 Resume from this record, the approved plan and decision `brain-atlas-5czc`; do not repeat broad exploration or classify under an unapproved diagnostic-only interpretation.
+
+## Approved amendment after human review
+
+The human reviewed the distinction between published-source identity, missing construction history, anatomical suitability and rights, then explicitly agreed: “This is an educational tool so we can document where we have small gaps in provenance as long as we have high confidence we are close to correct.” Approval `brain-atlas-n401` records the bounded interpretation:
+
+- The missing exact historical generation binding is no longer a prerequisite for implementing the local screening audit. It remains an explicit limitation.
+- Treat the pinned published map as a **coarse screening reference**, not anatomical ground truth. Do not infer that the historical candidate generator definitely produced it.
+- Verify acquired bytes/headers/label values, inspect multi-plane overlays against pinned template anatomy, and assess spatial coherence and rounding/grid sensitivity before relying on findings. Confidence must follow those checks, not the educational purpose alone.
+- Preserve label 255 as the source's combined “Cerebellum and Midbrain” compartment. Interpret uncertain boundaries and contradictory anatomy explicitly; do not automatically remove fibres.
+- Local audit use under published repository terms does not clear unidentified upstream rights for source-map redistribution or shipping derived classifications.
+- A reviewed curation recommendation with disclosed limitations is in scope. Actual replacement still requires independent anatomical corroboration and separate approval. Public geometry, endpoint artifacts, presets and runtime remain unchanged.
+
+This amendment supersedes the earlier stop instruction and the construction-binding requirement in `brain-atlas-5czc`; it does not rewrite that earlier human decision or resolve the missing evidence. No general exception to repository scientific-honesty or data-rights rules is created.
 
 ## Frozen methodological refinements for later implementation
 
