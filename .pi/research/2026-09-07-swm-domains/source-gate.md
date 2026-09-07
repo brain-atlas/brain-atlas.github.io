@@ -3,7 +3,8 @@
 - Work: `brain-atlas-yum.14.3`.
 - Approval: `brain-atlas-m195` permits source-gated offline auditing, not public replacement.
 - Date: 2026-09-07.
-- Research checkpoint result: **Exact construction provenance unresolved; no classification or implementation performed.**
+- Initial research checkpoint result (historical): **Exact construction provenance unresolved; no classification or implementation performed at that checkpoint.**
+- **Current empirical checkpoint:** [Anatomical suitability and specific limitations](anatomical-suitability.md). Pinned carpet/T1 bytes and matching forms verified; three-plane overlays and compartment diagnostics reproduced. Conditionally suitable for private source-named coarse screening, not precise tissue membership or automatic fibre rejection. SWM classification/sensitivity remains unimplemented.
 - **Subsequent scope amendment:** `brain-atlas-n401` accepts disclosed construction gaps for a bounded coarse-screening audit, conditional on byte/header, anatomical-overlay and sensitivity checks. It supersedes the implementation stop below, not the recorded evidence gaps. See the approved [amended design-plan](../../plans/brain-atlas-yum.14.3-swm-domain-design-plan.md).
 - Recovery: only `bd show brain-atlas-yum.14.2`, `bd show brain-atlas-yum.14.3`, their referenced artifacts and current relevant source. No prior transcript or unrelated Beads recovered.
 
@@ -106,6 +107,6 @@ This amendment supersedes the earlier stop instruction and the construction-bind
 - Preserve 2009a fibre and 2009c map provenance separately; common-world lookup is neither a template warp nor shared voxel-index equivalence.
 - Pilot values 3,391 / 3,447 / 4,253 remain unverified. Disagreement must be explained, not tuned away.
 
-## Current impact
+## Initial checkpoint impact (historical; superseded by linked empirical record)
 
 No code, runtime, public data, manifests, presets, labels, licenses or scientific public claims changed. No volume download, DSI execution, production classification, tests, build, push or deployment performed. This documentation-only checkpoint needs no runtime tests; the implementation and release remain unverified. Fresh SHA-256/byte checks matched all four prerequisite compatibility baselines (SWM, association, endpoint artifact and presets); working-tree and staged diff checks passed. Unrelated untracked right-OR research and the two root ZIP archives remain untouched. This record and the linked plan preserve incomplete work in a local documentation commit; they are not audit results. No public capabilities, lesson claims, dependency/software notices, citation identity, security, hosting or release behavior changed, so their current documents need no update at this checkpoint.

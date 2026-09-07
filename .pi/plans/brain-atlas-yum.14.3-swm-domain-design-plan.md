@@ -1,11 +1,11 @@
 # SWM anatomical-domain audit design-plan
 
 - **Work:** `brain-atlas-yum.14.3`.
-- **Status:** **Approved bounded screening audit; empirical suitability checks pending. Not implemented.**
+- **Status:** **Approved bounded screening audit; initial empirical source diagnostic implemented and reviewed. Full SWM audit and sensitivity not implemented.**
 - **Approval:** `brain-atlas-m195`, amended by `brain-atlas-n401` after explicit human agreement in the current conversation, 2026-09-07.
 - **Date:** 2026-09-07.
 - **Branch:** current `main`; optional approved branch creation was not used. No merge or integration authority.
-- **Evidence:** [source-gate record](../research/2026-09-07-swm-domains/source-gate.md).
+- **Evidence:** [source-gate record](../research/2026-09-07-swm-domains/source-gate.md); [initial anatomical suitability and specific unsuitability register](../research/2026-09-07-swm-domains/anatomical-suitability.md). The latter supports provisional source-named screening only, not anatomical ground truth or replacement.
 - **Source decision:** `brain-atlas-5czc` initially required targeted provenance research. Follow-up recovered a historical candidate generator and provider-declared target hash, but no exact generation binding. **`brain-atlas-n401` supersedes the complete construction-binding stop condition**, accepting the published map as a coarse screening reference subject to empirical checks and explicit uncertainty. The historical gap remains documented, not resolved.
 - **Prerequisite:** [source-bound fibre-accounting research](brain-atlas-yum.14.1-siibra-fibre-accounting.md). This child does not supersede its wider accounting proposal or current `tools/assets/SPEC.md`.
 
