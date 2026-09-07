@@ -10,9 +10,15 @@ Native-template supplement below resolves the earlier missing-parser blocker.
 
 **Next direction selected by owner:** `brain-atlas-bs4u` requires validated offline
 symmetric-to-asymmetric conversion before domain assignment. Follow-up design is
-`brain-atlas-yum.14.9`, with [draft decision brief](../../plans/brain-atlas-yum.14.9-cerebra-conversion-design-plan.md).
-No coarse common-RAS adoption, registration execution or acceptance relaxation was
-approved. Full `.6` stays open pending design and separately approved implementation.
+`brain-atlas-yum.14.9`, with [conversion design](../../plans/brain-atlas-yum.14.9-cerebra-conversion-design-plan.md).
+At that checkpoint no coarse common-RAS adoption, registration execution or
+acceptance relaxation was approved. **Later amendment, 2026-09-07:** approval
+`brain-atlas-2x3m` accepts a resource-bounded technical conversion candidate because
+qualified expert review is unavailable. The linked conversion plan supersedes its
+original draft; `brain-atlas-yum.14.10` owns implementation and the exact dependency
+acquisition/install gate. This changes the conversion deliverable, not the anatomical
+meaning of these diagnostic results. Full `.6` stays open; anatomical domains remain
+unvalidated and no automatic adoption is approved.
 
 ## Results and decision
 
