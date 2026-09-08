@@ -8,8 +8,6 @@ import numpy as np
 from scipy.ndimage import distance_transform_edt
 
 from .common import ContractError, sha256_file, require_empty_output_root
-from .cortex import load_nifti_with_matching_forms
-from .endpoints import _require_repository_inputs
 
 AFFINE = np.array([[1., 0, 0, -96], [0, 1., 0, -132], [0, 0, 1., -78], [0, 0, 0, 1.]])
 DOMAINS = (
@@ -33,6 +31,8 @@ def domain_ids(labels):
 
 
 def load_carpet(path):
+    from .cortex import load_nifti_with_matching_forms
+
     image, affine = load_nifti_with_matching_forms(path)
     if image.shape != (193,229,193) or not np.array_equal(affine, AFFINE):
         raise ContractError('carpet grid differs from pinned source')
@@ -132,6 +132,8 @@ def target_partition(ids, rounding, grid, interior, targets):
 
 
 def load_displayed(repo, parameters):
+    from .endpoints import _require_repository_inputs
+
     _require_repository_inputs(repo, parameters['repositoryInputs'])
     swm = json.loads((repo / 'public/data/swm_fibres.json').read_text())
     legacy = json.loads((repo / 'public/data/fibre_endpoints.json').read_text())

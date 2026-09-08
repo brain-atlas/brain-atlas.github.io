@@ -84,6 +84,10 @@ changing geometry, legacy endpoint tuples or presets. Nonfinite points, unknown
 source labels, hash/form drift or unsafe outputs fail closed. The test is
 `test/swm-domain-assets.test.js`.
 
+Pure `swm_domains` label/comparison helpers do not import mesh-generation dependencies.
+`load_carpet` and `load_displayed` import their existing asset loaders only when
+called; this does not alter loader validation, numerical rules, or environment gates.
+
 This command emits private audit reports, not entries in the public `outputs` or
 public-output rights inventory. Approval `brain-atlas-n401` permits published
 repository terms for this local screening scope only; the explicit terms flag

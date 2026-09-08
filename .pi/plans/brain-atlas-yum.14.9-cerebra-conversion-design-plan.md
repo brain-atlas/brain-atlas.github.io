@@ -2,7 +2,7 @@
 
 - Design Bead: `brain-atlas-yum.14.9`.
 - Implementation Bead: `brain-atlas-yum.14.10`; blocks `brain-atlas-yum.14.6`.
-- Status: **Approved scope; implementation not yet performed.**
+- Status: **Approved scope; implementation produced a numerically rejected private candidate. Execution paused.** See `.pi/research/2026-09-07-cerebra-conversion/report.md`; this design is not evidence of technical or anatomical acceptance.
 - Authority: `brain-atlas-2x3m`, 2026-09-07; original direction `brain-atlas-bs4u`.
 - Branch: `main`; task-owned local commits only, no push.
 - Evidence: `59d4a26`, `afaa36c`, and
@@ -53,6 +53,23 @@ form, size, source identity or label-table drift. CerebrA IDs are 0..102, 51 RH
 labels and LH=RH+51, not Jülich's +1000 convention.
 
 ## Established method and isolated environment
+
+**Acquisition amendment — `brain-atlas-g8gj`, 2026-09-07:** The owner requested
+`uv` after browser artifact quota evicted downloaded wheels. This supersedes the
+browser-only acquisition, pre-install bundled-notice review, and all-compressed-
+wheel retention requirements below. The exact 29-wheel inventory is unchanged
+(`.pi/research/2026-09-07-cerebra-conversion/wheel-inventory.json`, SHA-256
+`5c5b4740bbb590e54676016bfb9efc1978a5744668d6648afaa76af00ca04c0a`).
+Use `uv pip install` with exact URLs/local wheels, required hashes, no index,
+no dependency discovery, binary-only/no-build, no configuration discovery, and
+existing CPython 3.13.1. Reuse four retained verified wheels; fetch only the 25
+missing wheels (63,012,486 bytes). New `venv/` and private `cache/` stay under the
+approved private root; preserve existing `wheels/` and receipts. Retain expanded
+uv cache and installed-tree hashes instead of requiring original wheel containers.
+Review installed metadata and bundled notices **before any package import or
+scientific execution**; unknown/incompatible terms still block use. No base
+lock/environment, public asset, scientific method, or 2-GiB private-size ceiling
+change. The original ordering below is historical where this amendment differs.
 
 Select ANTsPy **0.6.3**, CPython **3.13.1**, Darwin arm64. Verified PyPI wheel:
 `antspyx-0.6.3-cp313-cp313-macosx_14_0_arm64.whl`, 16,637,911 bytes,
@@ -214,7 +231,19 @@ method-selection evidence, not a pinned executable or independent anatomical tru
 - [PyPI package/wheel metadata](https://pypi.org/pypi/antspyx/json)
 - [ICBM methods and terms](https://www.bic.mni.mcgill.ca/ServicesAtlases/ICBM152NLin2009)
 
-## Execution handoff
+## Current execution checkpoint
+
+`brain-atlas-yum.14.10` implemented and fitted the frozen method. Preserved B
+outputs, validated without refitting under source-bound `method-v3.json`, fail the
+unchanged 0.5-mm roundtrip budget (maxima 0.8517028651255683 / 0.5511378554652209 mm)
+and leave 15 / 143 cells uncertified by the sufficient positivity bound. That is
+not proof of folding. Replay stopped; anatomy remains unvalidated. Private report,
+20-plane nonexpert sheets, source hashes and two independent failure witnesses are
+retained. No tuning, threshold changes or adoption authorized; new method work
+requires separate approval. Current report/Beads supersede the historical running
+job instructions; do not restart old continuation scripts.
+
+## Historical execution handoff (before implementation)
 
 Resume `brain-atlas-yum.14.10`, not another design brainstorm. Owner wants practical
 implementation with available resources. Remaining human gate is exact dependency

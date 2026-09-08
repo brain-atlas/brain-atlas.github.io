@@ -1,0 +1,557 @@
+{
+  "id": "cerebra-synonly-candidate-v1",
+  "status": "frozen before any real fitting",
+  "environment": {
+    "directPackages": [
+      {
+        "name": "antspyx",
+        "version": "0.6.3"
+      },
+      {
+        "name": "certifi",
+        "version": "2026.7.22"
+      },
+      {
+        "name": "charset-normalizer",
+        "version": "3.5.1"
+      },
+      {
+        "name": "cloudpickle",
+        "version": "3.1.2"
+      },
+      {
+        "name": "contourpy",
+        "version": "1.3.3"
+      },
+      {
+        "name": "cycler",
+        "version": "0.12.1"
+      },
+      {
+        "name": "fonttools",
+        "version": "4.64.0"
+      },
+      {
+        "name": "idna",
+        "version": "3.19"
+      },
+      {
+        "name": "joblib",
+        "version": "1.6.0"
+      },
+      {
+        "name": "kiwisolver",
+        "version": "1.5.1"
+      },
+      {
+        "name": "matplotlib",
+        "version": "3.11.1"
+      },
+      {
+        "name": "narwhals",
+        "version": "2.25.0"
+      },
+      {
+        "name": "nibabel",
+        "version": "5.3.2"
+      },
+      {
+        "name": "numpy",
+        "version": "2.3.5"
+      },
+      {
+        "name": "packaging",
+        "version": "26.3"
+      },
+      {
+        "name": "pandas",
+        "version": "3.0.5"
+      },
+      {
+        "name": "patsy",
+        "version": "1.0.3"
+      },
+      {
+        "name": "pillow",
+        "version": "12.3.0"
+      },
+      {
+        "name": "pyparsing",
+        "version": "3.3.2"
+      },
+      {
+        "name": "python-dateutil",
+        "version": "2.9.0.post0"
+      },
+      {
+        "name": "pyyaml",
+        "version": "6.0.3"
+      },
+      {
+        "name": "requests",
+        "version": "2.34.2"
+      },
+      {
+        "name": "scikit-learn",
+        "version": "1.9.0"
+      },
+      {
+        "name": "scipy",
+        "version": "1.15.3"
+      },
+      {
+        "name": "six",
+        "version": "1.17.0"
+      },
+      {
+        "name": "statsmodels",
+        "version": "0.14.6"
+      },
+      {
+        "name": "threadpoolctl",
+        "version": "3.6.0"
+      },
+      {
+        "name": "urllib3",
+        "version": "2.7.0"
+      },
+      {
+        "name": "webcolors",
+        "version": "25.10.0"
+      }
+    ],
+    "transitivePackages": []
+  },
+  "environment_identity": {
+    "platform": {
+      "os": "macOS",
+      "osVersion": "26.5.1",
+      "build": "25F80",
+      "kernel": "Darwin 25.5.0",
+      "architecture": "arm64"
+    },
+    "uv": {
+      "bytes": 49354272,
+      "sha256": "63a2114be36011a3e5a43d75a3f95d7126d1709ed17bde86727a06ad3cbb48a0"
+    },
+    "python": {
+      "implementation": "CPython",
+      "version": "3.13.1",
+      "compiler": "Clang 18.1.8",
+      "architecture": "arm64",
+      "baseExecutableBytes": 49968,
+      "baseExecutableSha256": "513a2743ee8807003d3e2cc463c010f0b6615b2fb575300ce34a9a41439b095c",
+      "runtimeTreeSha256": "980e31a414dd30d75494465c41f401339b1449b2e408f2ac9d9b202c17661e2b"
+    },
+    "versions": {
+      "antspyx": "0.6.3",
+      "certifi": "2026.7.22",
+      "charset-normalizer": "3.5.1",
+      "cloudpickle": "3.1.2",
+      "contourpy": "1.3.3",
+      "cycler": "0.12.1",
+      "fonttools": "4.64.0",
+      "idna": "3.19",
+      "joblib": "1.6.0",
+      "kiwisolver": "1.5.1",
+      "matplotlib": "3.11.1",
+      "narwhals": "2.25.0",
+      "nibabel": "5.3.2",
+      "numpy": "2.3.5",
+      "packaging": "26.3",
+      "pandas": "3.0.5",
+      "patsy": "1.0.3",
+      "pillow": "12.3.0",
+      "pyparsing": "3.3.2",
+      "python-dateutil": "2.9.0.post0",
+      "pyyaml": "6.0.3",
+      "requests": "2.34.2",
+      "scikit-learn": "1.9.0",
+      "scipy": "1.15.3",
+      "six": "1.17.0",
+      "statsmodels": "0.14.6",
+      "threadpoolctl": "3.6.0",
+      "urllib3": "2.7.0",
+      "webcolors": "25.10.0"
+    },
+    "distributionTreeSha256": {
+      "antspyx": "07062a2b254d81215592d9448e490f26c7d057c5613bfb9f1acdcb90a5e8e915",
+      "certifi": "c7de7bed8d85832a4c4dcd716cd0007671087efdbf70b40b3fd4c1a8b75fc16d",
+      "charset-normalizer": "1a0aea42dadd90bce68f06c479f68072d68fa01febca6d7d62dfa90217115a39",
+      "cloudpickle": "abd82a34bd7790f9c197c3059ae9ae5144d28c4ffbea5a6efa61411dc111b83a",
+      "contourpy": "a0df631710c39ee066f5d39b15679d6d95d973cfdada7756f01f4345809c505f",
+      "cycler": "0b9d859ec140662cd2f6f6f5bd2435408ab080d6446882d2a9552e181237b38e",
+      "fonttools": "ab60e6df8b209f65cfb476c359f9ffd296ac35efdbc286dba7dce758eea97a0b",
+      "idna": "df792aee444515398b1bb53a5b13ae8fbb51e3f18783d4fee36b9c2d6f1d8852",
+      "joblib": "fcd5cdf280dbba5af1d1f65e5d6f7f23918f7da1d154caf382694e4580c9d253",
+      "kiwisolver": "fc5959318270a48b3009c2be96b4153dea845806ca28b22eaec5905786a51c06",
+      "matplotlib": "dd2c04dc4dbb042b7300ba29f0b6484df840a668ef2962807a0a6ac54c68207a",
+      "narwhals": "913e6a06e2c1229b96507d735024d0309fe9c10ad81aa909e6cb934a32bceb70",
+      "nibabel": "41de1bfb0d9613c0ea8126a09ac6455658144178773ee96b6b83dbcb8b2e5f68",
+      "numpy": "eada4d3421a0ea8cb03cd9278a8dd66a173b721cd7a2a19cc7fa06886fd70694",
+      "packaging": "0a9e13b3d873158417c8e0adc73c037a4567b63abb5bed95d88760f28768719d",
+      "pandas": "7b33dc557329b44727ef8a314b684cd340db426990af977616e157df5ee1b8f3",
+      "patsy": "a31c9f16d4733bbfe925c478c2dfc36c259da75de8e1bb0ee118a0f666df89a5",
+      "pillow": "f2c5a89bd75f71c588a2761284d83cadd8e7025fec1e63d7be45bf5910143c99",
+      "pyparsing": "ad9e96c0b8ef0e0041b15b9bda5984f7404fafa740ea4f956c9513f19a6bb095",
+      "python-dateutil": "5ac663b41f135ef3bd0d0d9f18257c277fb80982ceda6ee243b5f0318fbd7c7d",
+      "pyyaml": "160e7b4d6a70b0d74a31ccaef97c2283c3e20c8211b5bb77a20793e9058dcc1c",
+      "requests": "0d173886b35cf129844e010000a7d987d5ccd0d1f7fff03c5a0e16c3c4942a15",
+      "scikit-learn": "3bdb6a1a65d0f7848e16a8be64fdd24ea0608e0cc9fad53b362f9653883bfd16",
+      "scipy": "55fe47996b0297172099cc397ad961feaed5abb7a48399a524a9145ea058c756",
+      "six": "98d4f11a1b4f90c48814f50d6338d7da41351864ea4aceff8ea560e81730dfb4",
+      "statsmodels": "1e2239eed2c6050979c9affe77b320984464e1d9736c2000006853a08ace8ec7",
+      "threadpoolctl": "61a8528f3622d567e75723522e83fba47ea0a48bc6dc8c5d31b0fb2b9fdc575a",
+      "urllib3": "f74d9c84a53c00942474ab12118ea6a516724492d87fd238a239080ecde3361f",
+      "webcolors": "86c27874c85baf00dbd6080012442f6ce7c362aec3f31abd041fb2104bd948d1"
+    }
+  },
+  "implementation": {
+    ".pi/research/2026-09-07-cerebra-conversion/convert.py": "4f61a7cc67586ec727bf6ee8755bc81da772bd56f5e19ffb8d713aff9bc666a3",
+    ".pi/research/2026-09-07-cerebra-conversion/test_convert.py": "664a83a7cc610dc27b78f984fcf4cc22dd18dcde51710ad2826fb6b0640c71f8",
+    ".pi/research/2026-09-07-domain-atlas-selection/evaluate.py": "4c26327bdf5f10c1256f485feaa380b2c893d43d17ec1f7eb1b8ad635efd3551",
+    ".pi/research/2026-09-07-domain-atlas-selection/native_probe.py": "da892de2bbefa53afa61e124deb98c064587e7d4d570bb67976870ded8102daf",
+    ".pi/research/2026-09-07-domain-atlas-selection/source-manifest.json": "f811f8b728beb413e0c33cd40d28160f857aaa6fcef612a2af8342dc973e1231",
+    ".pi/research/2026-09-07-swm-domains/anatomy_probe.py": "975283140946855860b1ff1934bd618d605745709e1a7b382d7a0f0322a8e76b",
+    "tools/assets/common.py": "c36ba5295083a371258023cad8fc052c37b564cff88e9b0ea4277d5b5ff602a8",
+    "tools/assets/swm_domains.py": "91d437deac9583681b80ab7281c3dbdba5fabbd519f73d3e9eba84a80c792f1c"
+  },
+  "input_sets": [
+    {
+      "root": "/Users/hays/.local/share/brain-atlas/domain-atlas-selection-yum14-6-2026-09-07/inputs",
+      "files": [
+        {
+          "id": "CerebrA.mnc",
+          "filename": "CerebrA.mnc",
+          "bytes": 501507,
+          "sha256": "64a265da995a8e82bf6d39bbb758bfeabd35876f5dfff13deaba702ca90de1ab"
+        },
+        {
+          "id": "CerebrA.nii",
+          "filename": "CerebrA.nii",
+          "bytes": 34120436,
+          "sha256": "c83e8038b21ff85c5efaa4082eb1a4560f4bae392bc6f9b1fc0a7888e4fce1d3"
+        },
+        {
+          "id": "CerebrA_DKT.mnc",
+          "filename": "CerebrA_DKT.mnc",
+          "bytes": 521616,
+          "sha256": "24bb3f609a27efe359fb05ab39fbdd030657c7feead6633fbd4341862f883936"
+        },
+        {
+          "id": "CerebrA_DKT.nii",
+          "filename": "CerebrA_DKT.nii",
+          "bytes": 34120436,
+          "sha256": "57093126ac1729063854ee2348e3e222f593450d0246eb3332cfb7436c08fd40"
+        },
+        {
+          "id": "CerebrA_LabelDetails.csv",
+          "filename": "CerebrA_LabelDetails.csv",
+          "bytes": 2866,
+          "sha256": "1f27188447421c37f35d0cb3c7adebd072ecbe745f52ae23066f3a98337d8c4c"
+        },
+        {
+          "id": "DKT2icbm.xfm",
+          "filename": "DKT2icbm.xfm",
+          "bytes": 1024,
+          "sha256": "5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef"
+        },
+        {
+          "id": "DKT2icbmnl.xfm",
+          "filename": "DKT2icbmnl.xfm",
+          "bytes": 461,
+          "sha256": "f7b9ef2beca4981760766d6c7b2432be572f9bc0576331d177ae36e993361dd3"
+        },
+        {
+          "id": "DKT2icbmnl_grid_0.mnc",
+          "filename": "DKT2icbmnl_grid_0.mnc",
+          "bytes": 72376831,
+          "sha256": "ffb34c0b781b97a205bdd5ddaa0d98cea06c7fa481872d8516a37eb70b6eb4b7"
+        },
+        {
+          "id": "DKT_Atlas_icbm_nl.mnc",
+          "filename": "DKT_Atlas_icbm_nl.mnc",
+          "bytes": 488540,
+          "sha256": "9b823a3385a0eedbfe2aa09b8a98d624b32f88b18aaba3121c26a9a93c2b8972"
+        },
+        {
+          "id": "DKT_Atlas_icbm_nl.nii",
+          "filename": "DKT_Atlas_icbm_nl.nii",
+          "bytes": 34120436,
+          "sha256": "68799fb06e73a147113c8f6aaed1d7825d00111718dc1c4a2d1f62e8cf4b0492"
+        },
+        {
+          "id": "LICENSE",
+          "filename": "LICENSE",
+          "bytes": 6894,
+          "sha256": "46633d9b124044cc1ff3d3891e45d3d866b9c6d29896d62d81072b6c5868816b"
+        },
+        {
+          "id": "README.md",
+          "filename": "README.md",
+          "bytes": 167,
+          "sha256": "67d76381cf06bbed40c13130a057b5e47d86bb5a7294451f5247406d92819d97"
+        },
+        {
+          "id": "ants_nl_registration.sh",
+          "filename": "ants_nl_registration.sh",
+          "bytes": 783,
+          "sha256": "9ce959fa047b7c74974062bfb9e19bf82db3165058e580bcd4b2dbff151e0b6b"
+        },
+        {
+          "id": "bestlinreg_s2",
+          "filename": "bestlinreg_s2",
+          "bytes": 11876,
+          "sha256": "9249a879b7c2d2a982c9169de5fbc0a1be0b74a777a87cea07d1cd95413d8c34"
+        },
+        {
+          "id": "datacite.yml",
+          "filename": "datacite.yml",
+          "bytes": 1190,
+          "sha256": "8b9ff7cad96efa5f05d9e9143291ea8cf57749c498cb265a919860f0a42d6f9e"
+        },
+        {
+          "id": "linear_registration.sh",
+          "filename": "linear_registration.sh",
+          "bytes": 84,
+          "sha256": "16cbe9b2e7317f405a23159f8052579bb4adcedfe83daf9cea3733e37d7cdb6e"
+        },
+        {
+          "id": "mni_icbm152_t1_tal_nlin_sym_09c.mnc",
+          "filename": "mni_icbm152_t1_tal_nlin_sym_09c.mnc",
+          "bytes": 15775336,
+          "sha256": "04cd0dac790801d0cc580a5ef5ed9f2b36a744e548866d8a2f9251b8e6e2e071"
+        },
+        {
+          "id": "resampling.sh",
+          "filename": "resampling.sh",
+          "bytes": 136,
+          "sha256": "37eaee3baf505a10a472ab04a16fe1d3c32336b7dcbef6ac6de8a498dc084239"
+        }
+      ]
+    },
+    {
+      "root": "/Users/hays/.local/share/brain-atlas/swm-domain-audit/brain-atlas-yum.14.3-source-2026-09-07/inputs",
+      "files": [
+        {
+          "id": "carpet",
+          "filename": "tpl-MNI152NLin2009cAsym_res-01_desc-carpet_dseg.nii.gz",
+          "bytes": 451304,
+          "sha256": "52eded597985fee7806699dfd276d32b1d53293dff04326773e4fe84864752c7"
+        },
+        {
+          "id": "t1",
+          "filename": "tpl-MNI152NLin2009cAsym_res-01_T1w.nii.gz",
+          "bytes": 13685075,
+          "sha256": "1f27aabea9f7183dc0c69dafa71e1787b921ca778d655d9c1bf302b273d5627a"
+        }
+      ]
+    },
+    {
+      "root": "/Users/hays/.local/share/brain-atlas/cerebra-conversion-yum14-10-2026-09-07/native-preparation",
+      "files": [
+        {
+          "id": "canonical-receipt.json",
+          "filename": "canonical-receipt.json",
+          "bytes": 723,
+          "sha256": "997a02ace14e8ecc55dbf4328e9e0e764436abe2dcc4bb58d75ea724c5ab38c2"
+        },
+        {
+          "id": "native-00000-0.png",
+          "filename": "native-00000-0.png",
+          "bytes": 312082,
+          "sha256": "e6f30286368b9eb9f40d8a33927c83d663c6d91a268c73d9c6dc1f50348f8796"
+        },
+        {
+          "id": "native-00003-0.png",
+          "filename": "native-00003-0.png",
+          "bytes": 376968,
+          "sha256": "7e22f7950c605f2237882a6a4b23b868855df86740fa2348fa314741997d2c25"
+        },
+        {
+          "id": "native-00011-0.png",
+          "filename": "native-00011-0.png",
+          "bytes": 317238,
+          "sha256": "18a37246f3cfa8121e220952d2f4d0042e5b855e946e33dc9480ff7ed79713f2"
+        },
+        {
+          "id": "native-00047-5.png",
+          "filename": "native-00047-5.png",
+          "bytes": 362937,
+          "sha256": "4c746b3dc0280217c76044c6ad410017926b7dfc5ca4e62f7eb8e5768d077a05"
+        },
+        {
+          "id": "native-00099-7.png",
+          "filename": "native-00099-7.png",
+          "bytes": 358223,
+          "sha256": "b90d37e1ff03894e37eac152eaddc8d16f9a31642895647989357a99fa75935a"
+        },
+        {
+          "id": "native-00149-2.png",
+          "filename": "native-00149-2.png",
+          "bytes": 378800,
+          "sha256": "fe602856ce16026ba86274e3074c9391f551f2684de0b2fd2c6a974a042bede0"
+        },
+        {
+          "id": "native-01154-1.png",
+          "filename": "native-01154-1.png",
+          "bytes": 380065,
+          "sha256": "13c3e605e6f9a8f54faaa3e96c41fff5654f5b390d10c4ffd516b791a8bb241e"
+        },
+        {
+          "id": "native-canonical-float64.nii",
+          "filename": "native-canonical-float64.nii",
+          "bytes": 68240520,
+          "sha256": "611243e1164d42fc83710128e7b9f3ba1fd86fedb96d40f9c386b0c0c78ec821"
+        },
+        {
+          "id": "native-summary.json",
+          "filename": "native-summary.json",
+          "bytes": 4449,
+          "sha256": "3051ca068d20601fe12f0dd61c1699913d7ea0cd2ec05e4a7e108d1552a279c9"
+        }
+      ]
+    },
+    {
+      "root": "/Users/hays/.local/share/brain-atlas/cerebra-conversion-yum14-10-2026-09-07/candidate-b",
+      "files": [
+        {
+          "id": "method.json",
+          "filename": "method.json",
+          "bytes": 19015,
+          "sha256": "b3c85d682d00500eb5f7494f106c9218fa793040ca5f789e1600f66983c855dc"
+        },
+        {
+          "id": "syn-0GenericAffine.mat",
+          "filename": "syn-0GenericAffine.mat",
+          "bytes": 193,
+          "sha256": "f8f8f840b477ee2df12efa04a523eb1c89068a92a2a5e0c78e9ef2619c5d06a7"
+        },
+        {
+          "id": "syn-1InverseWarp.nii.gz",
+          "filename": "syn-1InverseWarp.nii.gz",
+          "bytes": 178904869,
+          "sha256": "50d8c385d33edccf0e24f0ba229ce05178897585f1f9989f4777a7ebe5ae9bbe"
+        },
+        {
+          "id": "syn-1Warp.nii.gz",
+          "filename": "syn-1Warp.nii.gz",
+          "bytes": 178903717,
+          "sha256": "545569ec47d2552ca6979cbf28c17d96433bff3b3681d984179bc9698c1946fa"
+        }
+      ]
+    }
+  ],
+  "roles": {
+    "moving": "/Users/hays/.local/share/brain-atlas/cerebra-conversion-yum14-10-2026-09-07/native-preparation/native-canonical-float64.nii",
+    "labels": "/Users/hays/.local/share/brain-atlas/domain-atlas-selection-yum14-6-2026-09-07/inputs/CerebrA.nii",
+    "label_table": "/Users/hays/.local/share/brain-atlas/domain-atlas-selection-yum14-6-2026-09-07/inputs/CerebrA_LabelDetails.csv",
+    "fixed": "/Users/hays/.local/share/brain-atlas/swm-domain-audit/brain-atlas-yum.14.3-source-2026-09-07/inputs/tpl-MNI152NLin2009cAsym_res-01_T1w.nii.gz",
+    "carpet": "/Users/hays/.local/share/brain-atlas/swm-domain-audit/brain-atlas-yum.14.3-source-2026-09-07/inputs/tpl-MNI152NLin2009cAsym_res-01_desc-carpet_dseg.nii.gz"
+  },
+  "arguments": [
+    "--dimensionality",
+    "3",
+    "-r",
+    "Identity",
+    "--metric",
+    "CC[FIXED_PTR,MOVING_PTR,1,4]",
+    "--transform",
+    "SyN[0.200000,3.000000,0.000000]",
+    "--convergence",
+    "[50x50x30,1e-7,8]",
+    "--smoothing-sigmas",
+    "2x1x0",
+    "--shrink-factors",
+    "4x2x1",
+    "-u",
+    "0",
+    "-z",
+    "1",
+    "--output",
+    "[PREFIX,WARPED_MOVING_PTR,WARPED_FIXED_PTR]",
+    "-x",
+    "[NA,NA]",
+    "--random-seed",
+    "0",
+    "--float",
+    "0",
+    "--write-composite-transform",
+    "0",
+    "-v",
+    "1"
+  ],
+  "effective_defaults": {
+    "winsorization": false,
+    "winsor_quantiles": [
+      0,
+      1
+    ],
+    "intrinsic_preprocessing": "ANTs 256-bin histogram endpoint estimation and [0,1] intensity windowing; endpoint variables float even under double registration. No additional application normalization.",
+    "histogram_matching": false,
+    "cc_sampling": "Dense, weight1,radius4,gradient filters disabled; no stochastic subsampling.",
+    "pyramid_sigma_units": "voxel standard deviations",
+    "field_smoothing_units": "voxel-space variances (3 update,0 total)",
+    "seed": "CLI0 retained: ANTs sentinel, not a fixed RNG seed; one thread set before imports; repeatability established only by exact two-run comparison.",
+    "double_scope": "ANTs registration computation and independent field checks; not every internal scalar. NIfTI image_read double avoids from_numpy downcast. Point wrapper only used in exactly representable synthetic fixtures.",
+    "output_t1_interpolation": "linear, outside0",
+    "internal_inverse": "ITK SyN20 maximum iterations,spacing-scaled mean0.001/max0.1 tolerances,zero boundary. Does not replace independent0.5mm check."
+  },
+  "technical_policy": {
+    "jacobian": "Unclamped central derivatives, outer voxel excluded; additional outward-rounded interval cell determinant sufficient positivity bound for exact unit RAS grid. Unverified cell fails numerical gate, not called a proven fold.",
+    "roundtrip": "Both directions, all grid centres with valid mapped-centre linear interpolation support, float64, max<=0.5mm engineering budget; every exclusion counted; empty support fails.",
+    "labels": "nearestNeighbor once, outside0, original0..102 IDs, separately transformed ones support; lost original labels fail; component/enclosed-background changes require review, no cleanup.",
+    "replay": "Two new roots; exact decoded RAS fields/labels/support; retain container hashes separately.",
+    "anatomy": "Every anatomical domain unvalidated; carpet descriptive, not independent truth; no adoption."
+  },
+  "review_selection": {
+    "fixed_ras_slices": {
+      "x": [
+        -30,
+        0,
+        30
+      ],
+      "y": [
+        -80,
+        -40,
+        0,
+        40
+      ],
+      "z": [
+        -60,
+        -40,
+        -20,
+        0,
+        20,
+        40,
+        60
+      ]
+    },
+    "extrema": "For each field, first C-order voxel attaining maximum displacement magnitude; inspect all3 orthogonal planes through it.",
+    "presentation": "Native+original labels, target+original labels, target+candidate labels, target+outside-support; same source-bound labels; nonexpert defect review only."
+  },
+  "evidence": {
+    "synthetic": "14 tests passed, including exact identity/nonidentity1e-12 and pinned recovery/no overwrite.",
+    "native_parser": "7 existing tests passed; original environment/source preflight native-summary.json",
+    "pre_fit_review": "runtime:delegated-results/89d70733-779c-4b15-897f-a053c24013a6/child-0.json",
+    "method_audit": "runtime:delegated-results/97c46c7b-b6e4-4dcb-93eb-74f825faa0af/child-0.json"
+  },
+  "supersedes": {
+    "sha256": "b3c85d682d00500eb5f7494f106c9218fa793040ca5f789e1600f66983c855dc",
+    "reason": "Completed SyN emitted exact identity affine. Guard now verifies/ignores only identity; optional pinned recovery avoids refitting. Registration arguments and all numerical policies unchanged."
+  },
+  "recovery": {
+    "method": "/Users/hays/.local/share/brain-atlas/cerebra-conversion-yum14-10-2026-09-07/candidate-b/method.json",
+    "fwdtransforms": [
+      "/Users/hays/.local/share/brain-atlas/cerebra-conversion-yum14-10-2026-09-07/candidate-b/syn-1Warp.nii.gz",
+      "/Users/hays/.local/share/brain-atlas/cerebra-conversion-yum14-10-2026-09-07/candidate-b/syn-0GenericAffine.mat"
+    ],
+    "invtransforms": [
+      "/Users/hays/.local/share/brain-atlas/cerebra-conversion-yum14-10-2026-09-07/candidate-b/syn-0GenericAffine.mat",
+      "/Users/hays/.local/share/brain-atlas/cerebra-conversion-yum14-10-2026-09-07/candidate-b/syn-1InverseWarp.nii.gz"
+    ],
+    "log": "/Users/hays/.local/share/brain-atlas/cerebra-conversion-yum14-10-2026-09-07/receipts/candidate-b.log",
+    "log_sha256": "c0802eca48b9288f7b405c1a92eb189b8e8cd7e854b4bd76d00af378b94f3b32",
+    "meaning": "Retained first registration, not a second execution. These files are checked as reference artifacts, never used as fitting images."
+  }
+}
