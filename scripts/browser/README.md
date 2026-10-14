@@ -72,7 +72,10 @@ tract-hidden lesson deferral, first-visible geometry loading, and complete Atlas
 development diagnostics to verify hidden/offscreen suspension, explicit Pause, reduced
 motion, accessible status, frozen model clocks, and event-driven paused render counts.
 The Chromium run also injects real touch input to verify Lesson scrolling versus Atlas
-camera capture.
+camera capture. `hardening-visuals.spec.cjs` audits declared atlas/image/split layouts,
+metadata, activation-only/no-referrer requests, keyboard selection, compact/short-frame
+error recovery, touch selection/Retry, reduced motion, and no-WebGL rendering. Its images
+are intercepted test fixtures, not scientific figures or new public lesson content.
 
 ## Mobile performance profile
 

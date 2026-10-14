@@ -368,7 +368,9 @@ and reload returns to Atlas without restoring local source. A declared HTTPS
 supplementary image element is created only while its validated visual is active, after
 opening; switching back to the atlas removes it. It remains a semantic DOM figure—not a
 WebGL texture—with alt text, caption, credit, source link, no-referrer loading, and an
-accessible retry state.
+accessible retry state. When space is tight, the image-error explanation scrolls within
+its frame; keyboard users can focus it and scroll to **Retry image**. The caption,
+credit, and source link remain outside that scrolling region.
 V1 accepts credential-free HTTPS image sources only; packaged repository-relative lesson
 images are not yet part of the contract. Scripts, styles, frames, raw HTML, unsafe URL
 schemes, arbitrary fetches, and undeclared images remain forbidden.
