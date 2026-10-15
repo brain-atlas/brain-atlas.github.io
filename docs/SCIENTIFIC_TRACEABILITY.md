@@ -94,6 +94,14 @@ SWM contains 7,220 left and 7,780 right fibres under the same rule.
 5. Short-range contours retain zero-mean vibration; population reciprocity must not be
    described as literal bidirectional conduction by one axon.
 
+The [condition-specific direction evidence review](ASSOCIATION_DIRECTION_EVIDENCE.md)
+(2026-10-15; `brain-atlas-yum.9`) verifies human stimulation and naming studies,
+including the 125-patient coactivation and separate 127-patient transfer-entropy
+reports. It retains the bilateral 50/50 fallback for all eight bundles: evoked
+response strength, task coactivation, and statistical direction do not directly
+calibrate illustrative event probabilities. This is not a measured resting-state
+model; any condition-specific replacement requires separate approval and validation.
+
 ## Source records verified for this audit
 
 The following records were fetched successfully on 2026-07-21 and fibre-space
