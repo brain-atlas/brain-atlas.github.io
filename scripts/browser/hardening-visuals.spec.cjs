@@ -24,8 +24,9 @@ for (const noWebgl of [false, true]) {
       const errors = monitor(page);
       await page.setViewportSize(viewport);
       await page.emulateMedia({ reducedMotion: 'reduce' });
+      let attempts = 0;
       await page.route('https://example.org/retinotopy.png', route => route.fulfill({
-        status: 200, contentType: 'image/png', body: Buffer.alloc(0),
+        status: 200, contentType: 'image/png', body: ++attempts === 1 ? Buffer.alloc(0) : png,
       }));
       await openFixture(page, fixture.replace('visual: atlas', 'visual: retinotopy-diagram'), noWebgl);
       await expect(page.locator('#supplementary-image-failure')).toBeVisible();
@@ -38,9 +39,20 @@ for (const noWebgl of [false, true]) {
       await page.keyboard.press('End');
       await page.keyboard.press('Tab');
       await expect(page.locator('#supplementary-image-retry')).toBeFocused();
-      const retry = await page.locator('#supplementary-image-retry').boundingBox();
-      expect(retry.y).toBeGreaterThanOrEqual(frame.y);
-      expect(retry.y + retry.height).toBeLessThanOrEqual(frame.y + frame.height);
+      // Native End scrolling can continue after Tab, even with reduced motion.
+      await expect(async () => {
+        const frame = await page.locator('#supplementary-image-frame').boundingBox();
+        const retry = await page.locator('#supplementary-image-retry').boundingBox();
+        expect(retry.y).toBeGreaterThanOrEqual(frame.y);
+        expect(retry.y + retry.height).toBeLessThanOrEqual(frame.y + frame.height);
+        expect(await page.locator('#supplementary-image-retry').evaluate(button => {
+          const rect = button.getBoundingClientRect();
+          return document.elementFromPoint(rect.x + rect.width / 2, rect.y + rect.height / 2) === button;
+        })).toBe(true);
+      }).toPass({ timeout: 5000 });
+      await page.keyboard.press('Enter');
+      await expect(page.locator('#supplementary-visual')).toHaveAttribute('data-state', 'loaded');
+      expect(attempts).toBe(2);
       expect(errors).toEqual([]);
     });
   }
