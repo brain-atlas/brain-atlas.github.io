@@ -375,6 +375,38 @@ V1 accepts credential-free HTTPS image sources only; packaged repository-relativ
 images are not yet part of the contract. Scripts, styles, frames, raw HTML, unsafe URL
 schemes, arbitrary fetches, and undeclared images remain forbidden.
 
+### Contribute a lesson
+
+In **Open lesson Markdown**, validate your pasted or file-loaded lesson, then select
+**Download lesson**. The browser downloads `lesson.md` as UTF-8 containing the exact
+validated schema-v1 Markdown: prose, comments, citations, scene directives, and image
+credits/source links remain intact. This is not an export of your current Atlas camera
+or filters, and image files are not bundled. File decoding and the text area's line-ending
+normalization happen before validation. Edits or file-load failures require revalidation.
+If no download appears, copy the Markdown into a local `.md` file. Downloading does not
+open the lesson, contact image hosts, or retain source across reloads.
+
+To propose inclusion in the [repository](https://github.com/brain-atlas/brain-atlas.github.io):
+
+1. Review the file for private information. Check teaching claims against primary
+   sources and preserve citations, captions, credits, source URLs, and evidence limits.
+2. Fork the repository and add the downloaded source under `src/lessons/` with a
+   descriptive filename. Add its teaching-claim/review record under `docs/lessons/`.
+3. Propose a matching `src/lessons/library.json` entry using the existing registry
+   format. Original prose uses the repository's AGPL-3.0-only terms; confirm you can
+   contribute under those terms. Document each image's separate license/permission
+   evidence in the registry and review record; credits alone do not establish rights.
+4. Run `npm run check:lessons`, `npm test`, and `npm run build:publish`; review the lesson
+   visually, including a narrow viewport and the no-WebGL reading path.
+5. Submit a normal pull request with the source, registry entry, evidence and test results.
+   Maintainers review scientific claims, representation limits, accessibility and rights
+   before inclusion. Validation or a registry entry does not certify scientific review
+   or authorize publication.
+
+The viewer does not sign in to GitHub, store tokens, submit files, or create pull requests.
+The contribution link contains no lesson source. Keep the downloaded file as your local
+fallback; GitHub contribution is optional and happens outside the viewer.
+
 ## Controls
 
 Use **Lessons** to start/resume the checked reference lesson or open the local workflow. Use

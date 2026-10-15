@@ -2,7 +2,7 @@
 
 **Date:** 2026-07-20; local-import boundary updated 2026-07-21; standalone
 loopback-server boundary added 2026-07-22; binary release pipeline added
-2026-07-23
+2026-07-23; explicit local lesson export added 2026-10-15
 
 **Scope:** Static viewer, optional standalone workstation executable, local
 lesson-import boundary, declared supplementary images, tracked/deployed assets,
@@ -94,6 +94,15 @@ or relaxing the standalone loopback/authentication boundary.
   `?lesson=local` marker contains no source and cannot recover it after reload; recovery
   removes the marker and returns to Atlas. There is no upload, backend, storage,
   messaging, or credential handling.
+- Explicit **Download lesson** exports only the frozen validated source as UTF-8
+  `lesson.md` using a temporary Blob URL. The fixed filename cannot contain author
+  paths; no HTML rendering, image fetching, source-bearing URL, upload, token or
+  browser-storage capability is added. Edits, file-read starts and failures invalidate
+  the candidate; failed download retains source for manual copy/retry. Browser download
+  completion cannot be attested by the app. The repository contribution link is fixed,
+  opens with `noopener noreferrer`, and preserves manual rights/scientific review.
+  Downloaded source can contain private prose/comments: users must inspect it before
+  sharing. This export neither certifies content nor changes CSP or GitHub permissions.
 - Anatomy/model requests remain same-origin and use established JSON, OBJ, and GLB
   parsers. Imported supplementary media may request only declared credential-free
   HTTPS image/source URLs after activation. Images use semantic DOM rather than

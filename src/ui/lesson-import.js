@@ -80,6 +80,7 @@ export function validateLessonImport(source, catalog) {
   return deepFreeze({
     ok: true,
     value: {
+      source,
       lesson: parsed.value,
       presentation,
       summary: {

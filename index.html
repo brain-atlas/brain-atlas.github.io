@@ -240,7 +240,8 @@
       <label for="lesson-import-source">Lesson Markdown</label>
       <textarea id="lesson-import-source" rows="16" spellcheck="false"
         placeholder="---&#10;title: My lesson&#10;schema: 1&#10;---"></textarea>
-      <p class="import-privacy">Nothing is uploaded or saved. Opening a validated lesson may contact the HTTPS image hosts listed in its preview.</p>
+      <p class="import-privacy">Nothing is uploaded or saved automatically. Download lesson saves the validated Markdown only, not image files. Opening a validated lesson may contact the HTTPS image hosts listed in its preview.</p>
+      <p>To contribute, download your lesson, check private content, citations and media rights, then follow the <a href="https://github.com/brain-atlas/brain-atlas.github.io/blob/main/README.md#contribute-a-lesson" target="_blank" rel="noopener noreferrer">repository contribution instructions</a>. Validation is not scientific review. Nothing is submitted here.</p>
       <section id="lesson-import-result" class="import-result" aria-live="polite" aria-atomic="true">
         <p>Source has not been validated.</p>
       </section>
@@ -248,6 +249,7 @@
     <footer class="import-actions">
       <button id="lesson-import-cancel" type="button">Cancel</button>
       <button id="lesson-import-validate" type="button">Validate lesson</button>
+      <button id="lesson-import-download" type="button" disabled>Download lesson</button>
       <button id="lesson-import-open" type="button" disabled>Open lesson</button>
     </footer>
   </dialog>

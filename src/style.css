@@ -511,7 +511,7 @@ button.layer-entity-toggle:hover:not(:disabled) { color: var(--text); border-col
   .import-file { align-items: stretch; flex-direction: column; }
   .import-file input { max-width: 100%; }
   #lesson-import-source { min-height: 220px; }
-  .import-actions { display: grid; grid-template-columns: repeat(3, 1fr); padding: 8px; }
+  .import-actions { display: grid; grid-template-columns: repeat(2, 1fr); padding: 8px; }
   .import-actions button { min-width: 0; padding-inline: 6px; font-size: var(--type-label-size); }
   .anatomy-controls { right: 8px; bottom: 8px; left: 8px; align-items: flex-end; }
   .anatomy-preview { max-width: 48%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

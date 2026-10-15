@@ -94,6 +94,18 @@ test('valid local source produces a frozen preview without changing its text', (
   assert.equal(Object.isFrozen(result.value.summary.externalHosts), true);
 });
 
+test('validated export source preserves comments, Unicode, credits and line endings', () => { // Tests INV-18
+  const source = importedSource().replace('schema: 1', 'schema: 1 # keep author comment')
+    .replace('Local introduction.', 'Local introduction: café 🧠. [Citation](https://example.org/paper)')
+    .replaceAll('\n', '\r\n');
+  const result = validateLessonImport(source, TEST_CATALOG);
+  assert.equal(result.ok, true, JSON.stringify(result.diagnostics));
+  assert.equal(result.value.source, source);
+  const exported = new TextDecoder().decode(new TextEncoder().encode(result.value.source));
+  assert.equal(exported, source);
+  assert.deepEqual(validateLessonImport(exported, TEST_CATALOG), result);
+});
+
 test('runtime catalog extends visual IDs without mutating or freezing the base catalog', () => { // Tests INV-17
   const result = validateLessonImport(importedSource(), TEST_CATALOG);
   assert.equal(result.ok, true);

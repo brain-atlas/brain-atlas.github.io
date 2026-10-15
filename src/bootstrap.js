@@ -1305,11 +1305,13 @@ function renderImportSummary(summary) {
 function invalidateImport(message = 'Changes have not been validated.') {
   lessonImportCandidate = null;
   byId('lesson-import-open').disabled = true;
+  byId('lesson-import-download').disabled = true;
   renderImportMessage(message);
 }
 
 async function loadImportFile() {
   const file = byId('lesson-import-file').files?.[0];
+  invalidateImport('Validate the lesson before opening or downloading it.');
   if (!file) return;
   if (!/\.md$/i.test(file.name)) {
     lessonImportCandidate = null;
@@ -1339,8 +1341,7 @@ async function loadImportFile() {
     byId('lesson-import-source').value = await file.text();
     invalidateImport(`${file.name} loaded. Validate the lesson before opening it.`);
   } catch (error) {
-    lessonImportCandidate = null;
-    byId('lesson-import-open').disabled = true;
+    invalidateImport();
     renderImportDiagnostics([{
       code: 'import.file.read',
       message: `The selected file could not be read: ${error.message}`,
@@ -1355,8 +1356,30 @@ function validateImportSource() {
   const result = validateLessonImport(byId('lesson-import-source').value, catalog);
   lessonImportCandidate = result.ok ? result.value : null;
   byId('lesson-import-open').disabled = !result.ok;
+  byId('lesson-import-download').disabled = !result.ok;
   if (result.ok) renderImportSummary(result.value.summary);
   else renderImportDiagnostics(result.diagnostics);
+}
+
+function downloadValidatedImport() {
+  if (!lessonImportCandidate) return;
+  const link = document.createElement('a');
+  let url;
+  renderImportSummary(lessonImportCandidate.summary);
+  try {
+    url = URL.createObjectURL(new Blob([lessonImportCandidate.source], { type: 'text/markdown;charset=utf-8' }));
+    link.href = url;
+    link.download = 'lesson.md';
+    document.body.append(link);
+    link.click();
+    byId('lesson-import-result').append(node('p', '', 'Download requested. Check your browser downloads; if no file appears, copy the Markdown and save it as lesson.md.'));
+  } catch {
+    byId('lesson-import-result').append(node('p', '', 'Download could not start. Copy the Markdown and save it as lesson.md, or retry Download lesson.'));
+  } finally {
+    link.remove();
+    // Give the browser time to consume the download before releasing its URL.
+    if (url) setTimeout(() => URL.revokeObjectURL(url), 60_000);
+  }
 }
 
 function openValidatedImport() {
@@ -1388,6 +1411,7 @@ function bindLessonImport() {
   byId('lesson-import-file').addEventListener('change', loadImportFile);
   byId('lesson-import-validate').addEventListener('click', validateImportSource);
   byId('lesson-import-open').addEventListener('click', openValidatedImport);
+  byId('lesson-import-download').addEventListener('click', downloadValidatedImport);
   dialog.addEventListener('close', () => {
     const destination = importCloseFocus;
     importCloseFocus = 'trigger';
