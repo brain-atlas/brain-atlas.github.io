@@ -1,6 +1,6 @@
 # Runtime performance
 
-**Last measured:** 2026-09-06 (Jülich catalog); historical baseline below: 2026-07-23
+**Last measured:** 2026-10-16 (browser-mode comparison); Jülich catalog: 2026-09-06; historical baseline: 2026-07-23
 
 **Tracking:** `brain-atlas-zmq.9`; re-profiled for `brain-atlas-zmq.31`; render policy hardened by `brain-atlas-zmq.19`
 **Profile:** `scripts/browser/performance.spec.cjs`
@@ -136,6 +136,127 @@ The host was an Apple M3 Max with 128 GiB RAM running Chromium 150.0.7871.46. Th
 Demand loading reduced the direct lesson's initial encoded anatomical/catalog transfer by **74.7%** relative to complete Atlas Home. The direct entry still pays for the active shared-early SWM and V2/V3 shells, but deferring the compressed association payload removes 654 kB of initial transfer and, more importantly on this profile, its main-thread geometry construction. App-ready time fell from the prior 2.562 s direct/2.619 s Atlas measurement to about 1.05/1.08 s because readiness now needs only the checked tract metadata projection; complete Atlas geometry continues loading after the semantic shell is ready. The Atlas settled transfer is intentionally unchanged apart from the 1.4 kB projection because its authored default shows every tract.
 
 The frame sample shows that this host kept scheduling active animation under the stated throttle after assets settled. It does **not** measure a phone GPU, battery use, thermal throttling, mobile Safari, or a cellular radio. Long tasks above 300 ms remain visible during initial parsing. Atlas Home also retains the full 14.7 MB encoded anatomical/catalog payload; its authored active/auto-rotate states still render continuously until paused, settled, hidden, or offscreen.
+
+## Headed versus headless comparison (2026-10-16)
+
+`brain-atlas-2h9x` compared the managed browser's visible, headless, and offscreen
+headed modes. **Use headless for routine automated checks; retain targeted visible
+browser checks.** This is evidence of comparable behavior in one automation
+profile, not certification of its GPU backend or physical-device performance.
+No application code, dependencies, browser configuration files, or system settings
+changed. The existing Playwright config already defaults to headless; `HEADED=1`
+selects headed execution. These measurements used the Pi browser tool, not that
+external Playwright runner.
+
+### Controlled environment and method
+
+- Source: `2062d64f544d05121a7113a618c3d46fc462f218`, unchanged during sampling.
+- Host: MacBook Pro Mac15,9, Apple M3 Max, 16 CPU / 40 GPU cores, 128 GB;
+  macOS 27.0.1 build 26A434, Darwin 27.0.0 arm64; built-in 3456×2234 display.
+- Browser: managed BetterChromium **153.0.8010.36**, same executable and persistent
+  profile across restarts. Page UA reported Chrome/153.0.0.0.
+- Common observed launch flags: `--use-gl=angle --use-angle=gl`,
+  `--fingerprint=57550 --fingerprint-locale=en-US --fingerprint-platform=macos`.
+  Headless added `--headless`; offscreen added `--window-size=1512,982` and
+  `--window-position=32000,32000`. No backend flags were changed for this work.
+- Same development server: `node node_modules/vite/bin/vite.js --host 127.0.0.1
+  --port 5213 --strictPort`, Node 24.19.0, npm 11.17.0. Development was necessary
+  for existing `window.__view` diagnostics; no source edits or HMR reloads occurred
+  during measurement. These are not production-build timing measurements.
+- Atlas Home at `/`, viewport 1440×1000 CSS pixels, DPR 1, canvas 1059×842;
+  default bilateral layers, no labels, activity playing, stationary default camera
+  `[210,75,-195]` (floating-point rounding omitted). No added CPU/network throttle.
+- Wait for `fibreFilter.eligibleAssociationContours > 0`, `__view.swm`, and 90
+  loaded region meshes under the existing MNI group's region child. Each mode
+  used the same page-evaluation probe: preserve/restore `scene.onAfterRender`,
+  capture `renderer.info`, then collect three consecutive rAF blocks, each ending
+  when its timestamp span reaches at least 2000 ms. Discard the first timestamp;
+  sort intervals for median and nearest-rank p95. Check increasing render count,
+  optic-radiation time and changed anterior position-buffer values, unchanged
+  camera, `!gl.isContextLost()`, and `gl.getError() === gl.NO_ERROR`.
+- Through the enabled `Fibre preset` combobox, select dorsal → ventral → all,
+  three rounds as warmup followed by three measured rounds. Read back selected
+  value, canonical query/counts and `fibreFilter.lastRebuildMs` after each change.
+  This timer covers query plus CPU geometry rebuild, **not GPU upload/completion
+  or end-to-end input latency**.
+- Capture and inspect each mode's actual Atlas screenshot and browser console.
+  Screenshots were not synchronized to an identical stochastic activity phase;
+  visual comparison is qualitative, not a pixel-equality assertion.
+
+### Results
+
+All modes provided WebGL 2. The visible context reported antialias/depth and alpha
+on, `preserveDrawingBuffer` off; attributes were not separately sampled in the
+other modes. The last sampled render in each mode submitted 142 draw calls,
+636,534 triangles and 273,640 lines, with 139 geometries and two textures.
+Point counts varied with activity (22,278 / 22,129 / 22,278 respectively), not
+static geometry loss. Each mode rendered 24 additional frames across the three
+blocks, advanced anterior travel by 48 mm and optic model time by 0.048, and kept
+the camera fixed. Those model increments reflect the existing frame-delta clamp
+and model scaling; they do not mean animation kept pace with elapsed wall time.
+All modes reported the document/stage visible, playback active, and no suspension.
+No WebGL error/context loss or console error was observed. All emitted the same
+OpenGL warning, `GPU stall due to ReadPixels`, during screenshot-enabled testing.
+
+Each comma-separated timing cell retains all three observations, rounded to 0.1 ms:
+
+| Measure | Visible | Headless | Offscreen headed |
+|---|---|---|---|
+| rAF median interval (ms) | 308.4, 308.3, 300.0 | 300.0, 300.0, 300.0 | 300.0, 300.0, 300.0 |
+| rAF p95 interval (ms) | 408.2, 400.0, 391.7 | 399.9, 416.7, 400.0 | 308.4, 408.4, 400.0 |
+| Block elapsed time (ms) | 2233.3, 2224.9, 2191.7 | 2216.6, 2216.6, 2199.9 | 2108.4, 2200.0, 2200.0 |
+| Dorsal rebuild (ms) | 5.1, 4.8, 5.0 | 5.0, 5.2, 4.8 | 5.1, 5.2, 4.9 |
+| Ventral rebuild (ms) | 3.6, 3.4, 3.5 | 3.5, 3.6, 3.5 | 3.6, 3.5, 3.6 |
+| All-fibre rebuild (ms) | 12.1, 11.7, 11.8 | 11.3, 11.9, 11.4 | 11.6, 11.6, 12.0 |
+
+Every rAF block contained only seven intervals: its p95 is consequently its
+maximum, not a robust tail estimate. The roughly 3 fps scheduling rate is poor in
+**all** modes. Short sequential samples, unequal time since page load, shared host
+load, persistent caches, and screenshot instrumentation preclude a statistical
+speed ranking or diagnosis of that slowdown. No historical timing is a matched
+control for this browser/profile. No headless-specific regression was observed;
+no application regression or hardware-acceleration claim follows from this result.
+
+All nine measured filter changes per mode produced the same canonical queries
+and counts: dorsal 1,178 association + 2,002 short-range = 3,180; ventral
+693 + 1,137 = 1,830; all 2,880 + 15,000 = 17,880. Screenshots showed the same
+framing, cortex, region/tract overlays and schematic anterior pathway. Model
+clocks and changing position buffers established continuing activity, not smooth
+presentation or exhaustive lesson-scene visibility.
+
+### Backend, offscreen, and remaining checks
+
+The page reported `ANGLE (Apple, ANGLE Metal Renderer: Apple M4 Pro, Unspecified
+Version)` in **every mode**, despite the actual M3 Max host and explicit
+`--use-angle=gl` launch flag. Treat this fingerprinted string (and reported limits,
+including maximum texture size 8192) as page-facing metadata, **not driver proof**.
+The guarded browser rejected `chrome://gpu/`, and exposes no CDP session method;
+actual hardware-versus-software rasterization remains unverified. Do not use these
+runs to approve GPU budgets or change ANGLE/system settings to chase timings.
+
+The host accepted offscreen mode and rendering continued. However, page-reported
+window origin was `[216,135]`, not the requested `[32000,32000]`; fingerprinting or
+window-manager placement may intervene. A read-only OS frontmost-app check found
+Firefox Developer Edition, but there was no paired launch-time focus trace.
+An OS window-bounds probe could not run because Swift was unavailable. Therefore
+**offscreen is not certified non-focus-stealing or physically off-desktop** here.
+`document.hasFocus()` was true in all modes and cannot prove desktop focus.
+Prefer headless when avoiding desktop windows matters.
+
+Routine headless checks may cover DOM/accessibility semantics, canonical state,
+loading/error paths, filter counts, renderer diagnostics, activity-buffer changes,
+and screenshot regressions within a pinned harness. Recheck parity after browser,
+GPU-driver, launch-profile, shader, or renderer changes. Before relying on a release's
+GPU behavior, retain a short visible smoke test in an ordinary, non-fingerprinted
+supported browser: confirm backend independently; inspect transparent layering and
+moving activity in Atlas plus a filtered lesson; exercise orbit/resize, Pause/Play,
+and real background/resume or occlusion. Check native keyboard focus and controls
+there as well. Offscreen rendering cannot replace those visible/OS checks.
+
+This comparison did not run Firefox/Safari parity, the full lesson/browser suite,
+production frame profiling, sustained thermal/battery tests, or physical phones.
+It does not supersede the device limits below. Exact local screenshot references
+and verification caveats are retained in `brain-atlas-2h9x`.
 
 ## Deferred device limits
 
