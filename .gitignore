@@ -11,6 +11,7 @@ internal/site/dist/*
 .envrc.local
 *.log
 .workbench/
+data-local/
 .pi/metrics/
 .pi/peer-runs/
 .pi/reviews/

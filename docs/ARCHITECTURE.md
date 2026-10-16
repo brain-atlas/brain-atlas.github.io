@@ -9,6 +9,22 @@ cross-builds, verifies, and packages that executable for the supported desktop
 platforms; it publishes one mutable nightly channel and immutable-by-policy
 versioned releases.
 
+## Private source and publication boundary
+
+`vite.config.js` defaults development/preview to IPv4 loopback. Its shared
+`private-source-protection` plugin rejects reserved private paths before dev HTTP
+serving (including `public/`, `/@fs/`, and resolved symlink targets), during module
+loading, and when emitting assets with private original filenames. The predicate
+and publication filesystem check live in `scripts/check-publish.mjs`; every Vite
+build runs the check, not only publication wrappers. `public/` must contain only
+tracked non-private files, without symlinks; Git-ignored files also fail.
+
+`data-local/` is reserved and ignored, not auto-created or populated. No runtime
+renderer, data transform, asset generator or standalone server interface changes.
+These are filename-based safeguards for trusted source, not a sandbox against
+custom build code or forced HTML/CSS inlining. Exact reserved paths, verification
+and operational limits live in [the security review](SECURITY_REVIEW.md).
+
 ## Standalone delivery boundary
 
 `npm run build:standalone` runs the existing publication guard, enables a

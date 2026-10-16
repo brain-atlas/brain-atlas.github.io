@@ -1,7 +1,8 @@
 # Atlas source register
 
 Work: `brain-atlas-yum.15`. Verified: **2026-09-08 UTC**.
-Status: current local inventory, not a completed storage migration or clean-machine rebuild.
+Status: historical 2026-09-08 inventory with 2026-10-16 protection/retention update
+below; not a completed storage migration or clean-machine rebuild.
 User approved a lean register and relationship map focused on a useful visual-system
 atlas: connectivity evidence, relevant image inspection, and voxel/world coordinates.
 See [relationship map](relationship-map.md) for meaning, mappings and product priorities.
@@ -84,18 +85,17 @@ by matching names; existing byte-bound builders still require their exact pins.
 | HCP-1065 reference/probability volume archives and two HCP842 OR volumes | Prior OR cross-representation/generation comparisons | **Four recorded browser-artifact paths missing**; other copies not established. Local uncommitted `.pi/research/2026-09-06-right-optic-radiation/{volume-comparison,atlas-generation-comparison}.json` retain identities/results. Reports are not recoverable source bytes. Not direct parents of current viewer geometry. |
 | Raw fMRI/DWI, subject registrations, tensor maps, measured connectivity matrices | Potential future subject/image workflows | **Not inventoried as available project inputs.** No acquisition or generic clinical-imaging importer approved here. Select one useful, licensed example only when implementing a concrete workflow. |
 
-## Lean storage/recovery follow-through — not implemented yet
+## Lean storage/recovery follow-through — original proposal
 
 Use a project-local `data-local/` for raw inputs and retained evidence, outside Git
 and all publication outputs; keep manifests/derivation records tracked. Preserve
 originals and exact bytes when copying, and back up irreplaceable recovered data.
 No new database, format framework or bulk upstream-subject download is needed.
 
-**Security prerequisite:** Git ignore rules do not prevent serving files. Current
-`vite.config.js` sets `server.host: true`; there is no dedicated `data-local/` deny
-rule. Before migration, establish explicit dev-server exclusion and verify ordinary
-and standalone publication exclusions. Do not serve repository root with a generic
-file server containing private data. Existing root archives were not moved here.
+**Security prerequisite (2026-09-08 finding, superseded by update below):** Git
+ignore did not prevent serving files; Vite bound all interfaces without a dedicated
+private-data deny. Explicit exclusion was required before migration. Do not serve
+repository root with a generic file server. Existing root archives were not moved.
 
 Then resolve five required missing pins through recorded URLs into a new bounded
 input root, verifying size/hash before parsing. Any changed bytes must be investigated,
@@ -103,7 +103,41 @@ not accepted by changing the expected hash. Reacquisition, safe storage setup an
 backup verification remain open work; **clean-machine rebuild is not yet established**.
 No source rights or access restrictions are waived by this storage decision.
 
-## Verification evidence and limits
+## 2026-10-16 protection and retention update
+
+Work: `brain-atlas-yum.15.1`; bounded protection approval: `brain-atlas-pc3u`.
+This update supersedes earlier availability claims **only for the paths rechecked**.
+
+- Development/preview now default to loopback. Development HTTP blocks reserved
+  private roots and the three source ZIP names, including encoded, query, `/@fs/`,
+  trailing-slash and resolved symlink paths. Every ordinary/standalone build checks
+  `public/` for untracked (including ignored), private and symlinked entries;
+  private module loads and private original filenames of emitted assets fail.
+  See `docs/SECURITY_REVIEW.md` for trusted-source/forced-inlining limits.
+- `data-local/` is ignored and reserved but **not created or populated**. No source
+  bytes were copied, acquired, moved, overwritten or deleted; rights are unchanged.
+- Replay archive `MANIFEST.tsv`: **49/49 entries, 780,598,830 bytes** freshly match
+  size and SHA-256. All three irreplaceable `recovered/` tractograms match both
+  archive identities and registered asset-intermediate identities. Their three
+  original scratchpad paths recorded in the manifest are now missing. The archive
+  is retained local storage, **not verified independent backup**; another copy or
+  recoverable backup on an independent destination has not been established.
+- Required-source search now locates **3/11 exact source identities**: repository
+  HCP tract ZIP, both archived HCP FIB copies, and retained TemplateFlow carpet.
+  Search was bounded to the same Jülich builder/probability, earlier-candidate,
+  replay and carpet roots plus the named repository tract ZIP, using size then
+  SHA-256. All three `/private/tmp` Jülich/candidate roots listed above are absent.
+  Therefore MPM/XML/hierarchy are now also **unlocated in those roots**, alongside
+  the five previously missing pins. This is not a whole-machine absence claim.
+- Five historical-pin acquisition remains deferred until concrete regeneration
+  need; no changed hash or newer same-name file was accepted. Newly unlocated
+  Jülich inputs and independent-backup verification remain explicit outstanding
+  work. Full Bead acceptance and clean-machine rebuilding are **not established**.
+
+No tracking was run. Byte checks establish retained identities, not upstream
+regeneration, anatomical validity, changed licensing, or disaster recovery.
+
+## Original 2026-09-08 verification evidence and limits
 
 Fresh offline Python 3.13.1 stdlib checks through `uv` verified all entries of the
 Jülich, short-bundle and CerebrA inventories above, plus **49 replay-archive entries /

@@ -1,6 +1,50 @@
 import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
 import { checkLessons } from './scripts/check-lessons.mjs';
+import { checkPublicFiles, isPrivateSource } from './scripts/check-publish.mjs';
+
+const privateSourceProtection = () => {
+  let config;
+  return {
+    name: 'private-source-protection',
+    enforce: 'pre',
+    configResolved(resolved) { config = resolved; },
+    buildStart() {
+      if (config.command === 'build') checkPublicFiles(config.root);
+    },
+    load(id) {
+      if (isPrivateSource(id.split(/[?#]/, 1)[0])) this.error(`Refusing to load private source: ${id}`);
+    },
+    generateBundle(_options, bundle) {
+      for (const output of Object.values(bundle)) {
+        for (const name of output.originalFileNames ?? []) {
+          if (isPrivateSource(resolve(config.root, name))) this.error(`Refusing to emit private source: ${name}`);
+        }
+      }
+    },
+    configureServer(server) {
+      // Public files bypass Vite's fs.deny; check both roots before any Vite middleware.
+      server.middlewares.use((req, res, next) => {
+        let pathname;
+        try {
+          pathname = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
+        } catch {
+          res.statusCode = 400;
+          return res.end('Invalid path');
+        }
+        const paths = pathname.startsWith('/@fs/')
+          ? [pathname.slice(5)]
+          : [resolve(config.root, `.${pathname}`), resolve(config.publicDir, `.${pathname}`)];
+        if (paths.some(isPrivateSource)) {
+          res.statusCode = 403;
+          return res.end('Private source access denied');
+        }
+        next();
+      });
+    },
+  };
+};
 
 const lessonLibrary = () => ({
   name: 'lesson-library',
@@ -45,8 +89,8 @@ export default defineConfig(() => {
 
   return {
     base: './',
-    plugins: [lessonLibrary(), publicationFiles(), ...(standalone ? [standaloneLifecycle()] : [])],
-    server: { port: 5180, open: false, host: true },
+    plugins: [privateSourceProtection(), lessonLibrary(), publicationFiles(), ...(standalone ? [standaloneLifecycle()] : [])],
+    server: { port: 5180, open: false, host: '127.0.0.1' },
     build: {
       target: 'es2022',
       outDir: standalone ? 'internal/site/dist' : 'dist',

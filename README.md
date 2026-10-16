@@ -556,8 +556,19 @@ decimated specifically to reduce GPU memory pressure.
 
 For GitHub Pages or another public deployment, build from a clean checkout with
 `npm run build:publish`. Vite copies every file under `public/`; the publication
-guard prevents untracked experiments with unknown provenance from entering
-`dist/`.
+guard rejects untracked files (including ignored files), symlinks, and reserved
+private-source paths under `public/`. Every ordinary and standalone Vite build
+runs that guard, including `npm run build`.
+
+Development and preview default to `127.0.0.1`, not LAN interfaces. Development
+HTTP denies `data-local/`, `.pi/`, `.beads/`, `.workbench/`, and the three retained
+root source ZIPs, including resolved symlink targets. Vite's built-in secret-file
+denies remain unchanged. Restart existing servers to adopt configuration changes.
+`data-local/` is ignored and reserved for private inputs; no source migration or
+backup is performed automatically. Never serve the repository root with a generic
+file server. Review authored imports/assets and build plugins: these guards are
+not a sandbox for arbitrary source-reading or forced asset inlining. See
+[`docs/SECURITY_REVIEW.md`](docs/SECURITY_REVIEW.md) for the precise boundary.
 
 ### Build standalone binaries from source
 

@@ -2,7 +2,8 @@
 
 **Date:** 2026-07-20; local-import boundary updated 2026-07-21; standalone
 loopback-server boundary added 2026-07-22; binary release pipeline added
-2026-07-23; explicit local lesson export added 2026-10-15
+2026-07-23; explicit local lesson export added 2026-10-15;
+private-source development/publication guards added 2026-10-16
 
 **Scope:** Static viewer, optional standalone workstation executable, local
 lesson-import boundary, declared supplementary images, tracked/deployed assets,
@@ -158,8 +159,20 @@ or relaxing the standalone loopback/authentication boundary.
   Projects, and enables vulnerability alerts and automated security fixes.
 - Secret-pattern scans found no credentials in tracked files or the private
   development history. The production build emits no source maps or symlinks.
-- `scripts/check-publish.mjs` rejects untracked files under `public/`; local
-  experimental assets live in ignored `.workbench/` and are absent from `dist/`.
+- `scripts/check-publish.mjs` rejects untracked files (including ignored files),
+  symlinks and reserved private-source paths under `public/`. The shared Vite
+  plugin runs this check for every ordinary/standalone build, rejects private
+  module loads, and checks emitted assets' original filenames before writing.
+  Reserved paths are `data-local/`, `.pi/`, `.beads/`, `.workbench/`,
+  `10.12751_g-node.be5e62.zip`, `hcp1065_avg_tracts_trk.zip`, and
+  `mni_icbm152_nlin_asym_09a_nifti.zip`. Both fresh publication trees were checked
+  for these paths and symlinks; source files remain outside publication outputs.
+- Development and preview default to IPv4 loopback. Development middleware denies
+  reserved paths before Vite handles direct, encoded, `/@fs/`, query-bearing, or
+  trailing-slash requests; it checks both repository/public paths and resolved
+  symlink targets. Vite's built-in secret-file denies are not replaced. Synthetic
+  HTTP regressions cover GET/HEAD, and real-root HEAD checks verify root archives
+  are denied while the app and public entity catalog remain available.
 - The standalone build runs the same publication guard, adds lifecycle code only
   under its explicit build flag while retaining Vite production mode, embeds the
   complete output with `go:embed`, and
@@ -183,6 +196,15 @@ or relaxing the standalone loopback/authentication boundary.
   server lifetime.
 
 ## Residual risks and operational requirements
+
+- Private-source protection assumes trusted authored source and build plugins.
+  It is not a filesystem sandbox or content classifier: renamed/copied bytes,
+  custom plugin reads and forced HTML/CSS asset inlining can bypass filename-based
+  emission checks. Never reference private inputs from application HTML/CSS/JS;
+  review artifact contents before publication. Source acquisition/migration and
+  independent backup verification remain separate operations. Git ignore is not
+  access control. Do not use a generic repository-root file server or expose Vite
+  with `--host`; restart existing servers after changing this configuration.
 
 - GitHub account and organization security remain the highest-value controls.
   Require two-factor authentication for organization members before adding
