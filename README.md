@@ -114,15 +114,15 @@ Model & sources explains these limits; endpoint subsets remain geometric context
 ### Loading and mobile limits
 
 No-WebGL sessions load neither Three.js nor anatomical geometry. After the WebGL gate,
-Atlas Home requests the complete authored default: the established 45 bilateral Jülich
+Without a saved view, Atlas Home requests the complete authored default: the established 45 bilateral Jülich
 region pairs plus fibre layers. Another 112 bilateral Jülich regions are indexed but hidden;
 their OBJ pairs are requested only when explicitly enabled. A direct checked lesson loads
 only the region meshes and independently packaged fibre layers in its active view; each
 deferred asset loads at most once through the canonical visibility path. A checked 1.4 kB
 projection supplies association names, grouping, colors, and point counts for readiness
 and the Viewer panel. The unchanged `tracts.json` geometry and activity metadata load
-only when a canonical snapshot first makes a named tract visible; Atlas Home requests
-them immediately because its authored default is complete.
+only when a canonical snapshot first makes a named tract visible; the complete Atlas
+default requests them immediately. A restored view requests its saved visible entities.
 
 A throttled 390×844 Chromium production profile reduced the direct lesson's initial
 encoded anatomical/catalog transfer by 74.7% relative to Atlas Home. This desktop-hosted
@@ -233,7 +233,7 @@ geometry and activity status
 remain separate in `public/data/fidelity.json`. See
 [`src/lesson/SPEC.md`](src/lesson/SPEC.md) for the contract.
 
-The app opens in the complete exploratory Atlas, not inside a lesson. The retained Viewer
+The app opens in the exploratory Atlas, restoring its last valid global view when available, not inside a lesson. The retained Viewer
 shows one compact Quick controls layer—global hemispheres, fibre preset/status, activity,
 speed, and fixed views—while one **Full controls** disclosure retains layers, custom endpoint
 queries, cutaway, tissue, camera actions, and reset over the same canonical global-atlas
@@ -248,9 +248,26 @@ rendered camera, canonical filters/playback request, exact `#page-scroll` positi
 focus. Exit removes the resume state and resets the complete default Atlas; an unsaved local
 lesson asks for confirmation first. On the narrowest session header, lesson-entry actions
 hide until Return or Exit so the two active-session choices remain readable and do not
-overlap. Individual stochastic particles are not serialized. A compact Atlas moves the
-camera uniformly away from the same target to keep the complete brain framed; anatomy,
-canvas scale, and the MNI transform remain uniform.
+overlap. Individual stochastic particles are not serialized. A compact default Atlas moves the
+camera uniformly away from the same target to keep the complete brain framed; restored
+cameras retain their saved pose. Anatomy, canvas scale, and the MNI transform remain uniform.
+
+Global Atlas edits save automatically in this browser's `localStorage`: visible layers,
+hemisphere and endpoint filters, actual camera/target, cutaway, tissue, playback request,
+and canonical display/selection settings. **Full controls → Reset Atlas** restores and saves
+the complete default; **Reset camera** only restores the entry camera. **Exit lesson** also
+replaces the saved Atlas with the default. Temporary lesson-derived exploration, imported
+lesson source, resume tokens, particle queues, and model time are never saved. A checked
+lesson URL still opens that lesson; reduced-motion preferences always take precedence.
+
+Storage is local to the browser profile and origin (scheme, host, and port), with no cookies
+or network transmission. Changing a standalone server's port means a different storage
+origin. Clearing site data removes the saved view; private browsing may discard it. Multiple
+tabs use the last successful save, without live synchronization. Unsupported or malformed
+records fall back to defaults. If storage is blocked or full, Viewer controls report that
+changes may be lost, while exploration remains usable. Saves are debounced and flushed on
+page hide or lesson entry; abrupt browser termination can lose recent edits. Named saved
+views are not yet supported.
 
 The library registry is `src/lessons/library.json`; it currently contains one lesson.
 Each drawer card shows its source summary and scene count, with links to bundled

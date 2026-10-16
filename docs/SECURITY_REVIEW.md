@@ -93,8 +93,23 @@ or relaxing the standalone loopback/authentication boundary.
   preview; only explicit **Open lesson** activation can replace the in-memory session.
   History stores only a versioned mode, checked ID, or opaque tab-local key. The
   `?lesson=local` marker contains no source and cannot recover it after reload; recovery
-  removes the marker and returns to Atlas. There is no upload, backend, storage,
-  messaging, or credential handling.
+  removes the marker and returns to Atlas. This source-import path adds no upload,
+  backend, source storage, messaging, or credential handling.
+- Global Atlas settings alone use `localStorage` key `brain-atlas.atlas-state`, with
+  envelope version 1 around canonical snapshot v2. `src/ui/atlas-storage.js` treats
+  storage as untrusted: a 131,072-code-unit limit precedes JSON parsing, exact envelope
+  keys/version and existing canonical shape/catalog validation precede use, and only
+  instant `atlas`/`dominant`/`explore` state with bounded finite camera coordinates is
+  accepted. Invalid/unknown records are removed only at this key; no guessed migration
+  or arbitrary object application occurs. Getter/read/write/remove exceptions become
+  explicit persistence notices, not renderer failures. Only global Atlas edits save;
+  lesson source, temporary inspection, history/resume tokens, particle queues and clocks
+  remain excluded. Reset Atlas and Exit replace this record with defaults. No cookie,
+  network API, CSP change, dependency or server-side storage is added. Stored settings
+  are not encrypted or secret from other same-origin scripts. Browser clearing/private
+  mode, origin/standalone port changes and failed writes can prevent restoration;
+  concurrent tabs are last-successful-save with no live synchronization. See
+  `test/atlas-storage.test.js` and `scripts/browser/home-persistence.spec.cjs`.
 - Explicit **Download lesson** exports only the frozen validated source as UTF-8
   `lesson.md` using a temporary Blob URL. The fixed filename cannot contain author
   paths; no HTML rendering, image fetching, source-bearing URL, upload, token or

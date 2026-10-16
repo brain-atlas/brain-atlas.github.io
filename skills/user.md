@@ -63,8 +63,11 @@ lesson is scientifically reviewed merely because it passes the structural contra
 
 ## Exploring the atlas
 
-- Atlas is Home. It starts from the project default: complete base atlas except labels,
-  home camera, bilateral hemispheres, no cutaway/selection, and requested activity.
+- Atlas is Home. It restores the last validated global view for this browser origin.
+  With no saved view, it starts from the project default: complete base atlas except
+  labels, home camera, bilateral hemispheres, no cutaway/selection, and requested activity.
+  Use **Full controls → Reset Atlas** (`#reset-atlas`) for a reproducible default;
+  this also replaces the saved view. Temporary lesson views and local source never save.
 - **Back to atlas** and **Explore this scene** both preserve a stable lesson token, keep
   effective lesson filters/playback, replace only the requested camera with the exact
   rendered pose, and create the same temporary Atlas branch.
@@ -76,8 +79,8 @@ lesson is scientifically reviewed merely because it passes the structural contra
   Endpoint controls offer the four authored presets plus custom all/touches/within/
   unordered-between modes. Region selectors also expose explicit unknown and ambiguous
   classes; these classes never match a region selector implicitly.
-  `[data-explore-camera]` buttons provide keyboard Zoom/Pan; Reset returns to the entry
-  pose. Auto-rotate remains hidden and off.
+  `[data-explore-camera]` buttons provide keyboard Zoom/Pan; Reset camera returns to the entry
+  pose without resetting filters. Auto-rotate remains hidden and off.
 - **Return to lesson** discards lesson-derived Atlas edits and preserves global Atlas
   state. **Exit lesson** removes Return/Exit and resets the authored complete Atlas. At
   350 px and below, Lessons/Open yield to these active-session actions and reappear after

@@ -1031,7 +1031,11 @@ new IntersectionObserver((entries) => {
   updateViewerVisibility({ stageVisible: latestStageIntersection(entries, stage) });
 }, { threshold: 0 }).observe(stage);
 new ResizeObserver(resize).observe(stage);
-controls.addEventListener('change', requestViewerRender);
+let viewerCameraChange = () => {};
+controls.addEventListener('change', () => {
+  requestViewerRender();
+  viewerCameraChange();
+});
 resize();
 
 if (import.meta.env.DEV) {
@@ -1828,6 +1832,7 @@ function syncPlaybackControls() {
 export function createLessonRendererAdapter(catalog, {
   onTransitionStateChange = () => {},
   onPowerStateChange = () => {},
+  onCameraChange = () => {},
 } = {}) {
   configureAnatomyInspector(catalog);
   configureFibreFilterControls(catalog);
@@ -1837,6 +1842,7 @@ export function createLessonRendererAdapter(catalog, {
   lessonTransitionStateChange = onTransitionStateChange;
   lessonTransitionStateChange(lessonTransitioning);
   viewerPowerStateChange = onPowerStateChange;
+  viewerCameraChange = onCameraChange;
   notifyViewerPowerState();
   if (import.meta.env.DEV) {
     window.__view.lesson = {

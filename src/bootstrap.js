@@ -1,6 +1,7 @@
 import './style.css';
 
 import { createLessonCatalog } from './lesson/index.js';
+import { readAtlasState, writeAtlasState } from './ui/atlas-storage.js';
 import libraryRecords from './lessons/library.json';
 import { createLessonLibrary } from './ui/lesson-library.js';
 import { createFidelityViewModel } from './ui/fidelity-view-model.js';
@@ -90,6 +91,9 @@ let scrollFrame = 0;
 let suppressLessonScroll = false;
 let cancelSceneFocusSettlement = () => {};
 let exploreState = null;
+let atlasSaveTimer = 0;
+let atlasSavePending = false;
+let restoredAtlasState = false;
 const workspace = {
   phase: 'booting',
   mode: null,
@@ -1499,6 +1503,58 @@ function restoreExploreNodes(homes) {
   byId('atlas-mount').replaceChildren();
 }
 
+function setAtlasStorageNotice(status) {
+  byId('atlas-storage-note').textContent = status === 'unavailable' || status === 'invalid'
+    ? 'This browser cannot save Atlas settings. You can keep exploring; changes may be lost on reload.'
+    : status === 'discarded'
+      ? 'Saved Atlas settings could not be restored. Defaults are in use; new edits will replace them.'
+      : 'Atlas settings save in this browser only. Lessons and temporary views are not saved.';
+}
+
+function scheduleAtlasSave() {
+  if (workspace.mode !== 'atlas' || exploreState?.kind !== 'global' || exploreState.phase !== 'active') return;
+  atlasSavePending = true;
+  clearTimeout(atlasSaveTimer);
+  atlasSaveTimer = setTimeout(flushAtlasSave, 250);
+}
+
+function flushAtlasSave() {
+  clearTimeout(atlasSaveTimer);
+  atlasSaveTimer = 0;
+  if (!atlasSavePending) return;
+  atlasSavePending = false;
+  if (workspace.mode !== 'atlas' || exploreState?.kind !== 'global' || !rendererAdapter) return;
+  try {
+    const snapshot = captureAtlasSnapshot(exploreState.snapshot, rendererAdapter.captureRenderedCamera(), catalog);
+    workspace.atlas.persistentSnapshot = snapshot;
+    workspace.atlas.activeSnapshot = snapshot;
+    exploreState.snapshot = snapshot;
+    setAtlasStorageNotice(writeAtlasState(() => window.localStorage, snapshot, catalog));
+  } catch {
+    setAtlasStorageNotice('invalid');
+  }
+}
+
+function resetGlobalAtlas() {
+  if (workspace.mode !== 'atlas' || exploreState?.kind !== 'global' || exploreState.phase !== 'active') return;
+  const snapshot = createAtlasExploreSnapshot(catalog);
+  try {
+    resetAnatomyInspector();
+    rendererAdapter.apply(snapshot);
+    rendererAdapter.beginExploreCamera(snapshot.camera, { fitToStage: true });
+    rendererAdapter.syncExplorePanel(createExplorePanelModel(snapshot, catalog));
+    exploreState.snapshot = snapshot;
+    workspace.atlas.activeSnapshot = snapshot;
+    workspace.atlas.persistentSnapshot = snapshot;
+    renderExploreFidelity(snapshot, []);
+    scheduleAtlasSave();
+    flushAtlasSave();
+    byId('announcer').textContent = 'Atlas reset to defaults.';
+  } catch (error) {
+    failExplore(error);
+  }
+}
+
 function applyExploreCommandBatch(commands) {
   if (!exploreState || exploreState.phase !== 'active') return;
   try {
@@ -1513,6 +1569,7 @@ function applyExploreCommandBatch(commands) {
     exploreState.snapshot = next;
     workspace.atlas.activeSnapshot = next;
     if (exploreState.kind === 'global') workspace.atlas.persistentSnapshot = next;
+    scheduleAtlasSave();
     renderExploreFidelity(next, exploreState.includedFidelityIds);
   } catch (error) {
     failExplore(error);
@@ -1520,6 +1577,7 @@ function applyExploreCommandBatch(commands) {
 }
 
 function prepareExploreChrome(kind, scene, canReturn) {
+  byId('atlas-storage-controls').hidden = kind !== 'global';
   byId('scene-count').textContent = kind === 'global' ? 'Atlas home' : 'Lesson view in Atlas';
   byId('stage-heading').textContent = kind === 'global' ? 'Complete visual-system atlas' : scene.title;
   byId('explore-scene-trigger').hidden = true;
@@ -1540,7 +1598,7 @@ function prepareExploreChrome(kind, scene, canReturn) {
 
 function prepareInitialAtlasWorkspace() {
   const scene = activePresentationScene(navigation.activeIndex);
-  const snapshot = createAtlasExploreSnapshot(catalog);
+  const snapshot = workspace.atlas.persistentSnapshot ?? createAtlasExploreSnapshot(catalog);
   exploreState = {
     phase: 'opening',
     kind: 'global',
@@ -1580,7 +1638,7 @@ function activateInitialAtlasRenderer() {
   if (!state || state.origin !== 'home') throw new Error('initial Atlas workspace is unavailable');
   rendererAdapter.resizeToStage();
   rendererAdapter.apply(state.snapshot);
-  rendererAdapter.beginExploreCamera(state.snapshot.camera, { fitToStage: true });
+  rendererAdapter.beginExploreCamera(state.snapshot.camera, { fitToStage: !restoredAtlasState });
   rendererAdapter.setExploreCommandHandler(applyExploreCommandBatch);
   rendererAdapter.syncExplorePanel(createExplorePanelModel(state.snapshot, catalog));
   state.phase = 'active';
@@ -1642,7 +1700,7 @@ function beginExplore(kind, trigger = null) {
     rendererAdapter?.resizeToStage();
     if (rendererAdapter) {
       rendererAdapter.apply(snapshot);
-      rendererAdapter.beginExploreCamera(snapshot.camera, { fitToStage: kind === 'global' });
+      rendererAdapter.beginExploreCamera(snapshot.camera, { fitToStage: kind === 'global' && !workspace.atlas.persistentSnapshot });
       rendererAdapter.setExploreCommandHandler(applyExploreCommandBatch);
       rendererAdapter.syncExplorePanel(createExplorePanelModel(snapshot, catalog));
     }
@@ -1724,6 +1782,7 @@ function failExplore(error) {
 
 function showPersistentAtlasState() {
   if (workspace.mode !== 'atlas' || !exploreState) return;
+  const fitToStage = !workspace.atlas.persistentSnapshot;
   const snapshot = workspace.atlas.persistentSnapshot ?? createAtlasExploreSnapshot(catalog);
   const scene = activePresentationScene(navigation.activeIndex);
   exploreState.kind = 'global';
@@ -1735,7 +1794,7 @@ function showPersistentAtlasState() {
   if (rendererAdapter) {
     rendererAdapter.resizeToStage();
     rendererAdapter.apply(snapshot);
-    rendererAdapter.beginExploreCamera(snapshot.camera, { fitToStage: true });
+    rendererAdapter.beginExploreCamera(snapshot.camera, { fitToStage });
     rendererAdapter.syncExplorePanel(createExplorePanelModel(snapshot, catalog));
   }
   renderExploreFidelity(snapshot, []);
@@ -1881,6 +1940,9 @@ function exitLessonSession() {
     renderLessonDrawer();
     writeWorkspaceHistory('atlas', { replace: true });
     workspace.phase = rendererUnavailable ? 'fallback' : 'atlas';
+    // Exit is an explicit default reset even when WebGL is unavailable.
+    setAtlasStorageNotice(writeAtlasState(() => window.localStorage,
+      rendererAdapter ? captureAtlasSnapshot(snapshot, rendererAdapter.captureRenderedCamera(), catalog) : snapshot, catalog));
     setTopbarStatus();
     setExploreAvailability(!rendererUnavailable);
     byId('announcer').textContent = 'Lesson closed. The complete Atlas is ready.';
@@ -2037,6 +2099,7 @@ function refreshRendererAdapter() {
   rendererAdapter = rendererAdapterFactory(createLessonRuntimeCatalog(catalog, lesson), {
     onTransitionStateChange: onRendererTransitionStateChange,
     onPowerStateChange: onRendererPowerStateChange,
+    onCameraChange: scheduleAtlasSave,
   });
   rendererAdapter.setAnatomyIntentHandler((intent) => applyAnatomyIntent(intent));
   rendererAdapter.setAnatomyGeometryHandler(renderAnatomyOptions);
@@ -2106,6 +2169,7 @@ function openLessonCandidate(candidate, {
   historyAction = 'push',
 } = {}) {
   if (!candidate || workspace.phase === 'switching') return;
+  flushAtlasSave();
   workspace.phase = 'switching';
   workspace.epoch += 1;
   const epoch = workspace.epoch;
@@ -2282,6 +2346,15 @@ async function start() {
       fetchJson('/data/julich_regions.json'),
     ]);
     catalog = createLessonCatalog(entities, fidelity, fibreFilterPresets, julichRegions);
+    const storedAtlas = readAtlasState(() => window.localStorage, catalog);
+    workspace.atlas.persistentSnapshot = storedAtlas.snapshot;
+    restoredAtlasState = storedAtlas.status === 'restored';
+    setAtlasStorageNotice(storedAtlas.status);
+    byId('reset-atlas').addEventListener('click', resetGlobalAtlas);
+    window.addEventListener('pagehide', flushAtlasSave);
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) flushAtlasSave();
+    });
     lessonLibrary = createLessonLibrary(libraryRecords, lessonSources, catalog);
     historySerial = Number.isInteger(history.state?.serial) ? history.state.serial : 0;
     const initialIntent = workspaceLocationIntent();

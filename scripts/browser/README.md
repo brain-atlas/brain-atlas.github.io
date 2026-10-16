@@ -50,6 +50,11 @@ entry/instructional view after camera settlement in wide and compact layouts, in
 model clocks, draw ranges/checksums, in-frame motion, changing settled-stage pixels,
 V1-proximal optic events and caps, selected association groups, and distinct
 Skip/Pause/Play/reduced-motion semantics.
+`home-persistence.spec.cjs` covers origin-local last-global-Atlas restoration, complete
+filters and actual camera across wide/compact reloads, camera-only page-hide flush,
+temporary lesson isolation, keyboard Reset Atlas versus camera reset, Exit defaults,
+malformed/denied/quota storage, checked routes and reduced-motion precedence. Each test
+uses its own browser context so saved settings cannot contaminate another test.
 The broader matrix covers Atlas-as-Home, its canonical Quick controls plus one native
 Full controls disclosure and Custom-query focus handoff, the responsive Lessons drawer,
 checked and local activation, direct/static routes, Back/Forward and
