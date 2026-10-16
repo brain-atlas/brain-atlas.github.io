@@ -116,7 +116,7 @@ an ID-sorted deeply frozen array, empty when omitted; source and snapshots stay 
 
 Each input list and the effective vocabulary have at most 64 entries; each record
 has at most eight aliases, 80 Unicode code points per spelling/ID, and 600 per
-plain-text definition. Spellings have no outer whitespace, line breaks or control
+plain-text definition. Spellings have no outer whitespace, line breaks or ASCII control
 characters; definitions may contain ordinary whitespace but no other ASCII controls.
 Blank text, unknown global IDs, duplicate IDs, unknown keys and case-insensitive
 Unicode spelling collisions (including aliases) reject the whole lesson. Definitions
