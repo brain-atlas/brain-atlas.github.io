@@ -37,6 +37,19 @@ In development mode, `src/main.js` exposes `window.__view` with camera, controls
 - To distinguish stopped activity from sparse, filtered, occluded, clipped, culled, or dimmed activity, inspect `window.__view.activity.state`, `.anterior.phase`, `.opticRadiation.modelTime`, `.opticRadiation.activeCount`, named point geometries, `window.__view.association`, `window.__view.swm`, and `window.__view.fibreFilter`. The latter reports the canonical query, selected/population quality summary, selected/eligible association contours, selected SWM contours, rendered SWM dots, and `lastRebuildMs` for the most recent query-plus-geometry rebuild. Run `scripts/browser/animation-continuity.spec.cjs` in Firefox and Chromium; it waits for every authored camera to settle, then checks actual stage-frame changes alongside model clocks, point checksums/draw ranges, in-frame events, dynamic-point culling, optic-radiation endpoint proximity and cap visibility, selected tract groups, stable camera pose, and the distinct Skip/Pause/Play/reduced-motion semantics.
 - Force the readable renderer-free path with `?no-webgl=1`; verify that no `main`/Three.js resource loads. Imported supplementary images remain available as semantic figures in this path.
 
+## Glossary checks
+
+The checked lesson opts into LGN, V1 and optic radiation. Only first eligible prose
+occurrences become `.glossary-term` buttons. Hover/focus shows a definition;
+click/tap/Enter/Space pins or toggles it; Escape, Tab, outside activation and Atlas
+entry dismiss. Popup text stays selectable and outside copied lesson prose.
+Verify focus clears compact stage/transport, long definitions stay inside viewport
+without covering the term, and Arrow/Page/Home/End scroll overflowing text while
+term remains focused. Repeat without WebGL. `scripts/browser/home-glossary.spec.cjs`
+covers imports, inert hostile-looking definitions, compact/wide/touch, max-length
+text, one-canvas Atlas/Return and accessible name/description; physical screen-reader
+verification remains separate.
+
 ## Opening a local lesson
 
 1. Activate header **Open lesson** (`#lesson-import-trigger`). Paste source into

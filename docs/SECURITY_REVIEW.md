@@ -3,7 +3,7 @@
 **Date:** 2026-07-20; local-import boundary updated 2026-07-21; standalone
 loopback-server boundary added 2026-07-22; binary release pipeline added
 2026-07-23; explicit local lesson export added 2026-10-15;
-private-source development/publication guards added 2026-10-16
+private-source development/publication guards and bounded glossary metadata added 2026-10-16
 
 **Scope:** Static viewer, optional standalone workstation executable, local
 lesson-import boundary, declared supplementary images, tracked/deployed assets,
@@ -95,6 +95,16 @@ or relaxing the standalone loopback/authentication boundary.
   `?lesson=local` marker contains no source and cannot recover it after reload; recovery
   removes the marker and returns to Atlas. This source-import path adds no upload,
   backend, source storage, messaging, or credential handling.
+- Optional glossary metadata passes the same standalone schema/parser before activation.
+  Global IDs are opt-in; local replacements are lesson-scoped. Lists/effective terms
+  are bounded to 64, aliases to eight, spellings to 80 Unicode code points and
+  definitions to 600; the 512 KiB source limit remains. Unknown references, duplicate
+  IDs and Unicode case-insensitive spelling collisions fail closed. Escaped literal
+  matching never interprets author regexes; DOM buttons/descriptions use text nodes,
+  including markup-looking definitions. Glossary content creates no URL, HTML,
+  external request, persistence, dependency, or CSP exception. Browser tests exercise
+  hostile-looking definitions, all-or-nothing import and no external traffic.
+  This validates shape/safety, not the scientific truth of local definitions.
 - Global Atlas settings alone use `localStorage` key `brain-atlas.atlas-state`, with
   envelope version 1 around canonical snapshot v2. `src/ui/atlas-storage.js` treats
   storage as untrusted: a 131,072-code-unit limit precedes JSON parsing, exact envelope

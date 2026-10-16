@@ -233,6 +233,17 @@ geometry and activity status
 remain separate in `public/data/fidelity.json`. See
 [`src/lesson/SPEC.md`](src/lesson/SPEC.md) for the contract.
 
+Lessons can opt into a small global glossary and add validated local definitions.
+Dotted-underlined terms offer help at their first eligible prose occurrence: hover
+or focus to read, click/tap/Enter/Space to pin or toggle, Escape/Tab/outside activation
+to dismiss. Definitions work without WebGL and do not change source downloads.
+Long definitions scroll with pointer/touch or Arrow/Page/Home/End while the term is
+focused. The checked lesson selects LGN, V1 and optic radiation. No stemming,
+cross-format phrase matching or glossary search is provided; automated semantics
+checks do not certify every screen reader/device. See
+[glossary author guidance](skills/write-lesson.md#optional-inline-glossary) for
+selection, local precedence and limits.
+
 The app opens in the exploratory Atlas, restoring its last valid global view when available, not inside a lesson. The retained Viewer
 shows one compact Quick controls layer—global hemispheres, fibre preset/status, activity,
 speed, and fixed views—while one **Full controls** disclosure retains layers, custom endpoint

@@ -87,6 +87,31 @@ population limits remain part of the supported scope.
 | Historical two-stream framework | [Mishkin, Ungerleider & Macko 1983](https://doi.org/10.1016/0166-2236%2883%2990190-X) presents the classic object-versus-spatial cortical-pathway framing. [Goodale & Milner 1992](https://doi.org/10.1016/0166-2236(92)90344-8) reframes the distinction around perception and action. The lesson presents both as evolving models, not absolute anatomical or behavioral divisions. |
 | Parallel streams and their interaction | [Nassi & Callaway 2009](https://doi.org/10.1038/nrn2619) reviews separate but interacting dorsal and ventral streams operating on related visual information. The lesson uses this as a systems framework rather than a complete wiring diagram. |
 
+## Glossary teaching-claim check — 2026-10-16
+
+The lesson opts into three project-authored definitions in
+`src/lesson/glossary.json`; all wording is an original short paraphrase, not a
+reproduction of source text or figures. The glossary adds no geometry, functional
+maps, physiological parameters or new representation claims. It is not a new
+human curriculum approval; it supports the already-reviewed pathway vocabulary.
+
+| ID / spellings | Definition claim and verified evidence |
+|---|---|
+| `lgn`: LGN / lateral geniculate nucleus | A visual relay in the thalamus receiving retinal ganglion-cell signals and sending signals through optic radiation to primary visual cortex. [Fujita et al. 2001, AJNR 22(9):1719–1726](https://pmc.ncbi.nlm.nih.gov/articles/PMC7974446/) directly identifies human LGN anatomically/functionally; its introduction states retinal inputs and optic-radiation projection. This is a general anatomy definition, not validation of this viewer's coordinates or activity. |
+| `v1`: V1 / primary visual cortex | Receives LGN input and recombines inputs into outputs to other visual areas. [Nassi & Callaway 2009](https://www.nature.com/articles/nrn2619), DOI [10.1038/nrn2619](https://doi.org/10.1038/nrn2619), publisher key points explicitly support the primate retina→LGN→V1 route, recombination and parallel outputs. The definition does not imply a complete percept or measured function in the displayed shell. |
+| `optic-radiation`: optic radiation / optic radiations | Nerve fibres from LGN to primary visual cortex on the same side. Fujita et al. above explicitly describes the ipsilateral striate-cortex projection. This biological definition does not certify tractography endpoints or remove the legacy right-side mirroring disclosure. |
+
+Source pages checked with `agnt web-search` then `agnt web-fetch` on 2026-10-16.
+Fujita's record states copyright American Society of Neuroradiology; no source
+figure/text asset is redistributed. Nassi's accessible publisher key points are
+sufficient for the stated narrow claim; subscription full text was not claimed
+read. Europe PMC and Cell fetch attempts returned HTTP 403 and were not treated
+as evidence. Existing data licenses and software notices are unaffected.
+
+Only selected first eligible displayed occurrences get buttons. Tooltip text is
+supplementary, not a replacement for narrative explanations or citations here.
+Imported local replacements are author-controlled and do not inherit this review.
+
 ## Representation dependencies and publication limits
 
 - The anterior path supports nasal-fibre crossing only. Biological temporal-retinal

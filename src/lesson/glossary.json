@@ -1,0 +1,20 @@
+[
+  {
+    "id": "lgn",
+    "term": "LGN",
+    "aliases": ["lateral geniculate nucleus"],
+    "definition": "Lateral geniculate nucleus: a visual relay in the thalamus. It receives signals from retinal ganglion cells and sends signals through the optic radiation to primary visual cortex."
+  },
+  {
+    "id": "v1",
+    "term": "V1",
+    "aliases": ["primary visual cortex"],
+    "definition": "Primary visual cortex: a cortical area that receives visual input from the LGN and recombines those inputs into signals sent to other visual areas."
+  },
+  {
+    "id": "optic-radiation",
+    "term": "optic radiation",
+    "aliases": ["optic radiations"],
+    "definition": "The bundle of nerve fibres carrying signals from the LGN to primary visual cortex on the same side of the brain."
+  }
+]

@@ -85,7 +85,7 @@ scientific catalogs, authored lesson state, or anatomical coordinates.
 | `captureAtlasSnapshot(snapshot, camera, catalog)` | bootstrap/tests | Substitutes the actual rendered camera into complete canonical Atlas state without mutating it. |
 | `readAtlasState(getStorage, catalog)` / `writeAtlasState(getStorage, snapshot, catalog)` | bootstrap/tests | Read/write only `brain-atlas.atlas-state`; strict envelope v1 and canonical v2 validation, Atlas-only instant state and bounded camera. Read returns `{ status, snapshot }`; write returns status. Storage exceptions never escape. |
 | `createLessonResumeToken(input, catalog)` | bootstrap/tests | Validates and freezes the single stable in-memory lesson restoration token; excludes transient particles and source. |
-| `markdownToViewModel(source)` | bootstrap/tests | Frozen allowlisted plain tree; rejects raw HTML and unsafe URLs defensively. |
+| `markdownToViewModel(source, { glossary = [], seen = new Set() } = {})` | bootstrap/tests | Frozen allowlisted plain tree; rejects raw HTML and unsafe URLs defensively. Validated resolved glossary records annotate first eligible occurrences; shared caller-owned `seen` tracks IDs across displayed fragments. |
 | `createFidelityViewModel(input, catalog)` | bootstrap/tests | Frozen scene records with separate ordered geometry/activity statuses; unknown records fail. |
 | `availableInspectableIds(snapshot, catalog)` | bootstrap/tests | Returns sorted inspectable IDs whose canonical owner is visible under effective global/per-entity hemispheres; unresolved owners fail. |
 | `createAnatomyCatalogViewModel({ query, snapshot, catalog, geometryIds })` | bootstrap/tests | Frozen alphabetic catalog results from entity/inspectable records, existing names/descriptions/IDs and optional `atlasId`; hidden/missing-content states are explicit. Renderer-supplied complete-geometry IDs affect only geometry copy; null means no WebGL. |
@@ -94,6 +94,32 @@ scientific catalogs, authored lesson state, or anatomical coordinates.
 | `anatomyTapIntent(input)` | main/tests | Distinguishes a bounded tap from orbit/scroll drag movement. |
 | `anatomyPointerNdc(input)` / `nearestAnatomyHit(hits)` | main/tests | Converts the exact renderer-canvas rectangle to NDC and deterministically selects the nearest hit. |
 | `deriveViewerPowerState(input)` / `needsContinuousViewerFrames(input)` | main/tests | Preserve requested playback while deriving hidden/offscreen suspension, reduced-motion-safe resume eligibility, active model clocks, and whether another renderer frame is justified. Unknown interaction-idle inputs fail. |
+
+## Inline glossary presentation
+
+`markdownToViewModel` matches selected spellings literally, case-insensitively with
+Unicode letter/number/mark/underscore boundaries. At a shared start the longest
+spelling wins; a previously seen longest spelling is not reinterpreted as a shorter
+term. Plurals require aliases. Heading, link, image, code and existing annotation
+nodes are excluded. Matches never span text/formatting nodes, but adjacent inline
+text still constrains word boundaries (`axon**s**` is not a match for `axon`).
+Source, original displayed spelling and normal reading order remain unchanged.
+Bootstrap creates one `seen` set per full render, processing displayed introduction
+then numbered scenes; undisplayed entry-scene prose never consumes a term.
+
+Bootstrap renders native inline buttons and separate hidden plain-text descriptions,
+linked through `aria-describedby` and `aria-controls`. Dotted underlines mark terms;
+buttons inherit typography rather than the shell's 44px control floor (inline-text
+target exception). Hover/focus shows one hoverable tooltip; click/tap/Enter/Space
+pins or toggles it. Escape, Tab, outside activation and workspace change dismiss it;
+transient pointer/focus departure also dismisses. Clicking/selecting inside a pinned
+definition does not close it. Definitions sit outside copied lesson prose. Keyboard
+focus clears sticky stage/transport; popup placement respects visual viewport,
+topbar and compact transport. Overflow scrolls with pointer/touch, or Arrow/Page/
+Home/End keys while the term holds focus. There is no focus trap or animation.
+No-WebGL uses the same DOM path; no renderer, persistence, source export or CSP changes.
+Browser accessible-name/description tests do not certify physical screen readers;
+matching is literal, not linguistic stemming or cross-format phrase recognition.
 
 ## Responsive label placement
 
@@ -204,6 +230,7 @@ production strips the hook.
 | INV-68 | One repository registry feeds library cards, source/license/review links, candidate selection, and checked query/history IDs. Development/build validation uses the same bounded import contract plus source/evidence-file checks. Library membership makes no reviewed/published claim. Fresh image-bearing routes require drawer host disclosure and explicit Start; Atlas preparation creates no declared images. | `test/lesson-library.test.js`, `test/build-config.test.js`, `scripts/browser/home-library.spec.cjs` | More lessons cannot fork parsing, silently misroute to the first candidate, bypass source/media evidence, or contact image hosts before consent. |
 | INV-69 | Catalog search and browsing reuse entity/inspectable metadata and the existing transient selection/inspector path. Hidden and missing-content entries remain explicit and nonactivating. Complete geometry presence is reported separately from canonical eligibility and is not a visibility claim; pending, partial, and failed loads share an explicit unavailable state. Search/list state is memory-only. | anatomy unit/browser tests + catalog atlas-ID drift check | Search cannot invent anatomy, content, geometry readiness, or another renderer/filter path. |
 | INV-70 | Only global Atlas canonical settings persist across reloads in origin-local `localStorage`. The strict v1 envelope contains canonical v2 state and no source/tokens/queues/clocks. Bootstrap loads before first application, preserves checked lesson routes, saves actual camera after 250 ms quiet or hidden/pagehide/lesson-entry flush, and never saves temporary exploration. Restored cameras are not responsively refit. Global Reset Atlas and Exit save defaults; camera Reset stays separate. Storage failure leaves the viewer usable with a notice. Current reduced-motion policy still wins. | `test/atlas-storage.test.js` + `scripts/browser/home-persistence.spec.cjs` | Local convenience cannot leak lesson content, pollute global Atlas, fork state/renderer, compound camera fit, or make storage a prerequisite for exploration. |
+| INV-72 | Glossary definitions annotate only the first eligible whole-word occurrence per selected term across displayed prose, preserve spelling/source/copy order, remain plain text, and support pointer/focus/keyboard/touch without WebGL. Popup state is ephemeral and clears across workspace/lesson changes. | `test/glossary.test.js` + `scripts/browser/home-glossary.spec.cjs` | Jargon help cannot change meaning, require hover, execute imported content or pollute saved Atlas/source state. |
 | INV-71 | Nine explicit-owner labels retain unchanged anchors under the one transform; deterministic bounded screen placement rejects collisions/edges and honors rendered owner/hemisphere/frustum/opaque-depth state. Selection/highlight priorities and retained candidate slots stabilize assignment. Geometry/filter/viewport/camera changes, not activity-event density, drive ≤20Hz solves; screen boxes stay separated between solves while leaders track anchors. Owner-filtered semantic text survives visual omission; labels-off defaults and canonical/storage contracts are unchanged. | `test/label-layout.test.js` + `scripts/browser/home-labels.spec.cjs` | Annotations cannot imply hidden anatomy, introduce another coordinate system, obscure each other during orbit, or make spatial labels the sole accessible text. |
 
 Jülich Viewer discovery is distinct from the nonactivating anatomy inspector search:
@@ -284,6 +311,7 @@ reloading its successful sibling.
 | FAIL-61 | A library entry opens another lesson, malformed/unregistered source ships, or fresh entry contacts image hosts before disclosure | Hardcoded candidate/route IDs, bypassed build validation, or premature image creation | Derive all checked paths from the validated registry; fail with file/position diagnostics; return fresh image routes to Atlas and require explicit drawer opening after host disclosure. |
 | FAIL-62 | Search claims missing geometry exists, drops focus on late load, or activates hidden anatomy | Eligibility was mistaken for geometry presence, loader notifications rebuilt the focused result without restoration, or activation bypassed the shared availability guard | Keep geometry and eligibility separate, preserve logical focus/invoker/query/scroll, and route activation through existing anatomy intents. |
 | FAIL-63 | Saved Atlas is malformed, oversized, version/catalog-incompatible, or browser storage throws | Untrusted/stale local data, privacy policy, quota or origin change | Bound input to 131,072 code units before JSON parsing; validate exact envelope/current canonical/catalog and finite bounded camera before use. Discard invalid data only at the app key; catch getter/read/write/remove errors, retain usable in-memory viewer and disclose failure. Never guess a migration or persist temporary/local lesson state. |
+| FAIL-65 | A glossary match lands inside a longer formatted word, consumes an excluded occurrence, or a definition disappears on internal selection/is clipped by fixed chrome | Per-node boundaries ignore adjacent inline text, caller loses shared seen IDs, blur overrides popup ownership, or placement ignores reading clearance | Match eligible text with surrounding displayed characters; share IDs only across displayed lesson prose; preserve internal popup interaction and clear external lifecycle; test compact focus, copy, touch, hover and dismissal. |
 | FAIL-64 | Labels collide, drift outside the viewport, remain after owner hiding or late opaque geometry, or repeat layout on activity-only frames | Missing eligibility/invalidation, anchor-relative motion between throttled solves, or unbounded/event-coupled placement | Reject unusable anchors/candidates, invalidate on geometry arrival/filter changes, retain screen rectangles between solves, and keep semantic names independent of visual omission. Verify every-frame orbit collisions plus stationary late-cortex arrival, not only eventual placement. |
 
 ## Decision Framework

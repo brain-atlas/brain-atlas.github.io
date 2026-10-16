@@ -154,6 +154,20 @@ contour margins, so `updateSwm` needs no asymmetric endpoint clipping; reduced
 motion settles each dot at its fixed home. Filtering changes contour eligibility but
 never event direction, rate parameters, or vibration semantics.
 
+## Lesson glossary
+
+Optional lesson-v1 `glossary` metadata selects stable records from bundled
+`src/lesson/glossary.json` and/or defines local records. The strict generated schema
+and `src/lesson/glossary.js` resolve bounded, collision-free, deeply frozen terms;
+local same-ID replacements never mutate the global vocabulary. This is an explicit
+additive metadata extension, not canonical scene state or persistence.
+`markdownToViewModel` emits `glossaryTerm` data only for first eligible whole-word
+matches, using a render-local ID set shared across displayed lesson fragments.
+`bootstrap.js` alone owns inline buttons, accessible descriptions, hover/focus/touch
+popup state, fixed-chrome-aware placement and dismissal. Definition text never
+becomes HTML, Markdown or a network request. Source export and no-WebGL parity use
+the existing paths. See lesson/UI SPECs and [author guidance](../skills/write-lesson.md#optional-inline-glossary).
+
 ## Lesson contract foundation
 
 `src/lesson/` is a renderer-independent ESM subsystem governed by

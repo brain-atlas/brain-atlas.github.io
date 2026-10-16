@@ -52,6 +52,51 @@ Identify separately:
 - what it cannot responsibly claim; and
 - what a learner must already know.
 
+## Optional inline glossary
+
+Use glossary help for essential jargon, not as a substitute for teaching a mechanism.
+Select only terms this lesson needs. Available global IDs in
+`src/lesson/glossary.json` are `lgn`, `v1`, and `optic-radiation`. Add this optional
+frontmatter field alongside `schema: 1`:
+
+```yaml
+glossary:
+  use: [lgn, v1]
+  terms:
+    - id: local-example
+      term: example term
+      aliases: [example terms]
+      definition: A short plain-text explanation appropriate to this lesson.
+```
+
+Local records can stand alone; a local record with a selected global ID replaces
+that entire record, including its spellings, only for this lesson. Unknown global
+IDs, duplicate local IDs and case-insensitive spelling/alias collisions reject the
+lesson. Without `glossary`, nothing is annotated. Limits: 64 selected globals and
+64 local records, at most 64 effective records after replacement; eight aliases per
+record; 80 Unicode code points per spelling/ID; 600 per definition. Use stable IDs,
+nonblank definitions and spellings without outer whitespace or control characters.
+The complete imported source must still fit 512 KiB. Older viewers that lack this
+explicit metadata extension reject the field; they do not silently ignore it.
+
+Only the first eligible occurrence in displayed introduction/numbered-scene prose
+gets a dotted underline. Matching ignores case, respects whole-word Unicode
+boundaries and prefers the longest overlapping phrase. Add plurals explicitly as
+aliases. Headings, links, images, code and scene directives never consume a term;
+phrases split by Markdown formatting do not match. Prose attached only to an
+unnumbered entry scene is not displayed or counted. No occurrence means no button,
+not an import error. Definitions are literal text: Markdown, HTML and URLs inside
+them are not rendered, executed or fetched. Original source/download stays exact.
+
+Hover or keyboard focus reads a definition; click/tap/Enter/Space pins or toggles it.
+Escape, Tab, outside activation and leaving the lesson dismiss it. Long definitions
+scroll with pointer/touch or Arrow/Page/Home/End while the term has focus. Keep
+wording short enough that scrolling is exceptional. Inline controls retain prose
+flow rather than becoming 44px blocks. Accessible descriptions work without WebGL;
+automated browser checks are not certification with every screen reader/device.
+Keep scientific evidence for each definition in the using lesson's validation
+record; a local definition is author-supplied, not a project scientific endorsement.
+
 ## 2. Define the learning contract
 
 Write down the intended audience, prerequisites, estimated scope, and three to five

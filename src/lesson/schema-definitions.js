@@ -61,6 +61,33 @@ const visualSchema = {
   },
 };
 
+const glossaryText = { type: 'string', minLength: 1, pattern: '\\S' };
+const glossarySpelling = {
+  ...glossaryText,
+  maxLength: 80,
+  pattern: '^(?!.*[\\u0000-\\u001f\\u007f])\\S(?:.*\\S)?$',
+};
+const glossarySchema = {
+  type: 'object',
+  additionalProperties: false,
+  properties: {
+    use: { type: 'array', maxItems: 64, uniqueItems: true, items: stableId },
+    terms: {
+      type: 'array', maxItems: 64,
+      items: {
+        type: 'object', additionalProperties: false,
+        required: ['id', 'term', 'definition'],
+        properties: {
+          id: { ...stableId, maxLength: 80 },
+          term: glossarySpelling,
+          aliases: { type: 'array', maxItems: 8, uniqueItems: true, items: glossarySpelling },
+          definition: { ...glossaryText, maxLength: 600, pattern: '^(?![\\s\\S]*[\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\u007f])[\\s\\S]*\\S[\\s\\S]*$' },
+        },
+      },
+    },
+  },
+};
+
 export const lessonMetadataSchema = {
   type: 'object',
   additionalProperties: false,
@@ -69,6 +96,7 @@ export const lessonMetadataSchema = {
     id: stableId,
     title: nonEmptyText,
     summary: nonEmptyText,
+    glossary: glossarySchema,
     entryScene: stableId,
     status: { const: 'draft' },
     schema: { const: LESSON_SCHEMA_VERSION },

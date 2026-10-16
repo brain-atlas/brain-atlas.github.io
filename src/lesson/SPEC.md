@@ -103,6 +103,28 @@ source location belong to the normalized scene wrapper, not renderer state. Pars
 geometry or activity fidelity. Deciding whether to number an entry scene or display a
 lifecycle badge belongs to the presentation layer.
 
+## Optional glossary metadata
+
+The explicit additive v1 `glossary` extension contains optional `use` (global IDs)
+and `terms` (local `{ id, term, aliases?, definition }` records). Old lessons remain
+valid; older viewers that lack this extension reject it rather than guessing.
+`glossary.json` is the small project-owned global vocabulary; `glossary.js` checks
+its shape and semantics at module load and resolves validated lesson selections.
+Nothing is selected implicitly. Local records replace selected globals with the
+same ID only in this lesson; local-only records are allowed. Parsed `glossary` is
+an ID-sorted deeply frozen array, empty when omitted; source and snapshots stay unchanged.
+
+Each input list and the effective vocabulary have at most 64 entries; each record
+has at most eight aliases, 80 Unicode code points per spelling/ID, and 600 per
+plain-text definition. Spellings have no outer whitespace, line breaks or control
+characters; definitions may contain ordinary whitespace but no other ASCII controls.
+Blank text, unknown global IDs, duplicate IDs, unknown keys and case-insensitive
+Unicode spelling collisions (including aliases) reject the whole lesson. Definitions
+are inert text even when they contain markup-looking characters, never an HTML or
+Markdown rendering surface. `use` accepts existing stable global IDs only. The local
+import's 512 KiB source bound still applies. Teaching-claim evidence belongs in the
+using lesson's validation record, not in renderer fidelity.
+
 ## Invariants
 
 | ID | Invariant | Enforcement | Why it matters |
@@ -123,6 +145,7 @@ lifecycle badge belongs to the presentation layer.
 | INV-14 | Every inspectable has a unique stable ID/binding, a resolved canonical owner, owner-derived fidelity, and verified-shape HTTPS citations. Every relationship has one resolved non-self target plus strict direction, evidence class, method, status, confidence, summary, and source records. Undirected pairs are authored once and projected reciprocally; duplicate/reversed authoring fails. Child landmarks use only `landmark` renderer bindings and remain outside scene entity IDs. | catalog schema/semantics + mapping/catalog tests | Search, canvas picking, reciprocal relationship inspection, and cited details share one honest registry without creating a second visibility system or upgrading representation fidelity. |
 | INV-15 | Every canonical snapshot v2 carries one validated endpoint-filter state. Named presets resolve from the strict small catalog; custom selectors resolve only to the original 45 project region IDs or explicit unknown/ambiguous classes; preset IDs cannot disagree with their frozen query. The complete Jülich visualization vocabulary does not silently broaden this versioned filter boundary. The filter describes unordered geometric endpoint membership and is independent of modeled activity direction. | catalog, scene-state, command, adapter, import, Explore, and reference-lesson tests | Lesson/Atlas/Return cannot inherit stale fibre subsets or reinterpret storage A/B as source/destination. |
 | INV-16 | Production merges exactly 112 source-bound Jülich additions into the 45-region canonical base. Additions are bilateral, hidden from Atlas defaults, and bound to the existing `fidelity.julich-regions` record and renderer path. | complete-catalog, Explore-default, and browser loading tests | Optional visualization expands vocabulary without eager geometry, duplicate state, or changed lesson/filter results. |
+| INV-17 | Opt-in global/local glossary metadata is bounded and strictly validated before resolution. Local same-ID replacement never mutates global records; ambiguous spellings and unresolved IDs reject. Resolved records remain inert, deeply frozen metadata outside canonical state. | `test/glossary.test.js`, generated validators, import/browser checks | Untrusted jargon definitions cannot become execution, source persistence, accidental annotation, or silent global overrides. |
 
 ## Failure modes
 
@@ -141,6 +164,7 @@ lifecycle badge belongs to the presentation layer.
 | FAIL-11 | `catalog.semantic.*inspectable*` | Inspectable owner/target is missing, a relationship targets itself or duplicates an authored/undirected pair, renderer binding drifts/collides, or a selection-only child is not a landmark | Fix the project-authored catalog before starting the renderer; never infer an owner, target, fidelity, relationship, or binding from a label. |
 | FAIL-12 | `catalog.semantic.*fibre-filter*` or `scene.semantic.*fibre-filter*` | Preset/selector is unresolved, mode/set shape is invalid, or a preset-labelled canonical query drifts from its catalog definition | Reject before renderer bindings run. Correct the authored preset/query; never infer regions from visible prose or silently broaden unknown/ambiguous matching. |
 | FAIL-13 | Complete Jülich catalog identity, count, bilateral labels, status split, renderer binding, or hierarchy-path shape drifts | Checked source/runtime catalog mismatch | Reject startup before lesson use; regenerate from pinned sources rather than filtering or fuzzy-matching at runtime. |
+| FAIL-14 | `lesson.schema.*` at `/glossary` or `lesson.glossary.invalid` | Invalid glossary shape, bounds, unknown reference, duplicate ID or ambiguous spelling | Preserve source and active lesson; show positioned diagnostics; correct metadata rather than partially enabling terms. |
 
 ## Decision framework
 

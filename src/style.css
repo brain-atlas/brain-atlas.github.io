@@ -137,6 +137,10 @@ button:disabled, fieldset:disabled button, fieldset:disabled input { cursor: not
 
 .lesson-layout { width: min(1480px, 100%); margin: 0 auto 20px; display: grid; grid-template-columns: minmax(340px, 0.95fr) minmax(560px, 1.25fr); gap: clamp(22px, 3vw, 48px); padding: 0 20px; align-items: start; }
 .lesson-reader { min-width: 0; padding-bottom: 18vh; }
+.glossary-term { display: inline; min-height: 0; max-width: 100%; transition: none; padding: 0; margin: 0; border: 0; border-radius: 0; background: none; color: inherit; font: inherit; line-height: inherit; text-align: inherit; white-space: normal; overflow-wrap: anywhere; user-select: text; cursor: help; text-decoration: underline dotted; text-underline-offset: 0.18em; }
+.glossary-term:hover, .glossary-term[aria-expanded="true"] { color: inherit; background: var(--accent-surface-subtle); }
+.glossary-definition { position: fixed; z-index: 60; width: 360px; padding: 12px 16px; border: 1px solid var(--line-strong); border-radius: 4px; background: var(--surface-popover); color: var(--text); font-size: var(--type-body-size); line-height: var(--type-support-leading); overflow: auto; overflow-wrap: anywhere; white-space: pre-wrap; overscroll-behavior: contain; }
+.glossary-definition[hidden] { display: none; }
 .lesson-intro { min-height: calc(88vh - var(--topbar)); display: flex; flex-direction: column; justify-content: center; padding: 72px clamp(8px, 3vw, 34px) 72px 0; border-bottom: 1px solid var(--line); }
 .lesson-intro h1 { max-width: 680px; margin: 0 0 20px; font-size: var(--type-display-size); line-height: var(--type-display-leading); letter-spacing: var(--type-display-tracking); overflow-wrap: anywhere; text-wrap: balance; }
 .lesson-intro > p { max-width: 640px; color: var(--text-lead); font-size: clamp(var(--type-body-size), 1.5vw, 1.22rem); line-height: var(--type-lead-leading); text-wrap: pretty; }

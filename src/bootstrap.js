@@ -238,6 +238,126 @@ function createDeclaredImageFigure(visual, className = 'lesson-inline-visual') {
   return figure;
 }
 
+let activeGlossary = null;
+let glossaryPinned = false;
+const glossaryDefinitions = node('div');
+glossaryDefinitions.id = 'lesson-glossary-definitions';
+app.append(glossaryDefinitions);
+
+function closeGlossary() {
+  if (activeGlossary) {
+    activeGlossary.definition.hidden = true;
+    activeGlossary.button.setAttribute('aria-expanded', 'false');
+  }
+  activeGlossary = null;
+  glossaryPinned = false;
+}
+
+function positionGlossary() {
+  if (!activeGlossary) return;
+  const { button, definition } = activeGlossary;
+  const anchor = button.getBoundingClientRect();
+  const viewport = window.visualViewport;
+  const left = (viewport?.offsetLeft ?? 0) + 8;
+  const top = Math.max(viewport?.offsetTop ?? 0, document.querySelector('.topbar').getBoundingClientRect().bottom) + 8;
+  const right = left + (viewport?.width ?? innerWidth) - 16;
+  const transport = document.querySelector('.scene-transport');
+  const bottom = Math.min(
+    (viewport?.offsetTop ?? 0) + (viewport?.height ?? innerHeight),
+    getComputedStyle(transport).position === 'fixed' ? transport.getBoundingClientRect().top : Infinity,
+  ) - 8;
+  if (!button.checkVisibility() || anchor.bottom < top || anchor.top > bottom) {
+    closeGlossary();
+    return;
+  }
+  definition.style.maxWidth = `${right - left}px`;
+  definition.style.maxHeight = `${bottom - top}px`;
+  const above = Math.max(0, anchor.top - top);
+  const below = Math.max(0, bottom - anchor.bottom);
+  const placeBelow = definition.getBoundingClientRect().height <= below || below >= above;
+  definition.style.maxHeight = `${placeBelow ? below : above}px`;
+  const box = definition.getBoundingClientRect();
+  definition.style.left = `${Math.max(left, Math.min(anchor.left, right - box.width))}px`;
+  const y = placeBelow ? anchor.bottom : anchor.top - box.height;
+  definition.style.top = `${Math.max(top, Math.min(y, bottom - box.height))}px`;
+}
+
+function renderGlossaryTerm(model) {
+  const button = node('button', 'glossary-term', model.value);
+  button.type = 'button';
+  const definition = node('div', 'glossary-definition', model.definition);
+  definition.id = `glossary-definition-${model.id}`;
+  definition.setAttribute('role', 'tooltip');
+  definition.hidden = true;
+  glossaryDefinitions.append(definition);
+  button.setAttribute('aria-describedby', definition.id);
+  button.setAttribute('aria-controls', definition.id);
+  button.setAttribute('aria-expanded', 'false');
+  function show() {
+    if (activeGlossary?.button === button) return;
+    closeGlossary();
+    activeGlossary = { button, definition };
+    definition.hidden = false;
+    definition.scrollTop = 0;
+    button.setAttribute('aria-expanded', 'true');
+    positionGlossary();
+  }
+  button.addEventListener('focus', () => {
+    const rect = button.getBoundingClientRect();
+    const transport = document.querySelector('.scene-transport');
+    const bottom = getComputedStyle(transport).position === 'fixed' ? transport.getBoundingClientRect().top : innerHeight;
+    if (rect.top < surfaceClearance() || rect.bottom > bottom - 8) {
+      pageScroll.scrollTo({
+        top: targetScrollTop({ scrollTop: pageScroll.scrollTop, targetTop: rect.top, clearanceTop: surfaceClearance(), maxScrollTop: pageScroll.scrollHeight - pageScroll.clientHeight }),
+        behavior: 'instant',
+      });
+    }
+    show();
+  });
+  button.addEventListener('blur', (event) => {
+    if (event.relatedTarget || !definition.matches(':hover')) closeGlossary();
+  });
+  button.addEventListener('pointerenter', (event) => { if (event.pointerType !== 'touch') show(); });
+  button.addEventListener('click', () => {
+    if (activeGlossary?.button === button && glossaryPinned) closeGlossary();
+    else { show(); glossaryPinned = true; }
+  });
+  function leave(event) {
+    if (activeGlossary?.button !== button || glossaryPinned || document.activeElement === button) return;
+    if (button.contains(event.relatedTarget) || definition.contains(event.relatedTarget)) return;
+    closeGlossary();
+  }
+  button.addEventListener('pointerleave', leave);
+  definition.addEventListener('pointerleave', leave);
+  return button;
+}
+
+document.addEventListener('pointerdown', (event) => {
+  if (activeGlossary && !activeGlossary.button.contains(event.target) && !activeGlossary.definition.contains(event.target)) closeGlossary();
+});
+document.addEventListener('keydown', (event) => {
+  if (!activeGlossary) return;
+  if (event.key === 'Tab') { closeGlossary(); return; }
+  if (event.key === 'Escape') {
+    closeGlossary();
+    event.preventDefault();
+    event.stopPropagation();
+    return;
+  }
+  const { button, definition } = activeGlossary;
+  if (event.target !== button || definition.scrollHeight <= definition.clientHeight) return;
+  const deltas = { ArrowDown: 40, ArrowUp: -40, PageDown: definition.clientHeight, PageUp: -definition.clientHeight, Home: -definition.scrollHeight, End: definition.scrollHeight };
+  if (Object.hasOwn(deltas, event.key)) {
+    definition.scrollTop += deltas[event.key];
+    event.preventDefault();
+    event.stopPropagation();
+  }
+}, true);
+pageScroll.addEventListener('scroll', positionGlossary, { passive: true });
+window.addEventListener('resize', positionGlossary);
+window.visualViewport?.addEventListener('resize', positionGlossary);
+window.visualViewport?.addEventListener('scroll', positionGlossary);
+
 function renderMarkdownNode(model) {
   switch (model.type) {
     case 'root': {
@@ -247,6 +367,8 @@ function renderMarkdownNode(model) {
     }
     case 'text':
       return document.createTextNode(model.value);
+    case 'glossaryTerm':
+      return renderGlossaryTerm(model);
     case 'paragraph':
     case 'blockquote':
     case 'strong':
@@ -308,8 +430,8 @@ function renderMarkdownNode(model) {
   }
 }
 
-function markdownFragment(markdown) {
-  return renderMarkdownNode(markdownToViewModel(markdown));
+function markdownFragment(markdown, seen) {
+  return renderMarkdownNode(markdownToViewModel(markdown, { glossary: lesson.glossary, seen }));
 }
 
 function sceneEntityLabels(scene) {
@@ -332,6 +454,7 @@ function renderLessonIdentity() {
 }
 
 function renderAtlasIdentity() {
+  closeGlossary();
   byId('lesson-brand-title').textContent = 'Visual system atlas';
   document.querySelector('.brand').setAttribute('aria-label', 'Brain Atlas home');
   byId('lesson-status').hidden = true;
@@ -341,10 +464,13 @@ function renderAtlasIdentity() {
 }
 
 function renderLesson() {
+  closeGlossary();
+  glossaryDefinitions.replaceChildren();
+  const seen = new Set();
   const statusLabel = presentation.statusLabel;
   renderLessonIdentity();
   const intro = byId('lesson-intro');
-  intro.replaceChildren(markdownFragment(lesson.introductionMarkdown));
+  intro.replaceChildren(markdownFragment(lesson.introductionMarkdown, seen));
   const title = intro.querySelector('h1');
   if (title) {
     title.id = 'lesson-title';
@@ -369,7 +495,7 @@ function renderLesson() {
     const rail = node('div', 'scene-rail');
     rail.append(node('span', 'scene-number', String(index + 1).padStart(2, '0')));
     const content = node('div', 'scene-copy');
-    content.append(markdownFragment(scene.proseMarkdown));
+    content.append(markdownFragment(scene.proseMarkdown, seen));
     const heading = content.querySelector('h1, h2, h3, h4, h5, h6');
     if (heading) heading.tabIndex = -1;
     const summary = node('p', 'scene-data-summary', `Stage: ${sceneEntityLabels(scene).join(' · ')}`);

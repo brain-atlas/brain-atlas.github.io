@@ -1,6 +1,8 @@
 ---
 title: "Early Vision: Retina to the Cortical Streams"
 schema: 1
+glossary:
+  use: [lgn, v1, optic-radiation]
 entryScene: orientation
 summary: Explain how early visual signals are transformed from retinal circuits through V1 into interacting ventral and dorsal cortical streams.
 ---

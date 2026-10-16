@@ -5,6 +5,7 @@ import { LineCounter, parseDocument } from 'yaml';
 
 import { createDiagnostic } from './diagnostics.js';
 import { isCredentialFreeHttps } from './https-formats.js';
+import { resolveGlossary } from './glossary.js';
 import { deepFreeze, normalizeSceneSnapshot } from './scene-state.js';
 import { validateLessonMetadata, validateSceneDirective } from './schemas.js';
 
@@ -178,8 +179,15 @@ export function parseLesson(source, catalog) {
   const metadataYaml = frontmatterNodes[0] ? parseYamlNode(frontmatterNodes[0], 'lesson') : null;
   diagnostics.push(...(metadataYaml?.diagnostics ?? []));
   const metadata = metadataYaml?.value;
+  let glossary = [];
   if (metadata !== undefined) {
-    diagnostics.push(...validateLessonMetadata(metadata, metadataYaml));
+    const metadataDiagnostics = validateLessonMetadata(metadata, metadataYaml);
+    diagnostics.push(...metadataDiagnostics);
+    if (metadataDiagnostics.length === 0) {
+      const resolved = resolveGlossary(metadata.glossary);
+      diagnostics.push(...remapDiagnostics(resolved.diagnostics, metadataYaml));
+      glossary = resolved.terms;
+    }
   }
   const visuals = Array.isArray(metadata?.visuals) ? metadata.visuals : [];
   const visualIds = new Set();
@@ -300,6 +308,7 @@ export function parseLesson(source, catalog) {
       status: metadata.status ?? null,
       entrySceneId: metadata.entryScene ?? null,
       visuals: structuredClone(visuals),
+      glossary,
       introductionMarkdown: trimMarkdown(source, introductionStart, introductionEnd),
       scenes,
     }),
