@@ -479,9 +479,15 @@ Lesson mode keeps the fieldset disabled so panel clicks cannot bypass authored s
 Atlas projects its active canonical snapshot into the same panel; filter and display
 changes use the same renderer adapter, and keyboard-operable Zoom/Pan actions supplement
 pointer and touch camera input. Auto-rotate stays off and hidden in Atlas.
-Legacy fixed-anchor 3D labels are hidden in the reference lesson pending the responsive
-placement work in `brain-atlas-zmq.20`; the free viewer label layer remains available in
-Atlas.
+**Full controls → Scene → Labels** enables nine landmark/pathway annotations in
+Atlas. Labels follow visible owners and hemisphere filters, avoid one another and
+viewport edges, and use leader lines when displaced. Leaders are annotations—not
+fibres or biological connections. Transparent shells remain see-through; opaque
+geometry and offscreen anchors suppress labels. Dense views may omit labels;
+screen-reader text retains enabled-owner names, and **Inspect anatomy** remains
+available. Labels stay off by default and in the reference lesson. The two legacy
+optic-radiation annotations use left-side anchors only; they do not label measured
+right-side anatomy.
 
 ## What's real vs schematic
 

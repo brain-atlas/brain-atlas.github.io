@@ -98,6 +98,15 @@ The retained panel lives in `#layers` inside `#viewer-console`. It is disabled w
 - **Pathways / Scene** — plain checkboxes carrying `dataset.id`: `or` (optic
   radiation), `swm` (short-range contours), `anterior` (anterior pathway), `brain`
   (cortical surface), `labels`.
+- **Labels** — nine existing annotations, off by default and in the reference lesson.
+  Labels follow their rendered owners/hemispheres and camera depth, separate in screen
+  space, and use non-directional leader strokes (not fibres). Transparent shells remain
+  see-through; crowded/occluded/offscreen labels can disappear. The two OR annotations
+  remain left-only. The owner-filtered `#anatomical-label-text` list preserves names for
+  screen readers; **Inspect anatomy** remains the semantic detail path. Development
+  `window.__view.labels` reports placement count, last/max expensive solve time and
+  rectangles. Orbit/resize should invalidate at ≤20Hz; activity-only settled cameras
+  should not repeatedly solve.
 - **Fibre endpoints** — `#fibre-filter-preset`, `#fibre-filter-mode`, and the two
   multi-select region sets. `#fibre-filter-summary` announces matched association/SWM
   counts and known/unknown/ambiguous fibre quality. Counts precede separately hidden

@@ -23,12 +23,16 @@ export const ANT_PATHS = [
 ];
 
 export const LANDMARKS = [
-  { p: LE, t: 'Left eye' }, { p: RE, t: 'Right eye' }, { p: CHI, t: 'Optic chiasm' },
-  { p: LGNL, t: 'LGN (L)' }, { p: LGNR, t: 'LGN (R)' },
-  { p: V1L, t: 'V1 (L)' }, { p: V1R, t: 'V1 (R)' },
-  // tract labels, pinned to fixed points on the left optic radiation
-  { p: [-30, -60, 5], t: 'Optic radiation', tract: true },
-  { p: [-32, -38, -12], t: "Meyer's loop", tract: true },
+  { id: 'eye-left', owner: 'pathway.anterior', inspectable: 'landmark.eye-left', hemi: null, p: LE, t: 'Left eye' },
+  { id: 'eye-right', owner: 'pathway.anterior', inspectable: 'landmark.eye-right', hemi: null, p: RE, t: 'Right eye' },
+  { id: 'optic-chiasm', owner: 'pathway.anterior', inspectable: 'landmark.optic-chiasm', hemi: null, p: CHI, t: 'Optic chiasm' },
+  { id: 'lgn-left', owner: 'region.lgn', hemi: 'L', p: LGNL, t: 'LGN (L)' },
+  { id: 'lgn-right', owner: 'region.lgn', hemi: 'R', p: LGNR, t: 'LGN (R)' },
+  { id: 'v1-left', owner: 'region.v1', hemi: 'L', p: V1L, t: 'V1 (L)' },
+  { id: 'v1-right', owner: 'region.v1', hemi: 'R', p: V1R, t: 'V1 (R)' },
+  // These two legacy anchors describe only the left optic radiation, not a bilateral measurement.
+  { id: 'optic-radiation-left', owner: 'pathway.optic-radiation', hemi: 'L', p: [-30, -60, 5], t: 'Optic radiation', tract: true },
+  { id: 'meyers-loop-left', owner: 'pathway.optic-radiation', hemi: 'L', p: [-32, -38, -12], t: "Meyer's loop", tract: true },
 ];
 
 // Only the schematic anterior landmarks get marker spheres; the LGN and V1 now

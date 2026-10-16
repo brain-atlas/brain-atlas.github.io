@@ -51,6 +51,7 @@ scientific catalogs, authored lesson state, or anatomical coordinates.
 - `fidelity-view-model.js` — scene fidelity status/detail projection.
 - `anatomy-inspector.js` — inspectable availability/detail projection, modality state, tap threshold, exact-canvas NDC, and nearest-hit choice.
 - `viewer-power.js` — pure observability/playback power policy and continuous-frame decision.
+- `label-layout.js` — bounded screen-space annotation placement; no anatomical transform, DOM or Three.js.
 - `region-catalog.js` — frozen Jülich discovery groups and source-name/atlas-ID/hierarchy search; no visibility or geometry effects.
 - `src/bootstrap.js` — DOM consumer, WebGL gate, focus, scrolling, responsive disclosure.
 - `src/main.js#createLessonRendererAdapter` — the only concrete Three.js consumer.
@@ -93,6 +94,41 @@ scientific catalogs, authored lesson state, or anatomical coordinates.
 | `anatomyTapIntent(input)` | main/tests | Distinguishes a bounded tap from orbit/scroll drag movement. |
 | `anatomyPointerNdc(input)` / `nearestAnatomyHit(hits)` | main/tests | Converts the exact renderer-canvas rectangle to NDC and deterministically selects the nearest hit. |
 | `deriveViewerPowerState(input)` / `needsContinuousViewerFrames(input)` | main/tests | Preserve requested playback while deriving hidden/offscreen suspension, reduced-motion-safe resume eligibility, active model clocks, and whether another renderer frame is justified. Unknown interaction-idle inputs fail. |
+
+## Responsive label placement
+
+`layoutLabels({ labels, width, height, obstacles = [], previous = [] })` is consumed
+by `main.js` and tests. Each label supplies stable `id`, screen anchor `x/y`, NDC `z`,
+positive camera `depth`, measured `width/height`, owner-derived `visible`, optional
+`occluded` and numeric `priority`. Output rectangles carry `id`, `slot` and leader
+endpoints. Invalid/offscreen/behind-camera/occluded anchors are omitted; unusable
+viewport dimensions return an empty list. Inputs are internal renderer projections,
+not a new lesson or storage format.
+
+Priority is selected/transient-highlighted owner (3), emphasized owner (2), then
+others (0), with stable ID tie-breaks. Eight directions × four gaps (8, 32, 80,
+160 CSS px) give 32 candidates per label. Candidates clamp to an 8px viewport inset;
+label collisions including a 4px gap are forbidden. Remaining cost is
+`200 × summed occupancy overlap / label area + 0.03 × leader length + 0.1 × clamp distance
+− 8 when retaining the previous candidate slot`. Occupancy uses rendered focused
+geometry when present, otherwise the enabled label owners. No fitting candidate
+means omission, never overlapping fallback. These are display heuristics, not
+anatomical measurements or a global optimality guarantee.
+
+`main.js` owns actual projection under `mniGroup`, rendered owner/hemisphere checks,
+non-shader mesh opacity ≥0.95 ray occlusion (excluding own geometry and clipped hits),
+geometry-bound caches, and CSS2D/SVG application. The two OR anchors are left-only;
+anterior markers follow their schematic owner's existing hemisphere-independent
+visibility. Fresnel shells and translucent cortex are deliberately see-through.
+Bounds are conservative projected boxes, not pixel masks. Expensive placement and
+occlusion run only for changed inputs, no faster than every 50ms with one trailing
+invalidation. Late geometry and filtered occupancy invalidate even at rest. Between
+solves, rectangles remain fixed while leaders track current anchors; a resize may
+briefly hide boxes that no longer fit. Suspension does not start a render loop.
+The label toggle gates an owner-filtered semantic list, independently of screen
+crowding/depth. Reference lessons and default Atlas keep labels off. Development
+`window.__view.labels` exposes count, last/max solve time and plain placements;
+production strips the hook.
 
 ## Invariants
 
@@ -168,6 +204,7 @@ scientific catalogs, authored lesson state, or anatomical coordinates.
 | INV-68 | One repository registry feeds library cards, source/license/review links, candidate selection, and checked query/history IDs. Development/build validation uses the same bounded import contract plus source/evidence-file checks. Library membership makes no reviewed/published claim. Fresh image-bearing routes require drawer host disclosure and explicit Start; Atlas preparation creates no declared images. | `test/lesson-library.test.js`, `test/build-config.test.js`, `scripts/browser/home-library.spec.cjs` | More lessons cannot fork parsing, silently misroute to the first candidate, bypass source/media evidence, or contact image hosts before consent. |
 | INV-69 | Catalog search and browsing reuse entity/inspectable metadata and the existing transient selection/inspector path. Hidden and missing-content entries remain explicit and nonactivating. Complete geometry presence is reported separately from canonical eligibility and is not a visibility claim; pending, partial, and failed loads share an explicit unavailable state. Search/list state is memory-only. | anatomy unit/browser tests + catalog atlas-ID drift check | Search cannot invent anatomy, content, geometry readiness, or another renderer/filter path. |
 | INV-70 | Only global Atlas canonical settings persist across reloads in origin-local `localStorage`. The strict v1 envelope contains canonical v2 state and no source/tokens/queues/clocks. Bootstrap loads before first application, preserves checked lesson routes, saves actual camera after 250 ms quiet or hidden/pagehide/lesson-entry flush, and never saves temporary exploration. Restored cameras are not responsively refit. Global Reset Atlas and Exit save defaults; camera Reset stays separate. Storage failure leaves the viewer usable with a notice. Current reduced-motion policy still wins. | `test/atlas-storage.test.js` + `scripts/browser/home-persistence.spec.cjs` | Local convenience cannot leak lesson content, pollute global Atlas, fork state/renderer, compound camera fit, or make storage a prerequisite for exploration. |
+| INV-71 | Nine explicit-owner labels retain unchanged anchors under the one transform; deterministic bounded screen placement rejects collisions/edges and honors rendered owner/hemisphere/frustum/opaque-depth state. Selection/highlight priorities and retained candidate slots stabilize assignment. Geometry/filter/viewport/camera changes, not activity-event density, drive ≤20Hz solves; screen boxes stay separated between solves while leaders track anchors. Owner-filtered semantic text survives visual omission; labels-off defaults and canonical/storage contracts are unchanged. | `test/label-layout.test.js` + `scripts/browser/home-labels.spec.cjs` | Annotations cannot imply hidden anatomy, introduce another coordinate system, obscure each other during orbit, or make spatial labels the sole accessible text. |
 
 Jülich Viewer discovery is distinct from the nonactivating anatomy inspector search:
 `createRegionCatalogGroups(regions, streamLabels, query)` groups the 45 established
@@ -247,6 +284,7 @@ reloading its successful sibling.
 | FAIL-61 | A library entry opens another lesson, malformed/unregistered source ships, or fresh entry contacts image hosts before disclosure | Hardcoded candidate/route IDs, bypassed build validation, or premature image creation | Derive all checked paths from the validated registry; fail with file/position diagnostics; return fresh image routes to Atlas and require explicit drawer opening after host disclosure. |
 | FAIL-62 | Search claims missing geometry exists, drops focus on late load, or activates hidden anatomy | Eligibility was mistaken for geometry presence, loader notifications rebuilt the focused result without restoration, or activation bypassed the shared availability guard | Keep geometry and eligibility separate, preserve logical focus/invoker/query/scroll, and route activation through existing anatomy intents. |
 | FAIL-63 | Saved Atlas is malformed, oversized, version/catalog-incompatible, or browser storage throws | Untrusted/stale local data, privacy policy, quota or origin change | Bound input to 131,072 code units before JSON parsing; validate exact envelope/current canonical/catalog and finite bounded camera before use. Discard invalid data only at the app key; catch getter/read/write/remove errors, retain usable in-memory viewer and disclose failure. Never guess a migration or persist temporary/local lesson state. |
+| FAIL-64 | Labels collide, drift outside the viewport, remain after owner hiding or late opaque geometry, or repeat layout on activity-only frames | Missing eligibility/invalidation, anchor-relative motion between throttled solves, or unbounded/event-coupled placement | Reject unusable anchors/candidates, invalidate on geometry arrival/filter changes, retain screen rectangles between solves, and keep semantic names independent of visual omission. Verify every-frame orbit collisions plus stationary late-cortex arrival, not only eventual placement. |
 
 ## Decision Framework
 
@@ -308,6 +346,7 @@ node --test test/scene-navigation.test.js test/lesson-scene-controller.test.js \
 | INV-61, FAIL-54 | `scripts/browser/hardening.spec.cjs` verifies compact-only import demotion, primary Next styling, secondary stage actions, wide parity, local-import reachability, 44px targets, and zero overflow in Chromium/Firefox |
 | INV-62, FAIL-55 | `test/scene-navigation.test.js` verifies resumed entry capability and invalid state; `scripts/browser/hardening.spec.cjs` verifies final status/actions, review focus, final camera/filter Explore, Return, and no-WebGL completion in Chromium/Firefox |
 | INV-68, FAIL-61 | `test/lesson-library.test.js`, `test/build-config.test.js`, and `scripts/browser/home-library.spec.cjs` multi-candidate route/history/resume, no-WebGL, external-host consent, and 44px source-link checks |
+| INV-71, FAIL-64 | `test/label-layout.test.js` deterministic order, priority, occupancy, hysteresis, edges/crowding; `scripts/browser/home-labels.spec.cjs` wide/compact cameras, hidden owners, depth/opaque geometry, late cortex, every-frame orbit collision, performance and saved-toggle/reference-lesson checks |
 | INV-70, FAIL-63 | `test/atlas-storage.test.js` exact envelope/canonical roundtrip, bad versions/references/limits and storage exceptions; `scripts/browser/home-persistence.spec.cjs` wide/compact reload/camera, filters, temporary-branch isolation, Reset/Exit, blocked/quota storage and reduced motion |
 | INV-63–INV-67, FAIL-56–FAIL-60 | `scripts/browser/explore-reconciliation.spec.cjs`, controller tests, and existing endpoint, anatomy, power, workspace, and animation suites |
 

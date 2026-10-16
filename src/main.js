@@ -34,6 +34,7 @@ import { createRendererAdapter } from './lesson/index.js';
 import { createCameraTransition, sampleCameraTransition } from './ui/camera-transition.js';
 import { createVisibilityTransition, sampleVisibilityTransition } from './ui/visibility-transition.js';
 import { createRegionCatalogGroups } from './ui/region-catalog.js';
+import { layoutLabels } from './ui/label-layout.js';
 import {
   deriveViewerPowerState,
   latestStageIntersection,
@@ -143,6 +144,7 @@ function loadBrain() {
       }
     });
     brainGroup.add(g.scene);
+    labelGeometryRevision++;
     reapplyLessonMaterialFactors(brainGroup);
     requestViewerRender();
   }, undefined, (e) => console.warn('brain load failed:', e));
@@ -201,11 +203,152 @@ for (const s of SPHERES) {
   landmarkMarkersById[s.id] = m;
 }
 const labelGroup = new THREE.Group(); mniGroup.add(labelGroup);
-for (const lb of LANDMARKS) {
+const labelLeaders = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+labelLeaders.classList.add('label-leaders');
+labelLeaders.setAttribute('aria-hidden', 'true');
+labelRenderer.domElement.appendChild(labelLeaders);
+const labelText = document.createElement('ul');
+labelText.id = 'anatomical-label-text'; labelText.className = 'sr-only';
+labelText.setAttribute('aria-label', 'Enabled anatomical labels');
+labelRenderer.domElement.appendChild(labelText);
+const anatomicalLabels = LANDMARKS.map(lb => {
   const div = document.createElement('div'); div.className = 'lbl3d'; div.textContent = lb.t;
+  div.dataset.labelId = lb.id; div.setAttribute('aria-hidden', 'true');
+  div.style.visibility = 'hidden'; div.style.pointerEvents = 'none';
   if (lb.tract) { div.style.color = '#ffc27a'; div.style.borderColor = 'rgba(255,176,74,.5)'; }
-  const o = new CSS2DObject(div); o.position.set(...lb.p); labelGroup.add(o);
+  const anchor = new CSS2DObject(div); anchor.position.set(...lb.p); labelGroup.add(anchor);
+  const line = document.createElementNS(labelLeaders.namespaceURI, 'line');
+  labelLeaders.appendChild(line);
+  const text = document.createElement('li'); text.textContent = lb.t; labelText.appendChild(text);
+  return { ...lb, anchor, div, line, text, world: new THREE.Vector3(), screen: new THREE.Vector3() };
+});
+let labelSelection = { selected: null, emphasized: [] };
+let labelPlacements = [];
+let labelSignature = '';
+let labelGeometryRevision = 0;
+let labelLayoutAt = -Infinity;
+let labelLayoutTimer = null;
+let labelLayoutCount = 0;
+let labelLayoutMs = 0;
+let labelLayoutMaxMs = 0;
+let labelViewport = { width: 0, height: 0 };
+const labelRaycaster = new THREE.Raycaster();
+const labelBoundsCache = new WeakMap();
+
+function labelOwnerObjects(label) {
+  if (label.inspectable) return [landmarkMarkersById[label.id]].filter(objectIsRendered);
+  const entity = anatomyCatalog?.entitiesById[label.owner];
+  if (!entity) return [];
+  if (entity.renderer.id === 'or') return [orLines[label.hemi]].filter(o => o && objectIsRendered(o));
+  return (regionsById[entity.renderer.id]?.children ?? [])
+    .filter(o => o.isMesh && o.userData.hemi === label.hemi && objectIsRendered(o));
 }
+
+function projectLabelBounds(roots) {
+  const rectangles = [];
+  for (const root of new Set(roots)) {
+    const box = new THREE.Box3();
+    root.traverse(object => {
+      if ((!object.isMesh && !object.isLineSegments) || !objectIsRendered(object)) return;
+      const geometry = object.geometry, position = geometry.attributes.position;
+      if (!position) return;
+      const count = Math.min(position.count, geometry.drawRange.count);
+      let cached = labelBoundsCache.get(geometry);
+      if (!cached || cached.version !== position.version || cached.count !== count) {
+        const bounds = new THREE.Box3(), point = new THREE.Vector3();
+        for (let i = geometry.drawRange.start; i < geometry.drawRange.start + count; i++) bounds.expandByPoint(point.fromBufferAttribute(position, i));
+        cached = { version: position.version, count, bounds };
+        labelBoundsCache.set(geometry, cached);
+      }
+      box.union(cached.bounds.clone().applyMatrix4(object.matrixWorld));
+    });
+    if (box.isEmpty()) continue;
+    const projected = [];
+    for (const x of [box.min.x, box.max.x]) for (const y of [box.min.y, box.max.y]) for (const z of [box.min.z, box.max.z]) {
+      const p = new THREE.Vector3(x, y, z).project(camera);
+      if (p.z >= -1 && p.z <= 1) projected.push({ x: (p.x + 1) * labelViewport.width / 2, y: (1 - p.y) * labelViewport.height / 2 });
+    }
+    if (!projected.length) continue;
+    const x = Math.min(...projected.map(p => p.x)), y = Math.min(...projected.map(p => p.y));
+    rectangles.push({ x, y, width: Math.max(...projected.map(p => p.x)) - x, height: Math.max(...projected.map(p => p.y)) - y });
+  }
+  return rectangles;
+}
+
+function updateAnatomicalLabels(timestamp) {
+  labelText.hidden = !labelGroup.visible;
+  labelLeaders.style.display = labelGroup.visible ? '' : 'none';
+  if (!labelGroup.visible) {
+    labelSignature = ''; labelPlacements = [];
+    clearTimeout(labelLayoutTimer); labelLayoutTimer = null;
+    return;
+  }
+  const { width, height } = labelViewport;
+  const projected = anatomicalLabels.map(label => {
+    label.anchor.getWorldPosition(label.world);
+    label.screen.copy(label.world).project(camera);
+    const roots = labelOwnerObjects(label);
+    const visible = roots.length > 0;
+    label.text.hidden = !visible;
+    const priority = labelSelection.selected === label.owner || highlightedInspectableId === (label.inspectable ?? label.owner) ? 3
+      : labelSelection.emphasized.includes(label.owner) ? 2 : 0;
+    return { id: label.id, x: (label.screen.x + 1) * width / 2, y: (1 - label.screen.y) * height / 2,
+      z: label.screen.z, depth: -label.world.clone().applyMatrix4(camera.matrixWorldInverse).z,
+      width: label.div.offsetWidth, height: label.div.offsetHeight, priority, visible, roots };
+  });
+  const signature = JSON.stringify([width, height, camera.matrixWorld.elements.map(n => +n.toFixed(6)), camera.projectionMatrix.elements,
+    labelGeometryRevision, brainMat.opacity, brainGroup.visible, clipPlane.constant, labelSelection, highlightedInspectableId,
+    projected.map(l => [l.id, l.visible, l.width, l.height, l.roots.map(o => [o.id, o.geometry?.attributes.position.version])])]);
+  if (signature !== labelSignature) {
+    if (timestamp - labelLayoutAt >= 50) {
+      const started = performance.now();
+      const opaque = [];
+      scene.traverse(o => {
+        if (o.isMesh && objectIsRendered(o) && !o.material.isShaderMaterial && o.material.opacity >= 0.95) opaque.push(o);
+      });
+      for (let i = 0; i < projected.length; i++) {
+        const item = projected[i], label = anatomicalLabels[i];
+        if (!item.visible || item.depth <= 0 || Math.abs(item.z) > 1) continue;
+        labelRaycaster.setFromCamera(label.screen, camera);
+        const distance = camera.position.distanceTo(label.world);
+        item.occluded = labelRaycaster.intersectObjects(opaque.filter(o => !item.roots.includes(o)), false)
+          .some(hit => hit.distance < distance - 0.5 && !(hit.object.material.clippingPlanes ?? []).some(plane => plane.distanceToPoint(hit.point) < 0));
+      }
+      const focus = [labelSelection.selected, ...labelSelection.emphasized].filter(id => id && id !== 'layer.labels' && id !== 'layer.cortex');
+      const focusRoots = focus.flatMap(id => anatomyCatalog?.entitiesById[id] ? lessonRendererObjects(anatomyCatalog.entitiesById[id]) : []);
+      const obstacles = projectLabelBounds(focusRoots.length ? focusRoots : projected.flatMap(l => l.roots));
+      labelPlacements = layoutLabels({ labels: projected, width, height, obstacles, previous: labelPlacements });
+      labelSignature = signature; labelLayoutAt = timestamp; labelLayoutCount++;
+      labelLayoutMs = performance.now() - started; labelLayoutMaxMs = Math.max(labelLayoutMaxMs, labelLayoutMs);
+      clearTimeout(labelLayoutTimer); labelLayoutTimer = null;
+    } else if (labelLayoutTimer === null) {
+      labelLayoutTimer = setTimeout(() => { labelLayoutTimer = null; requestViewerRender(); }, 50 - (timestamp - labelLayoutAt));
+    }
+  }
+  for (let i = 0; i < anatomicalLabels.length; i++) {
+    const label = anatomicalLabels[i], point = projected[i];
+    const placement = labelPlacements.find(p => p.id === label.id);
+    const visible = placement && point.visible && point.depth > 0 && Math.abs(point.z) <= 1
+      && point.x >= 0 && point.x <= width && point.y >= 0 && point.y <= height
+      && placement.x + placement.width <= width && placement.y + placement.height <= height;
+    label.div.style.visibility = visible ? 'visible' : 'hidden';
+    label.line.style.display = visible ? '' : 'none';
+    if (!visible) continue;
+    // Retain collision-free screen boxes between solves; leaders follow current anchors.
+    const dx = placement.x + placement.width / 2 - point.x;
+    const dy = placement.y + placement.height / 2 - point.y;
+    label.div.style.translate = `${dx}px ${dy}px`;
+    label.line.setAttribute('x1', point.x); label.line.setAttribute('y1', point.y);
+    label.line.setAttribute('x2', Math.max(placement.x, Math.min(placement.x + placement.width, point.x)));
+    label.line.setAttribute('y2', Math.max(placement.y, Math.min(placement.y + placement.height, point.y)));
+  }
+}
+if (import.meta.env.DEV) window.__view.labels = {
+  get layoutCount() { return labelLayoutCount; },
+  get lastLayoutMs() { return labelLayoutMs; },
+  get maxLayoutMs() { return labelLayoutMaxMs; },
+  get placements() { return structuredClone(labelPlacements); },
+};
 
 // ---------------------------------------------------------------------------
 // Region shells — Julich-Brain MPM (winner-take-all), loaded from a manifest.
@@ -310,6 +453,7 @@ function loadRegionMeshes(reg) {
       const mesh = new THREE.Mesh(geom, mat); mesh.frustumCulled = false; mesh.userData = { hemi };
       mesh.visible = hemiState[hemi] && (regionHemi[reg.id] ? regionHemi[reg.id][hemi] : true);
       group.add(mesh);
+      labelGeometryRevision++;
       reapplyLessonMaterialFactors(group);
       applyRegionMesh(reg.id);
       anatomyGeometryChanged();
@@ -868,6 +1012,7 @@ function recalculateFibreFilter({ geometryChanged = false } = {}) {
   const key = JSON.stringify([requestedFibreFilter, hemiState.L, hemiState.R]);
   const queryChanged = key !== fibreFilterInputKey;
   if (!queryChanged && !geometryChanged) return;
+  labelGeometryRevision++;
   const startedAt = performance.now();
   if (queryChanged) {
     fibreFilterResult = filterFibreEndpoints(fibreEndpointIndex, requestedFibreFilter, hemiState);
@@ -1021,6 +1166,7 @@ function resize() {
   camera.updateProjectionMatrix();
   renderer.setSize(width, height);
   labelRenderer.setSize(width, height);
+  labelViewport = { width, height };
   requestViewerRender();
 }
 window.addEventListener('resize', resize);
@@ -1091,6 +1237,7 @@ function animate(timestamp) {
   const controlsChanged = cameraTransitioning ? false : Boolean(controls.update());
   renderer.render(scene, camera);
   labelRenderer.render(scene, camera);
+  updateAnatomicalLabels(timestamp);
   viewerRenderCount++;
   const nextPowerState = currentViewerPowerState();
   if (needsContinuousViewerFrames({
@@ -1877,6 +2024,7 @@ export function createLessonRendererAdapter(catalog, {
   };
   const entityIds = Object.keys(catalog.entitiesById);
   function applyVisibilitySample(sample) {
+    labelGeometryRevision++;
     lessonEntityOpacities = sample.opacities;
     lessonRendererVisibility = new Set(sample.visibleIds.map((entityId) => {
       const rendererBinding = catalog.entitiesById[entityId].renderer;
@@ -1940,6 +2088,7 @@ export function createLessonRendererAdapter(catalog, {
     },
     setHemispheres(value) {
       if (!remember('hemispheres', value)) return;
+      labelGeometryRevision++;
       Object.assign(hemiState, value.global);
       for (const entity of Object.values(catalog.entitiesById)) {
         if (entity.renderer.kind === 'region') regionHemi[entity.renderer.id] = { L: true, R: true };
@@ -1980,6 +2129,7 @@ export function createLessonRendererAdapter(catalog, {
     },
     setSelection(value) {
       if (!remember('selection', value)) return;
+      labelSelection = value;
       const emphasized = new Set(value.emphasized);
       if (value.selected) emphasized.add(value.selected);
       const hasFocus = emphasized.size > 0;

@@ -55,6 +55,13 @@ filters and actual camera across wide/compact reloads, camera-only page-hide flu
 temporary lesson isolation, keyboard Reset Atlas versus camera reset, Exit defaults,
 malformed/denied/quota storage, checked routes and reduced-motion precedence. Each test
 uses its own browser context so saved settings cannot contaminate another test.
+`home-labels.spec.cjs` covers the nine responsive annotations at 1440/390px,
+camera presets/zoom, owner and hemisphere filtering, semantic text, opaque/behind-camera
+culling, stationary late-cortex arrival, every-frame orbit separation, ≤20Hz layout,
+activity-independent/paused counts, measured solve cost, and saved-toggle versus
+reference-lesson defaults. Stage screenshots accompany both sizes. The development
+`window.__view.labels` timings cover placement/occlusion/bounds work, not total frame
+cost; desktop results do not certify phone GPU performance.
 The broader matrix covers Atlas-as-Home, its canonical Quick controls plus one native
 Full controls disclosure and Custom-query focus handoff, the responsive Lessons drawer,
 checked and local activation, direct/static routes, Back/Forward and
