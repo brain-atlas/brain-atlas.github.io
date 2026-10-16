@@ -260,7 +260,12 @@ and verification caveats are retained in `brain-atlas-2h9x`.
 
 ## Deferred device limits
 
-No physical iPhone, iPad, or Android device was available for this pass. Before publication expands beyond the current MVP gate, test at least one current iOS Safari device and one mid-range Android Chromium device for:
+Physical-device and manual-browser validation remains unverified. The owner moved
+these checks out of the automated MVP readiness scope into nonblocking follow-up
+`brain-atlas-g3zb` on 2026-10-16. Closing the readiness task does not certify these
+capabilities or authorize publication. The follow-up covers the ordinary visible-browser
+checks above, physical assistive-technology traversal, and at least one current iOS
+Safari device and one mid-range Android Chromium device for:
 
 - cold-cache transfer and parse time;
 - WebGL memory pressure and context loss;
