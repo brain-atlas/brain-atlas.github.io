@@ -76,7 +76,7 @@ test('build job is read-only, pinned, credential-free, and retains the exact rel
   assert.equal(JSON.stringify(build).includes('GH_TOKEN'), false);
 });
 
-test('Ubuntu release CI leaves the Darwin-byte-exact Node suite to the documented local gate', () => {
+test('Ubuntu release CI retains local Node gate separate from historical environment certification', () => {
   const build = workflow().jobs.build;
   const combinedRuns = build.steps.filter(({ run }) => run).map(({ run }) => run).join('\n');
   const releases = readFileSync(new URL('../docs/RELEASES.md', import.meta.url), 'utf8');
@@ -85,7 +85,8 @@ test('Ubuntu release CI leaves the Darwin-byte-exact Node suite to the documente
   assert.equal(build.steps.some(({ name }) => name === 'Run Node tests'), false);
   assert.equal(combinedRuns.includes('npm test'), false);
   assert.match(releases, /does not run `npm test`/);
-  assert.match(releases, /recorded Darwin arm64\/Nix environment/);
+  assert.match(releases, /`npm run test:assets:environment`/);
+  assert.match(releases, /required before asset regeneration, not ordinary app/);
   assert.match(security, /release job does not rerun `npm test`/);
 });
 

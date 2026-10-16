@@ -18,6 +18,7 @@
     "check:lessons": "node scripts/check-lessons.mjs",
     "generate:lesson-validators": "node scripts/generate-lesson-validators.mjs",
     "test": "node --test",
+    "test:assets:environment": "uv run --python 3.13.1 --offline --with-requirements tools/assets/requirements.lock python -m tools.assets environment-preflight --uv \"$(command -v uv)\" --json",
     "build": "vite build",
     "build:publish": "node scripts/check-publish.mjs && vite build",
     "build:standalone:site": "node scripts/build-standalone.mjs --site-only",

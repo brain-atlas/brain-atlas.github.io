@@ -66,14 +66,18 @@ The read-only build job:
 Only GitHub-owned Actions are used, and each is pinned to a full commit SHA. The
 build job receives only `contents: read`.
 
-The Ubuntu release job does not run `npm test`. Seven tests exercise scientific
-asset regeneration against the recorded Darwin arm64/Nix environment, including
-byte-exact uv, Python, package-tree, and fixture checks that Ubuntu cannot
-satisfy. Decision `brain-atlas-ek3` keeps the complete 200-test `npm test` suite
-as a required local gate instead of running a partial Node suite in this
-workflow. The release job still runs the locked dependency audit, publication
-and build isolation checks, Go tests/race/vet, deterministic package validation,
-and the extracted Linux smoke test.
+The Ubuntu release job does not run `npm test`. Decision `brain-atlas-ek3`
+retains the complete suite as a required local gate rather than selecting a partial
+Node suite in this workflow. Under `brain-atlas-hjmx`, that suite now checks
+portable application/asset contracts, with Python/uv and offline-cached scientific
+packages still required; it no longer certifies historical host identity.
+`npm run test:assets:environment` separately checks the real recorded byte-exact
+environment and remains required before asset regeneration, not ordinary app
+builds. Regeneration commands also enforce that gate internally. See
+[asset pipeline testing](../tools/assets/SPEC.md#testing).
+The unchanged release job runs the locked dependency audit, publication and build
+isolation checks, Go tests/race/vet, deterministic package validation, and the
+extracted Linux smoke test.
 
 ## Nightly publication
 

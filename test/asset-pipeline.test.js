@@ -248,7 +248,7 @@ test('hash-complete environment lock freezes every direct and transitive package
   assert.doesNotMatch(lock, /https?:\/\/|--editable|--find-links/);
 });
 
-test('byte-exact environment preflight matches the complete recorded runtime and package trees', () => { // Tests INV-6; Tests FAIL-3
+test('byte-exact environment manifest records complete runtime and package trees', () => { // Tests INV-6; Tests FAIL-3
   const manifest = loadJson('../tools/assets/manifest.json');
   assert.match(manifest.environment.python.runtimeTreeSha256, /^[0-9a-f]{64}$/);
   assert.deepEqual(
@@ -262,22 +262,113 @@ test('byte-exact environment preflight matches the complete recorded runtime and
     assert.match(digest, /^[0-9a-f]{64}$/);
   }
 
-  const result = spawnSync(
-    'uv',
-    [
-      'run', '--python', '3.13.1', '--offline',
-      '--with-requirements', 'tools/assets/requirements.lock',
-      'python', '-m', 'tools.assets', 'environment-preflight',
-      '--uv', '/run/current-system/sw/bin/uv', '--json',
-    ],
-    { cwd: new URL('..', import.meta.url), encoding: 'utf8' },
-  );
+});
+
+test('byte-exact verifier accepts recorded identity and rejects each identity field drift', () => { // Tests INV-6; Tests FAIL-3
+  const result = runPython(`
+import copy, json
+from pathlib import Path
+from unittest.mock import patch
+from tools.assets.common import ContractError, verify_environment
+
+manifest = json.loads(Path('tools/assets/manifest.json').read_text())
+expected = manifest['environment']
+identity = {
+    'platform': expected['byteExactPlatform'],
+    'uv': {key: expected['uv'][key] for key in ('bytes', 'sha256')},
+    'python': expected['python'],
+    'distributionTreeSha256': expected['distributionTreeSha256'],
+}
+# Only host measurement is replaced; production comparison remains real.
+with patch('tools.assets.common.compute_environment_identity', return_value=identity):
+    assert verify_environment(Path('fixture-uv'), manifest) == identity
+rejected = 0
+for section in identity:
+    for field in identity[section]:
+        drift = copy.deepcopy(identity)
+        drift[section][field] = 'fixture-drift'
+        with patch('tools.assets.common.compute_environment_identity', return_value=drift):
+            try:
+                verify_environment(Path('fixture-uv'), manifest)
+            except ContractError:
+                rejected += 1
+            else:
+                raise AssertionError(f'accepted drift: {section}.{field}')
+print(json.dumps({'rejected': rejected, 'fields': sum(len(v) for v in identity.values())}))
+`);
   assert.equal(result.status, 0, result.stderr);
   const report = JSON.parse(result.stdout);
-  assert.equal(report.command, 'environment-preflight');
-  assert.equal(report.mode, 'byte-exact');
-  assert.equal(report.packages, 12);
-  assert.equal(report.status, 'ok');
+  assert.ok(report.fields > 20);
+  assert.equal(report.rejected, report.fields);
+});
+
+test('byte-exact measurement rejects missing, duplicate, and wrong-version packages', () => { // Tests INV-6; Tests FAIL-3
+  const result = runPython(`
+import json, tempfile
+from pathlib import Path
+from types import SimpleNamespace
+from unittest.mock import patch
+from tools.assets.common import ContractError, compute_environment_identity
+
+manifest = json.loads(Path('tools/assets/manifest.json').read_text())
+packages = [SimpleNamespace(metadata={'Name': entry['name']}, version=entry['version'])
+            for field in ('directPackages', 'transitivePackages')
+            for entry in manifest['environment'][field]]
+wrong = [SimpleNamespace(metadata=p.metadata, version='wrong') for p in packages]
+cases = [(packages[:-1], 'environment distributions differ'),
+         ([*packages, packages[0]], 'duplicate installed distribution'),
+         (wrong, 'distribution version mismatch')]
+with tempfile.NamedTemporaryFile() as uv:
+    for installed, message in cases:
+        with patch('tools.assets.common._macos_product', return_value=('fixture', 'fixture')), \
+             patch('tools.assets.common.environment_tree_sha256', return_value=('fixture', [])), \
+             patch('tools.assets.common.importlib.metadata.distributions', return_value=installed):
+            try:
+                compute_environment_identity(Path(uv.name), manifest)
+            except ContractError as error:
+                assert str(error).startswith(message), str(error)
+            else:
+                raise AssertionError(message)
+print(json.dumps({'rejected': len(cases)}))
+`);
+  assert.equal(result.status, 0, result.stderr);
+  assert.equal(JSON.parse(result.stdout).rejected, 3);
+});
+
+test('byte-exact CLI gates every regeneration route before input parsing', () => { // Tests INV-6; Tests FAIL-3
+  const result = runPython(`
+import contextlib, io, json
+from unittest.mock import patch
+from tools.assets.cli import main
+from tools.assets.common import ContractError
+
+heavy = ['--inputs', 'missing-inputs', '--output', 'missing-output']
+post = ['--tracked', 'missing-tracked', '--output', 'missing-output']
+dsi = ['--inputs', 'missing-inputs', '--prepared', 'missing-prepared', '--binary', 'missing-binary']
+commands = [
+    ['environment-preflight', '--uv', 'missing-uv'],
+    *[['build', asset, *heavy] for asset in ('cortex', 'regions', 'association')],
+    ['build', 'endpoints', *heavy, '--repo', '.'],
+    *[['prepare', asset, *heavy] for asset in ('optic-radiation', 'swm')],
+    ['postprocess', 'optic-radiation', *post],
+    ['postprocess', 'swm', *post, '--inputs', 'missing-inputs'],
+    ['audit', 'swm-domains', *heavy, '--repo', '.', '--accept-local-screening-terms'],
+    ['audit', 'swm-bundles', *heavy, '--repo', '.', '--accept-local-screening-terms',
+     '--masked-mpm', 'missing-mpm', '--domain-records', 'missing-records'],
+    *[['dsi-command', asset, *dsi, '--output', 'missing-output', '--log', 'missing-log']
+      for asset in ('optic-radiation', 'swm')],
+]
+for command in commands:
+    stderr = io.StringIO()
+    with patch('tools.assets.cli.verify_environment', side_effect=ContractError('fixture environment drift')) as gate:
+        with contextlib.redirect_stderr(stderr):
+            assert main(command) == 1, command
+        gate.assert_called_once()
+    assert stderr.getvalue().strip() == 'asset pipeline contract error: fixture environment drift', command
+print(json.dumps({'rejected': len(commands)}))
+`);
+  assert.equal(result.status, 0, result.stderr);
+  assert.equal(JSON.parse(result.stdout).rejected, 13);
 });
 
 test('environment-tree framing freezes files and symlinks while rejecting escapes', () => { // Tests INV-6; Tests FAIL-3

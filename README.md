@@ -543,6 +543,12 @@ npm run build:publish     # publication guard, then ordinary production build
 npm run preview           # serve dist/ on :5180
 ```
 
+`npm test` includes portable asset-contract fixtures requiring `python3`, `uv`,
+and offline-cached CPython 3.13.1 with `tools/assets/requirements.lock` packages.
+It does not certify the historical byte-exact asset environment. Before asset
+regeneration, run `npm run test:assets:environment`; a host mismatch must fail.
+See [asset pipeline testing](tools/assets/SPEC.md#testing).
+
 Vite's HMR full reloads can churn the GPU context on this heavy WebGL page. For
 stable viewing, use the HMR-free preview:
 

@@ -66,10 +66,13 @@ standalone Vite tree, audits locked Node dependencies, verifies ordinary/standal
 bundle separation, runs Go/release checks, and calls `cmd/package-standalone` to
 cross-build Linux, macOS, and Windows for amd64 and arm64 with `CGO_ENABLED=0`.
 The build job receives no release credential. It does not run the Node suite:
-seven scientific asset-regeneration tests require the recorded Darwin arm64/Nix
-byte-exact environment, so decision `brain-atlas-ek3` retains the complete
-`npm test` suite as a required local gate rather than selecting a partial Ubuntu
-subset.
+decision `brain-atlas-ek3` retains the complete `npm test` suite as a required
+local gate rather than selecting a partial Ubuntu subset. The suite covers
+portable application/asset contracts and still needs cached Python scientific
+packages. Historical host certification is separate:
+`npm run test:assets:environment` must pass before byte-exact regeneration;
+regeneration commands also enforce it internally. See
+[asset pipeline testing](../tools/assets/SPEC.md#testing).
 
 `internal/releasepack` owns the deterministic distribution contract. It writes
 normalized tar/gzip or ZIP archives containing one executable plus the required

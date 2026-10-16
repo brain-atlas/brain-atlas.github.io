@@ -41,6 +41,7 @@ uv run --python 3.13.1 --offline \
 | `audit swm-domains --inputs <dir> --repo <path> --output <empty-dir>` | Private source-compartment audit of all displayed SWM points; requires `--accept-local-screening-terms`. Hash/environment gates, no public output or source redistribution. |
 | `audit swm-bundles --inputs <dir> --masked-mpm <file> --domain-records <file> --repo <path> --output <empty-dir>` | Private HCP v1.1 population-map overlap evaluation. Requires `--accept-local-screening-terms`; complete pinned inputs, no download, runtime adoption or public output. |
 | `check-manifest` | Validate schema/semantics/references/rights and the lock identity without network access. |
+| `environment-preflight --uv <executable>` | Verify the real host against the complete recorded byte-exact environment; mismatch is a hard failure. |
 | `verify-current --repo <path>` | Verify exact current files, region tree, metadata, geometry payloads, and runtime mirror disclosure without regeneration. |
 | `build cortex` | Generate the cortical GLB from the exact TemplateFlow brain mask. |
 | `build regions` | Generate 314 OBJ files, unchanged 45-region `regions.json`, and complete `julich_regions.json` from exact Jülich MPM/XML/hierarchy inputs. |
@@ -355,6 +356,27 @@ Raw outputs/logs stay outside Git. Their owner-only durable archive is `~/.local
 | FAIL-12 | XML/hierarchy identity, counts, exact correspondence, bilateral offset, or reviewed unresolved map differs | Catalog provenance drift | Stop before meshing; never fuzzy-match names, invent hierarchy edges, or relabel source space. |
 
 ## Testing
+
+`npm test` runs portable application and asset-contract checks, not historical
+host certification. It still requires `python3`, `uv`, and an offline-cached
+CPython 3.13.1 plus the packages in `requirements.lock` for numerical fixtures.
+No tests are conditionally skipped for host identity. Environment tests substitute
+measurement fixtures only inside tests, exercise the real identity comparator,
+reject platform/uv/Python/package-tree drift and invalid package versions/sets,
+and check that regeneration CLI routes fail before input parsing when the gate fails.
+
+Run the separate real-host gate before byte-exact regeneration:
+
+```bash
+npm run test:assets:environment
+```
+
+This invokes `environment-preflight` with the `uv` executable on PATH, without
+mocks or fallback. It must fail on a nonmatching host; portable-suite success does
+not certify regeneration. Builders, preparation, post-processing, private audits,
+and DSI wrapper generation still invoke the strict verifier themselves. No
+manifest identity, hash, or asset is updated to accommodate a new host.
+
 
 | Spec item | Verification |
 |---|---|
