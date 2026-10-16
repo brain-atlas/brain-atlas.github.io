@@ -473,7 +473,7 @@ overall anatomy reads correctly**:
 
 - **Real data (all MNI152, co-registered):** the cortical surface (template
   shell); the amber **optic radiation** (HCP-1065 streamlines, re-tracked so they
-  terminate at the LGN — the density you see is real fibre density); and the
+  terminate at the LGN — sampled tractography, not measured anatomical fibre density); and the
   **LGN** and **V1** region shells (Jülich-Brain).
 - **Modeled activity on data-derived geometry:** all eight named association
   bundles carry seeded, inhibited code-like impulses in both directions.

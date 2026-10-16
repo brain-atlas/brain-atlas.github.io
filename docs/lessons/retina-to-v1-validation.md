@@ -22,8 +22,10 @@ or animation.
 The human curriculum review authorized removal of the optional `status: draft`
 metadata and approved the title **Early Vision: Retina to the Cortical Streams**.
 Under the v1 contract, absence of `status` makes no machine-readable reviewed or
-published claim. Final review of the revised prose remains the closeout gate for
-`brain-atlas-zmq.25`; publication remains separately gated.
+published claim. Final prose review and human approval were completed under
+`brain-atlas-zmq.25`, closed with reviewed curriculum commit `d768782` on
+2026-07-22. Curriculum approval does not authorize publication; that remains
+separately gated.
 
 The scientific review found no blocking factual error in the lesson's intended scope.
 The lesson remains valid only with its explicit boundaries: incomplete schematic

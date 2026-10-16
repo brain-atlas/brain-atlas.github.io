@@ -130,11 +130,13 @@ or relaxing the standalone loopback/authentication boundary.
   environment.
 - The standalone workflow builds on pull requests, `main`, `v*` tags, and manual
   dispatch, but its build job has only `contents: read`. It installs locked Node
-  dependencies, uses the Go version contract from `go.mod`, runs audit/Node/Go/
-  race/vet checks, verifies ordinary/standalone production separation, repeats
-  deterministic six-target packaging, requires a clean source state (also
-  recorded in provenance), smoke-tests the extracted static Linux executable,
-  and retains the exact artifact for 14 days.
+  dependencies, uses the Go version contract from `go.mod`, runs dependency audit,
+  Node-driven build/publication-isolation checks, and Go tests/race/vet checks,
+  verifies ordinary/standalone production separation, repeats deterministic
+  six-target packaging, requires a clean source state (also recorded in
+  provenance), smoke-tests the extracted static Linux executable, and retains
+  the exact artifact for 14 days. Application `npm test` remains a required local
+  gate, not a workflow step.
 - Only ref-gated dependent publication jobs receive `contents: write` and the
   job-scoped GitHub token. Pull requests and manual dispatches cannot publish.
   Every reusable Action is GitHub-owned and pinned to a full SHA; checkout never
@@ -243,10 +245,11 @@ or relaxing the standalone loopback/authentication boundary.
   They provide no confidentiality boundary and must remain suitable for public
   redistribution.
 - Large but bounded public data files can cause slow loading or memory pressure
-  on low-resource devices. Direct lessons defer unrelated region meshes and SWM,
-  but Atlas Home deliberately loads the complete authored default, and association
-  metadata and geometry remain combined in one eager file. This is an
-  availability/performance limitation, not a server compromise path. See
+  on low-resource devices. Direct lessons defer unrelated region meshes and SWM.
+  Association metadata loads separately from geometry; the complete association
+  geometry loads when a named tract first becomes visible. Atlas Home deliberately
+  requests the complete authored default, including association geometry. This is
+  an availability/performance limitation, not a server compromise path. See
   [`PERFORMANCE.md`](PERFORMANCE.md) for measured emulation and unverified physical-device limits.
 - Opening a lesson that declares external images reveals the learner's IP address
   and ordinary transport metadata to the listed hosts. The import preview discloses

@@ -41,7 +41,7 @@ Canonical license: <https://go.dev/LICENSE>.
 
 ## three.js
 
-The deployed application includes [three.js](https://threejs.org/) 0.185.1.
+The deployed application includes [three.js](https://threejs.org/) 0.186.1.
 
 > The MIT License
 >
@@ -75,7 +75,7 @@ them when a lesson entry point imports the contract subsystem:
 - [remark-parse](https://github.com/remarkjs/remark/tree/main/packages/remark-parse) 11.0.0 — MIT — Copyright © 2014 Titus Wormer;
 - [remark-frontmatter](https://github.com/remarkjs/remark-frontmatter) 5.0.0 — MIT — Copyright © 2017 Titus Wormer;
 - [Ajv](https://ajv.js.org/) 8.20.0 — MIT — Copyright © 2015–2021 Evgeny Poberezkin; and
-- [yaml](https://eemeli.org/yaml/) 2.9.0 — ISC — Copyright Eemeli Aro.
+- [yaml](https://eemeli.org/yaml/) 2.9.1 — ISC — Copyright Eemeli Aro.
 
 For the MIT-licensed packages above:
 

@@ -57,6 +57,26 @@ test('detailed records expose assumptions, uncertainty, material limits, sources
   assert.doesNotThrow(() => structuredClone(model));
 });
 
+test('cortex disclosure identifies retained source and meshing parameters', async () => {
+  const model = createFidelityViewModel({ fidelityIds: ['fidelity.cortex'] }, await catalogPromise);
+  const uncertainty = model.records[0].uncertainties.join(' ');
+  assert.match(uncertainty, /tools\/assets\/manifest\.json/);
+  assert.match(uncertainty, /tools\/assets\/cortex\.py/);
+  assert.doesNotMatch(uncertainty, /not checked in/);
+});
+
+for (const [id, replayClass] of [['optic-radiation', 4], ['superficial-white-matter', 3]]) {
+  test(`${id} disclosure distinguishes failed tracking replay from reproducible post-processing`, async () => {
+    const model = createFidelityViewModel({ fidelityIds: [`fidelity.${id}`] }, await catalogPromise);
+    const uncertainty = model.records[0].uncertainties.join(' ');
+    assert.match(uncertainty, /manual.*replay.*did not reproduce/i);
+    assert.match(uncertainty, new RegExp(`class ${replayClass}`));
+    assert.match(uncertainty, /byte-reproducible only from the recovered.*intermediate/i);
+    assert.match(uncertainty, /no retained FIB build record/);
+    assert.doesNotMatch(uncertainty, /have not been replayed/);
+  });
+}
+
 test('unknown fidelity records fail instead of receiving a reassuring default', async () => {
   const catalog = await catalogPromise;
   assert.throws(

@@ -24,7 +24,7 @@
         "The shell is used as translucent context rather than subject anatomy or a cortical parcellation."
       ],
       "uncertainties": [
-        "The exact source mask filename and offline meshing and decimation parameters are not checked in."
+        "The exact source mask and meshing/decimation parameters are retained in tools/assets/manifest.json and tools/assets/cortex.py; this smoothed, decimated population shell does not represent individual anatomical variability."
       ],
       "limitations": [
         {
@@ -48,7 +48,7 @@
           "url": "https://github.com/templateflow/tpl-MNI152NLin2009cAsym/blob/master/LICENSE"
         }
       ],
-      "reviewed": "2026-07-22"
+      "reviewed": "2026-10-16"
     },
     {
       "id": "fidelity.julich-regions",
@@ -161,7 +161,7 @@
       ],
       "uncertainties": [
         "The release-companion T1 indicates the FIB's asymmetric variant, but no retained FIB build record binds it directly.",
-        "Post-processing is reproducible from the recovered intermediate; the DSI tracking run and complete tool manifest have not been replayed."
+        "Manual DSI tracking replay did not reproduce the recovered geometry (class 4, materially different); current JSON is byte-reproducible only from the recovered TrackVis intermediate through deterministic post-processing, not full upstream regeneration. The exact tracking source/build binding remains unavailable."
       ],
       "limitations": [
         {
@@ -189,7 +189,7 @@
           "url": "https://www.humanconnectome.org/study/hcp-young-adult/document/wu-minn-hcp-consortium-open-access-data-use-terms"
         }
       ],
-      "reviewed": "2026-07-22"
+      "reviewed": "2026-10-16"
     },
     {
       "id": "fidelity.association-tracts",
@@ -293,7 +293,7 @@
       ],
       "uncertainties": [
         "The release-companion T1 indicates the FIB's asymmetric variant, but no retained FIB build record binds it directly.",
-        "Post-processing is reproducible from the recovered intermediate; the DSI tracking run and complete tool manifest have not been replayed.",
+        "Manual DSI tracking replay did not reproduce the recovered geometry (class 3, metric-only); current JSON is byte-reproducible only from the recovered TrackVis intermediate through deterministic post-processing, not full upstream regeneration. The exact tracking source/build binding remains unavailable.",
         "The categorical endpoint comparison overlays 2009a fibre coordinates with 2009c labels in common RAS millimetres without a template warp or a claim of voxel-grid equivalence."
       ],
       "limitations": [
@@ -334,7 +334,7 @@
           "url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
         }
       ],
-      "reviewed": "2026-09-07"
+      "reviewed": "2026-10-16"
     },
     {
       "id": "fidelity.display-labels",

@@ -19,6 +19,25 @@ test('README leads with hosted and binary user paths before development setup', 
   assert.match(readme, /Linux[\s\S]*macOS[\s\S]*Windows/);
 });
 
+test('bundled three.js and yaml notices match locked versions and licenses', () => {
+  const notices = read('THIRD_PARTY_NOTICES.md');
+  const { packages } = JSON.parse(read('package-lock.json'));
+  for (const [name, link, license] of [
+    ['three', '[three.js](https://threejs.org/)', 'MIT'],
+    ['yaml', '[yaml](https://eemeli.org/yaml/)', 'ISC'],
+  ]) {
+    assert.equal(packages[`node_modules/${name}`].license, license);
+    assert.ok(notices.includes(`${link} ${packages[`node_modules/${name}`].version}`), `${name} notice version drift`);
+  }
+});
+
+test('optic-radiation disclosure does not equate displayed streamlines with anatomical density', () => {
+  const readme = read('README.md');
+  assert.match(readme, /sampled tractography, not measured anatomical fibre density/);
+  assert.doesNotMatch(readme, /real fibre density/);
+  assert.doesNotMatch(read('src/main.js'), /show real density/);
+});
+
 test('macOS unsigned guidance is checksum-first and narrowly scoped', () => {
   const readme = read('README.md');
   const checksum = readme.indexOf('shasum -a 256');

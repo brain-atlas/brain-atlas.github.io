@@ -274,8 +274,10 @@ dsi_studio --action=trk \
 
 DSI Studio wrote gzip data under the `.trk` name. The project detected `1f 8b` and
 decompressed before nibabel parsing. The recovered compressed and decompressed
-intermediate hashes are recorded in the artifact registry. The DSI run was not
-replayed and its exact user-facing version string was not retained.
+intermediate hashes are recorded in the artifact registry. At the initial recovery
+checkpoint, the DSI run had not been replayed and its exact user-facing version
+string was not retained. The later manual replay below did not reproduce the
+recovered geometry.
 
 **Recovered post-processing.** The verified filter:
 

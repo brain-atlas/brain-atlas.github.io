@@ -345,7 +345,7 @@ function loadRegions() {
 
 // ---------------------------------------------------------------------------
 // Real optic-radiation streamlines (HCP-1065, sampled) + tracer flow.
-// Faint fibres show real density; bright tracers are fired down random fibres,
+// Faint fibres show sampled tractography, not anatomical density; bright tracers follow random fibres,
 // LGN -> V1, recycling. Everything is in MNI mm under mniGroup.
 const fibreGroup = new THREE.Group(); mniGroup.add(fibreGroup);
 let FIB = null;
