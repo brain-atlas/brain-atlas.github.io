@@ -105,7 +105,7 @@ or relaxing the standalone loopback/authentication boundary.
   external request, persistence, dependency, or CSP exception. Browser tests exercise
   hostile-looking definitions, all-or-nothing import and no external traffic.
   This validates shape/safety, not the scientific truth of local definitions.
-- Global Atlas settings alone use `localStorage` key `brain-atlas.atlas-state`, with
+- Last global Atlas settings use `localStorage` key `brain-atlas.atlas-state`, with
   envelope version 1 around canonical snapshot v2. `src/ui/atlas-storage.js` treats
   storage as untrusted: a 131,072-code-unit limit precedes JSON parsing, exact envelope
   keys/version and existing canonical shape/catalog validation precede use, and only
@@ -120,6 +120,22 @@ or relaxing the standalone loopback/authentication boundary.
   mode, origin/standalone port changes and failed writes can prevent restoration;
   concurrent tabs are last-successful-save with no live synchronization. See
   `test/atlas-storage.test.js` and `scripts/browser/home-persistence.spec.cjs`.
+- Named global Atlas views use a separate exact v1 `brain-atlas.saved-views` envelope
+  with only `{ schemaVersion, views: [{ name, snapshot }] }`. The shared Atlas validator
+  enforces the same canonical/catalog/camera boundary. Collection input is capped at
+  1 MiB UTF-8 before JSON parsing; output has the same cap. At most 20 records carry
+  trimmed NFC plain-text names of 1–80 UTF-16 code units, no control characters, and
+  no lowercase-normalized duplicates. Unknown fields (including lesson source), versions,
+  references or invalid records reject the whole collection; removal affects only this
+  key. Names render through text nodes/options, never HTML or URLs. Workspace/readiness
+  guards prohibit capture/restore/mutation from lessons and temporary exploration;
+  no-WebGL hides/disables these actions. Inline named confirmation precedes deletion.
+  Failed writes retain session-only changes and warn that reload may restore older data.
+  Reset Atlas/Exit do not delete the named collection. It shares the unencrypted,
+  origin/profile/port, clearing and last-successful-save cross-tab limits above; no
+  new network transmission, cookie, CSP permission, dependency or source storage is
+  introduced. Tests: `test/atlas-saved-views.test.js` and
+  `scripts/browser/home-saved-views.spec.cjs` (including history/fallback transitions).
 - Explicit **Download lesson** exports only the frozen validated source as UTF-8
   `lesson.md` using a temporary Blob URL. The fixed filename cannot contain author
   paths; no HTML rendering, image fetching, source-bearing URL, upload, token or

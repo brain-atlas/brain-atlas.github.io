@@ -81,6 +81,15 @@ lesson is scientifically reviewed merely because it passes the structural contra
   labels, home camera, bilateral hemispheres, no cutaway/selection, and requested activity.
   Use **Full controls → Reset Atlas** (`#reset-atlas`) for a reproducible default;
   this also replaces the saved view. Temporary lesson views and local source never save.
+- **Full controls → Saved views** captures named global views: `#saved-view-name`,
+  `#saved-view-save`, `#saved-view-select`, `#saved-view-restore`, `#saved-view-rename`,
+  and `#saved-view-delete`. Delete opens inline confirmation with Cancel initially
+  focused; Escape cancels. Verify exact camera/filter restoration and reload, name
+  validation, and 44px compact targets. Named copies survive Reset/Exit, never track
+  later edits, and stay unavailable in lesson/temporary/no-WebGL paths (including
+  history jumps). `#saved-views-status` must disclose session-only changes after
+  storage failure. `scripts/browser/home-saved-views.spec.cjs` runs against development
+  or production preview; no extra debug hook is needed.
 - **Back to atlas** and **Explore this scene** both preserve a stable lesson token, keep
   effective lesson filters/playback, replace only the requested camera with the exact
   rendered pose, and create the same temporary Atlas branch.

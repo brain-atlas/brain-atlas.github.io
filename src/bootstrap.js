@@ -2,6 +2,7 @@ import './style.css';
 
 import { createLessonCatalog } from './lesson/index.js';
 import { readAtlasState, writeAtlasState } from './ui/atlas-storage.js';
+import { changeSavedViews, readSavedViews, writeSavedViews } from './ui/atlas-saved-views.js';
 import libraryRecords from './lessons/library.json';
 import { createLessonLibrary } from './ui/lesson-library.js';
 import { createFidelityViewModel } from './ui/fidelity-view-model.js';
@@ -94,6 +95,9 @@ let exploreState = null;
 let atlasSaveTimer = 0;
 let atlasSavePending = false;
 let restoredAtlasState = false;
+let savedViews = [];
+let savedViewsUnsaved = false;
+let pendingViewDeletion = null;
 const workspace = {
   phase: 'booting',
   mode: null,
@@ -1578,6 +1582,13 @@ function bindLessonDrawer() {
 
 function setExploreAvailability(available) {
   const inLesson = workspace.mode === 'lesson';
+  const savedViewsAvailable = available && !inLesson && exploreState?.kind === 'global';
+  byId('saved-views-controls').hidden = !savedViewsAvailable;
+  byId('saved-view-save').disabled = !savedViewsAvailable;
+  for (const id of ['saved-view-restore', 'saved-view-rename', 'saved-view-delete']) {
+    byId(id).disabled = !savedViewsAvailable || savedViews.length === 0;
+  }
+  cancelSavedViewDeletion(false);
   const hasLessonSession = workspace.mode === 'atlas' && Boolean(workspace.lesson.token);
   byId('back-to-atlas').hidden = !inLesson;
   byId('explore-scene-trigger').hidden = !available || !inLesson;
@@ -1662,12 +1673,15 @@ function flushAtlasSave() {
 }
 
 function resetGlobalAtlas() {
-  if (workspace.mode !== 'atlas' || exploreState?.kind !== 'global' || exploreState.phase !== 'active') return;
-  const snapshot = createAtlasExploreSnapshot(catalog);
+  if (!canUseSavedViews()) return;
+  applyGlobalAtlasSnapshot(createAtlasExploreSnapshot(catalog), true, 'Atlas reset to defaults.');
+}
+
+function applyGlobalAtlasSnapshot(snapshot, fitToStage, announcement) {
   try {
     resetAnatomyInspector();
     rendererAdapter.apply(snapshot);
-    rendererAdapter.beginExploreCamera(snapshot.camera, { fitToStage: true });
+    rendererAdapter.beginExploreCamera(snapshot.camera, { fitToStage });
     rendererAdapter.syncExplorePanel(createExplorePanelModel(snapshot, catalog));
     exploreState.snapshot = snapshot;
     workspace.atlas.activeSnapshot = snapshot;
@@ -1675,10 +1689,130 @@ function resetGlobalAtlas() {
     renderExploreFidelity(snapshot, []);
     scheduleAtlasSave();
     flushAtlasSave();
-    byId('announcer').textContent = 'Atlas reset to defaults.';
+    byId('announcer').textContent = announcement;
+    return true;
   } catch (error) {
     failExplore(error);
+    return false;
   }
+}
+
+function canUseSavedViews() {
+  return workspace.mode === 'atlas' && exploreState?.kind === 'global'
+    && exploreState.phase === 'active' && !rendererUnavailable && Boolean(rendererAdapter);
+}
+
+function savedViewsNotice(message) {
+  byId('saved-views-status').textContent = `${message}${savedViewsUnsaved
+    ? ' Changes are available in this session only; this browser could not save them. Reload may restore older views.' : ''}`;
+}
+
+function cancelSavedViewDeletion(restoreFocus = true) {
+  const wasPending = pendingViewDeletion !== null;
+  pendingViewDeletion = null;
+  byId('saved-view-confirmation').hidden = true;
+  if (wasPending && restoreFocus) byId('saved-view-delete').focus();
+}
+
+function renderSavedViews(selected = byId('saved-view-select').value) {
+  const select = byId('saved-view-select');
+  select.replaceChildren();
+  if (savedViews.length === 0) {
+    const option = node('option', '', 'No saved views');
+    option.value = '';
+    select.append(option);
+  }
+  for (const view of savedViews) {
+    const option = node('option', '', view.name);
+    option.value = view.name;
+    select.append(option);
+  }
+  select.value = savedViews.some(view => view.name === selected) ? selected : savedViews[0]?.name ?? '';
+  select.disabled = savedViews.length === 0;
+  for (const id of ['saved-view-restore', 'saved-view-rename', 'saved-view-delete']) {
+    byId(id).disabled = savedViews.length === 0;
+  }
+}
+
+function mutateSavedViews(action) {
+  if (!canUseSavedViews()) return;
+  try {
+    const next = changeSavedViews(savedViews, action, catalog);
+    savedViewsUnsaved = writeSavedViews(() => window.localStorage, next, catalog) !== 'saved';
+    savedViews = next;
+    cancelSavedViewDeletion(false);
+    const selected = action.type === 'rename' ? action.nextName.trim().normalize('NFC') : action.name.trim().normalize('NFC');
+    renderSavedViews(selected);
+    byId('saved-view-name').removeAttribute('aria-invalid');
+    byId('saved-view-name').value = byId('saved-view-select').value;
+    const verb = action.type === 'save' ? 'Saved' : action.type === 'rename' ? 'Renamed to' : 'Deleted';
+    savedViewsNotice(`${verb} “${selected}”.`);
+    if (action.type === 'delete') {
+      byId(savedViews.length ? 'saved-view-select' : 'saved-view-name').focus();
+    }
+  } catch (error) {
+    savedViewsNotice(error.message);
+    byId('saved-view-name').setAttribute('aria-invalid', 'true');
+    byId('saved-view-name').focus();
+  }
+}
+
+function bindSavedViews() {
+  const stored = readSavedViews(() => window.localStorage, catalog);
+  savedViews = stored.views;
+  savedViewsUnsaved = stored.status === 'unavailable';
+  renderSavedViews();
+  savedViewsNotice(stored.status === 'discarded'
+    ? 'Saved views could not be restored. Incompatible or invalid views were discarded.'
+    : 'Named views stay unchanged until you rename or delete them.');
+  byId('saved-view-name').addEventListener('input', () => {
+    byId('saved-view-name').removeAttribute('aria-invalid');
+    cancelSavedViewDeletion(false);
+  });
+  byId('saved-view-select').addEventListener('change', () => {
+    cancelSavedViewDeletion(false);
+    byId('saved-view-name').value = byId('saved-view-select').value;
+    byId('saved-view-name').removeAttribute('aria-invalid');
+  });
+  byId('saved-view-save').addEventListener('click', () => {
+    if (!canUseSavedViews()) return;
+    try {
+      const snapshot = captureAtlasSnapshot(exploreState.snapshot, rendererAdapter.captureRenderedCamera(), catalog);
+      mutateSavedViews({ type: 'save', name: byId('saved-view-name').value, snapshot });
+    } catch {
+      savedViewsNotice('The current Atlas view could not be captured. Existing saved views are unchanged.');
+    }
+  });
+  byId('saved-view-restore').addEventListener('click', () => {
+    if (!canUseSavedViews()) return;
+    const view = savedViews.find(view => view.name === byId('saved-view-select').value);
+    if (!view) return;
+    cancelSavedViewDeletion(false);
+    if (applyGlobalAtlasSnapshot(view.snapshot, false, `Restored “${view.name}”.`)) {
+      savedViewsNotice(`Restored “${view.name}”. Current Atlas settings now use this view.`);
+    }
+  });
+  byId('saved-view-rename').addEventListener('click', () => mutateSavedViews({
+    type: 'rename', name: byId('saved-view-select').value, nextName: byId('saved-view-name').value,
+  }));
+  byId('saved-view-delete').addEventListener('click', () => {
+    if (!canUseSavedViews() || !byId('saved-view-select').value) return;
+    pendingViewDeletion = byId('saved-view-select').value;
+    byId('saved-view-delete-question').textContent = `Delete “${pendingViewDeletion}”? This removes the named view, not the current Atlas settings.`;
+    byId('saved-view-confirmation').hidden = false;
+    byId('saved-view-cancel').focus();
+  });
+  byId('saved-view-cancel').addEventListener('click', () => cancelSavedViewDeletion());
+  byId('saved-view-confirm').addEventListener('click', () => {
+    if (pendingViewDeletion !== null) mutateSavedViews({ type: 'delete', name: pendingViewDeletion });
+  });
+  byId('saved-view-confirmation').addEventListener('keydown', event => {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      event.stopPropagation();
+      cancelSavedViewDeletion();
+    }
+  });
 }
 
 function applyExploreCommandBatch(commands) {
@@ -2012,6 +2146,7 @@ function restoreHistoryIntent(intent) {
       rendererAdapter.beginExploreCamera(branch.snapshot.camera);
       rendererAdapter.syncExplorePanel(createExplorePanelModel(branch.snapshot, catalog));
       renderExploreFidelity(branch.snapshot, activePresentationScene(branch.lessonToken.activeIndex).fidelityIds);
+      setExploreAvailability(!rendererUnavailable);
       focusHistoryDestination('return-to-lesson', 'atlas');
     }
   } finally {
@@ -2477,6 +2612,7 @@ async function start() {
     restoredAtlasState = storedAtlas.status === 'restored';
     setAtlasStorageNotice(storedAtlas.status);
     byId('reset-atlas').addEventListener('click', resetGlobalAtlas);
+    bindSavedViews();
     window.addEventListener('pagehide', flushAtlasSave);
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) flushAtlasSave();

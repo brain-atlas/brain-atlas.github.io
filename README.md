@@ -277,8 +277,25 @@ origin. Clearing site data removes the saved view; private browsing may discard 
 tabs use the last successful save, without live synchronization. Unsupported or malformed
 records fall back to defaults. If storage is blocked or full, Viewer controls report that
 changes may be lost, while exploration remains usable. Saves are debounced and flushed on
-page hide or lesson entry; abrupt browser termination can lose recent edits. Named saved
-views are not yet supported.
+page hide or lesson entry; abrupt browser termination can lose recent edits.
+
+**Full controls → Saved views** keeps up to 20 named global Atlas views separately from
+last-view autosave. Enter a **View name**, then **Save current** to capture the actual
+camera and complete Atlas settings. Select a **Saved view** and choose **Restore** to
+make it the current, autosaved Atlas; later edits do not change the named copy. Edit
+View name and choose **Rename**, or **Delete** then **Confirm delete**. Cancel deletion
+or Escape keeps the view. Reset Atlas and Exit lesson keep named views.
+
+Names are trimmed and Unicode-normalized, limited to 80 UTF-16 code units, and must be
+nonempty, without control characters or case-insensitive duplicates. The collection is
+limited to 1 MiB of UTF-8 JSON. Invalid/incompatible collections are discarded with a
+notice. Storage failures keep changes for this session only; reload may restore older
+views, including views whose deletion could not be saved. Multiple tabs can overwrite
+one another's collection on the last successful save; there is no live synchronization.
+The same profile/origin/port and site-data-clearing limits above apply. These controls
+are unavailable during lessons, temporary lesson exploration, or without the 3D viewer.
+Named views contain no lesson source, resume state, model time, or particle queues;
+there is no upload, sharing, export, or account.
 
 The library registry is `src/lessons/library.json`; it currently contains one lesson.
 Each drawer card shows its source summary and scene count, with links to bundled

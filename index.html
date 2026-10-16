@@ -68,6 +68,7 @@
               <p class="stage-kicker">Readable lesson mode</p>
               <h3 id="fallback-title">The 3D stage is unavailable</h3>
               <p id="fallback-message">The lesson remains available. Scene summaries and model disclosures appear alongside the prose.</p>
+              <p>Saving and restoring named Atlas views requires the 3D viewer; existing saved views are unchanged.</p>
             </section>
             <div id="anatomy-controls" class="anatomy-controls">
               <button id="anatomy-preview" class="anatomy-preview" type="button" aria-haspopup="dialog" hidden></button>
@@ -183,6 +184,28 @@
               <div id="atlas-storage-controls" hidden>
                 <div class="btns"><button id="reset-atlas" class="wide" type="button" aria-describedby="atlas-storage-note">Reset Atlas</button></div>
                 <p id="atlas-storage-note" class="control-help" role="status">Atlas settings save in this browser only. Lessons and temporary views are not saved.</p>
+                <section id="saved-views-controls" class="saved-views-controls" aria-labelledby="saved-views-heading">
+                  <h3 id="saved-views-heading">Saved views</h3>
+                  <p id="saved-views-help" class="control-help">Save up to 20 global Atlas views in this browser only. Names: 1–80 characters. Reset Atlas keeps these views.</p>
+                  <label for="saved-view-name">View name</label>
+                  <input id="saved-view-name" type="text" maxlength="80" autocomplete="off" aria-describedby="saved-views-help saved-views-status">
+                  <button id="saved-view-save" type="button">Save current</button>
+                  <label for="saved-view-select">Saved view</label>
+                  <select id="saved-view-select" aria-describedby="saved-views-status"><option value="">No saved views</option></select>
+                  <div class="btns">
+                    <button id="saved-view-restore" type="button" disabled>Restore</button>
+                    <button id="saved-view-rename" type="button" disabled>Rename</button>
+                    <button id="saved-view-delete" type="button" disabled>Delete</button>
+                  </div>
+                  <div id="saved-view-confirmation" hidden>
+                    <p id="saved-view-delete-question" class="control-help"></p>
+                    <div class="btns">
+                      <button id="saved-view-cancel" type="button">Cancel deletion</button>
+                      <button id="saved-view-confirm" type="button" aria-describedby="saved-view-delete-question">Confirm delete</button>
+                    </div>
+                  </div>
+                  <p id="saved-views-status" class="control-help" role="status" aria-live="polite"></p>
+                </section>
               </div>
             </section>
           </div>

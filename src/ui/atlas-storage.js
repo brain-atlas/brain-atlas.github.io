@@ -3,7 +3,7 @@ import { normalizeCanonicalSnapshot } from '../lesson/index.js';
 export const ATLAS_STORAGE_KEY = 'brain-atlas.atlas-state';
 const MAX_RECORD_LENGTH = 128 * 1024;
 
-function validateAtlasSnapshot(value, catalog) {
+export function validateAtlasSnapshot(value, catalog) {
   const snapshot = normalizeCanonicalSnapshot(value, catalog);
   const { camera, visual, controlPolicy } = snapshot;
   const distance = Math.hypot(...camera.position.map((value, index) => value - camera.target[index]));
