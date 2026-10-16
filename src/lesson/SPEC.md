@@ -212,10 +212,9 @@ Full repository verification remains `npm test && npm run build:publish`.
 | `unified`, `remark-parse`, `remark-frontmatter` | Positioned Markdown/frontmatter AST parsing |
 | `yaml` | Structured YAML parsing and field locations |
 | `ajv` | Development-time strict JSON-schema compilation plus small shipped runtime helpers used by generated standalone validators |
-| `docs/SCIENTIFIC_TRACEABILITY.md` | Current runtime representation claim/limitation authority |
+| `docs/SCIENTIFIC_TRACEABILITY.md` | Current runtime representation claim/limitation authority, status vocabulary, and materiality/disclosure policy; lesson lifecycle Draft remains separate |
 | `docs/lessons/*-validation.md` | Per-lesson teaching-claim and curriculum-review authority |
 | `.pi/plans/brain-atlas-zmq.15-lesson-ux-ui-spec.md` | Approved interaction/state behavior |
-| `.pi/plans/brain-atlas-yum.3-model-fidelity-disclosure.md` | Approved scientific representation-status taxonomy and materiality rule; it does not define lesson lifecycle Draft |
 
 ## Non-goals
 

@@ -1,11 +1,19 @@
 # Model-fidelity disclosure design
 
-- **Status:** Approved
+- **Status:** Approved; stage-status placement and prototype note superseded (2026-10-16)
 - **Date:** 2026-07-21
 - **Owner Bead:** `brain-atlas-yum.3`
 - **Approval:** `brain-atlas-6nn`
 - **Current-state authority:** `docs/SCIENTIFIC_TRACEABILITY.md`
 - **Contract/runtime owners:** `brain-atlas-zmq.4` and later implementation Beads
+- **Reconciliation decision:** `brain-atlas-yum`, 2026-10-16: preserve the current
+  disclosure UI and governing `AGENTS.md` invariants; no runtime change authorized.
+- **Current policy:** [`docs/SCIENTIFIC_TRACEABILITY.md`](../../docs/SCIENTIFIC_TRACEABILITY.md#materiality-and-disclosure-policy)
+  now carries the retained materiality rule and current disclosure placement.
+  [`docs/ARCHITECTURE.md`](../../docs/ARCHITECTURE.md) and
+  [`src/ui/SPEC.md`](../../src/ui/SPEC.md) describe implemented behavior. Only the
+  obsolete placement/prototype text below is superseded; other approval scenarios
+  are preserved, not newly certified by this documentation reconciliation.
 
 ## Goal
 
@@ -88,13 +96,20 @@ appearing trustworthy. A genuinely unknown current-state fact is labelled
 
 ## Progressive surfaces
 
-### Persistent stage status
+### Persistent stage status — historical placement
 
-- Place a quiet **Model & sources** control beside the active visual or fallback.
-- Show separate one-line geometry and activity statuses when space permits; compact
-  layouts may place them inside the control's accessible description.
-- Keep status available during lessons and Explore without taking focus or changing
-  the scene.
+**Placement superseded 2026-10-16 by the reconciliation recorded in
+`brain-atlas-yum`.** Current UI keeps the control beside the stage and all
+geometry/activity statuses inside its disclosure; duplicate canvas badges, stage
+rows, and global status chrome remain forbidden. Current policy and implementation
+are linked in the header. The original placement instructions are retained here
+as historical rationale, not implementation requirements:
+
+> - Place a quiet **Model & sources** control beside the active visual or fallback.
+> - Show separate one-line geometry and activity statuses when space permits; compact
+>   layouts may place them inside the control's accessible description.
+> - Keep status available during lessons and Explore without taking focus or changing
+>   the scene.
 
 ### Contextual lesson note
 
@@ -121,6 +136,9 @@ Closing restores focus to **Model & sources**. Opening, closing, or following an
 external citation never mutates lesson position, camera, filters, or playback.
 
 ## Materiality rule for known limitations
+
+Retained by the 2026-10-16 reconciliation and promoted to the current policy linked
+in the header. The historical approval text follows:
 
 Show a limitation in the user-facing record when at least one is true:
 
@@ -221,7 +239,10 @@ And assumptions, material limitations, sources, and licenses open in one action
   `docs/SCIENTIFIC_TRACEABILITY.md`, relevant license/citation files, public summaries,
   and UI disclosure atomically under the repository documentation lifecycle.
 
-The current association-only disclosure in `index.html` is a validated prototype,
-not the final generalized lesson component. Its separate geometry/direction/timing
-copy and native disclosure behavior should be preserved while the contract becomes
-data-driven.
+**Historical prototype note — superseded 2026-10-16.** At original approval,
+the association-only disclosure in `index.html` was a validated prototype, not the
+final generalized lesson component; its separate geometry/direction/timing copy and
+native disclosure behavior were to be preserved as the contract became data-driven.
+Current disclosure is catalog-driven through `src/ui/fidelity-view-model.js` and
+`src/bootstrap.js`; use the current architecture and UI contract linked above, not
+this historical prototype, to describe shipped behavior.

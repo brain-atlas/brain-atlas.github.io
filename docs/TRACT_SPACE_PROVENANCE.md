@@ -236,8 +236,10 @@ clean repeat generated 234/233 with a different decoded multiset. The two accept
 contemporary runs establish end-to-end non-repeatability without identifying the
 varying internal stage. Neither recreates the recovered 223/220 asset, and neither
 may replace it. Decision `brain-atlas-3ct` accepts this exact legacy boundary only
-for pipeline closeout; source/build-bound deterministic retracking belongs to
-`brain-atlas-yum.13`.
+for pipeline closeout. The source/build-bound retracking effort
+`brain-atlas-yum.13` closed without resolving this gap. The accepted triage in
+`brain-atlas-yum` preserves the frozen assets and requires a concrete product or
+scientific need before renewed research; it does not authorize replacement.
 
 For all 220 final contours, the higher-y endpoint is the LGN side selected by
 nearest-mask assignment. LGN voxel-center distance: median 0.488 mm, 95th percentile
@@ -425,8 +427,9 @@ releases share a voxel grid.
   preparation, and current OR/SWM JSON from recovered intermediates. Manual DSI
   replays did not recreate the OR/SWM intermediates: OR remains class 4 and SWM
   class 3. The exact source/build binding and varying internal stage remain
-  unresolved. `brain-atlas-yum.13` owns deterministic retracking; any candidate
-  replacement requires separate approval.
+  unresolved despite the closed retracking effort `brain-atlas-yum.13`. Live work
+  status and any renewed research decision belong in `brain-atlas-yum`; any
+  candidate replacement still requires separate approval.
 - The surviving executable hash is
   `1e7aaf6be7ebebd0a69fa428eb9b670400642885137ae1d5710a1c1e3303cf56`.
   Its emitted Hou/Jul 9 2026 identity does not bind it to exact source, and the
