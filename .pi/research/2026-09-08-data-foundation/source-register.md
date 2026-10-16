@@ -114,14 +114,23 @@ This update supersedes earlier availability claims **only for the paths rechecke
   `public/` for untracked (including ignored), private and symlinked entries;
   private module loads and private original filenames of emitted assets fail.
   See `docs/SECURITY_REVIEW.md` for trusted-source/forced-inlining limits.
-- `data-local/` is ignored and reserved but **not created or populated**. No source
-  bytes were copied, acquired, moved, overwritten or deleted; rights are unchanged.
+- Under local-copy approval `brain-atlas-j0qw`, the three recovered tractograms
+  were copied with their archive-relative paths into
+  `data-local/backups/recovered-tracts-2026-10-16/` (**505,110,073 bytes**).
+  Source and destination sizes/SHA-256 match the registered pins; `receipt.json`
+  in that directory records exact paths, hashes and verification time. Directories
+  are owner-only and copies are mode 0600. Git-ignore and publication guard checks
+  pass; all six direct and `/@fs/` development HEAD checks return 403. Originals
+  remain unchanged; no downloads, moves, overwrites or deletions occurred. Rights
+  are unchanged. These are local preservation copies, not public assets.
 - Replay archive `MANIFEST.tsv`: **49/49 entries, 780,598,830 bytes** freshly match
   size and SHA-256. All three irreplaceable `recovered/` tractograms match both
   archive identities and registered asset-intermediate identities. Their three
   original scratchpad paths recorded in the manifest are now missing. The archive
-  is retained local storage, **not verified independent backup**; another copy or
-  recoverable backup on an independent destination has not been established.
+  and new copies are retained on the same workstation. **System backups are out
+  of project scope**, explicitly confirmed by the owner; independent-disk backup
+  verification is not a project blocker. These copies do not protect against disk
+  loss, and no system-backup verification is claimed.
 - Required-source search now locates **3/11 exact source identities**: repository
   HCP tract ZIP, both archived HCP FIB copies, and retained TemplateFlow carpet.
   Search was bounded to the same Jülich builder/probability, earlier-candidate,
@@ -131,8 +140,9 @@ This update supersedes earlier availability claims **only for the paths rechecke
   the five previously missing pins. This is not a whole-machine absence claim.
 - Five historical-pin acquisition remains deferred until concrete regeneration
   need; no changed hash or newer same-name file was accepted. Newly unlocated
-  Jülich inputs and independent-backup verification remain explicit outstanding
-  work. Full Bead acceptance and clean-machine rebuilding are **not established**.
+  Jülich inputs remain explicit outstanding recovery work. Local preservation is
+  verified; full source-recovery acceptance and clean-machine rebuilding are
+  **not established**.
 
 No tracking was run. Byte checks establish retained identities, not upstream
 regeneration, anatomical validity, changed licensing, or disaster recovery.
